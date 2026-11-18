@@ -41,9 +41,20 @@ def find_paper_text(run_dir) -> Tuple[Optional[str], Optional[str]]:
     return None, None
 
 
-def quote_in(quote: str, text_norm: str) -> str:
-    """'verbatim', 'fragments' (every 12+ character piece of an ellipsis quote is found) or 'no'."""
-    q = norm_text(quote)
+_PRIMES = str.maketrans({"′": "'", "ʹ": "'", "‵": "'", "″": '"', "ʺ": '"'})
+
+
+def fold_text(s: Any) -> str:
+    """norm_text plus: primes as apostrophes (5′ -> 5'), and no whitespace around + or - ("H + " / "Fe 3 +" / "A - B" ->
+    "h+" / "fe3+" / "a-b"), applied to the quote and the text alike. Unicode dashes, case and NFKC (superscript charges) are
+    already folded by norm_text."""
+    return re.sub(r"\s*([+\-])\s*", r"\1", norm_text(s).translate(_PRIMES))
+
+
+def quote_in(quote: str, text_norm: str, fn=norm_text) -> str:
+    """'verbatim', 'fragments' (every 12+ character piece of an ellipsis quote is found) or 'no'. ``text_norm`` is the
+    text normalised with the same ``fn`` (norm_text, or fold_text)."""
+    q = fn(quote)
     if q and q in text_norm:
         return "verbatim"
     parts = [x.strip(" .,;:") for x in re.split(r"\.\.\.|…|\[\.\.\.\]", q)]
@@ -59,7 +70,7 @@ def _has(term: str, text_norm: str) -> bool:
     return bool(term) and re.search(r"(?<![0-9a-z])%s(?![0-9a-z])" % re.escape(term), text_norm) is not None
 
 
-def _tally(rows: List[Tuple[str, str, str]], n_text: Optional[str]) -> Dict[str, Any]:
+def _tally(rows: List[Tuple[str, str, str]], n_text: Optional[str], fn=norm_text) -> Dict[str, Any]:
     out = {"n": len(rows), "verbatim": 0, "fragments": 0, "not_found": 0, "no_text": 0, "short": 0, "not_found_examples": []}
     for key, quote, _ in rows:
         if len(norm_text(quote)) < MIN_QUOTE:
@@ -68,7 +79,7 @@ def _tally(rows: List[Tuple[str, str, str]], n_text: Optional[str]) -> Dict[str,
         if n_text is None:
             out["no_text"] += 1
             continue
-        hit = quote_in(quote, n_text)
+        hit = quote_in(quote, n_text, fn)
         if hit == "no":
             out["not_found"] += 1
             if len(out["not_found_examples"]) < 5:
@@ -85,7 +96,8 @@ def paper_view(big: Dict[str, Any], text: Optional[str]) -> Dict[str, Any]:
     """Every (element, ``paper`` record) with a non-empty quote against the paper text, plus VD-10: elements whose only
     lineage is audit_modified (kind ``curation``; the paper view drops them) whose own evidence quote is verbatim in
     the paper, the candidates for promotion."""
-    n_text = norm_text(text) if text else None
+    n_text = fold_text(text) if text else None  # judged after the fold; ``before_fold`` is the same quotes under norm_text only
+    n_plain = norm_text(text) if text else None
     rows = {key: row for _, key, row, _ in keyed_rows(big)}
     quoted, audit = [], []
     for key, recs in (big.get("provenance") or {}).items():
@@ -96,13 +108,17 @@ def paper_view(big: Dict[str, Any], text: Optional[str]) -> Dict[str, Any]:
             q = evidence_quote(rows.get(key) or {}) if isinstance(rows.get(key), dict) else None
             audit.append((key, q or "", ""))
     with_q = [a for a in audit if a[1]]
-    res = _tally(quoted, n_text)
+    res = _tally(quoted, n_text, fold_text)
+    before = _tally(quoted, n_plain, norm_text)
+    res["before_fold"] = {k: before[k] for k in ("verbatim", "fragments", "not_found", "found_rate")}
     res["text"] = "found" if n_text is not None else "no text"
-    t = _tally(with_q, n_text)
+    t = _tally(with_q, n_text, fold_text)
+    t0 = _tally(with_q, n_plain, norm_text)
     res["audit_modified_only"] = {"elements": len(audit), "without_quote": len(audit) - len(with_q), "with_quote": len(with_q),
                                   "quote_verbatim": t["verbatim"], "quote_fragments": t["fragments"],
                                   "quote_not_found": t["not_found"], "no_text": t["no_text"], "short_quotes": t["short"],
-                                  "promotion_candidates": t["verbatim"] if n_text is not None else None}
+                                  "promotion_candidates": t["verbatim"] if n_text is not None else None,
+                                  "promotion_candidates_before_fold": t0["verbatim"] if n_text is not None else None}
     return res
 
 

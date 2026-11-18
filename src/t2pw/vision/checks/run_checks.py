@@ -139,6 +139,8 @@ def aggregate(runs: List[Dict[str, Any]], scopes: List[str]) -> Dict[str, Any]:
         p["runs_no_text"] += pv["text"] != "found"
         for k in ("n", "verbatim", "fragments", "not_found", "no_text", "short"):
             p[k] += pv[k]
+        for k in ("verbatim", "fragments", "not_found"):
+            p["before_fold_" + k] += pv["before_fold"][k]
         for k, v in pv["audit_modified_only"].items():
             if isinstance(v, int):
                 am[k] += v
@@ -147,7 +149,11 @@ def aggregate(runs: List[Dict[str, Any]], scopes: List[str]) -> Dict[str, Any]:
                 ex.append(e)
     found = p["verbatim"] + p["fragments"]
     judged = p["verbatim"] + p["fragments"] + p["not_found"]
+    found0 = p["before_fold_verbatim"] + p["before_fold_fragments"]
+    judged0 = found0 + p["before_fold_not_found"]
     out["faithfulness"] = {
+        "found_rate_before_fold": round(found0 / judged0, 4) if judged0 else None,
+        "found_rate_after_fold": round(found / judged, 4) if judged else None,
         "paper_quotes": dict(p), "found_rate_of_judged": round(found / judged, 4) if judged else None,
         "verbatim_rate_of_judged": round(p["verbatim"] / judged, 4) if judged else None,
         "not_found_examples": ex, "audit_modified_only_totals": dict(am),
@@ -166,6 +172,18 @@ def _run_list(a) -> List[Dict[str, Any]]:
         idx = [int(i) for i in (Path(a.idx).read_text() if a.idx and Path(a.idx).is_file() else a.idx or "").replace("\n", ",").split(",") if i.strip()]
         runs += [{"run": rl[i]["dir"], "idx": i} for i in (idx or range(len(rl)))]
     return runs
+
+
+def tree_info() -> Dict[str, Any]:
+    """The source tree this run imported t2pw from, and its git HEAD (so a report says which code made it)."""
+    import subprocess
+    import t2pw
+    root = Path(t2pw.__file__).resolve().parents[2]
+    git = lambda *a: subprocess.run(["git", "-C", str(root)] + list(a), capture_output=True, text=True, timeout=30).stdout.strip()  # noqa: E731
+    try:
+        return {"path": str(root), "head": git("rev-parse", "HEAD"), "dirty": bool(git("status", "--porcelain", "--", "src"))}
+    except Exception as e:  # not a git checkout, or no git: say so instead of failing the run
+        return {"path": str(root), "head": None, "dirty": None, "error": str(e)[:100]}
 
 
 def main(argv=None) -> int:
@@ -191,10 +209,12 @@ def main(argv=None) -> int:
         print("%d/%d %s %s %.0fs" % (n + 1, len(todo), item["idx"], "CRASH" if "crash" in rec else "ok", time.time() - t0), flush=True)
         if (n + 1) % 10 == 0:
             Path(a.out + ".partial").write_text(json.dumps({"runs": runs}, default=str), encoding="utf-8")
-    report = {"scopes": scopes, "totals": aggregate(runs, scopes), "runs": runs}
+    tree = tree_info()
+    report = {"tree": tree, "scopes": scopes, "totals": aggregate(runs, scopes), "runs": runs}
     Path(a.out).write_text(json.dumps(report, indent=1, default=str), encoding="utf-8")
     if a.totals_out:
-        Path(a.totals_out).write_text(json.dumps({"scopes": scopes, "totals": report["totals"]}, indent=1, default=str), encoding="utf-8")
+        Path(a.totals_out).write_text(json.dumps({"tree": tree, "scopes": scopes, "totals": report["totals"]}, indent=1, default=str), encoding="utf-8")
+    print("tree: %s HEAD %s dirty=%s" % (tree["path"], tree["head"], tree["dirty"]), flush=True)
     print(json.dumps(report["totals"], indent=1, default=str)[:6000])
     return 0
 

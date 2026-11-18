@@ -142,7 +142,21 @@ def test_injected_compartment_grouping_mismatch_is_flagged(run):
     moved = sbml.replace('name="Glycine" compartment="c_mitochondrial_matrix"', 'name="Glycine" compartment="c_cell"', 1)
     assert moved != sbml
     rep = consistency.cross_format(dict(outs, sbml=moved.encode("utf-8")), pwml_ir=ir)
-    assert "compartment_grouping_differs:sbml_vs_sbgn" in classes(rep)  # SBML splits what SBGN keeps together
+    assert "compartment_placement_differs:sbml_vs_sbgn" in classes(rep)  # one placement each, and they differ
+    # the exporter's own compartment_assumed notes bound what is allowed: told of one assumption, the difference is class j
+    told = consistency.cross_format(dict(outs, sbml=moved.encode("utf-8")), pwml_ir=ir,
+                                    sbgn_report={"notes": {"compartment_assumed:transporter_in_from_compartment": 1}})
+    assert "compartment_placement_differs:sbml_vs_sbgn" not in classes(told) and told["known"]["j_sbgn_assumed_placements"]["n"] == 1
+
+
+def test_sbml_only_placement_is_a_known_class_not_a_failure(run):
+    _, outs, ir = run
+    sbml = outs["sbml"].decode("utf-8")
+    extra = sbml.replace("</listOfSpecies>", '<species id="s_99_cell" name="Glycine" compartment="c_cell"/></listOfSpecies>', 1)
+    assert extra != sbml  # SBML lists Glycine in a second compartment no process uses it in
+    rep = consistency.cross_format(dict(outs, sbml=extra.encode("utf-8")), pwml_ir=ir)
+    assert rep["ok"], rep["failures"]
+    assert rep["known"]["k_sbml_only_placements"]["n"] >= 1
 
 
 def test_entity_placed_in_a_format_but_not_in_pwml_is_flagged(run):
@@ -198,6 +212,15 @@ def test_short_quotes_are_counted_apart_and_ids_match_whole_tokens():
     assert res["short"] >= 1 and res["not_found"] == faithfulness.paper_view(big_with(), text)["not_found"]
     assert faithfulness._has("glycine", "free glycine here") and not faithfulness._has("glycine", "polyglycine here")
     assert faithfulness._has("1234", "id 1234.") and not faithfulness._has("1234", "id 912345")
+
+
+def test_fold_finds_spaced_charges_and_primes_and_reports_before_and_after():
+    quote = "permeation of H+ through the 5'-phosphate channel"
+    text = "We saw permeation of H + through the 5′-phosphate channel in cells."
+    assert faithfulness.quote_in(quote, faithfulness.norm_text(text)) == "no"  # before the fold
+    assert faithfulness.quote_in(quote, faithfulness.fold_text(text), faithfulness.fold_text) == "verbatim"
+    res = faithfulness.paper_view(big_with(quote), text)
+    assert res["verbatim"] == res["before_fold"]["verbatim"] + 1 and res["before_fold"]["not_found"] == res["not_found"] + 1
 
 
 def big_with(quote=QUOTE, audit_quote=None):

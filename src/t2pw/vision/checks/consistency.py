@@ -525,11 +525,26 @@ def cross_format(outputs: Dict[str, bytes], *, pwml_ir: Optional[dict] = None, s
     # PWML vs a payload format: every placement the payload format has must lie inside one PWML compartment (PWML merges
     # compartments under canonical names, and places the ends of the interactions and transports it draws, which the
     # payload formats leave where the payload put them)
+    # Only entities with exactly one placement in both formats are grouped: SBML lists an entity in every compartment the
+    # payload's states give it, PWML and SBGN draw it only where a process uses it (V7a proof, 3 runs diagnosed).
+    pl = {f: defaultdict(set) for f in cfmts}  # cluster -> compartment names as written
+    for f in cfmts:
+        for c, v in grp[f].items():
+            for cluster in v:
+                pl[f][cluster].add(c)
+    k_pwml = 0  # placements SBML lists and PWML does not draw
     for f in ("sbml", "sbgn"):
         if "pwml" in models and f in models:
-            within = placed["pwml"] & placed[f]
-            gp = {c: v & within for c, v in grp["pwml"].items()}
-            gf = {c: v & within for c, v in grp[f].items() if v & within}
+            both = placed["pwml"] & placed[f]
+            anchored = {c for c in both if len(pl["pwml"][c]) == 1 and len(pl[f][c]) == 1}
+            gp, gf = defaultdict(set), defaultdict(set)
+            for c in anchored:
+                gp[next(iter(pl["pwml"][c]))].add(c)
+                gf[next(iter(pl[f][c]))].add(c)
+            for c in both:
+                d = len(pl["pwml"][c]) - len(pl[f][c])
+                extra_pw += max(d, 0)
+                k_pwml += max(-d, 0) if f == "sbml" else 0
             for cf, block in gf.items():
                 hit = [cp for cp, pset in gp.items() if block <= pset]
                 if not hit:
@@ -543,19 +558,27 @@ def cross_format(outputs: Dict[str, bytes], *, pwml_ir: Optional[dict] = None, s
                     go_p, go_f = models["pwml"].comp_go.get(cp), models[f].comp_go.get(cf)
                     if go_p and go_f and not go_p & go_f:  # both carry an ontology term and they disagree
                         _add(fails, "compartment_ontology_differs:pwml_vs_" + f, "pwml %s %s vs %s %s %s" % (cp, sorted(go_p), f, cf, sorted(go_f)))
-            extra_pw += sum(len(v) for v in gp.values()) - sum(len(v) for v in gf.values())
-    # the two payload formats: the same grouping, the same names
+    # the two payload formats (same names): an entity with one placement in each must have the same one; SBML-only placements
+    # are known (SBGN draws one glyph per (entity, compartment) a process uses, export_sbgn docstring); placements only SBGN
+    # has are bounded by the exporter's own compartment_assumed notes (transporter, interaction source, reaction state from IR)
+    k_sbgn = 0
     if "sbml" in models and "sbgn" in models:
-        within = placed["sbml"] & placed["sbgn"]
-        g1, g2 = ({c: v & within for c, v in grp[f].items() if v & within} for f in ("sbml", "sbgn"))
-        if {frozenset(v) for v in g1.values()} != {frozenset(v) for v in g2.values()}:
-            _add(fails, "compartment_grouping_differs:sbml_vs_sbgn", "sbml %s vs sbgn %s" % (
-                sorted(len(v) for v in g1.values()), sorted(len(v) for v in g2.values())))
-        else:
-            n1 = {frozenset(v): c for c, v in g1.items()}
-            for c2, v in g2.items():
-                if norm(n1[frozenset(v)]) != norm(c2):
-                    _add(fails, "compartment_name_differs_between_payload_formats", "sbml=%s sbgn=%s" % (n1[frozenset(v)], c2))
+        allowed = sum(v for k, v in ((sbgn_report or {}).get("notes") or {}).items() if str(k).startswith("compartment_assumed"))
+        dev = []
+        for c in sorted(placed["sbml"] & placed["sbgn"], key=name_of):
+            s, g = {norm(x): x for x in pl["sbml"][c]}, {norm(x): x for x in pl["sbgn"][c]}
+            if len(s) == 1 and len(g) == 1:
+                if set(s) != set(g):
+                    dev.append("%s: sbml=%s sbgn=%s" % (name_of(c), next(iter(s.values())), next(iter(g.values()))))
+            else:
+                k_sbgn += len(set(s) - set(g))
+                dev += ["%s: sbgn only %s" % (name_of(c), g[n]) for n in sorted(set(g) - set(s))]
+        for ex in dev[allowed:]:
+            _add(fails, "compartment_placement_differs:sbml_vs_sbgn", ex)
+        known["j_sbgn_assumed_placements"] = {"n": min(len(dev), allowed), "report_allows": allowed, "examples": dev[:5],
+                                              "note": "placements SBGN has that SBML does not, up to the exporter's compartment_assumed notes"}
+    known["k_sbml_only_placements"] = {"n": k_pwml + k_sbgn, "vs_pwml": k_pwml, "vs_sbgn": k_sbgn,
+                                       "note": "compartments SBML lists for an entity that PWML / SBGN do not draw it in (no process uses it there)"}
     known["a_compartment_names"] = {"n": sum(names_a.values()), "pairs": dict(names_a), "examples": list(names_a)[:5],
                                     "note": "PWML canonical compartment name differs from the stored name; every pair listed with its count"}
     known["h_pwml_extra_placements"] = {"n": extra_pw, "note": "placements PWML adds (an interaction or transport end drawn in a state the payload does not give the entity)"}
