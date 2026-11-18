@@ -22,6 +22,7 @@ from .convert import to_rows
 
 FLAG = "T2PW_EXTEND"
 SOURCES = ("pathbank", "reactome", "wikipathways")
+LITERATURE = "literature"   # other papers: literature.extend_literature, its own entry (other_paper provenance)
 # Budget share per source. Each source gets its share of what is left, so time a source does not
 # use passes on to the ones after it (one PathBank extract takes ~35-40 s and used to starve the rest).
 SHARES = {"pathbank": 2.0, "reactome": 1.0, "wikipathways": 1.0}
