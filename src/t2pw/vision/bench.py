@@ -240,7 +240,7 @@ def gold_from_pathbank(extract: Mapping[str, Any], case_id: str) -> Dict[str, An
     cs = {_comp(c): c for c in comps if c}
     compartments = [{"id": f"C{i}", **term(name)} for i, name in enumerate(cs.values(), 1)]
     return {"schema": SCHEMA_GOLD, "id": case_id, "kind": "full", "species": (extract.get("species") or {}).get("name") or "",
-            "pathbank": {"accession": extract.get("accession"), "pathway_id": extract.get("pathway_id"),
+            "curated_record": {"accession": extract.get("accession"), "pathway_id": extract.get("pathway_id"),
                          "name": extract.get("name"), "content_sha256": extract.get("content_sha256")},
             "complete": {t: True for t in TYPES}, "reactions": rx, "off_scope_reactions": [],
             "enzymes": _enzymes(rx, tr),
