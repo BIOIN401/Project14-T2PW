@@ -27,6 +27,7 @@ _REF_NAMES = ("PW000001.pwml", "PW012926.pwml")  # structure reference the PWML 
 _DB_ENV = tuple("PATHBANK_DB_" + k for k in ("HOST", "PORT", "USER", "PASSWORD", "SCHEMA",
                                               "CONNECT_TIMEOUT", "READ_TIMEOUT", "WRITE_TIMEOUT"))
 _MEMO: Dict[str, Tuple[Optional[bytes], dict, Optional[str]]] = {}  # export key -> (pwml bytes, ir, error); newest 4
+_KEPT: Dict[str, Dict[str, Any]] = {}  # export key -> the quarantine-kept payload; newest 4
 
 
 class GenerateError(RuntimeError):
@@ -113,6 +114,21 @@ def _export_pwml(v: Dict[str, Any], opts: Dict[str, Any]) -> Tuple[Optional[byte
     return None, res.get("pwml_ir") or {}, str(res.get("error") or "PWML export failed")
 
 
+def _kept(v: Dict[str, Any], opts: Dict[str, Any]) -> Dict[str, Any]:
+    """The graph the PWML export keeps: the strict quarantine decision ``run_pwml_export`` takes first, with the same
+    controls (strict_db, export mode, Stage-0 context). The structural formats are built from this, so SBML, SBGN and
+    KGML show exactly the reactions PWML shows (PWML drops a reaction the quarantine boundary refuses: PRODUCT_CONTRACT).
+    Raises GenerateError when the boundary refuses the whole view. ``v`` is not mutated."""
+    from t2pw.pipeline.export_mode import DEFAULT_EXPORT_MODE, coerce_mode
+    from t2pw.pipeline.strict_quarantine import quarantine_and_close
+    with _offline():
+        r = quarantine_and_close(v, strict_db=bool(opts.get("strict_db", True)), pathway_context=opts.get("pathway_context"),
+                                 mode=coerce_mode(opts.get("export_mode", DEFAULT_EXPORT_MODE)))
+    if not r.ok:
+        raise GenerateError("quarantine boundary refused the view: " + "; ".join(r.refusal_reasons))
+    return r.payload
+
+
 def _sbml(v: Dict[str, Any], meta: Dict[str, Any]) -> str:
     from t2pw.clean_model.builder import build_from_payload
     from t2pw.clean_model.export.sbml import sbml_text
@@ -133,7 +149,10 @@ def generate(big: Dict[str, Any], scope: ScopeSpec = DEFAULT, fmt: str = "pwml",
     exporter's own. ``meta``: paper metadata for SBML/KGML (clean model ``read_run_meta``). Both, plus the two
     environment switches the PWML bytes depend on (T2PW_FINAL_PAYLOAD, T2PW_PWML_LAYOUT), are part of the
     cache key next to the view hash, so a different control never returns another control's bytes.
-    Raises GenerateError when the PWML export refuses the view (pwml, svg and html need it; sbgn falls back to its grid).
+    SBML, KGML and SBGN are built from the graph the PWML export keeps (the strict quarantine decision under the same
+    controls), so no format shows a reaction PWML drops; "json" is the view itself, before that decision.
+    Raises GenerateError when the PWML export refuses the view (pwml, svg and html need it; sbgn falls back to its grid)
+    or when the quarantine boundary refuses it (every format but json).
     """
     if fmt not in FORMATS:
         raise ValueError("fmt must be one of %s, got %r" % (", ".join(FORMATS), fmt))
@@ -156,12 +175,20 @@ def generate(big: Dict[str, Any], scope: ScopeSpec = DEFAULT, fmt: str = "pwml",
             _MEMO[k] = _export_pwml(v, opts)
         return _MEMO[k]
 
+    def kept() -> Dict[str, Any]:
+        k = vh + oh
+        if k not in _KEPT:
+            if len(_KEPT) >= 4:
+                _KEPT.pop(next(iter(_KEPT)))
+            _KEPT[k] = _kept(v, opts)
+        return _KEPT[k]
+
     if fmt == "json":
-        out = json.dumps(v, ensure_ascii=False, indent=1).encode("utf-8")
+        out = json.dumps(v, ensure_ascii=False, indent=1).encode("utf-8")  # the view itself, before any quarantine
     elif fmt == "sbml":
-        out = _sbml(v, meta).encode("utf-8")
+        out = _sbml(kept(), meta).encode("utf-8")
     elif fmt == "kgml":
-        out = _kgml(v, meta).encode("utf-8")
+        out = _kgml(kept(), meta).encode("utf-8")
     else:
         xml, ir, err = pwml()
         if fmt == "pwml":
@@ -170,7 +197,7 @@ def generate(big: Dict[str, Any], scope: ScopeSpec = DEFAULT, fmt: str = "pwml",
             out = xml
         elif fmt == "sbgn":
             from t2pw.vision.export_sbgn import sbgn_text
-            out = sbgn_text(v, ir=ir if xml is not None else None).encode("utf-8")
+            out = sbgn_text(kept(), ir=ir if xml is not None else None).encode("utf-8")
         else:
             if xml is None:
                 raise GenerateError(err)
