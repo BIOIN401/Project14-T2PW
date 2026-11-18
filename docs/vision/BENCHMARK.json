@@ -1,0 +1,104 @@
+{
+ "schema": "t2pw.vision.benchmark_design/1",
+ "lane": "V9",
+ "mandate": "docs/VISION.md section 4; docs/vision/PLAN.md section 2.2 (scoped views)",
+ "scorer": {
+  "module": "src/t2pw/vision/bench.py",
+  "score_view": "score_view(big, scope, gold_case) -> dict (pure; view(big, scope) scored against one gold case)",
+  "run_benchmark": "run_benchmark(cases, {case id: {run label: big payload}}, scope) -> report (legs + micro aggregate per case kind)",
+  "gold_builders": {
+   "gold_from_supplement": "paper-kind gold from one case of a gold-supplement file (gold_v2_supported_reactions.json or paper_gold output)",
+   "gold_from_pathbank": "full-kind gold from a pathbank_gold.extract payload (no I/O)",
+   "build_full_gold": "extract by PW accession (the only database read in the module; extractor injectable) then gold_from_pathbank"
+  },
+  "reused_not_rebuilt": [
+   "bench/eval_v2/reactions.match_reaction (reaction match by defining participants, reversible gold may match backwards)",
+   "bench/eval_v2/reactions._row_key (duplicate-row collapse, as score_leg)",
+   "bench/eval_v2/matcher (strict name key, parenthetical rule, enzyme_keys with complex components)",
+   "bench/eval_v2/gold.Reaction and Term",
+   "bench/eval_v2/pathbank_gold.extract and connect",
+   "vision/payload.grounded_ids (identifier bridge) and vision/view.view"
+  ]
+ },
+ "sets": {
+  "paper": {
+   "purpose": "Main benchmark. How well does the software extract what the paper itself says? Scored on view(big, PAPER_ONLY) only.",
+   "scope": {"paper_only": true, "max_hops": null},
+   "gold_file": "src/t2pw/bench/eval_v2/gold_v2_supported_reactions.json",
+   "why_this_gold": "It is already paper-scoped: each case's scope field names the part of the pathway the paper states, every reaction carries a verbatim quote verified against the pinned full text, and a human certifies supported_reactions_complete per case. Reactions the paper states but that belong elsewhere are kept in off_pathway_reactions / summary_statements and are never gold. A paper that covers part of a pathway therefore has gold for that part only (the PMC12312563 case is exactly one step, MenD).",
+   "cases": [
+    {"case_id": "PMC12096016", "pathway": "enterobactin biosynthesis, E. coli", "reactions": 5, "complete": true, "precision": true, "role": "main",
+     "why": "Certified complete. Scope: the DHB arm and the assembly arm as the paper lays them out. Most stored runs of any gold paper (29)."},
+    {"case_id": "PMC12421875", "pathway": "menaquinone (classical), L. lactis", "reactions": 9, "complete": true, "precision": true, "role": "main",
+     "why": "Certified complete. Scope: the seven DHNA-forming steps (MenF to MenI) plus MenA and MenG. 2 stored runs."},
+    {"case_id": "PMC12312563", "pathway": "menaquinone, L. monocytogenes (MenD step only)", "reactions": 1, "complete": true, "precision": true, "role": "main",
+     "why": "Certified complete. A partial-coverage paper: the gold is exactly the one step the paper states, which is the 'part of the TCA cycle' rule of VISION section 4. 3 stored runs. One reaction, so report its numbers but never headline them."},
+    {"case_id": "PMC12657337", "pathway": "menaquinone MK-7 module, E. coli", "reactions": 3, "complete": false, "precision": false, "role": "recall_only",
+     "why": "supported_reactions_complete is false (not certified), so report.evaluate skips it. Recall is reported, precision is None. No stored run in the run list."}
+   ],
+   "candidates_not_scored": [
+    {"case_id": "PMC319880", "file": "docs/evaluation_v2/pathbank_gold/gold_paper_pw701720.json", "why_not": "Hinted draft, supported_reactions_complete false (ORCH-747), 1 reaction and 15 interactions; the paper is a 1981 scan and no run of it exists (the cohort used PMC11983282 for the Ara operon). The interactions in it are the only paper-scoped interaction gold in the repo: use them as a recall-only check once a human certifies the file."}
+   ],
+   "not_paper_scoped": [
+    {"file": "src/t2pw/bench/gold/pinned_v1.json", "why": "10 cases of pathway anchors, expected enzymes, substrates and products, forbidden organisms. It is a core/context relevance set (expected_export, mechanistic_relevance), not a list of what the paper states; its supported_reactions are a 3-row subset. Not used as paper gold."}
+   ]
+  },
+  "full": {
+   "purpose": "Small set. How much of everything known about the pathway did the software recover? Scored on view(big, FULL) against the whole curated PathBank pathway.",
+   "scope": {"paper_only": false, "max_hops": null},
+   "gold": "build_full_gold(PW id): every reaction, transport, interaction, enzyme and compartment of the curated pathway, read through pathbank_gold.extract (accession resolved via super_pathway_visualizations.pw_id, never pathways.id). Identifiers (HMDB, KEGG, ChEBI, PubChem, DrugBank, UniProt of complex members) are kept for the id bridge.",
+   "cases": [
+    {"pw_id": "PW701720", "pathway": "Ara operon inactivation, autoregulation of AraC", "paper": "PMC11983282", "extract": "docs/evaluation_v2/pathbank_gold/PW701720__extract.json", "curated": {"reactions": 1, "interactions": 7}, "offline": true, "note": "extract committed, so the gold needs no database"},
+    {"pw_id": "PW739181", "pathway": "sour taste", "paper": "PMC7059786", "extract": null, "offline": false, "note": "3 stored runs, no extracted reaction in any (the paper is signalling)"},
+    {"pw_id": "PW495535", "pathway": "WNT PCP", "paper": "PMC10425814", "extract": null, "offline": false, "note": "same paper as PW488575: not independent"},
+    {"pw_id": "PW488575", "pathway": "Wnt/Ca2+", "paper": "PMC10425814", "extract": null, "offline": false, "note": "same paper as PW495535: not independent; no stored run of its own (the one run is the WNT PCP topic)"},
+    {"pw_id": "PW766996", "pathway": "chlorophyll", "paper": "PMC5130987", "extract": null, "offline": false, "note": "2 stored runs; 41-reaction union across draws in ORCH-751"}
+   ],
+   "selection_rule": "3 to 6 pathways whose curated record is in PathBank and whose paper has stored runs. These five come from the ORCH-751 cohort table. The PathBank ids of the enterobactin and menaquinone papers are not recorded in the repository (open question), so the two certified-gold papers are in the paper set only."
+  }
+ },
+ "metrics": {
+  "types": ["reactions", "enzymes", "transports", "interactions", "compartments"],
+  "per_type": {
+   "gold": "gold elements of the type (paper set: gold elements flagged in_paper false are dropped under PAPER_ONLY)",
+   "recalled": "gold elements matched by at least one predicted element of the view",
+   "recall": "recalled / gold; None when the case has no gold of that type (not zero)",
+   "predicted": "deduplicated elements of the type in the scored view (reactions by the eval_v2 row key, transports and interactions by payload signature, enzymes by strict name key, compartments by row)",
+   "correct": "predicted elements matching at least one gold element",
+   "precision": "correct / predicted, reported only when the case declares the type complete; None otherwise"
+  },
+  "matching": {
+   "reactions": "eval_v2 match_reaction: every defining participant of one gold side on one predicted side, currency and cofactors excluded; reversible gold may match backwards. Identifier bridge: a predicted participant whose grounded ids (chebi, kegg, hmdb, pubchem, drugbank, uniprot; HMDB zero-padding folded) meet a gold term's ids is credited as that term.",
+   "enzymes": "gold enzyme term (name, aliases, complex members' gene names, member UniProt ids) against enzyme names of predicted reactions and transporters of predicted transports, with complex components expanded (eval_v2 enzyme_keys) or an id match",
+   "transports": "predicted cargo hits any gold cargo term; compartments agree unless both sides are known and differ (small spelling table: cytosol = cytoplasm, extracellular space = extracellular region ...)",
+   "interactions": "unordered entity pair, each side hitting a gold term; relationship canonicalised to activation / inhibition / binding and compared only when both sides have one",
+   "compartments": "folded name through the same spelling table"
+  },
+  "paper_stated_off_scope": "reactions only: predicted rows matching an off_pathway or summary statement the paper makes. They are not true positives and stay in the precision denominator (eval_v2 table 1); the count shows how much of the precision loss is paper-stated chemistry outside the case scope.",
+  "full_view_only": {
+   "recalled_base_only": "gold elements recalled by rows of the paper payload alone",
+   "recovered_by_extension": "gold elements recalled only because of extension rows (recalled minus recalled_base_only)",
+   "extension": "per type and overall: extension rows in the view, how many match a curated element, precision = matched / rows. An unmatched extension row is 'not in this curated pathway', not 'wrong': the metric is a lower bound on correctness.",
+   "provenance": "per type, predicted elements and how many are correct, by provenance kind (paper, other_paper, database, inferred, curation, unclassified). 'primary' puts each element in its highest-ranked kind in that order and so partitions the predicted elements (sums equal predicted and correct); 'any' counts an element under every kind it carries."
+  }
+ },
+ "denominators": {
+  "recall": "gold elements of the case (and run-independent)",
+  "precision": "deduplicated predicted elements in the scored view, complete types only",
+  "aggregate": "micro-average over legs (sum of numerators over sum of denominators), as eval_v2; precision pools only legs whose case declares the type complete; paper and full kinds are never pooled, and cases that share a paper (PW495535, PW488575) are not counted as independent evidence"
+ },
+ "rules": [
+  "The paper set is scored only on view(big, PAPER_ONLY); the full set on view(big, FULL). DEFAULT is reported as a third column for both sets so that a change at the default scope shows up (with no extension DEFAULT == FULL == base).",
+  "Gold is never edited to fit a run. Only a human certifies supported_reactions_complete; the builder reads the flag, it never sets it.",
+  "Identical runs differ at temperature 0: score at least three stored runs per case, report every leg, and call a regression only when it repeats.",
+  "PathBank pathways are mutable (status NULL or unlocked): record content_sha256 of the extract with every score and re-extract before comparing across dates.",
+  "Reactions of the full set are matched against the whole curated pathway; a curated step the paper does not state is a miss of the paper payload that an extension row may recover, never a miss of the paper set.",
+  "The product contract outranks every number here; a benchmark gain bought with a contract violation is a regression.",
+  "Before the extension lands (V4, V8) every full-view number is the paper-payload baseline; the recovered_by_extension and extension-precision columns are 0 / None by construction."
+ ],
+ "open_questions": [
+  "PathBank ids for the enterobactin (PMC12096016) and menaquinone (PMC12421875, PMC12312563, PMC12657337) pathways are not recorded in the repository; with them the full set would share papers with the certified paper set.",
+  "The ten lab pathway ids named in the brief are not listed in any committed eval or pinned document; only the five of the ORCH-751 cohort are.",
+  "Interaction, transport and compartment gold for the paper set does not exist in certified form (gold_v2 holds reactions only); until a human certifies the PMC319880 supplement or writes more, those types are recall-only or not evaluable there."
+ ]
+}
