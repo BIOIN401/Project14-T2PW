@@ -13,6 +13,17 @@ Plan: `docs/vision/PLAN.md`. Branch `vision/main` from `origin/main` `a6c07e16`.
   the main orchestrator reversed it and RULES.md is fixed. Two V1 runs ran under the 1 GB floor (model-unit-10, model-proof-4);
   both finished with 0 survivors.
 
+### Queue state at the 2026-11-18 hold (restart pending; nothing re-queued until main says the showcase is done)
+
+Merged in `vision/main` (pushed): V1, V2, V3, V5, V6 at 04596e6c. Gated work still owed, in this order:
+
+1. **Post-merge suites on 04596e6c** (V6 merge). Snapshot worktree `C:/t/vis-suite-0459` exists. Command (Git bash, background):
+   `bash C:/t/vis-runs/queue.sh vis-suite suite-0459 5400 C:/t/vis-runs/json/suite-0459.json 4 C:/t/vis-runs/logs/suite-0459.log -- "C:/Program Files/Git/bin/bash.exe" C:/t/vis-runs/suite.sh C:/t/vis-suite-0459 suite-0459`
+2. **V7a checks** (`vision/checks` fdce8edd, agent a94df03a34785b42f, sonnet/high): unit tests (min 2 GB) then the 97-run proof (min 4 GB); exact commands in `C:/t/vis-checks/docs/vision/results/V7a.json` `commands_still_to_run`, run through `queue.sh`. Code is committed, nothing run.
+3. **V4 extend-db** (`vision/extend-db` db7896c2, agent a909dd2a92c062ddd, opus/high): 12 focused tests passed (`logs/v4-unit-2.log`); live proof `v4-live-1` (min 4 GB) NEEDS THE PATHBANK DB, which is unreachable: do not run until main says the DB is back.
+4. **V9 bench** (`vision/bench` 190ba7b0, agent a8577fd290255303b, sonnet/high): done, 13 tests passed, proof ok on the paper set; full-view gold for PW739181, PW495535, PW488575, PW766996 NEEDS THE DB (via `C:/t/corr-assess/scripts/live_launch.py`): hold. Review of the current diff can run now (static).
+5. Not yet dispatched: V7b (attractiveness metrics + PathWhiz gallery, compose project `t2pw-vis`, Docker, min 4 GB), V8 extend-lit (after V4), V10 web (V5+V6 merged; main's rulings in the section below).
+
 ### Resume notes (after a restart)
 
 1. Worktrees: `C:/t/vis-main` (vision/main), `C:/t/vis-model`, `C:/t/vis-sbgn`, `C:/t/vis-diagram`. Rules for agents:
