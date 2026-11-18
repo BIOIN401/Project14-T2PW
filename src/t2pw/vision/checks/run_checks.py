@@ -52,7 +52,11 @@ def check_scope(big, scope_name: str, export, meta) -> Dict[str, Any]:
         v = validate.validate_pwml(outs["pwml"], ir=ir)
         rec["pwml"] = {"ok": v["ok"], "n_errors": len(v["errors"]), "errors": _short([e.get("message", str(e)) for e in v["errors"]])}
     if len(outs) == len(FMTS):
-        c = consistency.cross_format(outs, pwml_ir=ir)
+        # the SBGN exporter's own report, on the same kept graph and IR generate() gave it (generate returns bytes only)
+        from t2pw.vision.export_sbgn import sbgn_export
+        sbgn_report = sbgn_export(G._kept(view(big, scope), dict(export or {})), ir=ir)[1]
+        c = consistency.cross_format(outs, pwml_ir=ir, sbgn_report=sbgn_report)
+        rec["sbgn_report"] = {"exported": sbgn_report["exported"], "omitted": sbgn_report["omitted"]}
         rec["consistency"] = {"ok": c["ok"], "counts": c["counts"], "failures": c["failures"],
                               "known": {k: (v if not isinstance(v, dict) else {x: y for x, y in v.items() if x in ("n",)}) for k, v in c["known"].items()},
                               "known_examples": {k: v.get("examples", [])[:2] for k, v in c["known"].items() if isinstance(v, dict)}}
