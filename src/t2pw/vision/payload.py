@@ -53,6 +53,17 @@ CURRENCY = frozenset(_currency_fold(s) for spellings in _CURRENCY.values() for s
 def is_currency(name: Any) -> bool:
     return isinstance(name, str) and _currency_fold(name) in CURRENCY
 
+
+# spelling -> family ("water" and "H2O" are one), with the NADP pair folded onto NAD (VD-11 allows
+# exactly those variants to match)
+_FAMILY = {_currency_fold(s): fam for fam, spellings in _CURRENCY.items() for s in spellings}
+_VARIANT = {"NADP+": "NAD+", "NADPH": "NADH"}
+
+
+def currency_family(name: str) -> str:
+    fam = _FAMILY[_currency_fold(name)]
+    return _VARIANT.get(fam, fam)
+
 ID_FIELDS = {"chebi_id": "chebi", "kegg_id": "kegg", "hmdb_id": "hmdb", "pubchem_cid": "pubchem",
              "pathbank_compound_id": "pathbank_compound", "drugbank_id": "drugbank", "uniprot": "uniprot",
              "uniprot_id": "uniprot", "pathbank_protein_id": "pathbank_protein"}
@@ -402,8 +413,8 @@ class _Index:
         """(inputs, outputs, currency in, currency out): identity sets without currency metabolites
         (all participants if that leaves both sides empty), plus the folded currency on each side."""
         ins, outs = row.get("inputs") or [], row.get("outputs") or []
-        cur_in = frozenset(_currency_fold(n) for n in ins if is_currency(n))
-        cur_out = frozenset(_currency_fold(n) for n in outs if is_currency(n))
+        cur_in = frozenset(currency_family(n) for n in ins if is_currency(n))
+        cur_out = frozenset(currency_family(n) for n in outs if is_currency(n))
         core_in = [n for n in ins if not is_currency(n)]
         core_out = [n for n in outs if not is_currency(n)]
         if core_in or core_out:
@@ -425,17 +436,26 @@ class _Index:
         else:
             self.proc.setdefault((section, signature(section, row)), key)
 
-    def _rx_match(self, sets: tuple, state: str, mirror: Optional[tuple] = None) -> Optional[str]:
+    def _rx_match(self, sets: tuple, state: str, cur: tuple, reversed_: bool) -> Optional[str]:
         """First reaction with these identity sets whose state agrees (a row without a state matches
-        any state). ``mirror`` = the incoming currency (in, out) for a REVERSED match: when both rows
-        list currency it must mirror, so hexokinase (glucose + ATP -> G6P + ADP) never absorbs
-        G6Pase (G6P + H2O -> glucose + Pi). A row listing no currency gives no evidence either way."""
+        any state) and whose currency is compatible with the incoming ``cur`` = (in, out), by VD-11
+        (a missed merge shows a step twice; a wrong one loses a step, so under-merge wins):
+        forward  - either row lists no currency, or the currency is equal;
+        reversed - both rows list currency and it mirrors. A row with no currency never
+                   reverse-merges, and hexokinase (glucose + ATP -> G6P + ADP) never absorbs
+                   G6Pase (G6P + H2O -> glucose + Pi).
+        Currency compares by family with NADP+/NADPH folded onto NAD+/NADH."""
+        has = bool(cur[0] or cur[1])
         for s, k, c_in, c_out in self.rx.get(sets, []):
             if s and state and s != state:
                 continue
-            if mirror and (c_in or c_out) and (mirror[0] or mirror[1]) and (c_in, c_out) != (mirror[1], mirror[0]):
-                continue
-            return k
+            other = bool(c_in or c_out)
+            if reversed_:
+                ok = has and other and (c_in, c_out) == (cur[1], cur[0])
+            else:
+                ok = not has or not other or (c_in, c_out) == cur
+            if ok:
+                return k
         return None
 
     def match(self, section: str, row: Any) -> Tuple[Optional[str], bool]:
@@ -454,10 +474,10 @@ class _Index:
         if section == "processes.reactions":
             ins, outs, cur_in, cur_out = self._rx_sets(row)
             state = norm(row.get("biological_state"))
-            hit = self._rx_match((ins, outs), state)
+            hit = self._rx_match((ins, outs), state, (cur_in, cur_out), False)
             if hit or ins == outs:
                 return hit, False
-            hit = self._rx_match((outs, ins), state, mirror=(cur_in, cur_out))
+            hit = self._rx_match((outs, ins), state, (cur_in, cur_out), True)
             return hit, hit is not None
         return self.proc.get((section, signature(section, row))), False
 
@@ -491,11 +511,12 @@ def merge_extension(big: Dict[str, Any], rows_by_section: Dict[str, List[Dict[st
     not added: its records are appended to that element. Identity: entities by a shared grounded id,
     else a normalized name or synonym (same section) unless both rows carry different ids in one
     namespace; reactions by the identity sets of inputs and outputs without currency metabolites
-    and the same normalized state when both rows have one. A FORWARD match ignores currency
-    entirely, so cofactor variants merge: A + NAD+ -> B + NADH and A + NADP+ -> B + NADPH are one
-    element. A REVERSED match (note "orientation reversed") also needs the currency to mirror when
-    both rows list some, so opposing irreversible steps (kinase / phosphatase) stay apart; a row
-    listing no currency still matches either orientation. Other rows match by their signature. Entity names an incoming row references (participants,
+    and the same normalized state when both rows have one, plus the currency rule VD-11: a FORWARD
+    match needs either row to list no currency or equal currency; a REVERSED match (note
+    "orientation reversed") needs both rows to list currency and the currency to mirror. Currency
+    compares by family with only the NAD+/NADP+ and NADH/NADPH variants folded together, so
+    A + NAD+ -> B + NADH and A + NADP+ -> B + NADPH are one element, while kinase / phosphatase
+    pairs (ATP/ADP vs H2O/Pi) stay apart. Other rows match by their signature. Entity names an incoming row references (participants,
     actors, complex components, species, state parts) are rewritten to the matched row's name, so a
     view stays reference-closed. Hops are recomputed.
     """

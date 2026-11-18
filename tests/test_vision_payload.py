@@ -148,14 +148,11 @@ def test_merge_duplicate_adds_provenance_not_row():
     assert big["extension"] == {} and kinds(big, "entities.compounds", "A") == ["paper", "database"]
 
 
-def test_merge_reversed_reaction():
+def test_bare_reversed_reaction_stays_separate():
+    # VD-11: a row listing no currency never reverse-merges (orientation unknown -> under-merge)
     big = build_big_payload(payload())
-    rec = {"kind": "database", "source": None, "quote": None, "stage": "extend_db", "note": ""}
-    merged = merge_extension(big, {"processes.reactions": [{"name": "rev", "inputs": ["B"], "outputs": ["A"]}]},
-                             {"processes.reactions": [[rec]]})
-    assert merged["extension"] == {}
-    last = merged["provenance"][by_name(merged, "processes.reactions", "r1")][-1]
-    assert last["note"] == "orientation reversed"
+    merged = merge_extension(big, {"processes.reactions": [{"name": "rev", "inputs": ["B"], "outputs": ["A"]}]})
+    assert ext_names(merged) == ["rev"]
 
 
 def test_merge_by_synonym_renames_reference():
@@ -231,7 +228,8 @@ def test_f3_currency_ignored_in_reaction_identity():
     merged = merge_extension(big, {"processes.reactions": [
         {"name": "db", "inputs": ["A", "ATP"], "outputs": ["B", "ADP", "H+"]},
         {"name": "db rev", "inputs": ["B", "NADH"], "outputs": ["A", "NAD+"]}]})
-    assert ext_names(merged) == []
+    # forward: r1 lists no currency, so "db" merges; reversed: r1 lists none, so "db rev" stays (VD-11)
+    assert ext_names(merged) == ["db rev"]
     assert merged["provenance"][by_name(merged, "processes.reactions", "r1")] == \
         big["provenance"][by_name(big, "processes.reactions", "r1")]  # no records were given
 
@@ -242,15 +240,50 @@ def test_r1_opposing_irreversible_steps_do_not_merge():
                                         "outputs": ["G6P", "ADP"], "evidence": "x"})
     big = build_big_payload(p)
     rec = {"kind": "database", "source": None, "quote": None, "stage": "extend_db", "note": ""}
-    # hexokinase reversed goes first: once G6Pase is in, a forward match (currency ignored, like the
-    # NAD+/NADP+ variants) would take G6P + ADP -> glucose + ATP as G6Pase
+    # G6Pase first: since VD-11 the forward match no longer takes G6P + ADP -> glucose + ATP as G6Pase
     merged = merge_extension(big, {"processes.reactions": [
-        {"name": "hexokinase reversed", "inputs": ["G6P", "ADP"], "outputs": ["glucose", "ATP"]},
-        {"name": "G6Pase", "inputs": ["G6P", "H2O"], "outputs": ["glucose", "Phosphate"]}]},
+        {"name": "G6Pase", "inputs": ["G6P", "H2O"], "outputs": ["glucose", "Phosphate"]},
+        {"name": "hexokinase reversed", "inputs": ["G6P", "ADP"], "outputs": ["glucose", "ATP"]}]},
         {"processes.reactions": [[rec], [rec]]})
     assert ext_names(merged) == ["G6Pase"]  # currency does not mirror: a different step
     last = merged["provenance"][by_name(merged, "processes.reactions", "hexokinase")][-1]
     assert last["note"] == "orientation reversed"  # currency mirrors: the same step written backwards
+
+
+def one_reaction(rx):
+    p = payload()
+    p["processes"]["reactions"] = [dict(rx, evidence="x")]
+    return build_big_payload(p)
+
+
+def test_vd11_forward_needs_same_currency():
+    big = one_reaction({"name": "G6Pase", "inputs": ["G6P", "H2O"], "outputs": ["glucose", "Phosphate"]})
+    merged = merge_extension(big, {"processes.reactions": [
+        {"name": "hk backwards", "inputs": ["G6P", "ADP"], "outputs": ["glucose", "ATP"]},
+        {"name": "G6Pase again", "inputs": ["G6P", "water"], "outputs": ["glucose", "orthophosphate"]},
+        {"name": "G6Pase bare", "inputs": ["G6P"], "outputs": ["glucose"]}]})
+    assert ext_names(merged) == ["hk backwards"]  # ATP/ADP vs H2O/Pi; same currency and bare both merge
+
+
+def test_vd11_bare_reaction_does_not_absorb_reversed_step():
+    big = one_reaction({"name": "hk", "inputs": ["glucose"], "outputs": ["G6P"]})
+    merged = merge_extension(big, {"processes.reactions": [
+        {"name": "G6Pase", "inputs": ["G6P", "H2O"], "outputs": ["glucose", "Phosphate"]}]})
+    assert ext_names(merged) == ["G6Pase"]
+
+
+def test_vd11_nad_variants_merge_forward_and_mirrored_reverse():
+    big = one_reaction({"name": "dh", "inputs": ["X", "NAD+"], "outputs": ["Y", "NADH"]})
+    rec = {"kind": "database", "source": None, "quote": None, "stage": "extend_db", "note": ""}
+    merged = merge_extension(big, {"processes.reactions": [
+        {"name": "nadp fwd", "inputs": ["X", "NADP+"], "outputs": ["Y", "NADPH"]},
+        {"name": "mirrored", "inputs": ["Y", "NADH"], "outputs": ["X", "NAD+"]},
+        {"name": "mirrored nadp", "inputs": ["Y", "NADPH"], "outputs": ["X", "NADP+"]},
+        {"name": "not mirrored", "inputs": ["Y", "NAD+"], "outputs": ["X", "NADH"]}]},
+        {"processes.reactions": [[dict(rec)], [dict(rec)], [dict(rec)], [dict(rec)]]})
+    assert ext_names(merged) == ["not mirrored"]
+    notes = [r["note"] for r in merged["provenance"][by_name(merged, "processes.reactions", "dh")][-3:]]
+    assert notes == ["", "orientation reversed", "orientation reversed"]
 
 
 def test_r4_bare_pi_is_not_currency():
