@@ -2,7 +2,7 @@
   "lane": "V10",
   "branch": "vision/web",
   "base": "bc73c231",
-  "status": "blocked-on-gated-runs",
+  "status": "unit-tests-green; real-child test and SMOKE/golden/equivalence still to run (queued by the sub-orchestrator)",
   "built": [
     "GET /job/{sid}/{pos}/vision: the panel (HTMX lazy-loads it into the result page; empty 200 when the job has no stored payload or is not released, so the loader disappears)",
     "GET /job/{sid}/{pos}/view?scope=S: the result page with the panel open, a diagram of scope S (the svg, via <img>), a refused/failed export shown as a message with no file offered",
@@ -30,10 +30,12 @@
     "choose_scope_hook": "Scope chooser on submission is out of scope. Later: the job form posts a free-text request; app._process_submission calls choose_scope(text) (t2pw.vision.scope; LLM then keyword fallback, never raises) in the threadpool AFTER the rate limit, stores web_routes.slug_of(spec) with the item (a new column or a key in the stored request), and the result page reads it as the default scope: _panel(view, stored_slug) in vision_panel(), and the 'default' fallback in scope_arg() / the links in _vision_panel.html become that slug. web_routes.slug_of() already maps a ScopeSpec to the canonical slug and scope_arg() parses it back, so no new parsing is needed."
   },
   "tests": [
-    {"label": "tests/test_vision_web.py (focused)", "counts": "NOT RUN (gated runs on hold)", "log": null},
+    {"label": "v10-unit-1 (at dbdd3b3b): test_vision_web, test_vision_generate, test_web_app, test_web_review_reasons, test_web_browser_fixes, test_web_design_system", "counts": "155 passed, 2 failed, 1 skipped, 0 survivors; the 2 failures were existing test_vision_generate tests with two-argument fakes of _export_pwml (test_pwml_export_runs_once_per_view, test_refused_export_produces_no_format), broken by the added third argument", "log": "C:/t/vis-runs/logs/v10-unit-1.log"},
+    {"label": "batch1b, same six files at 70ad5d1e (default call shape of _export_pwml/_kept restored; run by the sub-orchestrator)", "counts": "157 passed, 1 skipped (the gated real-child test), 0 survivors", "log": "C:/t/vis-runs/logs/batch1-v10-unit.log"},
     {"label": "tests/test_vision_web.py::test_real_child_process (T2PW_VISION_GATED_RUN=1)", "counts": "NOT RUN", "log": null}
   ],
   "commands_still_to_run": [
+    "DONE (batch1b, 157 passed, 1 skipped): commands 1 and 2 and the test_vision_generate.py re-check. STILL TO RUN: command 3 (the real child, T2PW_VISION_GATED_RUN=1, -k real_child, min 4 GB) and command 4 (SMOKE / golden / equivalence on the merge). The numbering below is the original list.",
     "1. focused unit tests (min free 2 GB): PYTHONPATH=C:/t/vis-web/src T2PW_OFFLINE_CURATOR=1 bash C:/t/vis-runs/bw.sh vis-web v10-unit 900 C:/t/vis-runs/logs/v10-unit.json 2 -- C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe C:/t/vis-web/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/vis-web -q --basetemp=C:/t/vis-runs/bt/vis-web/run-1 tests/test_vision_web.py   (pipe to C:/t/vis-runs/logs/v10-unit.log; create C:/t/vis-runs/bt/vis-web first)",
     "2. existing web tests that render the changed result.html (min free 2 GB, new basetemp run-2): tests/test_web_app.py tests/test_web_review_reasons.py tests/test_web_browser_fixes.py tests/test_web_design_system.py; also tests/test_vision_generate.py (generate.py was edited; the new serve tests are test_lock_wait_is_bounded, test_a_busy_view_is_503_with_retry_after, test_child_reapplies_the_passed_env_after_dotenv_and_forces_the_offline_curator, test_child_remembers_only_a_genuine_export_refusal: default behaviour must be unchanged)",
     "3. the real child on tests/data/vision/generate/run56_final_mapped.json (min free 4 GB, run-3): same wrapper with env T2PW_VISION_GATED_RUN=1 added and `tests/test_vision_web.py -k real_child`. Either a PWML (then all six files exist and the svg starts with <svg) or a Refused with a .refused file and no .pwml is a valid verdict; a ServeError is a defect. Record which one happened.",
