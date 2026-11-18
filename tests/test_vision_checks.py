@@ -1,0 +1,201 @@
+"""Development checks (src/t2pw/vision/checks): validators have teeth, cross-format comparison classes, faithfulness quotes.
+Offline: the stored run fixtures of tests/data/vision/generate (no DB, no network, no LLM)."""
+from __future__ import annotations
+
+import copy
+import json
+import re
+from pathlib import Path
+
+import pytest
+
+pytest.importorskip("lxml.etree")
+pytest.importorskip("libsbml")
+
+from t2pw.vision import generate as G  # noqa: E402
+from t2pw.vision.checks import consistency, faithfulness, validate  # noqa: E402
+from t2pw.vision.payload import build_big_payload, merge_extension  # noqa: E402
+from t2pw.vision.view import DEFAULT  # noqa: E402
+
+DATA = Path(__file__).parent / "data" / "vision" / "generate"
+FIX = DATA / "run39_final_mapped.json"
+OPTS = {"strict_db": True, "export_mode": "pathwhiz", "pathway_context": {"key_compounds": [
+    "alas2 aminolevulinic acid synthase 2", "aminolevulinic acid ala", "glycine", "heme", "pyridoxal 5phosphate plp", "succinylcoa"]}}
+QUOTE = "condensation of glycine and succinyl-CoA to produce aminolevulinic acid"
+
+
+@pytest.fixture(scope="module")
+def run():
+    """(big payload, {fmt: bytes}, PWML IR) of the run39 fixture at the default scope."""
+    G._MEMO.clear()
+    G._KEPT.clear()
+    big = build_big_payload(json.loads(FIX.read_text(encoding="utf-8")))
+    outs = {f: G.generate(big, DEFAULT, f, export=OPTS) for f in ("pwml", "sbml", "sbgn", "kgml")}
+    from t2pw.vision.view import view
+    ir = G._export_pwml(view(big, DEFAULT), dict(OPTS))[1]
+    G._MEMO.clear()
+    G._KEPT.clear()
+    return big, outs, ir
+
+
+def classes(rep):
+    return {f["class"] for f in rep["failures"]}
+
+
+# ---------------------------------------------------------------- validators
+
+def test_valid_outputs_pass(run):
+    _, outs, _ = run
+    assert validate.validate_sbml(outs["sbml"])["ok"]
+    assert validate.validate_sbgn(outs["sbgn"])["ok"]
+    assert validate.validate_pwml(outs["pwml"])["ok"]
+
+
+def test_sbml_validator_catches_a_broken_file(run):
+    sbml = run[1]["sbml"].decode("utf-8")
+    broken = sbml.replace('speciesReference species="s_2_mitochondrial_matrix"', 'speciesReference species="s_nowhere"', 1)
+    assert broken != sbml
+    v = validate.validate_sbml(broken.encode("utf-8"))
+    assert not v["ok"] and v["errors"]
+    assert not validate.validate_sbml(b"<sbml><oops></sbml>")["ok"]  # not even XML
+
+
+def test_sbgn_validator_catches_a_dropped_compartment_ref(run):
+    sbgn = run[1]["sbgn"].decode("utf-8")
+    broken = sbgn.replace(' compartmentRef="c1"', "", 1)
+    assert broken != sbgn
+    v = validate.validate_sbgn(broken.encode("utf-8"))
+    assert not v["ok"] and any(f.startswith("pd10112") for f in v["schematron_failures"])
+    assert not validate.validate_sbgn(sbgn.replace('class="process"', 'class="processs"').encode("utf-8"))["ok"]  # XSD enum
+
+
+def test_pwml_validator_catches_a_broken_file(run):
+    pwml = run[1]["pwml"]
+    assert not validate.validate_pwml(pwml[: len(pwml) // 2])["ok"]  # truncated: not well-formed
+    no_section = re.sub(rb"<compounds>.*?</compounds>", b"", pwml, count=1, flags=re.S)
+    assert no_section != pwml and not validate.validate_pwml(no_section)["ok"]  # structure signature
+    assert "pwc-id" in validate.validate_pwml(pwml)["db_identity_absent"]  # offline: counted, not an error
+
+
+# ---------------------------------------------------------------- consistency
+
+def test_clean_run_is_consistent(run):
+    _, outs, ir = run
+    rep = consistency.cross_format(outs, pwml_ir=ir)
+    assert rep["ok"], rep["failures"]
+    assert rep["counts"]["pwml"]["processes"] == rep["counts"]["sbml"]["processes"] == rep["counts"]["kgml"]["processes"] == 2
+    # the two interactions SBML and KGML carry, PWML withholds (bare protein endpoint): explained by its own IR record
+    assert rep["known"]["e_pwml_withheld_interactions"]["n"] == 2
+    assert "interaction_missing_in_pwml" in classes(consistency.cross_format(outs))  # without the IR it is a failure
+
+
+def test_injected_missing_reaction_is_flagged(run):
+    _, outs, ir = run
+    sbml = run[1]["sbml"].decode("utf-8")
+    cut = re.sub(r'<reaction id="r_2".*?</reaction>', "", sbml, count=1, flags=re.S)
+    assert cut != sbml
+    rep = consistency.cross_format(dict(outs, sbml=cut.encode("utf-8")), pwml_ir=ir)
+    assert not rep["ok"] and "process_missing_in_sbml" in classes(rep)
+    kgml = outs["kgml"].decode("utf-8")
+    cut = re.sub(r'<reaction id="8".*?</reaction>', "", kgml, count=1, flags=re.S)
+    assert cut != kgml and "process_missing_in_kgml" in classes(consistency.cross_format(dict(outs, kgml=cut.encode("utf-8")), pwml_ir=ir))
+
+
+def test_canonical_name_difference_is_known_not_a_failure(run):
+    _, outs, ir = run
+    pwml = outs["pwml"].decode("utf-8")
+    renamed = pwml.replace("<name>Glycine</name>", "<name>Glycine (canonical)</name>", 1)
+    assert renamed != pwml
+    rep = consistency.cross_format(dict(outs, pwml=renamed.encode("utf-8")), pwml_ir=ir)
+    assert rep["ok"], rep["failures"]  # same entity by database id
+    assert rep["known"]["a_canonical_names"]["n"] == 1 and "Glycine (canonical)" in rep["known"]["a_canonical_names"]["examples"][0]
+
+
+def test_payload_formats_that_disagree_on_a_name_fail(run):
+    _, outs, ir = run
+    sbgn = outs["sbgn"].decode("utf-8")
+    renamed = sbgn.replace('<label text="Glycine" />', '<label text="Glycin" />', 1)
+    assert renamed != sbgn
+    # SBGN keeps the Glycine ids, so it is still the same entity, but its name now differs from SBML and KGML
+    assert "name_differs_between_payload_formats" in classes(consistency.cross_format(dict(outs, sbgn=renamed.encode("utf-8")), pwml_ir=ir))
+
+
+def test_missing_entity_in_one_format_is_flagged(run):
+    _, outs, ir = run
+    sbml = outs["sbml"].decode("utf-8")
+    cut = re.sub(r'<species id="s_3_mitochondrial_matrix".*?</species>', "", sbml, count=1, flags=re.S)  # heme, only in an interaction
+    assert cut != sbml
+    rep = consistency.cross_format(dict(outs, sbml=cut.encode("utf-8")), pwml_ir=ir)
+    assert "entity_missing_in_sbml" in classes(rep)
+    # SBGN does not draw heme (only in an interaction): known class b, not a failure
+    assert "entity_missing_in_sbgn" not in classes(consistency.cross_format(outs, pwml_ir=ir))
+    assert consistency.cross_format(outs, pwml_ir=ir)["known"]["b_sbgn_entities_only_in_interactions"]["n"] == 1
+
+
+# ---------------------------------------------------------------- faithfulness
+
+def big_with(quote=QUOTE, audit_quote=None):
+    base = json.loads(FIX.read_text(encoding="utf-8"))
+    base["processes"]["reactions"][0]["evidence"] = quote
+    if audit_quote:
+        rx = base["processes"]["reactions"][1]
+        rx["evidence"] = audit_quote
+        rx["provenance_lineage"] = [{"stage": "audit", "origin": "audit_modified", "reason": "x", "sources": []}]
+    return build_big_payload(base)
+
+
+def test_faithfulness_finds_a_planted_quote_and_misses_a_planted_non_quote():
+    text = "Results.  ALAS  catalyses the\n  Condensation of glycine and Succinyl-CoA  to produce aminolevulinic acid (ALA), in the matrix."
+    ok = faithfulness.paper_view(big_with(), text)  # whitespace and case are normalised
+    assert ok["verbatim"] >= 1 and ok["not_found"] == 0 and ok["found_rate"] == 1.0
+    bad = faithfulness.paper_view(big_with("heme is exported to the nucleus by a novel pump"), text)
+    assert bad["not_found"] == 1 and bad["not_found_examples"][0]["quote"].startswith("heme is exported")
+    assert faithfulness.paper_view(big_with(), None)["no_text"] >= 1  # no text is reported, not guessed
+    frag = faithfulness.paper_view(big_with("condensation of glycine and succinyl-CoA ... in the matrix"), text)
+    assert frag["fragments"] == 1
+
+
+def test_audit_modified_only_rows_are_counted_as_promotion_candidates():
+    text = "a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA."
+    res = faithfulness.paper_view(big_with(audit_quote="a PLP-dependent homodimer enzyme"), text)["audit_modified_only"]
+    assert res["elements"] == 1 and res["with_quote"] == 1 and res["promotion_candidates"] == 1
+    res = faithfulness.paper_view(big_with(audit_quote="never written in the paper"), text)["audit_modified_only"]
+    assert res["promotion_candidates"] == 0 and res["quote_not_found"] == 1
+
+
+def test_extended_view_offline_cache(tmp_path):
+    big = big_with()
+    assert faithfulness.extended_view(big)["status"] == "no extension"
+    ext = merge_extension(big, {"processes.reactions": [{"name": "ext step", "inputs": ["Glycine"], "outputs": ["heme"], "evidence": "ext"}]},
+                          {"processes.reactions": [[{"kind": "database", "source": "reactome:R-1", "quote": None, "stage": "extend", "note": ""},
+                                                    {"kind": "other_paper", "source": "PMC1", "quote": "heme is made from glycine", "stage": "extend", "note": ""}]]},
+                          {"reactome:R-1": {"kind": "database"}, "PMC1": {"kind": "other_paper"}})
+    assert faithfulness.extended_view(ext)["status"] == "extension"
+    none = faithfulness.extended_view(ext)  # nothing cached: counted, never fetched
+    assert none["database"]["no_cache"] >= 1 and none["other_paper"]["no_cache"] == 1
+    cache = {"reactome:R-1": "Glycine + succinyl-CoA -> heme", "PMC1": "We show that Heme is made from glycine in mitochondria."}
+    res = faithfulness.extended_view(ext, cache)
+    assert res["other_paper"]["verbatim"] == 1 and res["database"]["found"] >= 1 and res["database"]["not_found"] == 0
+    (tmp_path / "reactome_R_1.txt").write_text("an unrelated record", encoding="utf-8")  # directory form of the cache
+    (tmp_path / "PMC1.txt").write_text("a different paper", encoding="utf-8")
+    res = faithfulness.extended_view(ext, tmp_path)
+    assert res["database"]["not_found"] >= 1 and res["other_paper"]["not_found"] == 1
+
+
+def test_run_checks_on_a_payload_dir(tmp_path):
+    """The CLI path on a minimal run folder: final_mapped.json + the source text one level up."""
+    from t2pw.vision.checks import run_checks
+    paper = tmp_path / "paper"
+    run_dir = paper / "strict"
+    run_dir.mkdir(parents=True)
+    base = json.loads(FIX.read_text(encoding="utf-8"))
+    (run_dir / "final_mapped.json").write_text(json.dumps(copy.deepcopy(base)), encoding="utf-8")
+    (paper / "01_source_text.txt").write_text("ALAS: " + QUOTE + ".", encoding="utf-8")
+    (run_dir / "quarantine_report.json").write_text(json.dumps({"strict_db": True, "decision_inputs": {
+        "export_mode": "pathwhiz", "requested_core": OPTS["pathway_context"]["key_compounds"]}}), encoding="utf-8")
+    out = tmp_path / "report.json"
+    assert run_checks.main([str(run_dir), "--scopes", "paper,default", "--out", str(out)]) == 0
+    rep = json.loads(out.read_text(encoding="utf-8"))
+    t = rep["totals"]["scopes"]["default"]
+    assert t["n"] == 1 and t["sbml_valid"] == 1 and t["sbgn_valid"] == 1 and t["pwml_ok"] == 1
+    assert rep["totals"]["faithfulness"]["paper_quotes"]["verbatim"] >= 1
