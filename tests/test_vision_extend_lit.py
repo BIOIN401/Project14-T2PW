@@ -290,6 +290,8 @@ def test_title_only_and_prefixed_doi_input_paper_match():   # F1
             "doi": "10.5/abc", "journalInfo": {"journal": {"title": "J"}}}
     assert screen(item, {"title": "Siderophore biosynthesis in Escherichia coli"}) == "input_paper"
     assert screen(item, {"title": "Siderophore biosynthesis in &lt;i&gt;Escherichia coli&lt;/i&gt;"}) == "input_paper"
+    assert screen(item, {"title": "Siderophore Biosynthesis in Escherichia coli."}) == "input_paper"   # trailing "."
+    assert screen(dict(item, title="Siderophore biosynthesis in E. coli."), {"title": item["title"]}) is None
     assert screen(item, {"doi": "https://doi.org/10.5/ABC"}) == "input_paper"
     assert screen(item, {"doi": "doi:10.5/abc"}) == "input_paper"
     assert screen(item, {"title": "Another paper"}) is None

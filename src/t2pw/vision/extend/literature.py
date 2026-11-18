@@ -126,8 +126,8 @@ def screen(item: Dict[str, Any], paper: Dict[str, Any]) -> Optional[str]:
     if not any(ids.values()):
         return "no_identifier"
     mine = _ids(paper)
-    title = normalise(clean_text(paper.get("title")))
-    if any(ids[k] and ids[k] == mine[k] for k in mine) or (title and title == normalise(clean_text(item.get("title")))):
+    title = norm(clean_text(paper.get("title")))   # reference key: case, spacing, punctuation ignored
+    if any(ids[k] and ids[k] == mine[k] for k in mine) or (title and title == norm(clean_text(item.get("title")))):
         return "input_paper"
     types = [str(t).lower() for t in ((item.get("pubTypeList") or {}).get("pubType") or [])]
     publisher = str((item.get("bookOrReportDetails") or {}).get("publisher") or "").lower()
