@@ -15,7 +15,11 @@ pats = {
     "bearer": re.compile(r"bearer\s+[a-z0-9._-]{16,}", re.I),
     "api_key=": re.compile(r"api[_-]?key\s*[=:]\s*\S{8,}", re.I),
     "password=": re.compile(r"passw(or)?d\s*[=:]\s*\S+", re.I),
-    "user@host": re.compile(r"\b\w+:[^@\s/]+@[\w.-]+"),
+    # URL credentials (scheme://user:pw@host); a bare 'a:b@c' also matched payload element keys
+    # ('processes.reactions:<in>><out>@<state>'), which are not credentials
+    "url user:pw@host": re.compile(r"://[^/\s:@]+:[^/\s@]+@"),
+    # personal data from fetched papers (author e-mail addresses)
+    "email": re.compile(r"[\w.+-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)+"),
 }
 for k, v in env.items():
     if k == "PATHBANK_DB_PORT" and v:   # a bare number is everywhere; only in a host:port / port= context
@@ -25,7 +29,7 @@ for k, v in env.items():
 files = []
 for arg in sys.argv[1:]:
     p = Path(arg)
-    files += sorted(x for x in p.rglob("*") if x.is_file()) if p.is_dir() else [p]
+    files += sorted(x for x in p.rglob("*") if x.is_file() and "__pycache__" not in x.parts) if p.is_dir() else [p]
 total = 0
 for f in files:
     if f.resolve() == Path(__file__).resolve():

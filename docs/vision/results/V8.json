@@ -2,7 +2,30 @@
  "lane": "V8",
  "branch": "vision/extend-lit",
  "base": "d2e5fa7e",
- "status": "code + tests committed; focused tests, live proof, hand-check and secret scan NOT RUN (gated runs are batched by the sub-orchestrator)",
+ "status": "needs-decision: code, tests and live proof done; the live run admitted 1 step over 4 runs, so the 10-step hand-check could not be met (1/1 fidelity, 1/1 biology, 15 refusals audited). Round-1 fixes (quote spacing normalisation, escaped titles, full-text errors recorded) need v8-unit-2 and v8-live-2",
+ "live_round_1": {
+  "log": "C:/t/vis-runs/logs/v8-live-1.log (BW_EXIT=0, 0 survivors, 577.7 s, budget 300 s / 12 LLM calls per run)",
+  "runs": {
+   "PMC12421875-menaquinone": {"seconds": 177.6, "status": "ok", "frontier": "1 substrate, 1 product, 2 enzymes", "queries": "2 ok (10 hits each)",
+     "candidates": "5 kept; dropped: 10 over_max_papers, 2 abstract_names_other_organism, 1 input_paper",
+     "papers_read": "5: 2 with full text (PMC13586869 70214 chars, 3 passages; PMC13028806 62542 chars, 2 passages), 3 abstract only (1 of them open access but the full-text request failed)",
+     "llm": "8 calls, 8575 prompt + 5744 completion tokens, 0 errors", "extracted": 15,
+     "rejected": "quote_not_verbatim 2, roles_unassignable 9, states_no_reaction_relation 2, not_connected 1", "admitted": 1, "merged_into_base": 1, "added_hop_1": 0},
+   "PMC12096016-enterobactin": {"seconds": 83.1, "status": "ok", "frontier": "3 substrates, 2 products, 4 enzymes", "queries": "3 ok (10 hits each)",
+     "candidates": "5 kept; dropped: 21 over_max_papers, 3 preprint, 1 abstract_names_other_organism",
+     "papers_read": "5, abstract only (1 open access, full-text request failed)", "llm": "5 calls, 4237 + 446 tokens, 0 errors",
+     "extracted": 0, "rejected": "none", "admitted": 0, "merged_into_base": 0, "added_hop_1": 0},
+   "PMC12312563-listeria-mend": {"seconds": 92.0, "status": "no_candidates", "frontier": "2 substrates, 1 product, 1 enzyme",
+     "queries": "3 failed, ReadTimeout (Europe PMC)", "candidates": "0", "papers_read": 0, "llm": "0 calls", "extracted": 0, "admitted": 0},
+   "PMC12376012-human": {"seconds": 223.6, "status": "ok", "frontier": "4 substrates, 5 products, 12 enzymes", "queries": "3 ok (10 hits each)",
+     "candidates": "5 kept; dropped: 21 over_max_papers, 3 abstract_names_other_organism",
+     "papers_read": "5, abstract only (all 5 open access, every full-text request failed)", "llm": "5 calls, 4656 + 334 tokens, 0 errors",
+     "extracted": 2, "rejected": "states_no_reaction_relation 1, roles_unassignable 1", "admitted": 0, "merged_into_base": 0, "added_hop_1": 0}
+  },
+  "views": "default and full views equal the base sizes on all 4 runs (the only admitted step merged into a base row); unresolved_refs unchanged (human run 2 = base)",
+  "handcheck": "docs/vision/evidence/V8/handcheck.json: admitted 1 -> fidelity 1/1, biology 1/1; 15 refusals audited, 0 refused wrongly by the rules, 4 true single-step reactions lost to the admission span parser's sentence shapes, 1 to a stitched model quote, 1 quote miss was an XML spacing artefact (fixed; it would then be refused as B. subtilis, correctly)",
+  "secret_scan_round_1": "TOTAL 6, all false positives or scanner literals: scanner .pyc (its own pattern literals), V8.json (pattern names written in this record), live JSON 'user@host' x2 = a payload element key 'processes.reactions:<inputs>><outputs>@<state>' (not a credential, no personal data). Scanner fixed: skips __pycache__, URL-credential pattern needs '://', new e-mail pattern for author addresses"
+ },
  "built": [
   "src/t2pw/vision/extend/literature.py: extend_literature(big, *, paper, max_papers=5, budget_s=120, max_llm_calls=8, max_queries=3, page_size=10, passages_per_paper=2, cache_dir, get, chat_fn) -> (big, report); run_if_enabled(big, sources=...) runs only when T2PW_EXTEND is on AND 'literature' is in sources; nothing in the pipeline calls it",
   "frontier(big): terminal substrates (consumed, never produced) and terminal products of the paper's reactions, currency excluded, plus the enzymes of the steps touching them",
@@ -19,39 +42,47 @@
  "files": {
   "src/t2pw/vision/extend/literature.py": "new",
   "src/t2pw/vision/extend/__init__.py": "+1 line (LITERATURE constant)",
-  "tests/test_vision_extend_lit.py": "new, 14 tests (12 functions, one parametrised x3)",
+  "tests/test_vision_extend_lit.py": "new, 16 tests (14 functions, one parametrised x3); round 1 added 2",
   "tests/data/vision/extend_lit/search_chorismate.json": "new, hand-written Europe PMC core-shape response",
   "tests/data/vision/extend_lit/search_dihydrodiol.json": "new, hand-written Europe PMC core-shape response",
   "tests/data/vision/extend_lit/fulltext_PMC9000001.xml": "new, hand-written JATS full text",
   "docs/vision/evidence/V8/live_proof.py": "new",
-  "docs/vision/evidence/V8/secret_scan.py": "new"
+  "docs/vision/evidence/V8/secret_scan.py": "new",
+  "docs/vision/evidence/V8/live/": "v8-live-1 output: 4 run files + handcheck_pool.json",
+  "docs/vision/evidence/V8/handcheck.json": "hand-check of the admitted step + audit of 15 refusals"
  },
+ "round_1_fixes": [
+  "normalise(): no space before closing / after opening punctuation (full text from XML writes 'B. subtilis .'; one live quote missed only for that)",
+  "clean_text(): unescape before stripping tags (live source title kept '<i>Lactococcus lactis</i>')",
+  "full-text request errors are recorded per paper (full_text_errors); fetch_full_text swallowed them, so 7 of 9 failed open-access texts showed only '0 chars'",
+  "secret_scan.py: skips __pycache__; the URL-credential pattern now needs '://' (the bare form matched payload element keys); an e-mail pattern added for author addresses"
+ ],
  "tests": [
-  {"label": "v8-compile", "counts": "py_compile clean on all 5 python files (run directly, light)", "log": null},
-  {"label": "v8-unit-1", "counts": "NOT RUN: gated, for the sub-orchestrator's batch", "log": "C:/t/vis-runs/logs/v8-unit-1.log"}
+  {"label": "v8-compile", "counts": "py_compile clean (run directly, light)", "log": null},
+  {"label": "v8-unit-1", "counts": "47 passed (14 V8 + V4 merge file), BW_EXIT=0, 0 survivors (sub-orchestrator's batch), round-0 code", "log": "C:/t/vis-runs/logs/v8-unit-1.log"},
+  {"label": "v8-unit-2", "counts": "NOT RUN: round-1 code, for the sub-orchestrator's batch (expect 49)", "log": "C:/t/vis-runs/logs/v8-unit-2.log"}
  ],
  "commands_to_run": [
-  {"label": "v8-unit-1", "floor_gb": 2, "lock": true,
-   "cmd": "mkdir -p C:/t/vis-runs/bt/vis-extend-lit/1 && cd C:/t/vis-extend-lit && PYTHONPATH=C:/t/vis-extend-lit/src T2PW_OFFLINE_CURATOR=1 bash C:/t/vis-runs/bw.sh vis-extend-lit v8-unit-1 600 C:/t/vis-runs/json/v8-unit-1.json 2 -- C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe C:/t/vis-extend-lit/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/vis-extend-lit -q --basetemp=C:/t/vis-runs/bt/vis-extend-lit/1/t tests/test_vision_extend_lit.py tests/test_vision_extend_merge.py > C:/t/vis-runs/logs/v8-unit-1.log 2>&1",
-   "expect": "14 V8 tests + the V4 merge tests pass, 0 survivors (V4 file included to show the one-line __init__ change breaks nothing)"},
-  {"label": "v8-live-1", "floor_gb": 4, "lock": true, "network": "Europe PMC search + fullTextXML", "llm": "rag_prose_extraction via OPENROUTER_RAG_EXTRACT_MODEL (or the client default)",
-   "cmd": "cd C:/t/vis-extend-lit && PYTHONPATH=C:/t/vis-extend-lit/src bash C:/t/vis-runs/bw.sh vis-extend-lit v8-live-1 3000 C:/t/vis-runs/json/v8-live-1.json 4 -- C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe C:/t/vis-runs/scratch/vis-extend-db/launch.py C:/t/vis-extend-lit/docs/vision/evidence/V8/live_proof.py C:/t/vis-extend-lit/docs/vision/evidence/V8/live 300 12 > C:/t/vis-runs/logs/v8-live-1.log 2>&1",
-   "expect": "4 files <label>.json + handcheck_pool.json under docs/vision/evidence/V8/live; each line of the log prints status, LLM calls, tokens, placement. Budget 300 s / 12 calls per run (defaults 120 s / 8 are likely too small for full text with a real model, see open questions). Calls extend_literature directly, so T2PW_EXTEND is not needed. Search and full-text responses are cached by URL under C:/t/vis-runs/cache/vis-extend-lit (a rerun repeats only the LLM calls)"},
-  {"label": "v8-secrets-1", "floor_gb": 0, "lock": false,
-   "cmd": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe C:/t/vis-runs/scratch/vis-extend-db/launch.py C:/t/vis-extend-lit/docs/vision/evidence/V8/secret_scan.py C:/t/vis-extend-lit/docs/vision/evidence/V8 C:/t/vis-extend-lit/docs/vision/results/V8.json C:/t/vis-runs/logs/v8-live-1.log C:/t/vis-runs/logs/v8-unit-1.log > C:/t/vis-runs/logs/v8-secrets-1.log 2>&1",
-   "expect": "TOTAL 0 before any evidence commit (OpenRouter key prefix, bearer/api_key/password= shapes, user:pw@host, the DB host/user/password and OpenRouter key values, the DB port in a host:port or port= context; counts only)"},
-  {"label": "v8-handcheck", "after": "v8-live-1",
-   "how": "pick 10 steps from handcheck_pool.json (spread over the 4 runs, merged and hop-1 both, prefer full-text passages); for each (a) quote fidelity: does the quote state exactly this step (substrates, products, catalyst, direction)? (b) biology: is the step true for the run's organism? Every miss explained; write docs/vision/evidence/V8/handcheck.json"}
+  {"label": "v8-unit-2", "floor_gb": 2, "lock": true,
+   "cmd": "mkdir -p C:/t/vis-runs/bt/vis-extend-lit/2 && cd C:/t/vis-extend-lit && PYTHONPATH=C:/t/vis-extend-lit/src T2PW_OFFLINE_CURATOR=1 bash C:/t/vis-runs/bw.sh vis-extend-lit v8-unit-2 600 C:/t/vis-runs/json/v8-unit-2.json 2 -- C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe C:/t/vis-extend-lit/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/vis-extend-lit -q --basetemp=C:/t/vis-runs/bt/vis-extend-lit/2/t tests/test_vision_extend_lit.py tests/test_vision_extend_merge.py > C:/t/vis-runs/logs/v8-unit-2.log 2>&1",
+   "expect": "49 passed (16 V8 + 33 V4), 0 survivors"},
+  {"label": "v8-live-2", "floor_gb": 4, "lock": true, "network": "Europe PMC search + fullTextXML", "llm": "rag_prose_extraction",
+   "cmd": "cd C:/t/vis-extend-lit && PYTHONPATH=C:/t/vis-extend-lit/src bash C:/t/vis-runs/bw.sh vis-extend-lit v8-live-2 3000 C:/t/vis-runs/json/v8-live-2.json 4 -- C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe C:/t/vis-runs/scratch/vis-extend-db/launch.py C:/t/vis-extend-lit/docs/vision/evidence/V8/live_proof.py C:/t/vis-runs/scratch/vis-extend-lit/live2 300 12 > C:/t/vis-runs/logs/v8-live-2.log 2>&1",
+   "expect": "only worth running after the decision below, or to get past the Europe PMC timeouts (successful responses are cached by URL, failed ones are retried). Output to scratch first; copy to evidence after a secret scan"},
+  {"label": "v8-secrets-2", "floor_gb": 0, "lock": false,
+   "cmd": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe C:/t/vis-runs/scratch/vis-extend-db/launch.py C:/t/vis-extend-lit/docs/vision/evidence/V8/secret_scan.py C:/t/vis-extend-lit/docs/vision/evidence/V8 C:/t/vis-extend-lit/docs/vision/results/V8.json C:/t/vis-runs/logs/v8-live-1.log C:/t/vis-runs/logs/v8-unit-1.log",
+   "expect": "TOTAL 0 (counts only)"}
  ],
- "proofs": [],
+ "proofs": ["v8-live-1: see live_round_1; hand-check docs/vision/evidence/V8/handcheck.json"],
  "dead_ends": [
   "rag.acquire.search_candidates not used for the search itself: its CandidatePaper drops the Europe PMC journal, pubType, source (PPR), pmid, pmcid and doi fields the peer-review screen and the input-paper match need. build_query, _EUROPEPMC_SEARCH, CandidatePaper and fetch_full_text are reused; the GET goes through vision.extend.http.get_text (deadline, URL cache, t2pw-vision User-Agent)",
   "rag.admission.admit_candidates not used: it is gap-bound (needs detect_gaps output and admits only gap fillers). Its evidence core, validate_evidence_span (one statement, participants set-equal, direction, catalyst attached), is used per step, plus organisms_in_span / compare_organism",
   "NCBI, Crossref, Semantic Scholar, bioRxiv not queried: Europe PMC indexes PubMed and PMC with journal metadata; bioRxiv is excluded by the peer-review rule",
   "admission's span parser covers 'X converts A to B' / 'A is converted to B' shapes; 'EntA oxidizes A to B' is refused as roles_unassignable (probe, 2026-11-18). Live yield may be low; the refusals are counted per paper (rejected, rejected_samples)",
-  "no pytest run: gated runs are batched by the sub-orchestrator (dispatch instruction); test expectations were traced by hand against the code and a direct probe of validate_evidence_span / organisms_in_span / split_statements on the fixture sentences (C:/t/vis-runs/scratch/vis-extend-lit/probe_span.py)"
+  "round 0 committed before any pytest run (gated runs are batched by the sub-orchestrator); the expectations were traced by hand and v8-unit-1 then passed 47/47"
  ],
  "open_questions": [
+  "YIELD (needs decision, blocks the 10-step hand-check): 1 step admitted over 4 runs, and it only confirmed a paper step. Causes, largest first: Europe PMC timeouts (3/3 Listeria searches, 7/9 open-access full texts); abstracts rarely state one reaction; the rag.admission span parser refuses common shapes ('is first/further converted into ... by', 'is oxidized to ... by', 'are condensed into ..., catalyzed by'), 4 true steps lost in the audit. Options: (a) rerun live (v8-live-2) to get past the timeouts, no code change, may still give < 10 steps; (b) widen the span parser in rag/admission.py: outside this lane's boundary, changes RAG admission in the pipeline too, needs its own no-regression proof; (c) a literature-only relaxation inside literature.py (e.g. accept roles_unassignable when the one-statement verbatim quote names every participant and the catalyst), cheap but weakens the evidence bar the hand-check measures; (d) raise max_papers / LLM calls (more cost per run, abstracts add little). Recommendation: (a) now, then (b) as its own lane if yield is still low",
   "Organism policy (needs PO): a paper whose title+abstract names only other organisms is dropped and a quote naming another organism is rejected; papers naming no organism ('unknown') and same-genus ones ('genus_level') are kept, with the verdict in every provenance note. Options: (a) keep as is (allow_unknown, like rag ORGANISM_POLICY_ALLOW_UNKNOWN); (b) strict: require 'match' (fewer steps, safer biology); (c) off. Cost of (a): an E. coli step can reach an L. lactis pathway when the abstract does not name the organism",
   "Literature entities are not grounded (names only; they join payload rows by name or synonym). New entities therefore carry no ids, so a literature step that touches only another literature step is not_connected (hop chains stop at 1). Grounding via mapping/map_ids would be a later lane",
   "Budget defaults (120 s, 8 calls) come from the brief; with a real model each call takes ~10-30 s, so a run reads 2-4 papers. The live proof uses 300 s / 12 calls. A call already started may overrun the deadline by its own timeout",
