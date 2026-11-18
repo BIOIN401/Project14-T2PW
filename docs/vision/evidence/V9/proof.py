@@ -95,6 +95,9 @@ def main(out_dir):
     gold_cases = {"PW701720": gold_from_pathbank(
         json.loads((TREE / "docs/evaluation_v2/pathbank_gold/PW701720__extract.json").read_text(encoding="utf-8")), "PW701720")}
     for pw in FULL_CASES:
+        cached = out / f"gold_{pw}.json"
+        if pw not in gold_cases and cached.is_file():  # built earlier from the database and committed: no DB needed
+            gold_cases[pw] = json.loads(cached.read_text(encoding="utf-8"))
         if pw not in gold_cases:
             try:
                 gold_cases[pw] = build_full_gold(pw)
