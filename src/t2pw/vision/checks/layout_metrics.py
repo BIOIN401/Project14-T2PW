@@ -148,7 +148,7 @@ def pwml_layout_metrics(pwml: bytes | str, *, pathwhiz_sizes: bool = False) -> D
                              centre of the enzyme (its protein locations) to the centre of the reaction (its drawn compounds)
     examples                 up to three of each offender, for a gallery caption
     """
-    root = ET.fromstring(pwml)
+    root = ET.fromstring(pwml.encode("utf-8") if isinstance(pwml, str) else pwml)
     pv = root if root.tag == "pathway-visualization" else root.find(".//pathway-visualization")
     if pv is None:
         raise ValueError("no <pathway-visualization> in the PWML")
