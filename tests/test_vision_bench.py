@@ -97,7 +97,7 @@ def test_default_equals_base_when_there_is_no_extension():
     big = build_big_payload(base())
     a, b = score_view(big, DEFAULT, paper_gold()), score_view(big, FULL, paper_gold())
     assert a["types"] == b["types"]
-    assert a["extension"]["all"] == {"rows": 0, "correct": 0, "precision": None}
+    assert all(v == {"rows": 0, "correct": 0, "match_rate": None} for v in a["extension"].values())
 
 
 def extract():
@@ -139,10 +139,10 @@ def test_full_view_recall_counts_curated_elements_recovered_through_extension_ro
     # names differ ("Compound A" vs "A"): the match is by the grounded chebi ids
     assert (r["gold"], r["recalled"], r["recovered_by_extension"], r["recalled_base_only"]) == (3, 3, 1, 2)
     e = full["extension"]["reactions"]  # r3 curated, r4 not
-    assert (e["rows"], e["correct"], e["precision"]) == (2, 1, 0.5)
-    # extension enzymes: EnzC (curated, found by its UniProt id and name); r4 names none
-    assert full["extension"]["enzymes"] == {"rows": 1, "correct": 1, "precision": 1.0}
-    assert full["extension"]["all"] == {"rows": 3, "correct": 2, "precision": round(2 / 3, 4)}
+    assert (e["rows"], e["correct"], e["match_rate"]) == (2, 1, 0.5)
+    # extension enzymes: EnzC (curated, credited through r3, which matches the curated step it catalyses)
+    assert full["extension"]["enzymes"] == {"rows": 1, "correct": 1, "match_rate": 1.0}
+    assert "precision" not in r and r["match_rate"] == round(3 / 5, 4)  # full gold: a match rate, not a precision
     base_only = score_view(build_big_payload(base()), FULL, gold)["types"]["reactions"]
     assert base_only["recalled"] == 2 and base_only["recovered_by_extension"] == 0
     default = score_view(big, DEFAULT, gold)["types"]["reactions"]  # hop <= 1: r3 yes, r4 (hop 2) no
@@ -152,7 +152,7 @@ def test_full_view_recall_counts_curated_elements_recovered_through_extension_ro
 def test_full_view_scores_enzymes_transports_interactions_compartments():
     b = base()
     b["processes"]["transports"] = [{"name": "export", "cargo": "C", "from_biological_state": "cyt", "to_biological_state": "out"}]
-    b["processes"]["interactions"] = [{"name": "i", "entity_1": "EnzA", "entity_2": "D", "relationship": "inhibits",
+    b["processes"]["interactions"] = [{"name": "i", "entity_1": "D", "entity_2": "EnzA", "relationship": "inhibits",
                                        "biological_state": "cyt", "evidence": "x"}]
     b["entities"]["compounds"].append(comp("D", 4))
     b["biological_states"].append({"name": "out", "subcellular_location": "extracellular space"})
@@ -160,17 +160,77 @@ def test_full_view_scores_enzymes_transports_interactions_compartments():
     t = score_view(build_big_payload(b), FULL, build_full_gold("PW1", lambda _: extract()))["types"]
     assert (t["transports"]["recalled"], t["interactions"]["recalled"], t["compartments"]["recalled"]) == (1, 1, 2)
     assert t["enzymes"]["recalled"] == 2 and t["enzymes"]["gold"] == 3  # EnzA, EnzB found (names/aliases); EnzC not in base
-    assert t["compartments"]["precision"] == 1.0
+    assert t["compartments"]["match_rate"] == 1.0 and t["interactions"]["recalled_weak"] == 0
 
 
-def test_wrong_relationship_or_wrong_compartment_does_not_match():
+def with_interaction(e1, e2, rel):
     b = base()
-    b["processes"]["transports"] = [{"name": "t", "cargo": "C", "from_biological_state": "cyt", "to_biological_state": "cyt"}]
-    b["processes"]["interactions"] = [{"name": "i", "entity_1": "EnzA", "entity_2": "D", "relationship": "activates",
+    b["processes"]["interactions"] = [{"name": "i", "entity_1": e1, "entity_2": e2, "relationship": rel,
                                        "biological_state": "cyt", "evidence": "x"}]
-    b["entities"]["compounds"].append(comp("D", 4))
-    t = score_view(build_big_payload(b), FULL, gold_from_pathbank(extract(), "PW1"))["types"]
-    assert t["transports"]["recalled"] == 0 and t["interactions"]["recalled"] == 0
+    return build_big_payload(b)
+
+
+def igold(rel):  # A acts on B
+    return paper_gold(interactions=[{"id": "I1", "a": [tm("A")], "b": [tm("B")], "relationship": rel}])
+
+
+@pytest.mark.parametrize("gold_rel, e1, e2, pred_rel, exact, weak", [
+    ("activation", "A", "B", "activates", 1, 0),   # same directional relation, order respected
+    ("activation", "B", "A", "activates", 0, 0),   # swapped direction: contradiction
+    ("activation", "A", "B", "inhibits", 0, 0),    # activation against inhibition: contradiction
+    ("inhibition", "A", "B", "stimulates", 0, 0),
+    ("activation", "A", "B", "binds", 0, 1),       # binding against a directional relation: weak
+    ("activation", "B", "A", "binds", 0, 1),
+    ("activation", "A", "B", "", 0, 1),            # unknown relation: weak
+    ("binding", "A", "B", "activates", 0, 1),      # directional prediction against gold binding: weak
+    ("binding", "B", "A", "binds", 1, 0),          # undirected: either order is exact
+    (None, "A", "B", None, 0, 1),                  # two unknown relations carry no information: weak
+])
+def test_interaction_tiers_only_exact_counts_toward_recall(gold_rel, e1, e2, pred_rel, exact, weak):
+    t = score_view(with_interaction(e1, e2, pred_rel), FULL, igold(gold_rel))["types"]["interactions"]
+    assert (t["recalled"], t["recalled_weak"]) == (exact, weak)
+    assert t["recall"] == float(exact) and t["correct"] == exact  # weak never raises recall or correct
+
+
+def test_transport_compartments_compare_folded_names_even_when_unknown_to_the_table():
+    def case(to):
+        return paper_gold(transports=[{"id": "T1", "cargo": [tm("C")], "from": "Cytosol", "to": to}])
+
+    def big(state_location):
+        b = base()
+        b["biological_states"].append({"name": "dest", "subcellular_location": state_location})
+        b["processes"]["transports"] = [{"name": "t", "cargo": "C", "from_biological_state": "cyt", "to_biological_state": "dest"}]
+        return build_big_payload(b)
+
+    ok = lambda to, loc: score_view(big(loc), FULL, case(to))["types"]["transports"]["recalled"]  # noqa: E731
+    assert ok("Golgi Lumen", "golgi lumen") == 1    # unknown to the spelling table, equal folded
+    assert ok("Golgi Lumen", "cytoplasm") == 0      # known vs unknown, different: rejected
+    assert ok("Golgi Lumen", "endoplasmic reticulum") == 0
+    assert ok("Extracellular Space", "extracellular region") == 1  # alias through the table
+
+
+def test_enzyme_is_credited_only_through_a_reaction_that_matches_the_gold_reaction_carrying_it():
+    egold = [{"id": "E1", "name": "EnzA", "aliases": [], "ids": [], "role": "defining", "for": ["R1"]}]
+
+    def enzymes(r1_enzymes, rag_enzymes):
+        b = base()
+        b["processes"]["reactions"][0]["enzymes"] = [{"entity": e} for e in r1_enzymes]
+        b["processes"]["reactions"][2]["enzymes"] = [{"entity": e} for e in rag_enzymes]
+        return score_view(build_big_payload(b), FULL, paper_gold(enzymes=egold))["types"]["enzymes"]
+
+    assert enzymes(["EnzA"], [])["recalled"] == 1            # on the reaction that matches R1
+    wrong = enzymes([], ["EnzA"])                            # EnzA only on an unrelated row (B -> Z)
+    assert wrong["recalled"] == 0 and wrong["correct"] == 0 and wrong["predicted"] == 2  # EnzA (wrong row) and EnzB
+    assert enzymes(["EnzB"], [])["recalled"] == 0            # wrong enzyme on the right reaction
+
+
+def test_paper_only_ignores_extension_rows_even_with_a_paper_record():
+    paper_rec = {"kind": "paper", "source": "paper", "quote": "C to D", "stage": "extend_lit", "note": ""}
+    big = merge_extension(build_big_payload(base()), {"entities.compounds": [comp("D", 4)],
+                                                      "processes.reactions": [rx("r3", ["C"], ["D"], [])]},
+                          {"entities.compounds": [[paper_rec]], "processes.reactions": [[paper_rec]]})
+    assert score_view(big, PAPER_ONLY, paper_gold())["types"]["reactions"]["predicted"] == 2
+    assert score_view(big, FULL, paper_gold())["types"]["reactions"]["recalled"] == 3
 
 
 def test_provenance_breakdown_partitions_the_predicted_elements():
@@ -194,9 +254,27 @@ def test_run_benchmark_keeps_kinds_apart_and_reports_cases_without_runs():
     rep = run_benchmark([paper, full, other], {"P": {"run1": with_extension(), "run2": with_extension()},
                                                "PW1": {"run1": with_extension()}}, FULL)
     assert rep["cases_without_runs"] == ["Q"] and len(rep["legs"]) == 3
-    assert set(rep["aggregate"]) == {"paper", "full"} and rep["aggregate"]["paper"]["legs"] == 2
-    assert rep["aggregate"]["paper"]["types"]["reactions"]["recall_num_den"] == [6, 6]
-    assert rep["aggregate"]["full"]["types"]["reactions"]["recall_num_den"] == [3, 3]
+    assert set(rep["aggregate"]) == {"paper", "full"} and rep["aggregate"]["paper"]["micro"]["legs"] == 2
+    assert rep["aggregate"]["paper"]["micro"]["types"]["reactions"]["recall_num_den"] == [6, 6]
+    assert rep["aggregate"]["full"]["micro"]["types"]["reactions"]["recall_num_den"] == [3, 3]
+    assert rep["aggregate"]["paper"]["headline"] == "macro" and list(rep["aggregate"]["paper"]["per_case"]) == ["P"]
+    assert "precision" in rep["aggregate"]["paper"]["micro"]["types"]["reactions"]
+    assert "match_rate" in rep["aggregate"]["full"]["micro"]["types"]["reactions"]
+
+
+def test_macro_over_cases_is_the_headline_and_a_many_run_case_does_not_outweigh_the_rest():
+    complete = paper_gold()                                   # 3 gold reactions
+    sparse = {**paper_gold(), "id": "Q"}
+    runs = {"P": {f"run{i}": with_extension() for i in range(3)},           # 3 runs, recall 3/3 each
+            "Q": {"run1": build_big_payload(base())}}                       # 1 run, no r3: recall 2/3
+    agg = run_benchmark([complete, sparse], runs, FULL)["aggregate"]["paper"]
+    assert agg["micro"]["types"]["reactions"]["recall_num_den"] == [11, 12]        # 11/12 = 0.9167, run-weighted
+    assert agg["per_case"]["P"]["types"]["reactions"]["recall"] == 1.0
+    assert agg["per_case"]["Q"]["types"]["reactions"]["recall"] == round(2 / 3, 4)
+    macro = agg["macro"]["types"]["reactions"]
+    assert abs(macro["recall"] - 0.8333) < 2e-4 and macro["recall_cases"] == 2  # 0.9167 micro would hide Q
+    assert agg["macro"]["cases"] == 2
+    assert agg["macro"]["types"]["interactions"]["recall"] is None  # no gold of the type in any case
 
 
 def test_dedupe_matches_eval_v2_duplicate_collapse():
