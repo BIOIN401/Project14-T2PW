@@ -100,7 +100,7 @@ def test_default_equals_base_when_there_is_no_extension():
     assert a["extension"]["all"] == {"rows": 0, "correct": 0, "precision": None}
 
 
-def extract(**kw):
+def extract():
     def part(side, name, chebi=None, **x):
         return {"side": side, "name": name, "element_type": "Compound", "identifiers": {"chebi_id": f"CHEBI:{chebi}"} if chebi else {}, **x}
 
@@ -119,8 +119,7 @@ def extract(**kw):
          "catalysts": []},
         {"process_type": "Interaction", "accession": "PW_I1", "interaction_type": "Inhibition",
          "biological_state": {"location": "Cytosol"},
-         "participants": [part("left", "Compound D", 4), part("right", "EnzA", None, element_type="Protein")], "catalysts": []},
-        **kw]}
+         "participants": [part("left", "Compound D", 4), part("right", "EnzA", None, element_type="Protein")], "catalysts": []}]}
 
 
 def test_full_gold_comes_from_the_injected_extractor_and_covers_every_type():
