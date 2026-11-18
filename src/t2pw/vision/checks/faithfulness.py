@@ -7,7 +7,9 @@
 
 Quotes are compared after normalisation: Unicode NFKC, dashes and quote marks folded, case folded, whitespace collapsed.
 A quote written with an ellipsis ("a ... b") is found when each fragment of 12+ characters is found; those are counted
-apart from verbatim finds. The extension cache (V4 / V8 write it) is either a dict ``source id -> text`` or a directory
+apart from verbatim finds. A quote under MIN_QUOTE (20) normalised characters is counted as ``short`` and not judged
+(it would be found in almost any text); the found rate is over the longer ones. Database re-finds match a name or an id
+as a whole token (not inside a longer word or number). The extension cache (V4 / V8 write it) is either a dict ``source id -> text`` or a directory
 holding ``<source id with every non-alphanumeric character as "_">.<txt|json|xml|html>``. No file, no fetch: the element
 is counted as ``no_cache``.
 """
@@ -49,9 +51,20 @@ def quote_in(quote: str, text_norm: str) -> str:
     return "fragments" if len(parts) > 1 and all(x in text_norm for x in parts) else "no"
 
 
+MIN_QUOTE = 20  # normalised characters; a shorter "quote" is found in almost any text, so it is counted apart, not judged
+
+
+def _has(term: str, text_norm: str) -> bool:
+    """``term`` (already normalised) in the text as a whole token: not inside a longer letter / digit run."""
+    return bool(term) and re.search(r"(?<![0-9a-z])%s(?![0-9a-z])" % re.escape(term), text_norm) is not None
+
+
 def _tally(rows: List[Tuple[str, str, str]], n_text: Optional[str]) -> Dict[str, Any]:
-    out = {"n": len(rows), "verbatim": 0, "fragments": 0, "not_found": 0, "no_text": 0, "not_found_examples": []}
+    out = {"n": len(rows), "verbatim": 0, "fragments": 0, "not_found": 0, "no_text": 0, "short": 0, "not_found_examples": []}
     for key, quote, _ in rows:
+        if len(norm_text(quote)) < MIN_QUOTE:
+            out["short"] += 1
+            continue
         if n_text is None:
             out["no_text"] += 1
             continue
@@ -63,7 +76,8 @@ def _tally(rows: List[Tuple[str, str, str]], n_text: Optional[str]) -> Dict[str,
         else:
             out[hit] += 1
     found = out["verbatim"] + out["fragments"]
-    out["found_rate"] = round(found / out["n"], 4) if out["n"] and n_text is not None else None
+    judged = out["n"] - out["short"]  # the rate is over the quotes long enough to judge
+    out["found_rate"] = round(found / judged, 4) if judged and n_text is not None else None
     return out
 
 
@@ -87,7 +101,7 @@ def paper_view(big: Dict[str, Any], text: Optional[str]) -> Dict[str, Any]:
     t = _tally(with_q, n_text)
     res["audit_modified_only"] = {"elements": len(audit), "without_quote": len(audit) - len(with_q), "with_quote": len(with_q),
                                   "quote_verbatim": t["verbatim"], "quote_fragments": t["fragments"],
-                                  "quote_not_found": t["not_found"], "no_text": t["no_text"],
+                                  "quote_not_found": t["not_found"], "no_text": t["no_text"], "short_quotes": t["short"],
                                   "promotion_candidates": t["verbatim"] if n_text is not None else None}
     return res
 
@@ -110,13 +124,13 @@ def _in_record(section: str, row: Any, rec_norm: str) -> bool:
     """The element is in its database record: its name or a synonym, a grounded id, or (a process) every non-currency participant."""
     if not isinstance(row, dict):
         return False
-    if any(n and n in rec_norm for n in [norm_text(row.get("name"))] + [norm_text(s) for s in row.get("synonyms") or []]):
+    if any(_has(n, rec_norm) for n in [norm_text(row.get("name"))] + [norm_text(s) for s in row.get("synonyms") or []]):
         return True
-    if any(v and v in rec_norm for _, v in grounded_ids(row)):
+    if any(_has(v, rec_norm) for _, v in grounded_ids(row)):
         return True
     if section.startswith("processes."):
         names = [n for n in refs(section, row)[0] if not is_currency(n)]
-        return bool(names) and all(norm_text(n) in rec_norm for n in names)
+        return bool(names) and all(_has(norm_text(n), rec_norm) for n in names)
     return False
 
 
@@ -126,7 +140,7 @@ def extended_view(big: Dict[str, Any], cache=None) -> Dict[str, Any]:
     ext_rows = sum(len(r) for _, r in iter_sections(big.get("extension") or {}))
     rows = {key: (section, row, is_base) for section, key, row, is_base in keyed_rows(big)}
     db = {"n": 0, "found": 0, "not_found": 0, "no_cache": 0, "not_found_examples": []}
-    op = {"n": 0, "verbatim": 0, "fragments": 0, "not_found": 0, "no_cache": 0, "not_found_examples": []}
+    op = {"n": 0, "verbatim": 0, "fragments": 0, "not_found": 0, "no_cache": 0, "short": 0, "not_found_examples": []}
     for key, recs in (big.get("provenance") or {}).items():
         section, row, _ = rows.get(key, ("", None, True))
         for r in recs:
@@ -143,6 +157,9 @@ def extended_view(big: Dict[str, Any], cache=None) -> Dict[str, Any]:
                         db["not_found_examples"].append({"key": key, "source": r.get("source")})
             elif r.get("kind") == "other_paper" and str(r.get("quote") or "").strip():
                 op["n"] += 1
+                if len(norm_text(r["quote"])) < MIN_QUOTE:
+                    op["short"] += 1
+                    continue
                 text = _cached(cache, r.get("source") or "")
                 if text is None:
                     op["no_cache"] += 1

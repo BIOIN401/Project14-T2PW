@@ -49,11 +49,13 @@ class Model:
         self.ints: List[Tuple[int, int, str]] = []
         self.derived: List[Tuple[int, int]] = []   # SBML: (non-catalyst modifier, catalyst of the same reaction)
         self.wrappers: List[Tuple[int, int]] = []  # PWML: (single-member complex, its protein)
+        self.regs: List[Tuple[int, int, str]] = []  # SBGN arcs / SBML non-catalyst modifiers: (entity, process index, class)
+        self.comp_go: Dict[str, Set[str]] = {}      # compartment name -> GO ids it carries (PWML ontology-id, SBML annotation)
         self.has_comps = True
         self.problems: List[str] = []
 
-    def ent(self, name: Any, ids=(), comp: Optional[str] = None) -> int:
-        self.ents.append({"name": str(name or "").strip(), "ids": set(ids), "comps": {comp} if comp else set()})
+    def ent(self, name: Any, ids=(), comp: Optional[str] = None, kind: str = "") -> int:
+        self.ents.append({"name": str(name or "").strip(), "ids": set(ids), "comps": {comp} if comp else set(), "kind": kind})
         return len(self.ents) - 1
 
 
@@ -101,12 +103,15 @@ def parse_pwml(data: bytes) -> Model:
         return m
     sect = lambda tag: [c for s in pv if _local(s) == tag for c in s]  # noqa: E731
     loc = {_text(e, "id"): _text(e, "name") for e in sect("subcellular-locations")}
+    for e in sect("subcellular-locations"):
+        if _text(e, "ontology-id").upper().startswith("GO:"):
+            m.comp_go.setdefault(_text(e, "name"), set()).add(_text(e, "ontology-id").upper())
     state = {_text(e, "id"): loc.get(_text(e, "subcellular-location-id"), "") for e in sect("biological-states")}
     idx: Dict[Tuple[str, str], int] = {}
     for typ, tag in PWML_TYPES.items():
         for e in sect(tag):
             ids = [(_PWML_ID_TAGS[_local(c)], c.text) for c in e if _local(c) in _PWML_ID_TAGS and (c.text or "").strip()]
-            idx[(typ, _text(e, "id"))] = m.ent(_text(e, "name"), _ids(ids))
+            idx[(typ, _text(e, "id"))] = m.ent(_text(e, "name"), _ids(ids), kind=typ)
     for e in sect("protein-complexes"):
         members = [idx.get(("Protein", (c.text or "").strip())) for x in e if _local(x) == "protein_complex-proteins"
                    for y in x for c in y if _local(c) == "protein-id"]
@@ -168,6 +173,12 @@ def parse_sbml(data: bytes) -> Model:
         m.problems.append("no model")
         return m
     comp_name = {c.get("id"): (c.get("name") or c.get("id")) for s in _kids(model, "listOfCompartments") for c in s}
+    for s in _kids(model, "listOfCompartments"):
+        for c in s:
+            for li in c.iter():
+                go = re.search(r"/(GO:\d+)$", li.get("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}resource") or "", re.I) if _local(li) == "li" else None
+                if go:
+                    m.comp_go.setdefault(comp_name[c.get("id")], set()).add(go.group(1).upper())
     sp: Dict[str, int] = {}
     by_name: Dict[str, int] = {}
     for s in [c for l in _kids(model, "listOfSpecies") for c in l]:
@@ -181,6 +192,7 @@ def parse_sbml(data: bytes) -> Model:
         mods = [c for l in _kids(rx, "listOfModifiers") for c in l if c.get("species") in sp]
         cats = [sp[c.get("species")] for c in mods if c.get("sboTerm") == "SBO:0000013"]
         m.derived += [(sp[c.get("species")], k) for c in mods if c.get("sboTerm") != "SBO:0000013" for k in cats]
+        m.regs += [(sp[c.get("species")], len(m.procs), c.get("sboTerm") or "") for c in mods if c.get("sboTerm") != "SBO:0000013"]
         m.procs.append({"name": rx.get("name") or rx.get("id"), "ins": refs("listOfReactants"), "outs": refs("listOfProducts"), "cats": cats})
     for it in root.iter():
         if _local(it) == "interaction" and it.get("sourceName") is not None:
@@ -235,6 +247,8 @@ def parse_sbgn(data: bytes) -> Model:
             m.procs[proc[s]]["outs"].append(node[t])
         elif cls == "catalysis" and s in node and t in proc:
             m.procs[proc[t]]["cats"].append(node[s])
+        elif cls in ("stimulation", "inhibition", "modulation") and s in node and t in proc:
+            m.regs.append((node[s], proc[t], cls))
     return m
 
 
@@ -286,8 +300,10 @@ UNKNOWN = "unknown"                                   # the PathBank "Unknown" s
 UNSPECIFIED = frozenset(norm(x) for x in ("unspecified location", "unspecified"))  # where SBML / SBGN put an entity with no stated location
 
 
-def _is_sentinel(e: Dict[str, Any]) -> bool:
-    return e["name"].strip().casefold() == UNKNOWN
+def _is_sentinel(fmt: str, e: Dict[str, Any]) -> bool:
+    """The PathBank Unknown protein: in PWML only a Protein-type entity of that name (a compound called Unknown is a
+    compound); in the other formats any entity of that name (SBML and KGML must not have it, SBGN draws it)."""
+    return e["name"].strip().casefold() == UNKNOWN and (fmt != "pwml" or e.get("kind") == "Protein")
 
 
 def _clusters(models: Dict[str, Model]) -> Dict[Tuple[str, int], Any]:
@@ -296,7 +312,7 @@ def _clusters(models: Dict[str, Model]) -> Dict[Tuple[str, int], Any]:
     uf, owner = _UF(), {}
     for fmt, m in models.items():
         for i, e in enumerate(m.ents):
-            if _is_sentinel(e):
+            if _is_sentinel(fmt, e):
                 continue
             node = (fmt, i)
             uf.find(node)
@@ -307,7 +323,7 @@ def _clusters(models: Dict[str, Model]) -> Dict[Tuple[str, int], Any]:
                     owner[tok] = node
         for c, p in m.wrappers:
             uf.union((fmt, c), (fmt, p))
-    return {(f, i): uf.find((f, i)) for f, m in models.items() for i, e in enumerate(m.ents) if not _is_sentinel(e)}
+    return {(f, i): uf.find((f, i)) for f, m in models.items() for i, e in enumerate(m.ents) if not _is_sentinel(f, e)}
 
 
 def _add(fails: Dict[str, Dict[str, Any]], cls: str, example: str, n: int = 1) -> None:
@@ -346,8 +362,14 @@ def cross_format(outputs: Dict[str, bytes], *, pwml_ir: Optional[dict] = None, s
     known: Dict[str, Any] = {
         "d_pathwhiz_complex_wrapper": {"n": sum(len(m.wrappers) for m in models.values()),
                                        "note": "PWML single-member complex '<protein> complex' compared as its protein (Stage 6 wrapper: PathWhiz has no bare-protein enzyme or interaction member)"},
-        "f_unknown_sentinel": {"n": sum(_is_sentinel(e) for m in models.values() for e in m.ents),
-                               "note": "the PathBank Unknown protein is a placeholder; the clean model (SBML, KGML) has no entity for it, so it is left out of every format"}}
+        "f_unknown_sentinel": {"n": sum(_is_sentinel(f, e) for f, m in models.items() for e in m.ents),
+                               "per_format": {f: sum(_is_sentinel(f, e) for e in m.ents) for f, m in models.items()},
+                               "note": "the PathBank Unknown protein is a placeholder: PWML (Protein type) and SBGN carry it, the clean model (SBML, KGML) must not"}}
+    for f in ("sbml", "kgml"):
+        if f in models:
+            for e in models[f].ents:
+                if _is_sentinel(f, e):
+                    _add(fails, "unknown_sentinel_in_" + f, e["name"])
 
     # entities: the same set in every format
     only_int = []
@@ -444,6 +466,29 @@ def cross_format(outputs: Dict[str, bytes], *, pwml_ir: Optional[dict] = None, s
         "n": len(P | Es | K) if "sbgn" in models else 0, "sbgn_report_omitted": (sbgn_report or {}).get("omitted"),
         "note": "SBGN PD has no entity-to-entity interaction and the exporter omits non-regulatory ones (V2 / VD-8)"}
 
+    # regulatory arcs: SBGN stimulation / inhibition / modulation against what SBML says. SBML's non-catalyst modifier of a
+    # reaction must be an SBGN arc on that process; an SBGN arc must be a modifier, or come from an interaction whose target
+    # catalyses the process (V2: interactions resolve to the processes the target catalyses). Class b covers only what the
+    # SBGN exporter's own report lists as omitted reaction arcs.
+    if "sbml" in models and "sbgn" in models:
+        def regset(f):
+            sig = lambda p: (cs(f, models[f].procs[p]["ins"]), cs(f, models[f].procs[p]["outs"]))  # noqa: E731
+            return {(cl[(f, e)], sig(p)) for e, p, _ in models[f].regs if (f, e) in cl}
+        Rs, Rg = regset("sbml"), regset("sbgn")
+        cats_of = defaultdict(set)
+        for s_, lists in catalysts("sbgn").items():
+            cats_of[s_] = set().union(*lists)
+        pair_set = P | Es | Ds
+        missing = sorted(Rs - Rg, key=str)
+        allowed = sum(((sbgn_report or {}).get("omitted") or {}).get("reaction_arcs", {}).values())
+        for x, s_ in missing[allowed:]:
+            _add(fails, "sbgn_regulatory_arc_missing", "%s -> %s" % (name_of(x), show(s_)))
+        for x, s_ in sorted(Rg - Rs, key=str):
+            if not any((x, k) in pair_set for k in cats_of.get(s_, ())):
+                _add(fails, "sbgn_regulatory_arc_extra", "%s -> %s" % (name_of(x), show(s_)))
+        known["b_sbgn_omitted_regulatory_arcs"] = {"n": min(len(missing), allowed), "report_allows": allowed,
+                                                   "note": "SBML modifiers the SBGN exporter reports as omitted reaction arcs (role_not_regulatory, unresolved_entity)"}
+
     # compartments: the same grouping of entities (names are not trusted); (c) KGML has none
     def groups(f):  # compartment -> entities placed there; "unspecified" placements are not placements
         g = defaultdict(set)
@@ -458,8 +503,22 @@ def cross_format(outputs: Dict[str, bytes], *, pwml_ir: Optional[dict] = None, s
     known["f_unplaced_entities"] = {"n": sum(1 for f in cfmts for m in [models[f]] for i, e in enumerate(m.ents)
                                              if (f, i) in cl and e["comps"] and all(norm(c) in UNSPECIFIED for c in e["comps"])),
                                     "note": "entities the payload gives no location are in 'unspecified location' (SBML) and are not compared; PWML and SBGN place them"}
-    names_a: List[str] = []
+    names_a: Counter = Counter()
     extra_pw = 0
+    # an entity placed in a payload format and present in PWML must be placed in PWML too (PWML places every entity it draws)
+    for f in ("sbml", "sbgn"):
+        if "pwml" in models and f in models:
+            for c in sorted((placed[f] & present["pwml"]) - placed["pwml"], key=name_of):
+                _add(fails, "compartment_placement_missing_in_pwml", "%s (placed in %s)" % (name_of(c), f))
+    # between the payload formats: the same entities placed; SBGN assumes a place for an entity SBML leaves unplaced (class f)
+    if "sbml" in models and "sbgn" in models:
+        both = present["sbml"] & present["sbgn"]
+        unplaced_sbml = {cl[("sbml", i)] for i, e in enumerate(models["sbml"].ents)
+                         if ("sbml", i) in cl and e["comps"] and all(norm(c) in UNSPECIFIED for c in e["comps"])}
+        for c in sorted((placed["sbml"] & both) - placed["sbgn"], key=name_of):
+            _add(fails, "compartment_placement_missing_in_sbgn", name_of(c))
+        for c in sorted(((placed["sbgn"] & both) - placed["sbml"]) - unplaced_sbml, key=name_of):
+            _add(fails, "compartment_placement_missing_in_sbml", name_of(c))
     # PWML vs a payload format: every placement the payload format has must lie inside one PWML compartment (PWML merges
     # compartments under canonical names, and places the ends of the interactions and transports it draws, which the
     # payload formats leave where the payload put them)
@@ -473,8 +532,14 @@ def cross_format(outputs: Dict[str, bytes], *, pwml_ir: Optional[dict] = None, s
                 if not hit:
                     _add(fails, "compartment_grouping_differs:pwml_vs_" + f, "%s '%s' (%d entities) is not inside one PWML compartment: %s" % (
                         f, cf, len(block), sorted(name_of(c) for c in block)[:4]))
-                elif norm(cf) not in {norm(h) for h in hit}:
-                    names_a.append("pwml=%s %s=%s" % (hit[0], f, cf))
+                else:
+                    named = [h for h in hit if norm(h) == norm(cf)]
+                    cp = named[0] if named else hit[0]
+                    if not named:
+                        names_a["pwml=%s %s=%s" % (cp, f, cf)] += 1
+                    go_p, go_f = models["pwml"].comp_go.get(cp), models[f].comp_go.get(cf)
+                    if go_p and go_f and not go_p & go_f:  # both carry an ontology term and they disagree
+                        _add(fails, "compartment_ontology_differs:pwml_vs_" + f, "pwml %s %s vs %s %s %s" % (cp, sorted(go_p), f, cf, sorted(go_f)))
             extra_pw += sum(len(v) for v in gp.values()) - sum(len(v) for v in gf.values())
     # the two payload formats: the same grouping, the same names
     if "sbml" in models and "sbgn" in models:
@@ -488,7 +553,8 @@ def cross_format(outputs: Dict[str, bytes], *, pwml_ir: Optional[dict] = None, s
             for c2, v in g2.items():
                 if norm(n1[frozenset(v)]) != norm(c2):
                     _add(fails, "compartment_name_differs_between_payload_formats", "sbml=%s sbgn=%s" % (n1[frozenset(v)], c2))
-    known["a_compartment_names"] = {"n": len(names_a), "examples": names_a[:5]}
+    known["a_compartment_names"] = {"n": sum(names_a.values()), "pairs": dict(names_a), "examples": list(names_a)[:5],
+                                    "note": "PWML canonical compartment name differs from the stored name; every pair listed with its count"}
     known["h_pwml_extra_placements"] = {"n": extra_pw, "note": "placements PWML adds (an interaction or transport end drawn in a state the payload does not give the entity)"}
     known["c_kgml_has_no_compartments_or_catalysts"] = "kgml" in models
 

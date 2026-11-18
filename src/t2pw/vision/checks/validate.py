@@ -49,7 +49,7 @@ def validate_sbml(data: bytes, max_messages: int = 200) -> Dict[str, Any]:
 # ---------------------------------------------------------------- SBGN
 
 @lru_cache(maxsize=2)
-def _sbgn_schemas(data_dir: str):
+def sbgn_schemas(data_dir: str):
     """(XSD, schematron). The schematron is libSBGN sbgn_pd.sch, 'basic' phase, loaded by lxml after four in-memory
     adjustments (the file on disk is untouched): title moved before ns and digit-led pattern ids prefixed (lxml checks ISO
     RelaxNG); assert attributes lxml's schema does not know dropped (the assert id stays as the message prefix); pattern
@@ -78,7 +78,7 @@ def validate_sbgn(data: bytes, data_dir=None) -> Dict[str, Any]:
     """SBGN-ML 0.3 Process Description: XSD errors, libSBGN schematron failed asserts (message starts with the assert id,
     e.g. ``pd10112``), and duplicate arcs (pattern pd10133)."""
     from lxml import etree
-    xsd, sch = _sbgn_schemas(str(data_dir or SBGN_DATA))
+    xsd, sch = sbgn_schemas(str(data_dir or SBGN_DATA))
     try:
         doc = etree.fromstring(data if isinstance(data, bytes) else data.encode("utf-8"))
     except etree.XMLSyntaxError as e:

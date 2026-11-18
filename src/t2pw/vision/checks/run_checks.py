@@ -58,7 +58,7 @@ def check_scope(big, scope_name: str, export, meta) -> Dict[str, Any]:
         c = consistency.cross_format(outs, pwml_ir=ir, sbgn_report=sbgn_report)
         rec["sbgn_report"] = {"exported": sbgn_report["exported"], "omitted": sbgn_report["omitted"]}
         rec["consistency"] = {"ok": c["ok"], "counts": c["counts"], "failures": c["failures"],
-                              "known": {k: (v if not isinstance(v, dict) else {x: y for x, y in v.items() if x in ("n",)}) for k, v in c["known"].items()},
+                              "known": {k: (v if not isinstance(v, dict) else {x: y for x, y in v.items() if x in ("n", "pairs", "per_format")}) for k, v in c["known"].items()},
                               "known_examples": {k: v.get("examples", [])[:2] for k, v in c["known"].items() if isinstance(v, dict)}}
     return rec
 
@@ -95,7 +95,7 @@ def aggregate(runs: List[Dict[str, Any]], scopes: List[str]) -> Dict[str, Any]:
                              "refused": [], "sbml_valid": 0, "sbgn_valid": 0, "pwml_ok": 0, "cross_ok": 0}
         classes: Dict[str, Dict[str, Any]] = {}
         invalid: Dict[str, Dict[str, Any]] = defaultdict(lambda: {"runs": 0, "examples": []})
-        known = Counter()
+        known, renamed, sentinel = Counter(), Counter(), Counter()
         for r, x in recs:
             if len(x["generated"]) < len(FMTS):
                 t["refused"].append({"run": r["run"][-90:], "errors": {k: v[:120] for k, v in list(x["errors"].items())[:1]}})
@@ -119,10 +119,16 @@ def aggregate(runs: List[Dict[str, Any]], scopes: List[str]) -> Dict[str, Any]:
                         if len(d["examples"]) < 5:
                             d["examples"].append({"run": r["run"][-70:], "example": e})
                 for k, v in c["known"].items():
+                    if isinstance(v, dict):  # every renamed compartment pair, and the Unknown sentinel per format, summed over runs
+                        renamed.update(v.get("pairs") or {})
+                        for f_, n_ in (v.get("per_format") or {}).items():
+                            sentinel[f_] += n_
                     known[k] += (v if isinstance(v, int) and not isinstance(v, bool) else (v.get("n", 0) if isinstance(v, dict) else int(bool(v))))
         t["validation_failure_kinds"] = dict(invalid)
         t["cross_format_failure_classes"] = dict(sorted(classes.items()))
         t["known_difference_totals"] = dict(known)
+        t["compartment_renames"] = dict(renamed.most_common())
+        t["unknown_sentinel_per_format"] = dict(sentinel)
         out["scopes"][s] = t
     fa = [r["faithfulness"] for r in runs if "faithfulness" in r]
     p = Counter()
@@ -131,7 +137,7 @@ def aggregate(runs: List[Dict[str, Any]], scopes: List[str]) -> Dict[str, Any]:
         pv = f["paper"]
         p["runs"] += 1
         p["runs_no_text"] += pv["text"] != "found"
-        for k in ("n", "verbatim", "fragments", "not_found", "no_text"):
+        for k in ("n", "verbatim", "fragments", "not_found", "no_text", "short"):
             p[k] += pv[k]
         for k, v in pv["audit_modified_only"].items():
             if isinstance(v, int):

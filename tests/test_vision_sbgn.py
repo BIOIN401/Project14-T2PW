@@ -16,34 +16,10 @@ NS = {"s": "http://sbgn.org/libsbgn/0.3"}
 SVRL = {"svrl": "http://purl.oclc.org/dsdl/svrl"}
 
 
-ISO = "http://purl.oclc.org/dsdl/schematron"
+# the XSD and the libSBGN schematron (with its in-memory adjustments) are loaded by the development checks, one copy
+from t2pw.vision.checks.validate import sbgn_schemas  # noqa: E402
 
-
-def _schematron():
-    """libSBGN sbgn_pd.sch, 'basic' phase, loaded by lxml after four in-memory adjustments (file on disk untouched):
-    title moved before ns and digit-led pattern ids prefixed (lxml checks ISO RelaxNG), assert attributes lxml's
-    schema does not know dropped (the assert id is kept as the message prefix), and pattern pd10133 removed
-    (uses XPath 2.0 distinct-values; lxml is XSLT 1.0). pd10133 (unique arc ends) is re-checked in problems()."""
-    doc = etree.parse(str(DATA / "sbgn_pd.sch"))
-    root = doc.getroot()
-    title = root.find("{%s}title" % ISO)
-    root.remove(title)
-    root.find("{%s}ns" % ISO).addprevious(title)
-    for p in root.iter("{%s}pattern" % ISO):
-        p.set("id", "p" + p.get("id"))
-    for a in list(root.iter("{%s}active" % ISO)):
-        if a.get("pattern") == "pd10133":
-            a.getparent().remove(a)
-        else:
-            a.set("pattern", "p" + a.get("pattern"))
-    for a in root.iter("{%s}assert" % ISO):
-        a.text = (a.get("id") or "") + ": " + (a.text or "").strip()
-        for k in ("id", "name", "see", "diagnostics", "role"):
-            a.attrib.pop(k, None)
-    return isoschematron.Schematron(doc, store_report=True)
-
-
-XSD, SCH = etree.XMLSchema(etree.parse(str(DATA / "SBGN.xsd"))), _schematron()
+XSD, SCH = sbgn_schemas(str(DATA))
 
 
 def problems(text: str) -> list[str]:

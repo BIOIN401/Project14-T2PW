@@ -86,6 +86,10 @@ def test_clean_run_is_consistent(run):
     assert rep["counts"]["pwml"]["processes"] == rep["counts"]["sbml"]["processes"] == rep["counts"]["kgml"]["processes"] == 2
     # the two interactions SBML and KGML carry, PWML withholds (bare protein endpoint): explained by its own IR record
     assert rep["known"]["e_pwml_withheld_interactions"]["n"] == 2
+    k = rep["known"]  # the fixture's known counts (one single-member complex; no Unknown, no modifier interaction, no extra placement)
+    assert k["d_pathwhiz_complex_wrapper"]["n"] == 1
+    assert k["f_unknown_sentinel"]["n"] == 0 and set(k["f_unknown_sentinel"]["per_format"].values()) == {0}
+    assert k["g_pwml_modifier_interactions"]["n"] == 0 and k["h_pwml_extra_placements"]["n"] == 0
     assert "interaction_missing_in_pwml" in classes(consistency.cross_format(outs))  # without the IR it is a failure
 
 
@@ -132,7 +136,69 @@ def test_missing_entity_in_one_format_is_flagged(run):
     assert consistency.cross_format(outs, pwml_ir=ir)["known"]["b_sbgn_entities_only_in_interactions"]["n"] == 1
 
 
+def test_injected_compartment_grouping_mismatch_is_flagged(run):
+    _, outs, ir = run
+    sbml = outs["sbml"].decode("utf-8")
+    moved = sbml.replace('name="Glycine" compartment="c_mitochondrial_matrix"', 'name="Glycine" compartment="c_cell"', 1)
+    assert moved != sbml
+    rep = consistency.cross_format(dict(outs, sbml=moved.encode("utf-8")), pwml_ir=ir)
+    assert "compartment_grouping_differs:sbml_vs_sbgn" in classes(rep)  # SBML splits what SBGN keeps together
+
+
+def test_entity_placed_in_a_format_but_not_in_pwml_is_flagged(run):
+    _, outs, ir = run
+    pwml = outs["pwml"].decode("utf-8")
+    cut = re.sub(r"<compound-locations>.*?</compound-locations>", "<compound-locations/>", pwml, count=1, flags=re.S)
+    assert cut != pwml
+    rep = consistency.cross_format(dict(outs, pwml=cut.encode("utf-8")), pwml_ir=ir)
+    assert "compartment_placement_missing_in_pwml" in classes(rep)
+
+
+def test_injected_catalyst_mismatch_is_flagged(run):
+    _, outs, ir = run
+    sbml = outs["sbml"].decode("utf-8")
+    changed = sbml.replace('<modifierSpeciesReference species="s_7_mitochondrial_matrix" sboTerm="SBO:0000013"/>',
+                           '<modifierSpeciesReference species="s_1_mitochondrial_matrix" sboTerm="SBO:0000013"/>', 1)
+    assert changed != sbml
+    assert "catalyst_mismatch:pwml_vs_sbml" in classes(consistency.cross_format(dict(outs, sbml=changed.encode("utf-8")), pwml_ir=ir))
+
+
+def test_sbgn_regulatory_arcs_are_compared_with_sbml(run):
+    _, outs, ir = run
+    sbgn = outs["sbgn"].decode("utf-8")
+    extra = sbgn.replace("</map>", '<arc class="inhibition" id="a99" source="g1" target="p1"><start x="0" y="0" /><end x="0" y="0" /></arc></map>', 1)
+    assert extra != sbgn  # an SBGN inhibition arc that nothing in SBML or PWML explains
+    assert "sbgn_regulatory_arc_extra" in classes(consistency.cross_format(dict(outs, sbgn=extra.encode("utf-8")), pwml_ir=ir))
+    sbml = outs["sbml"].decode("utf-8")
+    plus = sbml.replace('<modifierSpeciesReference species="s_7_mitochondrial_matrix" sboTerm="SBO:0000013"/>',
+                        '<modifierSpeciesReference species="s_7_mitochondrial_matrix" sboTerm="SBO:0000013"/>'
+                        '<modifierSpeciesReference species="s_3_mitochondrial_matrix" sboTerm="SBO:0000459"/>', 1)
+    assert plus != sbml  # an SBML regulator SBGN has no arc for
+    bad = consistency.cross_format(dict(outs, sbml=plus.encode("utf-8")), pwml_ir=ir)
+    assert "sbgn_regulatory_arc_missing" in classes(bad)
+    # class b only as far as the exporter's own report lists omitted reaction arcs
+    told = consistency.cross_format(dict(outs, sbml=plus.encode("utf-8")), pwml_ir=ir, sbgn_report={"omitted": {"reaction_arcs": {"role_not_regulatory": 1}}})
+    assert "sbgn_regulatory_arc_missing" not in classes(told) and told["known"]["b_sbgn_omitted_regulatory_arcs"]["n"] == 1
+
+
+def test_unknown_sentinel_is_only_a_protein_in_pwml_and_never_in_the_clean_model(run):
+    _, outs, ir = run
+    sbml = outs["sbml"].decode("utf-8")
+    renamed = sbml.replace('name="Glycine"', 'name="Unknown"', 1)
+    assert renamed != sbml
+    rep = consistency.cross_format(dict(outs, sbml=renamed.encode("utf-8")), pwml_ir=ir)
+    assert "unknown_sentinel_in_sbml" in classes(rep) and rep["known"]["f_unknown_sentinel"]["per_format"]["sbml"] == 1
+
+
 # ---------------------------------------------------------------- faithfulness
+
+def test_short_quotes_are_counted_apart_and_ids_match_whole_tokens():
+    text = "ALAS makes aminolevulinic acid from glycine and succinyl-CoA in the matrix."
+    res = faithfulness.paper_view(big_with("glycine"), text)  # 7 characters: found in any text, so not judged
+    assert res["short"] >= 1 and res["not_found"] == faithfulness.paper_view(big_with(), text)["not_found"]
+    assert faithfulness._has("glycine", "free glycine here") and not faithfulness._has("glycine", "polyglycine here")
+    assert faithfulness._has("1234", "id 1234.") and not faithfulness._has("1234", "id 912345")
+
 
 def big_with(quote=QUOTE, audit_quote=None):
     base = json.loads(FIX.read_text(encoding="utf-8"))
