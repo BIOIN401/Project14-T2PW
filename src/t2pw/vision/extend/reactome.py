@@ -132,6 +132,8 @@ def fetch(ctx: Dict[str, Any], *, max_pathways: int = 3, deadline: float, cache_
     sp = species_of(ctx, deadline, cache_dir)
     if not sp:
         return [], ["species not in Reactome: " + ", ".join(str(s.get("name")) for s in ctx.get("species") or [])]
+    if not sp.get("taxId"):   # listed without a taxonomy id (e.g. Arabidopsis): no species-scoped mapping
+        return [], [f"Reactome lists {sp.get('displayName')} without a taxId: source skipped"]
     ids = ctx.get("ids") or {}
     probes = [("UniProt", v.upper()) for v in sorted(ids.get("uniprot", ()))[:max_ids]] + \
              [("ChEBI", v) for v in sorted(ids.get("chebi", ()))[:max_ids]]

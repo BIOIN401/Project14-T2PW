@@ -242,6 +242,12 @@ def to_rows(big: Dict[str, Any], pw: Dict[str, Any]):
                 counts["renamed_name_conflict"] += 1
         else:
             hit, _ = index.match(section, row)
+            mine_ids, hit_ids = grounded_ids(row), index.key_ids.get(hit, set()) if hit else set()
+            if hit and mine_ids and hit_ids and not (mine_ids & hit_ids):
+                # S5: both grounded, no agreeing id -> a name or synonym alone never joins them
+                # (live: PathBank 'Coproporphyrin III' onto the paper's coproporphyrinogen III)
+                counts["name_join_refused_no_shared_id"] += 1
+                hit = None
             if hit:
                 name = index.key_name.get(hit) or name
             elif norm(name) in index.ent_key:  # F4: same name, conflicting ids -> separate row

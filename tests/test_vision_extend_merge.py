@@ -146,8 +146,10 @@ def test_one_source_failing_leaves_the_others():
     big, report = extend_big_payload(big0, sources=("pathbank", "reactome"),
                                      fetchers={"pathbank": boom, "reactome": fake([rc])})
     assert report["failed"] == ["pathbank"]
-    assert report["sources"]["pathbank"] == {"status": "failed", "pathways": [], "notes": [], "counts": {},
-                                             "error": "ConnectionError"}   # no driver text (could hold a host)
+    entry = dict(report["sources"]["pathbank"])
+    entry.pop("budget_s")
+    assert entry == {"status": "failed", "pathways": [], "notes": [], "counts": {},
+                     "error": "ConnectionError"}   # no driver text (could hold a host)
     assert report["placement"] == {"reactome:R-1": {"hop_1": 1}}
 
 
@@ -420,3 +422,100 @@ def test_r4_intracellular_is_not_cytoplasm():
     from t2pw.vision.extend.convert import fold
     assert fold("cytosol") == fold("Cytoplasm") == fold(None, "GO:0005829") == fold(None, "0005737")
     assert fold("intracellular") != fold("cytosol") and fold(None, "GO:0005622") != fold("cytosol")
+
+
+# ---------------------------------------------------------------- round 3 (live hand check: S1-S5, S7)
+
+def test_s1_unused_species_row_never_chooses_the_organism():
+    from t2pw.vision.extend import paper_context
+    b = base()
+    b["entities"]["species"].append({"name": "Arabidopsis thaliana", "taxonomy_id": "3702", "evidence": "x"})
+    b["entities"]["proteins"].append({"name": "E9", "species": "Lactococcus lactis", "evidence": "E9"})
+    ctx = paper_context(build_big_payload(b))
+    assert ctx["species"] == [{"name": "Escherichia coli", "taxonomy_id": "562"},
+                              {"name": "Lactococcus lactis", "taxonomy_id": None}]   # used, no species row
+
+
+class FakeReader:
+    """Answers pathbank.candidates' SELECTs by table (no database)."""
+
+    def rows(self, sql, params=()):
+        if "FROM species" in sql:
+            return [{"id": 1, "name": "Mus musculus", "taxonomy_id": 10090}]
+        if "FROM reaction_elements" in sql:
+            return [{"pid": 10, "n": 5}, {"pid": 11, "n": 3}]
+        if "FROM pathways p JOIN super_pathway_visualizations" in sql:
+            return [{"pid": 10, "name": "Generated Pathway 1790128106", "species_id": 1, "pw_id": "PW767504"},
+                    {"pid": 11, "name": "\tAndrogen and Estrogen Metabolism ", "species_id": 1, "pw_id": "PW064569"}]
+        return []
+
+
+def test_s2_generated_pathway_records_are_excluded_and_s7_names_cleaned():
+    from t2pw.vision.extend.pathbank import candidates
+    cands, notes = candidates(FakeReader(), {"species": [{"name": "Mus musculus", "taxonomy_id": "10090"}],
+                                             "ids": {"pathbank_compound": {"37", "157"}}})
+    assert [(c["pw_id"], c["name"]) for c in cands] == [("PW064569", "Androgen and Estrogen Metabolism")]
+    assert any("PW767504" in n and "not curated" in n for n in notes)
+
+
+def test_s7_pathbank_participant_names_are_stripped():
+    from t2pw.vision.extend.pathbank import to_neutral
+    p = {"side": "left", "element_type": "Compound", "element_id": 1, "name": "\t Chlorophyllide ",
+         "synonyms": [" chlide\t"], "identifiers": {}}
+    q = dict(p, side="right", name="lipid A disaccharide \t", synonyms=[])
+    pw = to_neutral({"accession": "PW1", "name": " x\t", "processes": [
+        {"process_type": "Reaction", "accession": "R", "participants": [p, q], "catalysts": []}]})
+    r = pw["steps"][0]
+    assert (r["inputs"][0]["name"], r["inputs"][0]["synonyms"], r["outputs"][0]["name"], pw["name"]) == \
+        ("Chlorophyllide", ["chlide"], "lipid A disaccharide", "x")
+
+
+def test_s3_reactome_species_without_taxid_skips_the_source(tmp_path):
+    from t2pw.vision.extend.reactome import fetch
+    cache_put(tmp_path, "https://reactome.org/ContentService/data/species/all",
+              [{"dbId": 170905, "displayName": "Arabidopsis thaliana", "schemaClass": "Species"}])
+    pws, notes = fetch({"species": [{"name": "Arabidopsis thaliana", "taxonomy_id": "3702"}], "ids": {}},
+                       deadline=0, cache_dir=tmp_path)
+    assert pws == [] and "without a taxId" in notes[0]
+
+
+def test_s4_each_source_gets_its_share_of_what_is_left():
+    import time
+    got = {}
+
+    def rec(name):
+        def f(ctx, *, deadline, **kw):
+            got[name] = deadline - time.monotonic()
+            return [], []
+        return f
+    extend_big_payload(build_big_payload(base()), budget_s=100,
+                       fetchers={s: rec(s) for s in ("pathbank", "reactome", "wikipathways")})
+    assert 48 < got["pathbank"] <= 50          # 2 of 4 shares
+    assert 48 < got["reactome"] <= 50          # 1 of 2 shares of the ~100 s still left
+    assert 97 < got["wikipathways"] <= 100     # everything left
+
+
+def test_s5_grounded_rows_never_join_on_a_synonym_alone():
+    b = base()
+    b["entities"]["compounds"].append({"name": "coproporphyrinogen III", "mapped_ids": {"kegg": "C03263"},
+                                       "synonyms": ["Coproporphyrin III"], "evidence": "x"})
+    b["processes"]["reactions"].append({"name": "C to copro", "inputs": ["C"], "outputs": ["coproporphyrinogen III"],
+                                        "biological_state": "cell state", "evidence": "y"})
+    copro = {"type": "compound", "name": "Coproporphyrin III", "synonyms": [], "ids": {"pathbank_compound_id": 999}}
+    big, report = run_on(b, [rxn("PW_R213418", [part("coproporphyrinogen III", "C03263"), part("O2", "C00007")],
+                                 [copro, part("H2O2", "C00027")])])
+    step = big["extension"]["processes"]["reactions"][0]
+    assert step["inputs"] == ["coproporphyrinogen III", "O2"]
+    assert step["outputs"] == ["Coproporphyrin III [pathbank]", "H2O2"]     # not a self-loop
+    assert report["sources"]["pathbank"]["counts"]["name_join_refused_no_shared_id"] == 1
+
+
+def test_source_provenance_names_the_pathway_and_step():
+    # KDSR case: a source-data error stays traceable to its record (PathBank PW000148 PW_R001169)
+    big, _ = run_on(base(), [rxn("PW_R001169", [part("C", "C90003"), part("NADPH", "C00005")],
+                                 [part("Delta", "C90004"), part("NADP+", "C00006")])], sid="pathbank:PW000148")
+    k = next(k for k, (s, r, b) in keyed(big).items() if s == "processes.reactions" and not b)
+    rec = big["provenance"][k][0]
+    assert rec["kind"] == "database" and rec["source"] == "pathbank:PW000148"
+    assert "PW000148" in rec["note"] and "PW_R001169" in rec["note"]
+    assert big["sources"]["pathbank:PW000148"]["accession"] == "PW000148"

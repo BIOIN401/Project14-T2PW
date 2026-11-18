@@ -15,13 +15,16 @@ import time
 from collections import Counter
 from typing import Any, Callable, Dict, Optional, Tuple
 
-from t2pw.vision.payload import (_Index, currency_family, grounded_ids, is_currency, keyed_rows,
-                                 merge_extension)
+from t2pw.vision.payload import (STATES, _Index, currency_family, grounded_ids, is_currency, keyed_rows,
+                                 merge_extension, norm, refs)
 
 from .convert import to_rows
 
 FLAG = "T2PW_EXTEND"
 SOURCES = ("pathbank", "reactome", "wikipathways")
+# Budget share per source. Each source gets its share of what is left, so time a source does not
+# use passes on to the ones after it (one PathBank extract takes ~35-40 s and used to starve the rest).
+SHARES = {"pathbank": 2.0, "reactome": 1.0, "wikipathways": 1.0}
 
 
 def extend_enabled(env: Optional[Dict[str, str]] = None) -> bool:
@@ -41,14 +44,37 @@ def _default_fetcher(name: str) -> Callable:
     return fetch
 
 
+def used_species(big: Dict[str, Any]) -> Dict[str, str]:
+    """{normalized name: name as written} of the species the paper's proteins / complexes or its
+    processes' states use. A species row nothing uses (an extraction artefact, e.g. a stray
+    'Arabidopsis thaliana') never chooses the organism."""
+    base = big.get("base") or {}
+    state_species = {norm(r.get("name")): r.get("species") for r in base.get(STATES) or [] if isinstance(r, dict)}
+    used: Dict[str, str] = {}
+    for section, _, row, is_base in keyed_rows(big):
+        if not is_base or not isinstance(row, dict):
+            continue
+        names = []
+        if section in ("entities.proteins", "entities.protein_complexes"):
+            names = [row.get(f) for f in ("species", "organism")]
+        elif section.startswith("processes."):
+            names = [state_species.get(norm(st)) for st in refs(section, row)[1]]
+        for n in names:
+            if isinstance(n, str) and norm(n):
+                used.setdefault(norm(n), n.strip())
+    return used
+
+
 def paper_context(big: Dict[str, Any]) -> Dict[str, Any]:
-    """Species (name, taxonomy id) and the grounded ids of the paper's non-currency entities."""
+    """Species in use (name, taxonomy id) and the grounded ids of the paper's non-currency entities."""
     species, ids = [], {}
+    used = used_species(big)
     for section, _, row, is_base in keyed_rows(big):
         if not is_base or not isinstance(row, dict):
             continue
         if section == "entities.species":
-            species.append({"name": row.get("name"), "taxonomy_id": str(row.get("taxonomy_id") or "") or None})
+            if norm(row.get("name")) in used:
+                species.append({"name": row.get("name"), "taxonomy_id": str(row.get("taxonomy_id") or "") or None})
         elif section in ("entities.compounds", "entities.proteins", "entities.protein_complexes"):
             if is_currency(row.get("name")):
                 continue
@@ -58,6 +84,8 @@ def paper_context(big: Dict[str, Any]) -> Dict[str, Any]:
                     found |= grounded_ids(c)
             for ns, v in found:
                 ids.setdefault(ns, set()).add(v)
+    listed = {norm(s["name"]) for s in species}
+    species += [{"name": used[n], "taxonomy_id": None} for n in sorted(set(used) - listed)]   # used, no row
     return {"species": species, "ids": ids}
 
 
@@ -78,15 +106,20 @@ def extend_big_payload(big: Dict[str, Any], *, sources=SOURCES, budget_s: float 
     ctx = paper_context(big)
     report: Dict[str, Any] = {"budget_s": budget_s, "max_pathways": max_pathways, "sources": {},
                               "species": ctx["species"], "failed": []}
-    for name in sources:
+    sources = list(sources)
+    for i, name in enumerate(sources):
         entry: Dict[str, Any] = {"status": "ok", "pathways": [], "notes": [], "counts": Counter()}
         report["sources"][name] = entry
-        if time.monotonic() >= deadline:
+        now = time.monotonic()
+        if now >= deadline:
             entry["status"] = "skipped_budget"
             continue
+        later = sum(SHARES.get(s, 1.0) for s in sources[i:])
+        own_deadline = now + (deadline - now) * SHARES.get(name, 1.0) / later
+        entry["budget_s"] = round(own_deadline - now, 1)
         try:
             fetch = (fetchers or {}).get(name) or _default_fetcher(name)
-            pathways, notes = fetch(ctx, max_pathways=max_pathways, deadline=deadline,
+            pathways, notes = fetch(ctx, max_pathways=max_pathways, deadline=own_deadline,
                                     cache_dir=(os.path.join(str(cache_dir), name) if cache_dir else None))
         except Exception as exc:  # noqa: BLE001 - fail open by design
             entry.update(status="failed", error=_safe_error(exc))
@@ -163,6 +196,6 @@ def currency_only_twins(big: Dict[str, Any]) -> Dict[str, Any]:
                 diff = (ci ^ co2) | (co ^ ci2)
             else:
                 continue
-            if diff and diff <= small:
+            if diff and diff <= small and not any({k, k2} == {a, b} for a, b, _ in pairs):  # each pair once
                 pairs.append([k, k2, sorted(diff)])
     return {"count": len(pairs), "pairs": pairs[:50]}

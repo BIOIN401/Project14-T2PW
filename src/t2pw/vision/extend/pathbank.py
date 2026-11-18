@@ -8,10 +8,19 @@ a SELECT.
 
 from __future__ import annotations
 
+import re
 import time
 from typing import Any, Dict, List, Optional, Tuple
 
 from t2pw.bench.eval_v2.pathbank_gold import _Reader, connect, extract
+
+GENERATED = re.compile(r"\s*Generated Pathway\b", re.I)
+
+
+def _clean(text) -> str:
+    """PathBank names carry tabs and padding ('\\t Chlorophyllide ')."""
+    return " ".join(str(text or "").split())
+
 
 TYPES = {"Compound": "compound", "Protein": "protein", "ProteinComplex": "complex", "NucleicAcid": "nucleic_acid"}
 ID_KEYS = {"hmdb_id": "hmdb", "kegg_id": "kegg", "chebi_id": "chebi", "pubchem_cid": "pubchem",
@@ -108,8 +117,12 @@ def candidates(r: _Reader, ctx: Dict[str, Any], *, min_overlap: int = 2) -> Tupl
                                            sp[x["species_id"]]["match"] != "exact", x["pid"])):
         if row["pid"] in seen:
             continue
+        if GENERATED.match(str(row.get("name") or "")):   # machine-made record, not a curated pathway
+            notes.append(f"{row['pw_id']} '{_clean(row.get('name'))}' skipped: not curated")
+            seen.add(row["pid"])
+            continue
         seen.add(row["pid"])
-        out.append({"pw_id": row["pw_id"], "name": row["name"], "pathway_id": row["pid"],
+        out.append({"pw_id": row["pw_id"], "name": _clean(row["name"]), "pathway_id": row["pid"],
                     "species": sp[row["species_id"]]["name"], "species_match": sp[row["species_id"]]["match"],
                     "overlap": keep[row["pid"]]})
     # propagated copies of one pathway (one per strain) share a name: keep the best of each
@@ -121,19 +134,20 @@ def candidates(r: _Reader, ctx: Dict[str, Any], *, min_overlap: int = 2) -> Tupl
 
 def _part(p: Dict[str, Any]) -> Optional[Dict[str, Any]]:
     t = TYPES.get(str(p.get("element_type")))
-    if not t or not p.get("name"):
+    if not t or not _clean(p.get("name")):
         return None
     ids = {ID_KEYS[k]: v for k, v in (p.get("identifiers") or {}).items() if k in ID_KEYS}
     if t == "compound":
         ids["pathbank_compound_id"] = p.get("element_id")
     if t == "protein":
         ids["pathbank_protein_id"] = p.get("element_id")
-    part = {"type": t, "name": p["name"], "synonyms": p.get("synonyms") or [], "ids": ids}
+    syn = lambda x: [s for s in map(_clean, x.get("synonyms") or []) if s]
+    part = {"type": t, "name": _clean(p["name"]), "synonyms": syn(p), "ids": ids}
     if t == "complex":
-        part["components"] = [{"type": "protein", "name": c.get("name"), "synonyms": c.get("synonyms") or [],
+        part["components"] = [{"type": "protein", "name": _clean(c.get("name")), "synonyms": syn(c),
                                "ids": {"uniprot": c.get("uniprot"), "pathbank_protein_id": c.get("protein_id")},
                                "stoichiometry": c.get("stoichiometry")}
-                              for c in p.get("components") or [] if c.get("name")]
+                              for c in p.get("components") or [] if _clean(c.get("name"))]
     return part
 
 
@@ -178,7 +192,7 @@ def to_neutral(ex: Dict[str, Any]) -> Dict[str, Any]:
                           "entity_1": left[0], "entity_2": right[0], "location": _loc(proc.get("biological_state"))})
         else:
             notes.append(f"{ptype} {step_acc}: not converted")
-    return {"source_id": f"pathbank:{acc}", "db": "pathbank", "accession": acc, "name": ex.get("name"),
+    return {"source_id": f"pathbank:{acc}", "db": "pathbank", "accession": acc, "name": _clean(ex.get("name")),
             "url": f"https://pathbank.org/view/{acc}", "updated_at": (ex.get("curator") or {}).get("updated_at"),
             "content_sha256": ex.get("content_sha256"), "retrieved": ex.get("extracted_at"),
             "species": (ex.get("species") or {}).get("name"),
