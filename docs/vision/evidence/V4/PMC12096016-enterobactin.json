@@ -1,0 +1,356 @@
+{
+ "run": "runs_papers/ORCH-759p/legs/enterobactin-strict/2026-10-22_2101/papers/PMC12096016/strict",
+ "seconds": 47.8,
+ "report": {
+  "budget_s": 120.0,
+  "max_pathways": 3,
+  "sources": {
+   "pathbank": {
+    "status": "ok",
+    "pathways": [
+     {
+      "source_id": "pathbank:PW000760",
+      "accession": "PW000760",
+      "name": "Biosynthesis of Siderophore Group Nonribosomal Peptides",
+      "overlap": {
+       "compounds": 6,
+       "proteins": 6
+      },
+      "steps": 14
+     },
+     {
+      "source_id": "pathbank:PW002048",
+      "accession": "PW002048",
+      "name": "Enterobactin Biosynthesis",
+      "overlap": {
+       "compounds": 5,
+       "proteins": 5
+      },
+      "steps": 4
+     },
+     {
+      "source_id": "pathbank:PW000751",
+      "accession": "PW000751",
+      "name": "2,3-Dihydroxybenzoate Biosynthesis",
+      "overlap": {
+       "compounds": 3,
+       "proteins": 3
+      },
+      "steps": 4
+     }
+    ],
+    "notes": [
+     "species: Escherichia coli (exact), Escherichia coli (strain K12) (binomial), Escherichia coli (strain ATCC 8739 / DSM 1576 / Crooks) (binomial), Escherichia coli (strain SMS-3-5 / SECEC) (binomial), Escherichia coli (strain UTI89 / UPEC) (binomial), Escherichia coli (strain 55989 / EAEC) (binomial), Escherichia coli (strain SE11) (binomial), Escherichia coli (strain K12 / MC4100 / BW2952) (binomial), Escherichia coli (strain ATCC 55124 / KO11) (binomial), Escherichia coli (strain B / REL606) (binomial), Escherichia coli (strain B / BL21-DE3) (binomial), Escherichia coli (strain MS 21-1) (binomial), Escherichia coli DORA_B_14 (binomial), Escherichia coli O6:H1 (strain CFT073 / ATCC 700928 / UPEC) (binomial), Escherichia coli str. K-12 substr. MG1655 (binomial), Escherichia coli O157:H7 (binomial), Escherichia coli K-12 (binomial), Escherichia coli SE15 (binomial), Escherichia coli O157:H7 str. Sakai (binomial), Escherichia coli 536 (binomial), Escherichia coli APEC O1 (binomial), Escherichia coli E24377A (binomial), Escherichia coli HS (binomial), Escherichia coli str. K-12 substr. DH10B (binomial), Escherichia coli O157:H7 str. EC4115 (binomial), Escherichia coli O127:H6 str. E2348/69 (binomial), Escherichia coli UMN026 (binomial), Escherichia coli IAI1 (binomial), Escherichia coli S88 (binomial), Escherichia coli ED1a (binomial), Escherichia coli IAI39 (binomial), Escherichia coli O157:H7 str. TW14359 (binomial), Escherichia coli O103:H2 str. 12009 (binomial), Escherichia coli O26:H11 str. 11368 (binomial), Escherichia coli O111:H- str. 11128 (binomial), Escherichia coli O55:H7 str. CB9615 (binomial), Escherichia coli 042 (binomial), Escherichia coli W (binomial), Escherichia coli IHE3034 (binomial), Escherichia coli DH1 (binomial), Escherichia coli O113:H21 (binomial), Escherichia coli (strain K12 / W3110 / ATCC 27325 / DSM 5911) (binomial), Escherichia coli 1-250-04_S3_C1 (binomial), Escherichia coli MP021552.12 (binomial), Escherichia coli O8 (binomial), Escherichia coli TA447 (binomial), Escherichia coli H605 (binomial), Escherichia coli O157:H7 (strain EC869) (binomial), Escherichia coli 4.0967 (binomial), Escherichia coli HVH 36 (binomial), Escherichia coli EC1870 (binomial), Escherichia coli ISC7 (binomial), Escherichia coli O104:H4 (strain 2011C-3493) (binomial), Escherichia coli 3.4880 (binomial), Escherichia coli O25b:H4-ST131 (binomial), Escherichia coli 2-460-02_S1_C1 (binomial), Escherichia coli O131:H25 (binomial), Escherichia coli DORA_A_5_14_21 (binomial), Escherichia coli O141:H4 (binomial), Escherichia coli O121 (binomial), Escherichia coli O26 str. RM8426 (binomial), Escherichia coli M605 (binomial), Escherichia coli O103 (binomial), Escherichia coli 1303 (binomial), Escherichia coli LF82 (binomial), Escherichia coli O104:H4 str. 2009EL-2050 (binomial), Escherichia coli P12b (binomial), Escherichia coli UMNK88 (binomial), Escherichia coli O157:H7 str. EDL933 (binomial), Escherichia coli 'BL21-Gold(DE3)pLysS AG' (binomial), Escherichia coli O111:H- (binomial), Escherichia coli KTE182 (binomial), Escherichia coli O6 (binomial), Escherichia coli O111 (binomial), Escherichia coli 97.0246 (binomial)",
+     "query ids: 10 PathBank compounds, 7 UniProt",
+     "read timeout per query 119 s; the budget is not hard inside one extract",
+     "candidates: PW000760 Biosynthesis of Siderophore Group Nonribosomal Peptides {'compounds': 6, 'proteins': 6}; PW002048 Enterobactin Biosynthesis {'compounds': 5, 'proteins': 5}; PW000751 2,3-Dihydroxybenzoate Biosynthesis {'compounds': 3, 'proteins': 3}; PW000977 Secondary Metabolites: Cysteine Biosynthesis from Serine {'compounds': 2, 'proteins': 4}; PW001897 Menaquinol Biosythesis {'compounds': 3, 'proteins': 1}; PW438177 Menaquinone biosynthesis {'compounds': 3, 'proteins': 1}; PW000799 tRNA Charging {'compounds': 2}; PW000800 Cysteine Biosynthesis  {'compounds': 2}; PW000815 Tryptophan Metabolism {'compounds': 2}; PW000816 Chorismate Biosynthesis {'compounds': 2}"
+    ],
+    "counts": {
+     "steps_reaction": 17,
+     "currency_renamed": 26,
+     "complex_joined_by_members": 11,
+     "synonyms_dropped_collision": 9,
+     "no_compartment": 3,
+     "steps_transport": 5
+    }
+   },
+   "reactome": {
+    "status": "no_candidates",
+    "pathways": [],
+    "notes": [
+     "13 ids probed; candidates: "
+    ],
+    "counts": {}
+   },
+   "wikipathways": {
+    "status": "no_candidates",
+    "pathways": [],
+    "notes": [
+     "species ['escherichia coli']; candidates: "
+    ],
+    "counts": {}
+   }
+  },
+  "species": [
+   {
+    "name": "Escherichia coli",
+    "taxonomy_id": "562"
+   }
+  ],
+  "failed": [],
+  "placement": {
+   "pathbank:PW000751": {
+    "merged_into_base": 2,
+    "hop_1": 2
+   },
+   "pathbank:PW002048": {
+    "merged_into_base": 2,
+    "hop_1": 2
+   },
+   "pathbank:PW000760": {
+    "merged_into_base": 2,
+    "hop_2_plus": 3,
+    "hop_1": 8,
+    "hop_none": 1
+   }
+  },
+  "overlay_entities_hop_none": 18,
+  "currency_only_twins": {
+   "count": 2,
+   "pairs": [
+    [
+     "processes.reactions:23dihydroxybenzoicacid+adenosinetriphosphate>23dihydroxybenzoyladenylicacid+ppi@",
+     "processes.reactions:23dihydroxybenzoicacid+adenosinetriphosphate+h+>23dihydroxybenzoyladenylicacid+ppi@cytosolescherichiacoli",
+     [
+      "H+"
+     ]
+    ],
+    [
+     "processes.reactions:23dihydroxybenzoicacid+adenosinetriphosphate+h+>23dihydroxybenzoyladenylicacid+ppi@cytosolescherichiacoli",
+     "processes.reactions:23dihydroxybenzoicacid+adenosinetriphosphate>23dihydroxybenzoyladenylicacid+ppi@",
+     [
+      "H+"
+     ]
+    ]
+   ]
+  }
+ },
+ "base": {
+  "entities": 26,
+  "reactions": 5,
+  "transports": 1,
+  "interactions": 10,
+  "unresolved_refs": 0
+ },
+ "default": {
+  "entities": 56,
+  "reactions": 12,
+  "transports": 4,
+  "interactions": 10,
+  "unresolved_refs": 0
+ },
+ "full": {
+  "entities": 69,
+  "reactions": 14,
+  "transports": 6,
+  "interactions": 10,
+  "unresolved_refs": 0
+ },
+ "merged_into_base": [
+  {
+   "key": "processes.reactions:chorismate>isochorismate@cytoplasmicstate",
+   "name": "EntC isochorismate synthase reaction",
+   "db": [
+    {
+     "kind": "database",
+     "source": "pathbank:PW000760",
+     "quote": null,
+     "stage": "extension_db",
+     "note": "pathbank PW000760 reaction PW_R002452; source direction >; source compartment: not given; matched row state: cytoplasmic state"
+    },
+    {
+     "kind": "database",
+     "source": "pathbank:PW002048",
+     "quote": null,
+     "stage": "extension_db",
+     "note": "pathbank PW002048 reaction PW_R005976; source direction <>; source compartment: Cytosol; matched row state: cytoplasmic state"
+    },
+    {
+     "kind": "database",
+     "source": "pathbank:PW000751",
+     "quote": null,
+     "stage": "extension_db",
+     "note": "pathbank PW000751 reaction PW_R002452; source direction >; source compartment: not given; matched row state: cytoplasmic state"
+    }
+   ]
+  },
+  {
+   "key": "processes.reactions:23dihydro23dihydroxybenzoate>23dihydroxybenzoicacid@cytoplasmicstate",
+   "name": "EntA 2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase reaction",
+   "db": [
+    {
+     "kind": "database",
+     "source": "pathbank:PW000760",
+     "quote": null,
+     "stage": "extension_db",
+     "note": "pathbank PW000760 reaction PW_R002454; source direction >; source compartment: Cytosol; matched row state: cytoplasmic state"
+    },
+    {
+     "kind": "database",
+     "source": "pathbank:PW002048",
+     "quote": null,
+     "stage": "extension_db",
+     "note": "pathbank PW002048 reaction PW_R005978; source direction >; source compartment: Cytosol; matched row state: cytoplasmic state"
+    },
+    {
+     "kind": "database",
+     "source": "pathbank:PW000751",
+     "quote": null,
+     "stage": "extension_db",
+     "note": "pathbank PW000751 reaction PW_R002423; source direction >; source compartment: not given; matched row state: cytoplasmic state"
+    }
+   ]
+  }
+ ],
+ "added_steps": [
+  {
+   "hop": 2,
+   "name": "Fe3+ + Ferrichrome minus Fe(III) -> Ferrichrome",
+   "in": [
+    "Fe3+",
+    "Ferrichrome minus Fe(III)"
+   ],
+   "out": [
+    "Ferrichrome minus Fe(III)"
+   ],
+   "note": "pathbank PW000760 reaction PW_R1970817; source direction >; source compartment: Cytosol"
+  },
+  {
+   "hop": 1,
+   "name": "Fe(III)dicitrate + H2O + ATP -> phosphate + H+ + Fe3+ + Citric acid + ADP",
+   "in": [
+    "Fe(III)dicitrate",
+    "H2O",
+    "Adenosine triphosphate"
+   ],
+   "out": [
+    "phosphate",
+    "H+",
+    "Fe3+",
+    "Citric acid",
+    "ADP"
+   ],
+   "note": "pathbank PW000760 reaction PW_R1998772; source direction >; source compartment: Cytosol"
+  },
+  {
+   "hop": 1,
+   "name": "H2O + isochorismate -> Pyruvic acid + 2,3-dihydro-2,3-dihydroxybenzoate",
+   "in": [
+    "H2O",
+    "isochorismate"
+   ],
+   "out": [
+    "Pyruvic acid",
+    "2,3-dihydro-2,3-dihydroxybenzoate"
+   ],
+   "note": "pathbank PW000760 reaction PW_R002453; source direction >; source compartment: Cytoplasm"
+  },
+  {
+   "hop": 1,
+   "name": "ATP + L-serine + 2,3-dihydroxybenzoic acid -> AMP + enterobactin + PPi + H+",
+   "in": [
+    "Adenosine triphosphate",
+    "L-serine",
+    "2,3-dihydroxybenzoic acid"
+   ],
+   "out": [
+    "AMP",
+    "enterobactin",
+    "PPi",
+    "H+"
+   ],
+   "note": "pathbank PW000760 reaction PW_R003389; source direction >; source compartment: Cytoplasm"
+  },
+  {
+   "hop": 1,
+   "name": "Ferric enterobactin -> Fe2+ + enterobactin",
+   "in": [
+    "Ferric enterobactin"
+   ],
+   "out": [
+    "Fe2+",
+    "enterobactin"
+   ],
+   "note": "pathbank PW000760 reaction PW_R003390; source direction >; source compartment: Cytoplasm"
+  },
+  {
+   "hop": 1,
+   "name": "ATP + 2,3-dihydroxybenzoic acid -> (2,3-Dihydroxybenzoyl)adenylic acid + PPi",
+   "in": [
+    "Adenosine triphosphate",
+    "2,3-dihydroxybenzoic acid"
+   ],
+   "out": [
+    "(2,3-Dihydroxybenzoyl)adenylic acid",
+    "PPi"
+   ],
+   "note": "pathbank PW000760 reaction PW_R005260; source direction <>; source compartment: not given"
+  },
+  {
+   "hop": 2,
+   "name": "Ferric enterobactin + H2O -> 2,3-Dihydroxybenzoylserine + Fe3+ + H+",
+   "in": [
+    "Ferric enterobactin",
+    "H2O"
+   ],
+   "out": [
+    "2,3-Dihydroxybenzoylserine",
+    "Fe3+",
+    "H+"
+   ],
+   "note": "pathbank PW000760 reaction PW_R005520; source direction >; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "2,3-dihydroxybenzoic acid + ATP + H+ -> (2,3-Dihydroxybenzoyl)adenylic acid + PPi",
+   "in": [
+    "2,3-dihydroxybenzoic acid",
+    "Adenosine triphosphate",
+    "H+"
+   ],
+   "out": [
+    "(2,3-Dihydroxybenzoyl)adenylic acid",
+    "PPi"
+   ],
+   "note": "pathbank PW002048 reaction PW_R005979; source direction >; source compartment: Cytosol"
+  },
+  {
+   "hop": 1,
+   "name": "2,3-dihydroxybenzoic acid + O2 -> H+ + 2-Carboxymuconate",
+   "in": [
+    "2,3-dihydroxybenzoic acid",
+    "O2"
+   ],
+   "out": [
+    "H+",
+    "2-Carboxymuconate"
+   ],
+   "note": "pathbank PW000751 reaction PW_R005866; source direction >; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "enterobactin transport",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW000760 transport PW_T000414; source direction >"
+  },
+  {
+   "hop": 1,
+   "name": "enterobactin transport",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW000760 transport PW_T000415; source direction >"
+  },
+  {
+   "hop": 1,
+   "name": "L-serine transport",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW000760 transport PW_T000416; source direction >"
+  },
+  {
+   "hop": null,
+   "name": "Sodium transport",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW000760 transport PW_T000416; source direction >"
+  },
+  {
+   "hop": 2,
+   "name": "Ferric enterobactin transport",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW000760 transport PW_T000417; source direction >"
+  }
+ ]
+}

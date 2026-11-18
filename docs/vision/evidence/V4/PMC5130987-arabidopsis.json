@@ -1,0 +1,1094 @@
+{
+ "run": "runs_papers/ORCH-759p/legs/chlorophyll-strict/2026-10-22_2301/papers/PMC5130987/strict",
+ "seconds": 43.8,
+ "report": {
+  "budget_s": 120.0,
+  "max_pathways": 3,
+  "sources": {
+   "pathbank": {
+    "status": "ok",
+    "pathways": [
+     {
+      "source_id": "pathbank:PW124167",
+      "accession": "PW124167",
+      "name": "Porphyrin and chlorophyll metabolism",
+      "overlap": {
+       "compounds": 12,
+       "proteins": 7
+      },
+      "steps": 39
+     },
+     {
+      "source_id": "pathbank:PW766996",
+      "accession": "PW766996",
+      "name": "Chlorophyll biosynthesis",
+      "overlap": {
+       "compounds": 10,
+       "proteins": 9
+      },
+      "steps": 14
+     },
+     {
+      "source_id": "pathbank:PW012899",
+      "accession": "PW012899",
+      "name": "Chlorophyll a Biosynthesis II",
+      "overlap": {
+       "compounds": 2,
+       "proteins": 2
+      },
+      "steps": 5
+     }
+    ],
+    "notes": [
+     "species: Arabidopsis thaliana (exact)",
+     "query ids: 16 PathBank compounds, 36 UniProt",
+     "read timeout per query 119 s; the budget is not hard inside one extract",
+     "candidates: PW124167 Porphyrin and chlorophyll metabolism {'compounds': 12, 'proteins': 7}; PW766996 Chlorophyll biosynthesis {'compounds': 10, 'proteins': 9}; PW012899 Chlorophyll a Biosynthesis II {'compounds': 2, 'proteins': 2}; PW012911 Chlorophyll a Biosynthesis I {'compounds': 2, 'proteins': 2}; PW122504 Terpenoid Backbone Biosynthesis {'compounds': 2, 'proteins': 1}; PW012901 Phylloquinol Biosynthesis {'compounds': 1, 'proteins': 1}; PW123993 Ubiquinone Biosynthesis {'compounds': 2}; PW124158 \tUbiquinone and other terpenoid-quinone biosynthesis {'compounds': 2}; PW126504 Ubiquinone and other terpenoid-quinone biosynthesis Replication Test {'compounds': 2}; PW126505 Ubiquinone and other terpenoid-quinone biosynthesis rep test {'compounds': 2}"
+    ],
+    "counts": {
+     "currency_renamed": 110,
+     "steps_reaction": 54,
+     "renamed_name_conflict": 2,
+     "kept_apart_compartment": 10,
+     "complex_joined_by_members": 21,
+     "synonyms_dropped_collision": 15,
+     "steps_transport": 4,
+     "no_compartment": 1
+    }
+   },
+   "reactome": {
+    "status": "failed",
+    "pathways": [],
+    "notes": [],
+    "counts": {},
+    "error": "KeyError"
+   },
+   "wikipathways": {
+    "status": "ok",
+    "pathways": [
+     {
+      "source_id": "wikipathways:WP3662",
+      "accession": "WP3662",
+      "name": "Phytochrome signaling pathway to turn on photomorphogenesis",
+      "overlap": [
+       "O24646",
+       "O80536",
+       "P43254"
+      ],
+      "steps": 0
+     },
+     {
+      "source_id": "wikipathways:WP2230",
+      "accession": "WP2230",
+      "name": "Chlorophyll b degradation",
+      "overlap": [
+       "18230",
+       "27888"
+      ],
+      "steps": 12
+     },
+     {
+      "source_id": "wikipathways:WP3661",
+      "accession": "WP3661",
+      "name": "Genetic interactions between sugar and hormone signaling",
+      "overlap": [
+       "A0MES8",
+       "O24606"
+      ],
+      "steps": 4
+     }
+    ],
+    "notes": [
+     "species ['arabidopsis thaliana']; candidates: WP3662 Phytochrome signaling pathway to turn on photomorphogenesis 3; WP2230 Chlorophyll b degradation 2; WP3661 Genetic interactions between sugar and hormone signaling 2",
+     "WP3662: 0 steps, 12 lines not converted",
+     "WP2230: 12 steps, 0 lines not converted",
+     "WP3661: 4 steps, 35 lines not converted"
+    ],
+    "counts": {
+     "no_compartment": 15,
+     "steps_reaction": 12,
+     "steps_interaction": 4
+    }
+   }
+  },
+  "species": [
+   {
+    "name": "Arabidopsis thaliana",
+    "taxonomy_id": "3702"
+   }
+  ],
+  "failed": [
+   "reactome"
+  ],
+  "placement": {
+   "pathbank:PW124167": {
+    "hop_2_plus": 21,
+    "hop_1": 18
+   },
+   "pathbank:PW766996": {
+    "hop_1": 12,
+    "hop_2_plus": 2
+   },
+   "pathbank:PW012899": {
+    "hop_2_plus": 3,
+    "hop_1": 2
+   },
+   "wikipathways:WP2230": {
+    "hop_1": 4,
+    "hop_2_plus": 7,
+    "hop_none": 1
+   },
+   "wikipathways:WP3661": {
+    "hop_1": 1,
+    "hop_none": 3
+   }
+  },
+  "overlay_entities_hop_none": 33,
+  "currency_only_twins": {
+   "count": 9,
+   "pairs": [
+    [
+     "processes.reactions:5aminolevulinicacid>h2o+porphobilinogen@chloroplastarabidopsisthaliana",
+     "processes.reactions:5aminolevulinicacid>porphobilinogen@plastid",
+     [
+      "H2O"
+     ]
+    ],
+    [
+     "processes.reactions:5aminolevulinicacid>h2o+porphobilinogen@chloroplastarabidopsisthaliana",
+     "processes.reactions:5aminolevulinicacid>h++h2o+porphobilinogen@chloroplastarabidopsisthaliana",
+     [
+      "H+"
+     ]
+    ],
+    [
+     "processes.reactions:hydroxymethylbilane>h2o+uroporphyrinogeniii@chloroplastarabidopsisthaliana",
+     "processes.reactions:hydroxymethylbilane>uroporphyrinogeniii@plastid",
+     [
+      "H2O"
+     ]
+    ],
+    [
+     "processes.reactions:uroporphyrinogeniii>co2+coproporphyrinogeniii@chloroplastarabidopsisthaliana",
+     "processes.reactions:h++uroporphyrinogeniii>co2+coproporphyrinogeniii@chloroplastarabidopsisthaliana",
+     [
+      "H+"
+     ]
+    ],
+    [
+     "processes.reactions:coproporphyrinogeniii+o2>co2+h2o+protoporphyrinogenix@chloroplastarabidopsisthaliana",
+     "processes.reactions:coproporphyrinogeniii+h++o2>co2+h2o+protoporphyrinogenix@chloroplastarabidopsisthaliana",
+     [
+      "H+"
+     ]
+    ],
+    [
+     "processes.reactions:5aminolevulinicacid>h++h2o+porphobilinogen@chloroplastarabidopsisthaliana",
+     "processes.reactions:5aminolevulinicacid>porphobilinogen@plastid",
+     [
+      "H+",
+      "H2O"
+     ]
+    ],
+    [
+     "processes.reactions:5aminolevulinicacid>h++h2o+porphobilinogen@chloroplastarabidopsisthaliana",
+     "processes.reactions:5aminolevulinicacid>h2o+porphobilinogen@chloroplastarabidopsisthaliana",
+     [
+      "H+"
+     ]
+    ],
+    [
+     "processes.reactions:h++uroporphyrinogeniii>co2+coproporphyrinogeniii@chloroplastarabidopsisthaliana",
+     "processes.reactions:uroporphyrinogeniii>co2+coproporphyrinogeniii@chloroplastarabidopsisthaliana",
+     [
+      "H+"
+     ]
+    ],
+    [
+     "processes.reactions:coproporphyrinogeniii+h++o2>co2+h2o+protoporphyrinogenix@chloroplastarabidopsisthaliana",
+     "processes.reactions:coproporphyrinogeniii+o2>co2+h2o+protoporphyrinogenix@chloroplastarabidopsisthaliana",
+     [
+      "H+"
+     ]
+    ]
+   ]
+  }
+ },
+ "base": {
+  "entities": 124,
+  "reactions": 23,
+  "interactions": 31,
+  "transports": 0,
+  "unresolved_refs": 0
+ },
+ "default": {
+  "entities": 188,
+  "reactions": 53,
+  "interactions": 32,
+  "transports": 0,
+  "unresolved_refs": 0
+ },
+ "full": {
+  "entities": 248,
+  "reactions": 82,
+  "interactions": 35,
+  "transports": 4,
+  "unresolved_refs": 0
+ },
+ "merged_into_base": [],
+ "added_steps": [
+  {
+   "hop": 2,
+   "name": "O2 + Fe2+ + H+ -> Fe3+ + H2O",
+   "in": [
+    "O2",
+    "Fe2+",
+    "H+"
+   ],
+   "out": [
+    "Fe3+",
+    "H2O"
+   ],
+   "note": "pathbank PW124167 reaction PW_R213417; source direction >; source compartment: Mitochondrion"
+  },
+  {
+   "hop": 1,
+   "name": "coproporphyrinogen III + O2 -> Coproporphyrin III + H2O2",
+   "in": [
+    "coproporphyrinogen III",
+    "O2"
+   ],
+   "out": [
+    "coproporphyrinogen III",
+    "H2O2"
+   ],
+   "note": "pathbank PW124167 reaction PW_R213418; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 1,
+   "name": "5-aminolevulinic acid -> porphobilinogen + H2O",
+   "in": [
+    "5-aminolevulinic acid"
+   ],
+   "out": [
+    "porphobilinogen",
+    "H2O"
+   ],
+   "note": "pathbank PW124167 reaction PW_R213419; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 1,
+   "name": "porphobilinogen + H2O -> hydroxymethylbilane + NH3",
+   "in": [
+    "porphobilinogen",
+    "H2O"
+   ],
+   "out": [
+    "hydroxymethylbilane",
+    "NH3"
+   ],
+   "note": "pathbank PW124167 reaction PW_R213420; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 1,
+   "name": "hydroxymethylbilane -> uroporphyrinogen III + H2O",
+   "in": [
+    "hydroxymethylbilane"
+   ],
+   "out": [
+    "uroporphyrinogen III",
+    "H2O"
+   ],
+   "note": "pathbank PW124167 reaction PW_R213421; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 1,
+   "name": "uroporphyrinogen III -> coproporphyrinogen III + CO2",
+   "in": [
+    "uroporphyrinogen III"
+   ],
+   "out": [
+    "coproporphyrinogen III",
+    "CO2"
+   ],
+   "note": "pathbank PW124167 reaction PW_R213422; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 1,
+   "name": "coproporphyrinogen III + O2 -> protoporphyrinogen IX + CO2 + H2O",
+   "in": [
+    "coproporphyrinogen III",
+    "O2"
+   ],
+   "out": [
+    "protoporphyrinogen IX",
+    "CO2",
+    "H2O"
+   ],
+   "note": "pathbank PW124167 reaction PW_R213423; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 1,
+   "name": "protoporphyrinogen IX + O2 -> protoporphyrin IX + H2O2",
+   "in": [
+    "protoporphyrinogen IX",
+    "O2"
+   ],
+   "out": [
+    "protoporphyrin IX",
+    "H2O2"
+   ],
+   "note": "pathbank PW124167 reaction PW_R213424; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 1,
+   "name": "protoporphyrin IX + Fe2+ -> Heme + H+",
+   "in": [
+    "protoporphyrin IX",
+    "Fe2+"
+   ],
+   "out": [
+    "Heme",
+    "H+"
+   ],
+   "note": "pathbank PW124167 reaction PW_R213425; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 1,
+   "name": "(S)-4-Amino-5-oxopentanoate -> 5-aminolevulinic acid",
+   "in": [
+    "(S)-4-Amino-5-oxopentanoate"
+   ],
+   "out": [
+    "5-aminolevulinic acid"
+   ],
+   "note": "pathbank PW124167 reaction PW_R213426; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 1,
+   "name": "ATP + protoporphyrin IX + Magnesium Sulfate + H2O -> ADP + phosphate + Magnesium protoporphyrin + H+",
+   "in": [
+    "ATP",
+    "protoporphyrin IX",
+    "Magnesium Sulfate",
+    "H2O"
+   ],
+   "out": [
+    "ADP",
+    "phosphate",
+    "Magnesium protoporphyrin",
+    "H+"
+   ],
+   "note": "pathbank PW124167 reaction PW_R213438; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 3,
+   "name": "\t Magnesium protoporphyrin monomethyl ester + NADPH + H+ + O2 -> \t 13(1)-Hydroxy-magnesium-protoporphyrin IX 13-monomethyl ester + NADP+ + H2O",
+   "in": [
+    "\t Magnesium protoporphyrin monomethyl ester",
+    "NADPH",
+    "H+",
+    "O2"
+   ],
+   "out": [
+    "\t 13(1)-Hydroxy-magnesium-protoporphyrin IX 13-monomethyl ester",
+    "NADP+",
+    "H2O"
+   ],
+   "note": "pathbank PW124167 reaction PW_R213440; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 2,
+   "name": "Heme + H2O + Farnesyl pyrophosphate -> Heme O + PPi",
+   "in": [
+    "Heme",
+    "H2O",
+    "Farnesyl pyrophosphate"
+   ],
+   "out": [
+    "Heme O",
+    "PPi"
+   ],
+   "note": "pathbank PW124167 reaction PW_R213441; source direction >; source compartment: Mitochondrion"
+  },
+  {
+   "hop": 2,
+   "name": "Heme + Reduced ferredoxin + O2 + H+ -> Biliverdin + Fe2+ + Carbon monoxide + Oxidized ferredoxin + H2O",
+   "in": [
+    "Heme",
+    "Reduced ferredoxin",
+    "O2",
+    "H+"
+   ],
+   "out": [
+    "Biliverdin",
+    "Fe2+",
+    "Carbon monoxide",
+    "Oxidized ferredoxin",
+    "H2O"
+   ],
+   "note": "pathbank PW124167 reaction PW_R213442; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 2,
+   "name": "Reduced ferredoxin + Biliverdin -> Oxidized ferredoxin + (3Z)-Phytochromobilin",
+   "in": [
+    "Reduced ferredoxin",
+    "Biliverdin"
+   ],
+   "out": [
+    "Oxidized ferredoxin",
+    "(3Z)-Phytochromobilin"
+   ],
+   "note": "pathbank PW124167 reaction PW_R213443; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 1,
+   "name": "Divinylprotochlorophyllide + NADPH + H+ -> Pchlide + NADP+",
+   "in": [
+    "Divinylprotochlorophyllide",
+    "NADPH",
+    "H+"
+   ],
+   "out": [
+    "Pchlide",
+    "NADP+"
+   ],
+   "note": "pathbank PW124167 reaction PW_R213444; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 1,
+   "name": "Pchlide + NADPH + H+ -> NADP+ + \t Chlorophyllide ",
+   "in": [
+    "Pchlide",
+    "NADPH",
+    "H+"
+   ],
+   "out": [
+    "NADP+",
+    "\t Chlorophyllide "
+   ],
+   "note": "pathbank PW124167 reaction PW_R213445; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 2,
+   "name": "pheophorbide a + Reduced ferredoxin + H+ + O2 -> red chlorophyll catabolite + Oxidized ferredoxin",
+   "in": [
+    "pheophorbide a",
+    "Reduced ferredoxin",
+    "H+",
+    "O2"
+   ],
+   "out": [
+    "red chlorophyll catabolite",
+    "Oxidized ferredoxin"
+   ],
+   "note": "pathbank PW124167 reaction PW_R213447; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 3,
+   "name": "pheophorbide a + H2O -> Pyropheophorbide a + Methanol + CO2",
+   "in": [
+    "pheophorbide a",
+    "H2O"
+   ],
+   "out": [
+    "Pyropheophorbide a",
+    "Methanol",
+    "CO2"
+   ],
+   "note": "pathbank PW124167 reaction PW_R213448; source direction >; source compartment: Cytosol"
+  },
+  {
+   "hop": 2,
+   "name": "H+ + Reduced ferredoxin + red chlorophyll catabolite -> Oxidized ferredoxin + Primary fluorescent chlorophyll catabolite",
+   "in": [
+    "H+",
+    "Reduced ferredoxin",
+    "red chlorophyll catabolite"
+   ],
+   "out": [
+    "Oxidized ferredoxin",
+    "Primary fluorescent chlorophyll catabolite"
+   ],
+   "note": "pathbank PW124167 reaction PW_R213449; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 1,
+   "name": "7(1)-Hydroxychlorophyll a + Reduced ferredoxin + H+ -> chlorophyll a + Oxidized ferredoxin + H2O",
+   "in": [
+    "7(1)-Hydroxychlorophyll a",
+    "Reduced ferredoxin",
+    "H+"
+   ],
+   "out": [
+    "chlorophyll a",
+    "Oxidized ferredoxin",
+    "H2O"
+   ],
+   "note": "pathbank PW124167 reaction PW_R213452; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 2,
+   "name": "13(1)-Oxo-magnesium-protoporphyrin IX 13-monomethyl ester + NADPH + H+ + O2 -> Divinylprotochlorophyllide + NADP+ + H2O",
+   "in": [
+    "13(1)-Oxo-magnesium-protoporphyrin IX 13-monomethyl ester",
+    "NADPH",
+    "H+",
+    "O2"
+   ],
+   "out": [
+    "Divinylprotochlorophyllide",
+    "NADP+",
+    "H2O"
+   ],
+   "note": "pathbank PW124167 reaction PW_R213498; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 2,
+   "name": "Divinylprotochlorophyllide + NADPH + H+ -> NADP+ + 3,8-divinyl chlorophyllide a",
+   "in": [
+    "Divinylprotochlorophyllide",
+    "NADPH",
+    "H+"
+   ],
+   "out": [
+    "NADP+",
+    "3,8-divinyl chlorophyllide a"
+   ],
+   "note": "pathbank PW124167 reaction PW_R213499; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 3,
+   "name": "\t 13(1)-Hydroxy-magnesium-protoporphyrin IX 13-monomethyl ester + NADPH + H+ + O2 -> 13(1)-Oxo-magnesium-protoporphyrin IX 13-monomethyl ester + NADP+ + H2O",
+   "in": [
+    "\t 13(1)-Hydroxy-magnesium-protoporphyrin IX 13-monomethyl ester",
+    "NADPH",
+    "H+",
+    "O2"
+   ],
+   "out": [
+    "13(1)-Oxo-magnesium-protoporphyrin IX 13-monomethyl ester",
+    "NADP+",
+    "H2O"
+   ],
+   "note": "pathbank PW124167 reaction PW_R213505; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 2,
+   "name": "3,8-divinyl chlorophyllide a + NADPH + H+ -> \t Chlorophyllide  + NADP+",
+   "in": [
+    "3,8-divinyl chlorophyllide a",
+    "NADPH",
+    "H+"
+   ],
+   "out": [
+    "\t Chlorophyllide ",
+    "NADP+"
+   ],
+   "note": "pathbank PW124167 reaction PW_R213506; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 1,
+   "name": "\t Chlorophyllide  + phytyl pyrophosphate -> chlorophyll a + PPi",
+   "in": [
+    "\t Chlorophyllide ",
+    "phytyl pyrophosphate"
+   ],
+   "out": [
+    "chlorophyll a",
+    "PPi"
+   ],
+   "note": "pathbank PW124167 reaction PW_R213507; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 1,
+   "name": "chlorophyll b + NADH + H+ -> NAD+ + 7(1)-Hydroxychlorophyll a",
+   "in": [
+    "chlorophyll b",
+    "NADH",
+    "H+"
+   ],
+   "out": [
+    "NAD+",
+    "7(1)-Hydroxychlorophyll a"
+   ],
+   "note": "pathbank PW124167 reaction PW_R213508; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 2,
+   "name": "\t Chlorophyllide  + O2 + NADPH + H+ -> 7(1)-Hydroxychlorophyllide a + H2O + NADP+",
+   "in": [
+    "\t Chlorophyllide ",
+    "O2",
+    "NADPH",
+    "H+"
+   ],
+   "out": [
+    "7(1)-Hydroxychlorophyllide a",
+    "H2O",
+    "NADP+"
+   ],
+   "note": "pathbank PW124167 reaction PW_R213509; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 2,
+   "name": "\t Chlorophyllide  + H+ -> pheophorbide a + Magnesium",
+   "in": [
+    "\t Chlorophyllide ",
+    "H+"
+   ],
+   "out": [
+    "pheophorbide a",
+    "Magnesium"
+   ],
+   "note": "pathbank PW124167 reaction PW_R213510; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 2,
+   "name": "L-Glutamyl-tRNA(Glu) + NADPH + H+ -> (S)-4-Amino-5-oxopentanoate + tRNA(Glu) + NADP+",
+   "in": [
+    "L-Glutamyl-tRNA(Glu)",
+    "NADPH",
+    "H+"
+   ],
+   "out": [
+    "(S)-4-Amino-5-oxopentanoate",
+    "tRNA(Glu)",
+    "NADP+"
+   ],
+   "note": "pathbank PW124167 reaction PW_R213511; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 3,
+   "name": "tRNA(Glu) + L-Glutamic acid + ATP -> L-Glutamyl-tRNA(Glu) + PPi + AMP",
+   "in": [
+    "tRNA(Glu)",
+    "L-Glutamic acid",
+    "ATP"
+   ],
+   "out": [
+    "L-Glutamyl-tRNA(Glu)",
+    "PPi",
+    "AMP"
+   ],
+   "note": "pathbank PW124167 reaction PW_R213512; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 2,
+   "name": "S-adenosyl L-methionine + Magnesium protoporphyrin -> S-Adenosylhomocysteine + \t Magnesium protoporphyrin monomethyl ester",
+   "in": [
+    "S-adenosyl L-methionine",
+    "Magnesium protoporphyrin"
+   ],
+   "out": [
+    "S-Adenosylhomocysteine",
+    "\t Magnesium protoporphyrin monomethyl ester"
+   ],
+   "note": "pathbank PW124167 reaction PW_R213513; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 1,
+   "name": "7-hydroxy-chlorophyllide a + NADPH + O2 + H+ -> Chlide b + H2O + NADP+",
+   "in": [
+    "7-hydroxy-chlorophyllide a",
+    "NADPH",
+    "O2",
+    "H+"
+   ],
+   "out": [
+    "Chlide b",
+    "H2O",
+    "NADP+"
+   ],
+   "note": "pathbank PW124167 reaction PW_R003291; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 1,
+   "name": "Chlide b + Phytyl diphosphate [pathbank] -> chlorophyll b + Diphosphate",
+   "in": [
+    "Chlide b",
+    "Phytyl diphosphate [pathbank]"
+   ],
+   "out": [
+    "chlorophyll b",
+    "Diphosphate"
+   ],
+   "note": "pathbank PW124167 reaction PW_R003292; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 1,
+   "name": "chlorophyll a + H+ -> pheophytin a + Magnesium",
+   "in": [
+    "chlorophyll a",
+    "H+"
+   ],
+   "out": [
+    "pheophytin a",
+    "Magnesium"
+   ],
+   "note": "pathbank PW124167 reaction PW_R047552; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 1,
+   "name": "5-aminolevulinic acid -> porphobilinogen + H2O + H+",
+   "in": [
+    "5-aminolevulinic acid"
+   ],
+   "out": [
+    "porphobilinogen",
+    "H2O",
+    "H+"
+   ],
+   "note": "pathbank PW766996 reaction PW_R2146839; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 1,
+   "name": "uroporphyrinogen III + H+ -> coproporphyrinogen III + CO2",
+   "in": [
+    "uroporphyrinogen III",
+    "H+"
+   ],
+   "out": [
+    "coproporphyrinogen III",
+    "CO2"
+   ],
+   "note": "pathbank PW766996 reaction PW_R2146842; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 1,
+   "name": "coproporphyrinogen III + H+ + O2 -> protoporphyrinogen IX + H2O + CO2",
+   "in": [
+    "coproporphyrinogen III",
+    "H+",
+    "O2"
+   ],
+   "out": [
+    "protoporphyrinogen IX",
+    "H2O",
+    "CO2"
+   ],
+   "note": "pathbank PW766996 reaction PW_R2146843; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 1,
+   "name": "protoporphyrin IX + H2O + Magnesium + ATP -> Mg-Proto IX + ADP + phosphate + H+",
+   "in": [
+    "protoporphyrin IX",
+    "H2O",
+    "Magnesium",
+    "ATP"
+   ],
+   "out": [
+    "Mg-Proto IX",
+    "ADP",
+    "phosphate",
+    "H+"
+   ],
+   "note": "pathbank PW766996 reaction PW_R2146850; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 1,
+   "name": "Mg-Proto IX + S-adenosyl L-methionine -> S-Adenosylhomocysteine + Mg-Protoporphyrin IX 13-monomethyl ester",
+   "in": [
+    "Mg-Proto IX",
+    "S-adenosyl L-methionine"
+   ],
+   "out": [
+    "S-Adenosylhomocysteine",
+    "Mg-Protoporphyrin IX 13-monomethyl ester"
+   ],
+   "note": "pathbank PW766996 reaction PW_R2146851; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 2,
+   "name": "Mg-Protoporphyrin IX 13-monomethyl ester + NADPH + O2 + H+ -> 3,8-divinyl protochlorophyllide a + NADP+ + H2O",
+   "in": [
+    "Mg-Protoporphyrin IX 13-monomethyl ester",
+    "NADPH",
+    "O2",
+    "H+"
+   ],
+   "out": [
+    "3,8-divinyl protochlorophyllide a",
+    "NADP+",
+    "H2O"
+   ],
+   "note": "pathbank PW766996 reaction PW_R2146852; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 2,
+   "name": "3,8-divinyl protochlorophyllide a + H+ + NADPH -> NADP+ + Chlorophyllide a",
+   "in": [
+    "3,8-divinyl protochlorophyllide a",
+    "H+",
+    "NADPH"
+   ],
+   "out": [
+    "NADP+",
+    "Chlorophyllide a"
+   ],
+   "note": "pathbank PW766996 reaction PW_R2146853; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 1,
+   "name": "Chlorophyllide a + Phytyl diphosphate [pathbank] + H+ -> chlorophyll a + PPi",
+   "in": [
+    "Chlorophyllide a",
+    "Phytyl diphosphate [pathbank]",
+    "H+"
+   ],
+   "out": [
+    "chlorophyll a",
+    "PPi"
+   ],
+   "note": "pathbank PW766996 reaction PW_R2146854; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 1,
+   "name": "chlorophyll a + O2 -> chlorophyll b + H2O",
+   "in": [
+    "chlorophyll a",
+    "O2"
+   ],
+   "out": [
+    "chlorophyll b",
+    "H2O"
+   ],
+   "note": "pathbank PW766996 reaction PW_R2146855; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 1,
+   "name": "\t Chlorophyllide  + geranylgeranyl pyrophosphate + H+ -> geranylgeranyl-chlorophyll a + PPi",
+   "in": [
+    "\t Chlorophyllide ",
+    "geranylgeranyl pyrophosphate",
+    "H+"
+   ],
+   "out": [
+    "geranylgeranyl-chlorophyll a",
+    "PPi"
+   ],
+   "note": "pathbank PW012899 reaction PW_R047548; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 2,
+   "name": "geranylgeranyl-chlorophyll a + NADPH + H+ -> dihydrogeranylgeranyl-chlorophyll a + NADP+",
+   "in": [
+    "geranylgeranyl-chlorophyll a",
+    "NADPH",
+    "H+"
+   ],
+   "out": [
+    "dihydrogeranylgeranyl-chlorophyll a",
+    "NADP+"
+   ],
+   "note": "pathbank PW012899 reaction PW_R047549; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 2,
+   "name": "dihydrogeranylgeranyl-chlorophyll a + NADPH + H+ -> tetrahydrogeranylgeranyl-chlorophyll a + NADP+",
+   "in": [
+    "dihydrogeranylgeranyl-chlorophyll a",
+    "NADPH",
+    "H+"
+   ],
+   "out": [
+    "tetrahydrogeranylgeranyl-chlorophyll a",
+    "NADP+"
+   ],
+   "note": "pathbank PW012899 reaction PW_R047550; source direction >; source compartment: Chloroplast"
+  },
+  {
+   "hop": 1,
+   "name": "tetrahydrogeranylgeranyl-chlorophyll a + NADPH + H+ -> chlorophyll a + NADP+",
+   "in": [
+    "tetrahydrogeranylgeranyl-chlorophyll a",
+    "NADPH",
+    "H+"
+   ],
+   "out": [
+    "chlorophyll a",
+    "NADP+"
+   ],
+   "note": "pathbank PW012899 reaction PW_R047551; source direction >; source compartment: not given"
+  },
+  {
+   "hop": 2,
+   "name": "pheophytin b (phein b) -> 7-Hydroxymethyl pheophytin a (HMPhein a)",
+   "in": [
+    "pheophytin b (phein b)"
+   ],
+   "out": [
+    "7-Hydroxymethyl pheophytin a (HMPhein a)"
+   ],
+   "note": "wikipathways WP2230 reaction id4a526921; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "chlorophyll a -> pheophytin a",
+   "in": [
+    "chlorophyll a"
+   ],
+   "out": [
+    "pheophytin a"
+   ],
+   "note": "wikipathways WP2230 reaction id7430e041; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "7(1)-Hydroxychlorophyll a -> chlorophyll a",
+   "in": [
+    "7(1)-Hydroxychlorophyll a"
+   ],
+   "out": [
+    "chlorophyll a"
+   ],
+   "note": "wikipathways WP2230 reaction id8f760fa3; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 2,
+   "name": "pheophytin a -> pheophorbide a (pheide a)",
+   "in": [
+    "pheophytin a"
+   ],
+   "out": [
+    "pheophorbide a (pheide a)"
+   ],
+   "note": "wikipathways WP2230 reaction iddf1abe81; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "chlorophyll b -> pheophytin b (phein b)",
+   "in": [
+    "chlorophyll b"
+   ],
+   "out": [
+    "pheophytin b (phein b)"
+   ],
+   "note": "wikipathways WP2230 reaction af9a3; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 2,
+   "name": "7(1)-Hydroxychlorophyll a -> 7-Hydroxymethyl pheophytin a (HMPhein a)",
+   "in": [
+    "7(1)-Hydroxychlorophyll a"
+   ],
+   "out": [
+    "7-Hydroxymethyl pheophytin a (HMPhein a)"
+   ],
+   "note": "wikipathways WP2230 reaction f28f2; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "7-Hydroxymethyl pheophytin a (HMPhein a) -> 7-Hydroxymethyl pheophorbide a (HMPheide a)",
+   "in": [
+    "7-Hydroxymethyl pheophytin a (HMPhein a)"
+   ],
+   "out": [
+    "7-Hydroxymethyl pheophorbide a (HMPheide a)"
+   ],
+   "note": "wikipathways WP2230 reaction b937e; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 2,
+   "name": "7-Hydroxymethyl pheophytin a (HMPhein a) -> pheophytin a",
+   "in": [
+    "7-Hydroxymethyl pheophytin a (HMPhein a)"
+   ],
+   "out": [
+    "pheophytin a"
+   ],
+   "note": "wikipathways WP2230 reaction e3c9e; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 3,
+   "name": "7-Hydroxymethyl pheophorbide a (HMPheide a) -> pheophorbide a (pheide a)",
+   "in": [
+    "7-Hydroxymethyl pheophorbide a (HMPheide a)"
+   ],
+   "out": [
+    "pheophorbide a (pheide a)"
+   ],
+   "note": "wikipathways WP2230 reaction b57f6; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 2,
+   "name": "pheophytin b (phein b) -> pheophorbide b (pheide b)",
+   "in": [
+    "pheophytin b (phein b)"
+   ],
+   "out": [
+    "pheophorbide b (pheide b)"
+   ],
+   "note": "wikipathways WP2230 reaction ab9a2; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 3,
+   "name": "pheophorbide b (pheide b) -> 7-Hydroxymethyl pheophorbide a (HMPheide a)",
+   "in": [
+    "pheophorbide b (pheide b)"
+   ],
+   "out": [
+    "7-Hydroxymethyl pheophorbide a (HMPheide a)"
+   ],
+   "note": "wikipathways WP2230 reaction ededa; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 2,
+   "name": "Fe2+ transport",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW124167 transport PW_T011051; source direction >"
+  },
+  {
+   "hop": 2,
+   "name": "Fe2+ transport",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW124167 transport PW_T011053; source direction >"
+  },
+  {
+   "hop": 2,
+   "name": "Heme transport",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW124167 transport PW_T011054; source direction >"
+  },
+  {
+   "hop": 2,
+   "name": "Heme transport",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW124167 transport PW_T011055; source direction >"
+  },
+  {
+   "hop": 1,
+   "name": "GIN4 / CTR1 inhibition of EIN3",
+   "in": null,
+   "out": null,
+   "note": "wikipathways WP3661 interaction id90d6590"
+  },
+  {
+   "hop": null,
+   "name": "ETR1 inhibition of EIN2",
+   "in": null,
+   "out": null,
+   "note": "wikipathways WP3661 interaction idb5d58087"
+  },
+  {
+   "hop": null,
+   "name": "GIN4 / CTR1 inhibition of MPK3:MKK9:MPK6",
+   "in": null,
+   "out": null,
+   "note": "wikipathways WP3661 interaction idc2e25228"
+  },
+  {
+   "hop": null,
+   "name": "GIN4 / CTR1 inhibition of EIN2",
+   "in": null,
+   "out": null,
+   "note": "wikipathways WP3661 interaction idd7115f18"
+  }
+ ]
+}

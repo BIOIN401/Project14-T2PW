@@ -1,0 +1,752 @@
+{
+ "run": "runs_verify/2026-09-06_1425/papers/PMC12376012/research",
+ "seconds": 119.6,
+ "report": {
+  "budget_s": 120.0,
+  "max_pathways": 3,
+  "sources": {
+   "pathbank": {
+    "status": "ok",
+    "pathways": [
+     {
+      "source_id": "pathbank:PW569256",
+      "accession": "PW569256",
+      "name": "Sphingolipid Signaling",
+      "overlap": {
+       "compounds": 8,
+       "proteins": 9
+      },
+      "steps": 22
+     },
+     {
+      "source_id": "pathbank:PW000148",
+      "accession": "PW000148",
+      "name": "Sphingolipid Metabolism",
+      "overlap": {
+       "compounds": 10,
+       "proteins": 5
+      },
+      "steps": 29
+     },
+     {
+      "source_id": "pathbank:PW127250",
+      "accession": "PW127250",
+      "name": "Gaucher Disease",
+      "overlap": {
+       "compounds": 10,
+       "proteins": 5
+      },
+      "steps": 29
+     }
+    ],
+    "notes": [
+     "species: Homo sapiens (exact), Homo sapiens 1 (binomial)",
+     "query ids: 49 PathBank compounds, 15 UniProt",
+     "read timeout per query 119 s; the budget is not hard inside one extract",
+     "candidates: PW569256 Sphingolipid Signaling {'compounds': 8, 'proteins': 9}; PW000148 Sphingolipid Metabolism {'compounds': 10, 'proteins': 5}; PW127250 Gaucher Disease {'compounds': 10, 'proteins': 5}; PW127251 Globoid Cell Leukodystrophy {'compounds': 10, 'proteins': 5}; PW127252 Metachromatic Leukodystrophy (MLD) {'compounds': 10, 'proteins': 5}; PW127253 Fabry Disease {'compounds': 10, 'proteins': 5}; PW720113 tut {'compounds': 9, 'proteins': 6}; PW122154 sphingomyelin {'compounds': 3, 'proteins': 2}; PW566925 Apoptosis Signaling {'compounds': 3, 'proteins': 1}; PW000023 Fatty Acid Metabolism {'compounds': 2}"
+    ],
+    "counts": {
+     "steps_interaction": 3,
+     "steps_reaction": 73,
+     "kept_apart_compartment": 3,
+     "synonyms_dropped_collision": 5,
+     "renamed_name_conflict": 10,
+     "steps_transport": 4,
+     "currency_renamed": 42,
+     "complex_joined_by_members": 28
+    }
+   },
+   "reactome": {
+    "status": "ok",
+    "pathways": [
+     {
+      "source_id": "reactome:R-HSA-1660661",
+      "accession": "R-HSA-1660661",
+      "name": "Sphingolipid de novo biosynthesis",
+      "overlap": [
+       "UniProt:O15121",
+       "UniProt:O15269",
+       "UniProt:O15270",
+       "UniProt:Q06136",
+       "UniProt:Q8NFR3",
+       "UniProt:Q969W0",
+       "UniProt:Q96LT4",
+       "UniProt:Q9NUV7",
+       "UniProt:Q9NYA1",
+       "UniProt:Q9Y5P4"
+      ],
+      "steps": 0
+     },
+     {
+      "source_id": "reactome:R-HSA-9845614",
+      "accession": "R-HSA-9845614",
+      "name": "Sphingolipid catabolism",
+      "overlap": [
+       "ChEBI:17585",
+       "UniProt:O95470",
+       "UniProt:Q9BX95"
+      ],
+      "steps": 0
+     }
+    ],
+    "notes": [
+     "29 ids probed; candidates: R-HSA-1660661 Sphingolipid de novo biosynthesis 10; R-HSA-9845614 Sphingolipid catabolism 3",
+     "stopped early: BudgetExceeded: https://reactome.org/ContentService/data/query/R-HSA-9843721",
+     "stopped early: BudgetExceeded: https://reactome.org/ContentService/data/pathway/R-HSA-9845614/containedEvents"
+    ],
+    "counts": {}
+   },
+   "wikipathways": {
+    "status": "failed",
+    "pathways": [],
+    "notes": [],
+    "counts": {},
+    "error": "BudgetExceeded: https://www.wikipathways.org/wikipathways-assets/pathways/WP4725/WP4725.gpml"
+   }
+  },
+  "species": [
+   {
+    "name": "Homo sapiens",
+    "taxonomy_id": "9606"
+   }
+  ],
+  "failed": [
+   "wikipathways"
+  ],
+  "placement": {
+   "pathbank:PW569256": {
+    "merged_into_base": 5,
+    "hop_1": 14,
+    "hop_2_plus": 2,
+    "hop_none": 1
+   },
+   "pathbank:PW127250": {
+    "merged_into_base": 2,
+    "hop_1": 19,
+    "hop_2_plus": 7
+   },
+   "pathbank:PW000148": {
+    "merged_into_base": 2,
+    "hop_1": 19,
+    "hop_2_plus": 7
+   }
+  },
+  "overlay_entities_hop_none": 54,
+  "currency_only_twins": {
+   "count": 0,
+   "pairs": []
+  }
+ },
+ "base": {
+  "entities": 64,
+  "reactions": 19,
+  "transports": 2,
+  "interactions": 1,
+  "unresolved_refs": 2
+ },
+ "default": {
+  "entities": 152,
+  "reactions": 47,
+  "transports": 6,
+  "interactions": 2,
+  "unresolved_refs": 0
+ },
+ "full": {
+  "entities": 179,
+  "reactions": 55,
+  "transports": 6,
+  "interactions": 4,
+  "unresolved_refs": 0
+ },
+ "merged_into_base": [
+  {
+   "key": "processes.reactions:lserine+palmitoylcoa>3ketodihydrosphingosine3kds@erstate",
+   "name": "SPT reaction",
+   "db": [
+    {
+     "kind": "database",
+     "source": "pathbank:PW569256",
+     "quote": null,
+     "stage": "extension_db",
+     "note": "pathbank PW569256 reaction PW_R1567007; source direction >; source compartment: Endoplasmic Reticulum; matched row state: ER state"
+    }
+   ]
+  },
+  {
+   "key": "processes.reactions:dihydroceramide>ceramide@erstate",
+   "name": "Dihydroceramide desaturase reaction",
+   "db": [
+    {
+     "kind": "database",
+     "source": "pathbank:PW569256",
+     "quote": null,
+     "stage": "extension_db",
+     "note": "pathbank PW569256 reaction PW_R1567033; source direction >; source compartment: Endoplasmic Reticulum; matched row state: ER state"
+    }
+   ]
+  },
+  {
+   "key": "processes.reactions:sphingosine>sphingosine1phosphate@",
+   "name": "Sphingosine kinase reaction",
+   "db": [
+    {
+     "kind": "database",
+     "source": "pathbank:PW569256",
+     "quote": null,
+     "stage": "extension_db",
+     "note": "pathbank PW569256 reaction PW_R1567211; source direction >; source compartment: Lysosome"
+    },
+    {
+     "kind": "database",
+     "source": "pathbank:PW000148",
+     "quote": null,
+     "stage": "extension_db",
+     "note": "pathbank PW000148 reaction PW_R001194; source direction >; source compartment: Endoplasmic Reticulum Membrane"
+    },
+    {
+     "kind": "database",
+     "source": "pathbank:PW000148",
+     "quote": null,
+     "stage": "extension_db",
+     "note": "pathbank PW000148 reaction PW_R001196; source direction >; source compartment: Cell Membrane"
+    },
+    {
+     "kind": "database",
+     "source": "pathbank:PW127250",
+     "quote": null,
+     "stage": "extension_db",
+     "note": "pathbank PW127250 reaction PW_R001194; source direction >; source compartment: Endoplasmic Reticulum Membrane"
+    },
+    {
+     "kind": "database",
+     "source": "pathbank:PW127250",
+     "quote": null,
+     "stage": "extension_db",
+     "note": "pathbank PW127250 reaction PW_R001196; source direction >; source compartment: Cell Membrane"
+    }
+   ]
+  },
+  {
+   "key": "processes.reactions:sphingosine1phosphate>sphingosine@",
+   "name": "Sphingosine-1-phosphate phosphatase reaction",
+   "db": [
+    {
+     "kind": "database",
+     "source": "pathbank:PW569256",
+     "quote": null,
+     "stage": "extension_db",
+     "note": "pathbank PW569256 reaction PW_R1571091; source direction <>; source compartment: Cell Membrane"
+    },
+    {
+     "kind": "database",
+     "source": "pathbank:PW000148",
+     "quote": null,
+     "stage": "extension_db",
+     "note": "pathbank PW000148 reaction PW_R001195; source direction >; source compartment: Endoplasmic Reticulum Membrane"
+    },
+    {
+     "kind": "database",
+     "source": "pathbank:PW127250",
+     "quote": null,
+     "stage": "extension_db",
+     "note": "pathbank PW127250 reaction PW_R001195; source direction >; source compartment: Endoplasmic Reticulum Membrane"
+    }
+   ]
+  },
+  {
+   "key": "processes.reactions:sphingomyelin>ceramide@",
+   "name": "Sphingomyelinase reaction",
+   "db": [
+    {
+     "kind": "database",
+     "source": "pathbank:PW569256",
+     "quote": null,
+     "stage": "extension_db",
+     "note": "pathbank PW569256 reaction PW_R1571902; source direction >; source compartment: Lysosome"
+    }
+   ]
+  }
+ ],
+ "added_steps": [
+  {
+   "hop": 1,
+   "name": "ceramide activation of Mitogen-activated protein kinase kinase kinase 5",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW569256 interaction PW_I015798"
+  },
+  {
+   "hop": 2,
+   "name": "Mitogen-activated protein kinase kinase kinase 5 activation of p38",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW569256 interaction PW_I015799"
+  },
+  {
+   "hop": 2,
+   "name": "Mitogen-activated protein kinase kinase kinase 5 activation of JNK",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW569256 interaction PW_I015800"
+  },
+  {
+   "hop": 1,
+   "name": "Sphinganine -> dihydroceramide",
+   "in": [
+    "Sphinganine"
+   ],
+   "out": [
+    "dihydroceramide"
+   ],
+   "note": "pathbank PW569256 reaction PW_R1567026; source direction >; source compartment: Endoplasmic Reticulum"
+  },
+  {
+   "hop": 1,
+   "name": "ceramide -> sphingomyelin",
+   "in": [
+    "ceramide"
+   ],
+   "out": [
+    "sphingomyelin"
+   ],
+   "note": "pathbank PW569256 reaction PW_R1567106; source direction >; source compartment: Golgi Apparatus"
+  },
+  {
+   "hop": 1,
+   "name": "ceramide -> sphingosine",
+   "in": [
+    "ceramide"
+   ],
+   "out": [
+    "sphingosine"
+   ],
+   "note": "pathbank PW569256 reaction PW_R1570560; source direction >; source compartment: Lysosome"
+  },
+  {
+   "hop": 1,
+   "name": "sphingosine -> ceramide",
+   "in": [
+    "sphingosine"
+   ],
+   "out": [
+    "ceramide"
+   ],
+   "note": "pathbank PW569256 reaction PW_R1571270; source direction <>; source compartment: Cell Membrane"
+  },
+  {
+   "hop": 1,
+   "name": "glucosylceramide [pathbank] -> ceramide",
+   "in": [
+    "glucosylceramide [pathbank]"
+   ],
+   "out": [
+    "ceramide"
+   ],
+   "note": "pathbank PW569256 reaction PW_R1572134; source direction >; source compartment: Lysosome"
+  },
+  {
+   "hop": 1,
+   "name": "3-ketodihydrosphingosine (3-KDS) -> Sphinganine",
+   "in": [
+    "3-ketodihydrosphingosine (3-KDS)"
+   ],
+   "out": [
+    "Sphinganine"
+   ],
+   "note": "pathbank PW569256 reaction PW_R1674702; source direction >; source compartment: Endoplasmic Reticulum"
+  },
+  {
+   "hop": 1,
+   "name": "ceramide -> glucosylceramide [pathbank]",
+   "in": [
+    "ceramide"
+   ],
+   "out": [
+    "glucosylceramide [pathbank]"
+   ],
+   "note": "pathbank PW569256 reaction PW_R1674703; source direction >; source compartment: Endoplasmic Reticulum"
+  },
+  {
+   "hop": 1,
+   "name": "ceramide -> Ceramide 1-phosphate [pathbank]",
+   "in": [
+    "ceramide"
+   ],
+   "out": [
+    "Ceramide 1-phosphate [pathbank]"
+   ],
+   "note": "pathbank PW569256 reaction PW_R1674705; source direction >; source compartment: Endoplasmic Reticulum"
+  },
+  {
+   "hop": 1,
+   "name": "ceramide -> sphingomyelin",
+   "in": [
+    "ceramide"
+   ],
+   "out": [
+    "sphingomyelin"
+   ],
+   "note": "pathbank PW569256 reaction PW_R1674708; source direction <>; source compartment: Cell Membrane"
+  },
+  {
+   "hop": null,
+   "name": "p38 + JNK -> Apoptosis regulator BAX",
+   "in": [
+    "p38",
+    "JNK"
+   ],
+   "out": [
+    "Apoptosis regulator BAX"
+   ],
+   "note": "pathbank PW569256 reaction PW_R1884285; source direction >; source compartment: Cytosol"
+  },
+  {
+   "hop": 1,
+   "name": "palmitoyl-CoA + L-serine -> 3-ketodihydrosphingosine (3-KDS) + CO2",
+   "in": [
+    "palmitoyl-CoA",
+    "L-serine"
+   ],
+   "out": [
+    "3-ketodihydrosphingosine (3-KDS)",
+    "CO2"
+   ],
+   "note": "pathbank PW000148 reaction PW_R001168; source direction >; source compartment: Cytosol"
+  },
+  {
+   "hop": 1,
+   "name": "Sphinganine + NADPH -> 3-ketodihydrosphingosine (3-KDS) + NADP+",
+   "in": [
+    "Sphinganine",
+    "NADPH"
+   ],
+   "out": [
+    "3-ketodihydrosphingosine (3-KDS)",
+    "NADP+"
+   ],
+   "note": "pathbank PW000148 reaction PW_R001169; source direction >; source compartment: Cytosol"
+  },
+  {
+   "hop": 2,
+   "name": "Sphinganine 1-phosphate + ADP -> Sphinganine + ATP",
+   "in": [
+    "Sphinganine 1-phosphate",
+    "ADP"
+   ],
+   "out": [
+    "Sphinganine",
+    "ATP"
+   ],
+   "note": "pathbank PW000148 reaction PW_R001170; source direction >; source compartment: Endoplasmic Reticulum"
+  },
+  {
+   "hop": 2,
+   "name": "Sphinganine 1-phosphate + H2O -> Sphinganine + phosphate",
+   "in": [
+    "Sphinganine 1-phosphate",
+    "H2O"
+   ],
+   "out": [
+    "Sphinganine",
+    "phosphate"
+   ],
+   "note": "pathbank PW000148 reaction PW_R001171; source direction >; source compartment: Cell Membrane"
+  },
+  {
+   "hop": 1,
+   "name": "dihydroceramide -> Ceramide (d18:1/18:0)",
+   "in": [
+    "dihydroceramide"
+   ],
+   "out": [
+    "Ceramide (d18:1/18:0)"
+   ],
+   "note": "pathbank PW000148 reaction PW_R001186; source compartment: Endoplasmic Reticulum Membrane"
+  },
+  {
+   "hop": 1,
+   "name": "sphingosine-1-phosphate -> ethanolamine phosphate + Palmitaldehyde",
+   "in": [
+    "sphingosine-1-phosphate"
+   ],
+   "out": [
+    "ethanolamine phosphate",
+    "Palmitaldehyde"
+   ],
+   "note": "pathbank PW000148 reaction PW_R001193; source direction >; source compartment: Endoplasmic Reticulum Membrane"
+  },
+  {
+   "hop": 1,
+   "name": "Ceramide (d18:1/18:0) + H2O -> sphingosine",
+   "in": [
+    "Ceramide (d18:1/18:0)",
+    "H2O"
+   ],
+   "out": [
+    "sphingosine"
+   ],
+   "note": "pathbank PW000148 reaction PW_R001197; source direction >; source compartment: Endoplasmic Reticulum Membrane"
+  },
+  {
+   "hop": 1,
+   "name": "dihydroceramide -> Sphinganine",
+   "in": [
+    "dihydroceramide"
+   ],
+   "out": [
+    "Sphinganine"
+   ],
+   "note": "pathbank PW000148 reaction PW_R001198; source direction >; source compartment: Cytosol"
+  },
+  {
+   "hop": 2,
+   "name": "Ceramide (d18:1/18:0) + ATP -> CerP(d18:1/18:0) + ADP",
+   "in": [
+    "Ceramide (d18:1/18:0)",
+    "ATP"
+   ],
+   "out": [
+    "CerP(d18:1/18:0)",
+    "ADP"
+   ],
+   "note": "pathbank PW000148 reaction PW_R001199; source direction >; source compartment: Cell Membrane"
+  },
+  {
+   "hop": 2,
+   "name": "CerP(d18:1/18:0) + H2O -> Ceramide (d18:1/18:0) + phosphate",
+   "in": [
+    "CerP(d18:1/18:0)",
+    "H2O"
+   ],
+   "out": [
+    "Ceramide (d18:1/18:0)",
+    "phosphate"
+   ],
+   "note": "pathbank PW000148 reaction PW_R001200; source direction >; source compartment: Cell Membrane"
+  },
+  {
+   "hop": 2,
+   "name": "Ceramide (d18:1/18:0) -> CerP(d18:1/18:0)",
+   "in": [
+    "Ceramide (d18:1/18:0)"
+   ],
+   "out": [
+    "CerP(d18:1/18:0)"
+   ],
+   "note": "pathbank PW000148 reaction PW_R001201; source direction >; source compartment: Endoplasmic Reticulum Membrane"
+  },
+  {
+   "hop": 1,
+   "name": "Ceramide (d18:1/18:0) + PC(15:0/18:2(9Z,12Z)) -> sphingomyelin + Galactosylglycerol",
+   "in": [
+    "Ceramide (d18:1/18:0)",
+    "PC(15:0/18:2(9Z,12Z))"
+   ],
+   "out": [
+    "sphingomyelin",
+    "Galactosylglycerol"
+   ],
+   "note": "pathbank PW000148 reaction PW_R001203; source direction >; source compartment: Golgi Apparatus"
+  },
+  {
+   "hop": 1,
+   "name": "sphingomyelin + H2O -> Ceramide (d18:1/18:0) + Phosphorylcholine",
+   "in": [
+    "sphingomyelin",
+    "H2O"
+   ],
+   "out": [
+    "Ceramide (d18:1/18:0)",
+    "Phosphorylcholine"
+   ],
+   "note": "pathbank PW000148 reaction PW_R001204; source direction >; source compartment: Golgi Apparatus"
+  },
+  {
+   "hop": 1,
+   "name": "Ceramide (d18:1/18:0) -> galactosylceramide",
+   "in": [
+    "Ceramide (d18:1/18:0)"
+   ],
+   "out": [
+    "galactosylceramide"
+   ],
+   "note": "pathbank PW000148 reaction PW_R001205; source direction >; source compartment: Endoplasmic Reticulum Membrane"
+  },
+  {
+   "hop": 1,
+   "name": "galactosylceramide -> Ceramide (d18:1/18:0)",
+   "in": [
+    "galactosylceramide"
+   ],
+   "out": [
+    "Ceramide (d18:1/18:0)"
+   ],
+   "note": "pathbank PW000148 reaction PW_R001206; source direction >; source compartment: Lysosome"
+  },
+  {
+   "hop": 1,
+   "name": "glucosylceramide + H2O -> Ceramide (d18:1/18:0) + D-Glucose",
+   "in": [
+    "glucosylceramide",
+    "H2O"
+   ],
+   "out": [
+    "Ceramide (d18:1/18:0)",
+    "D-Glucose"
+   ],
+   "note": "pathbank PW000148 reaction PW_R001216; source direction >; source compartment: Lysosome"
+  },
+  {
+   "hop": 1,
+   "name": "Ceramide (d18:1/18:0) + Uridine diphosphate glucose -> glucosylceramide + UDP",
+   "in": [
+    "Ceramide (d18:1/18:0)",
+    "Uridine diphosphate glucose"
+   ],
+   "out": [
+    "glucosylceramide",
+    "UDP"
+   ],
+   "note": "pathbank PW000148 reaction PW_R001218; source direction >; source compartment: Endoplasmic Reticulum Membrane"
+  },
+  {
+   "hop": 1,
+   "name": "Lactosylceramide (d18:1/18:0) -> glucosylceramide",
+   "in": [
+    "Lactosylceramide (d18:1/18:0)"
+   ],
+   "out": [
+    "glucosylceramide"
+   ],
+   "note": "pathbank PW000148 reaction PW_R001219; source direction >; source compartment: Cytosol"
+  },
+  {
+   "hop": 1,
+   "name": "Lactosylceramide (d18:1/18:0) + UDP -> glucosylceramide + Uridine diphosphate glucose",
+   "in": [
+    "Lactosylceramide (d18:1/18:0)",
+    "UDP"
+   ],
+   "out": [
+    "glucosylceramide",
+    "Uridine diphosphate glucose"
+   ],
+   "note": "pathbank PW000148 reaction PW_R001221; source direction <; source compartment: Golgi Apparatus"
+  },
+  {
+   "hop": 1,
+   "name": "galactosylceramide + Phosphoadenosine phosphosulfate -> 3-O-Sulfogalactosylceramide (d18:1/18:0) + Adenosine 3',5'-diphosphate",
+   "in": [
+    "galactosylceramide",
+    "Phosphoadenosine phosphosulfate"
+   ],
+   "out": [
+    "3-O-Sulfogalactosylceramide (d18:1/18:0)",
+    "Adenosine 3',5'-diphosphate"
+   ],
+   "note": "pathbank PW000148 reaction PW_R001222; source direction >; source compartment: Golgi Apparatus"
+  },
+  {
+   "hop": 1,
+   "name": "3-O-Sulfogalactosylceramide (d18:1/18:0) + H2O -> galactosylceramide + Sulfate",
+   "in": [
+    "3-O-Sulfogalactosylceramide (d18:1/18:0)",
+    "H2O"
+   ],
+   "out": [
+    "galactosylceramide",
+    "Sulfate"
+   ],
+   "note": "pathbank PW000148 reaction PW_R001223; source direction >; source compartment: Lysosome"
+  },
+  {
+   "hop": 1,
+   "name": "galactosylceramide + D-Galactose -> Galabiosylceramide (d18:1/18:0)",
+   "in": [
+    "galactosylceramide",
+    "D-Galactose"
+   ],
+   "out": [
+    "Galabiosylceramide (d18:1/18:0)"
+   ],
+   "note": "pathbank PW000148 reaction PW_R001225; source direction <; source compartment: Lysosome"
+  },
+  {
+   "hop": 1,
+   "name": "galactosylceramide -> N-Acetylneuraminyl-galactosylceramide (d18:1/18:0)",
+   "in": [
+    "galactosylceramide"
+   ],
+   "out": [
+    "N-Acetylneuraminyl-galactosylceramide (d18:1/18:0)"
+   ],
+   "note": "pathbank PW000148 reaction PW_R001227; source direction >; source compartment: Endoplasmic Reticulum"
+  },
+  {
+   "hop": 2,
+   "name": "Galabiosylceramide (d18:1/18:0) + Phosphoadenosine phosphosulfate -> Adenosine 3',5'-diphosphate + Galabiosylceramide sulfate (d18:1/18:0)",
+   "in": [
+    "Galabiosylceramide (d18:1/18:0)",
+    "Phosphoadenosine phosphosulfate"
+   ],
+   "out": [
+    "Adenosine 3',5'-diphosphate",
+    "Galabiosylceramide sulfate (d18:1/18:0)"
+   ],
+   "note": "pathbank PW000148 reaction PW_R180411; source direction >; source compartment: Golgi Apparatus"
+  },
+  {
+   "hop": 1,
+   "name": "Sphinganine 1-phosphate -> ethanolamine phosphate + Palmitaldehyde",
+   "in": [
+    "Sphinganine 1-phosphate"
+   ],
+   "out": [
+    "ethanolamine phosphate",
+    "Palmitaldehyde"
+   ],
+   "note": "pathbank PW000148 reaction PW_R000511; source direction >; source compartment: Endoplasmic Reticulum Membrane"
+  },
+  {
+   "hop": 2,
+   "name": "ATP + Sphinganine -> ADP + Sphinganine 1-phosphate",
+   "in": [
+    "ATP",
+    "Sphinganine"
+   ],
+   "out": [
+    "ADP",
+    "Sphinganine 1-phosphate"
+   ],
+   "note": "pathbank PW000148 reaction PW_R000519; source direction >; source compartment: Cytosol"
+  },
+  {
+   "hop": 1,
+   "name": "sphingosine transport",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW569256 transport PW_T096779"
+  },
+  {
+   "hop": 1,
+   "name": "sphingosine-1-phosphate transport",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW569256 transport PW_T097863"
+  },
+  {
+   "hop": 1,
+   "name": "sphingosine-1-phosphate transport",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW569256 transport PW_T098024"
+  },
+  {
+   "hop": 1,
+   "name": "ceramide transport",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW569256 transport PW_T098661; source direction >"
+  }
+ ]
+}
