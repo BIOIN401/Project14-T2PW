@@ -1,0 +1,374 @@
+{
+ "schema": "t2pw.vision.bench_gold/1",
+ "id": "PW739181",
+ "kind": "full",
+ "species": "Homo sapiens",
+ "curated_record": {
+  "accession": "PW739181",
+  "pathway_id": 745741,
+  "name": "Taste Transduction: Sour",
+  "content_sha256": "3c9623635547aac1bf589df4f8399d963981b40a26e25b57dafc76d63065d128"
+ },
+ "complete": {
+  "reactions": true,
+  "enzymes": true,
+  "transports": true,
+  "interactions": true,
+  "compartments": true
+ },
+ "reactions": [],
+ "off_scope_reactions": [],
+ "enzymes": [
+  {
+   "id": "E1",
+   "name": "Proton channel OTOP1",
+   "aliases": [
+    "OTOP1"
+   ],
+   "ids": [
+    [
+     "pwp",
+     "pw_p425390"
+    ],
+    [
+     "uniprot",
+     "q7rtm1"
+    ]
+   ],
+   "role": "defining",
+   "for": [
+    "PW_T100249"
+   ]
+  },
+  {
+   "id": "E2",
+   "name": "Inward rectifier potassium channel (IK1)",
+   "aliases": [
+    "KCNJ2",
+    "Inward rectifier potassium channel 2",
+    "KCNJ4",
+    "Inward rectifier potassium channel 4"
+   ],
+   "ids": [
+    [
+     "pwp",
+     "pw_p000675"
+    ],
+    [
+     "uniprot",
+     "p63252"
+    ],
+    [
+     "uniprot",
+     "p48050"
+    ]
+   ],
+   "role": "defining",
+   "for": [
+    "PW_T100250"
+   ]
+  }
+ ],
+ "transports": [
+  {
+   "id": "PW_T100248",
+   "cargo": [
+    {
+     "name": "Acetic acid",
+     "aliases": [
+      "Acoh",
+      "Acetate",
+      "Ethanoate",
+      "Ethanoic acid",
+      "Ethylate",
+      "Ethylic acid",
+      "Glacial acetate",
+      "Glacial acetic acid",
+      "Kyselina octova",
+      "Methanecarboxylate",
+      "Methanecarboxylic acid",
+      "Vinegar",
+      "Vinegar acid",
+      "Acide acetique",
+      "Ch3-cooh"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "acet"
+      ],
+      [
+       "cas",
+       "64-19-7"
+      ],
+      [
+       "chebi",
+       "15366"
+      ],
+      [
+       "drugbank",
+       "db03166"
+      ],
+      [
+       "hmdb",
+       "42"
+      ],
+      [
+       "kegg",
+       "c00033"
+      ],
+      [
+       "pubchem",
+       "176"
+      ],
+      [
+       "pwc",
+       "pw_c000029"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "from": "Extracellular Space",
+   "to": "Cytosol",
+   "transporters": []
+  },
+  {
+   "id": "PW_T100249",
+   "cargo": [
+    {
+     "name": "Hydrogen Ion",
+     "aliases": [
+      "H+",
+      "H(+)",
+      "Hydrogen cation",
+      "Hydron",
+      "Proton"
+     ],
+     "ids": [
+      [
+       "chebi",
+       "15378"
+      ],
+      [
+       "hmdb",
+       "59597"
+      ],
+      [
+       "kegg",
+       "c00080"
+      ],
+      [
+       "pubchem",
+       "1038"
+      ],
+      [
+       "pwc",
+       "pw_c040034"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "from": "Extracellular Space",
+   "to": "Cytosol",
+   "transporters": [
+    {
+     "name": "Proton channel OTOP1",
+     "aliases": [
+      "OTOP1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p425390"
+      ],
+      [
+       "uniprot",
+       "q7rtm1"
+      ]
+     ],
+     "role": "defining"
+    }
+   ]
+  },
+  {
+   "id": "PW_T100250",
+   "cargo": [
+    {
+     "name": "Potassium",
+     "aliases": [
+      "K+",
+      "Kalium",
+      "Potassium (k+)",
+      "Potassium (ion)",
+      "Potassium cation",
+      "Potassium ion",
+      "Potassium ion (k+)",
+      "Potassium ion (k1+)",
+      "Potassium ion(+)",
+      "Potassium ion(1+)",
+      "Potassium monocation",
+      "Potassium(+)",
+      "Potassium(1+)",
+      "Potassium(1+) ion"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "k%2b"
+      ],
+      [
+       "cas",
+       "24203-36-9"
+      ],
+      [
+       "chebi",
+       "29103"
+      ],
+      [
+       "drugbank",
+       "db01345"
+      ],
+      [
+       "hmdb",
+       "586"
+      ],
+      [
+       "kegg",
+       "c00238"
+      ],
+      [
+       "pubchem",
+       "813"
+      ],
+      [
+       "pwc",
+       "pw_c000457"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "from": "Extracellular Space",
+   "to": "Cytosol",
+   "transporters": [
+    {
+     "name": "Inward rectifier potassium channel (IK1)",
+     "aliases": [
+      "KCNJ2",
+      "Inward rectifier potassium channel 2",
+      "KCNJ4",
+      "Inward rectifier potassium channel 4"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p000675"
+      ],
+      [
+       "uniprot",
+       "p63252"
+      ],
+      [
+       "uniprot",
+       "p48050"
+      ]
+     ],
+     "role": "defining"
+    }
+   ]
+  }
+ ],
+ "interactions": [
+  {
+   "id": "PW_I016455",
+   "a": [
+    {
+     "name": "Hydrogen Ion",
+     "aliases": [
+      "H+",
+      "H(+)",
+      "Hydrogen cation",
+      "Hydron",
+      "Proton"
+     ],
+     "ids": [
+      [
+       "chebi",
+       "15378"
+      ],
+      [
+       "hmdb",
+       "59597"
+      ],
+      [
+       "kegg",
+       "c00080"
+      ],
+      [
+       "pubchem",
+       "1038"
+      ],
+      [
+       "pwc",
+       "pw_c040034"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "b": [
+    {
+     "name": "Inward rectifier potassium channel (IK1)",
+     "aliases": [
+      "KCNJ2",
+      "Inward rectifier potassium channel 2",
+      "KCNJ4",
+      "Inward rectifier potassium channel 4"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p000675"
+      ],
+      [
+       "uniprot",
+       "p63252"
+      ],
+      [
+       "uniprot",
+       "p48050"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "relationship": "inhibition"
+  }
+ ],
+ "compartments": [
+  {
+   "id": "C1",
+   "name": "Membrane",
+   "aliases": [],
+   "ids": [],
+   "role": "defining"
+  },
+  {
+   "id": "C2",
+   "name": "Extracellular Space",
+   "aliases": [],
+   "ids": [],
+   "role": "defining"
+  },
+  {
+   "id": "C3",
+   "name": "Cytosol",
+   "aliases": [],
+   "ids": [],
+   "role": "defining"
+  }
+ ],
+ "skipped_processes": []
+}
