@@ -1,0 +1,809 @@
+{
+ "scopes": [
+  "paper",
+  "default"
+ ],
+ "totals": {
+  "n_runs": 97,
+  "crashed": [],
+  "scopes": {
+   "paper": {
+    "n": 97,
+    "generated_all_formats": 96,
+    "refused": [
+     {
+      "run": "d/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-08-21_2239/papers/PMC12782028/strict",
+      "errors": {
+       "pwml": "GenerateError: PWML export stopped by the quarantine boundary: unaccounted_locked_reactions:1"
+      }
+     }
+    ],
+    "sbml_valid": 96,
+    "sbgn_valid": 96,
+    "pwml_ok": 96,
+    "cross_ok": 38,
+    "validation_failure_kinds": {},
+    "cross_format_failure_classes": {
+     "compartment_grouping_differs:pwml_vs_sbgn": {
+      "runs": 6,
+      "total": 6,
+      "examples": [
+       {
+        "run": "59p/legs/sour_taste_v2-strict/2026-10-22_2233/papers/PMC7059786/strict",
+        "example": "sbgn 'saliva' (4 entities) is not inside one PWML compartment: ['5-HT', 'Ca++', 'Hydrogen Ion', 'OTOP1']"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-21_2057/papers/PMC12452463/strict",
+        "example": "sbgn 'extracellular space' (3 entities) is not inside one PWML compartment: ['FepA', 'enterobactin', 'ferric-enterobactin']"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-21_2239/papers/PMC12452463/strict",
+        "example": "sbgn 'extracellular' (4 entities) is not inside one PWML compartment: ['Fe3', 'FepA', 'enterobactin', 'ferric-enterobactin']"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-24_1203/papers/PMC12096016/strict",
+        "example": "sbgn 'extracellular' (4 entities) is not inside one PWML compartment: ['Fe3', 'TonB', 'enterobactin', 'ferric-enterobactin complex']"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-25_1216/papers/PMC12444477/strict",
+        "example": "sbgn 'cytoplasmic leaflet of the IM' (14 entities) is not inside one PWML compartment: ['KDO transferase', 'Kdo-lipid A', 'Kdo-lipid IV_A', 'LpxB']"
+       }
+      ]
+     },
+     "compartment_grouping_differs:pwml_vs_sbml": {
+      "runs": 7,
+      "total": 8,
+      "examples": [
+       {
+        "run": "-759/legs/menaquinone-strict/2026-10-22_1148/papers/PMC12421875/strict",
+        "example": "sbml 'intracellular' (18 entities) is not inside one PWML compartment: ['1,4-dihydroxy-2-naphthoic acid', '2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate', 'DHNA-CoA', 'Dimethylallylpyrophosphate']"
+       },
+       {
+        "run": "-759p/legs/chlorophyll-strict/2026-10-22_2301/papers/PMC5130987/strict",
+        "example": "sbml 'thylakoid membrane' (11 entities) is not inside one PWML compartment: ['3,8-divinyl-protochlorophyllide', 'GUN4', 'GluTR1', 'Mg-Proto IX']"
+       },
+       {
+        "run": "14-T2PW/runs_validation/c120/2026-09-08_1240/papers/PMC10031235/strict",
+        "example": "sbml 'cytosol' (11 entities) is not inside one PWML compartment: ['3-phosphoglycerate', '3PHP', 'D-3-phosphoglycerate dehydrogenase', 'L-Glutamic acid']"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-21_2014/papers/PMC12312563/strict",
+        "example": "sbml 'cell' (6 entities) is not inside one PWML compartment: ['1,4-dihydroxy-2-naphthoic acid (DHNA)', 'Magnesium', 'Oxoglutaric acid', 'SEPHCHC']"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-25_1216/papers/PMC12444477/strict",
+        "example": "sbml 'inner membrane (IM)' (9 entities) is not inside one PWML compartment: ['Kdo-lipid A', 'LPS', 'LpxK', 'MsbA']"
+       }
+      ]
+     },
+     "compartment_grouping_differs:sbml_vs_sbgn": {
+      "runs": 48,
+      "total": 48,
+      "examples": [
+       {
+        "run": "-759/legs/menaquinone-strict/2026-10-22_1148/papers/PMC12421875/strict",
+        "example": "sbml [1, 9, 18] vs sbgn [1, 9, 16]"
+       },
+       {
+        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
+        "example": "sbml [1, 1, 1, 1, 2] vs sbgn [1, 3]"
+       },
+       {
+        "run": "-759p/legs/chlorophyll-strict/2026-10-22_2301/papers/PMC5130987/strict",
+        "example": "sbml [6, 11, 54] vs sbgn [6, 9, 54]"
+       },
+       {
+        "run": "59p/legs/enterobactin-strict/2026-10-22_2101/papers/PMC12096016/strict",
+        "example": "sbml [1, 1, 17] vs sbgn [1, 18]"
+       },
+       {
+        "run": "59p/legs/sour_taste_v2-strict/2026-10-22_2233/papers/PMC7059786/strict",
+        "example": "sbml [1, 1, 1, 2, 2, 2, 3] vs sbgn [1, 1, 2, 3, 4]"
+       }
+      ]
+     },
+     "compartment_name_differs_between_payload_formats": {
+      "runs": 6,
+      "total": 9,
+      "examples": [
+       {
+        "run": "CH-755/legs/sour_taste-strict/2026-10-21_0139/papers/PMC7059786/strict",
+        "example": "sbml=cytoplasm sbgn=apical membrane"
+       },
+       {
+        "run": "CH-755/legs/sour_taste-strict/2026-10-21_0139/papers/PMC7059786/strict",
+        "example": "sbml=synaptic vesicles sbgn=synapse"
+       },
+       {
+        "run": "CH-755/legs/sour_taste-strict/2026-10-21_0139/papers/PMC7059786/strict",
+        "example": "sbml=synaptic vesicles sbgn=nerve fiber"
+       },
+       {
+        "run": "759p/legs/menaquinone-strict/2026-10-22_2154/papers/PMC12421875/strict",
+        "example": "sbml=intracellular sbgn=cell"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-24_1428/papers/PMC12444477/strict",
+        "example": "sbml=periplasmic leaflet of the IM sbgn=outer membrane"
+       }
+      ]
+     },
+     "compartment_placement_missing_in_pwml": {
+      "runs": 1,
+      "total": 1,
+      "examples": [
+       {
+        "run": "-759p/legs/chlorophyll-strict/2026-10-22_2301/papers/PMC5130987/strict",
+        "example": "CHLI2 (placed in sbgn)"
+       }
+      ]
+     },
+     "entity_missing_in_kgml": {
+      "runs": 2,
+      "total": 2,
+      "examples": [
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-22_2147/papers/PMC12096016/strict",
+        "example": "4'-phosphopantetheinyl transferase entD"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "Fe3"
+       }
+      ]
+     },
+     "entity_missing_in_pwml": {
+      "runs": 2,
+      "total": 2,
+      "examples": [
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-22_2147/papers/PMC12096016/strict",
+        "example": "4'-phosphopantetheinyl transferase entD"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "Fe3"
+       }
+      ]
+     },
+     "entity_missing_in_sbgn": {
+      "runs": 2,
+      "total": 4,
+      "examples": [
+       {
+        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
+        "example": "Celsr1"
+       },
+       {
+        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
+        "example": "Vangl2"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "Fe3"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "Fe3+"
+       }
+      ]
+     },
+     "entity_missing_in_sbml": {
+      "runs": 1,
+      "total": 1,
+      "examples": [
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-22_2147/papers/PMC12096016/strict",
+        "example": "4'-phosphopantetheinyl transferase entD"
+       }
+      ]
+     },
+     "interaction_extra_in_pwml": {
+      "runs": 3,
+      "total": 10,
+      "examples": [
+       {
+        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
+        "example": "Dvl-DAAM complex -> GTP"
+       },
+       {
+        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
+        "example": "Dvl-DAAM complex -> Adenosine triphosphate"
+       },
+       {
+        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
+        "example": "DAAM complex -> GTP"
+       },
+       {
+        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
+        "example": "DAAM complex -> Adenosine triphosphate"
+       },
+       {
+        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
+        "example": "Ras-related C3 botulinum toxin substrate 1 -> GTP"
+       }
+      ]
+     },
+     "interaction_missing_in_kgml": {
+      "runs": 7,
+      "total": 9,
+      "examples": [
+       {
+        "run": "CH-755/legs/sour_taste-strict/2026-10-21_0139/papers/PMC7059786/strict",
+        "example": "5-HT -> 5-HT"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-22_2147/papers/PMC13231680/strict",
+        "example": "phthalylsulfacetamide -> Zn2+"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-24_1203/papers/PMC13231680/strict",
+        "example": "phthalylsulfacetamide -> Zn2+"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-25_1216/papers/PMC12444477/strict",
+        "example": "cardiolipin -> LPS"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-09-02_2052/papers/PMC12452463/strict",
+        "example": "enterobactin -> ferric iron (Fe3+)"
+       }
+      ]
+     },
+     "process_extra_in_kgml": {
+      "runs": 1,
+      "total": 1,
+      "examples": [
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "{enterobactin} -> {ferri-enterobactin}"
+       }
+      ]
+     },
+     "process_extra_in_sbgn": {
+      "runs": 1,
+      "total": 1,
+      "examples": [
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "{enterobactin} -> {ferri-enterobactin}"
+       }
+      ]
+     },
+     "process_extra_in_sbml": {
+      "runs": 1,
+      "total": 1,
+      "examples": [
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "{Fe3, enterobactin} -> {ferri-enterobactin}"
+       }
+      ]
+     },
+     "process_missing_in_kgml": {
+      "runs": 3,
+      "total": 4,
+      "examples": [
+       {
+        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
+        "example": "{Dishevelled} -> {Dishevelled}"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "{Fe3+, enterobactin} -> {ferri-enterobactin}"
+       },
+       {
+        "run": "IN/Project14-T2PW/runs_smoke/2026-09-10_1135/papers/PMC13405594/strict",
+        "example": "{SREBF2} -> {SREBF2}"
+       }
+      ]
+     },
+     "process_missing_in_sbgn": {
+      "runs": 1,
+      "total": 1,
+      "examples": [
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "{Fe3+, enterobactin} -> {ferri-enterobactin}"
+       }
+      ]
+     },
+     "process_missing_in_sbml": {
+      "runs": 1,
+      "total": 1,
+      "examples": [
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "{Fe3+, enterobactin} -> {ferri-enterobactin}"
+       }
+      ]
+     },
+     "unresolved_reference:sbml": {
+      "runs": 1,
+      "total": 1,
+      "examples": [
+       {
+        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
+        "example": "interaction endpoint unresolved: Dishevelled (Dvl) -> Invs"
+       }
+      ]
+     }
+    },
+    "known_difference_totals": {
+     "d_pathwhiz_complex_wrapper": 110,
+     "f_unknown_sentinel": 182,
+     "b_sbgn_entities_only_in_interactions": 130,
+     "a_canonical_names": 0,
+     "e_pwml_withheld_interactions": 145,
+     "g_pwml_modifier_interactions": 7,
+     "b_sbgn_interactions_not_compared": 192,
+     "b_sbgn_omitted_regulatory_arcs": 0,
+     "f_unplaced_entities": 280,
+     "a_compartment_names": 67,
+     "h_pwml_extra_placements": 105,
+     "c_kgml_has_no_compartments_or_catalysts": 96
+    },
+    "compartment_renames": {
+     "pwml=cytoplasm sbml=extracellular": 8,
+     "pwml=cytoplasm sbgn=extracellular": 8,
+     "pwml=Extracellular Space sbml=extracellular": 7,
+     "pwml=endoplasmic reticulum sbml=cell": 5,
+     "pwml=cytoplasm sbml=cell": 4,
+     "pwml=cell sbml=apical membrane": 3,
+     "pwml=cell sbgn=extracellular": 3,
+     "pwml=Mitochondrion sbml=mitochondria": 3,
+     "pwml=Mitochondrion sbgn=mitochondria": 3,
+     "pwml=cell sbml=extracellular": 2,
+     "pwml=Extracellular Space sbgn=extracellular": 2,
+     "pwml=cell sbgn=apical membrane": 1,
+     "pwml=Cell Membrane sbml=ER": 1,
+     "pwml=Cell Membrane sbml=plasma membrane": 1,
+     "pwml=Cell Membrane sbgn=plasma membrane": 1,
+     "pwml=mitochondrial matrix sbml=cell": 1,
+     "pwml=Inner Membrane sbgn=inner membrane (IM)": 1,
+     "pwml=Inner Membrane sbgn=outer membrane (OM)": 1,
+     "pwml=cytosol sbgn=extracellular": 1,
+     "pwml=cytoplasm sbml=extracellular space": 1,
+     "pwml=endoplasmic reticulum sbml=plasma_membrane": 1,
+     "pwml=Endoplasmic Reticulum sbml=cell": 1,
+     "pwml=cytosol sbml=cell": 1,
+     "pwml=cytoplasm sbml=plasma membrane": 1,
+     "pwml=nucleus sbml=Golgi": 1,
+     "pwml=nucleus sbgn=Golgi": 1,
+     "pwml=cell sbml=mitochondria": 1,
+     "pwml=Extracellular Space sbml=cell": 1,
+     "pwml=Apical cell membrane sbml=apical membrane": 1,
+     "pwml=cell sbgn=saliva": 1
+    },
+    "unknown_sentinel_per_format": {
+     "pwml": 41,
+     "sbml": 0,
+     "sbgn": 141,
+     "kgml": 0
+    }
+   },
+   "default": {
+    "n": 97,
+    "generated_all_formats": 97,
+    "refused": [],
+    "sbml_valid": 97,
+    "sbgn_valid": 97,
+    "pwml_ok": 97,
+    "cross_ok": 38,
+    "validation_failure_kinds": {},
+    "cross_format_failure_classes": {
+     "compartment_grouping_differs:pwml_vs_sbgn": {
+      "runs": 6,
+      "total": 6,
+      "examples": [
+       {
+        "run": "59p/legs/sour_taste_v2-strict/2026-10-22_2233/papers/PMC7059786/strict",
+        "example": "sbgn 'saliva' (4 entities) is not inside one PWML compartment: ['5-HT', 'Ca++', 'Hydrogen Ion', 'OTOP1']"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-21_2057/papers/PMC12452463/strict",
+        "example": "sbgn 'extracellular space' (3 entities) is not inside one PWML compartment: ['FepA', 'enterobactin', 'ferric-enterobactin']"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-21_2239/papers/PMC12452463/strict",
+        "example": "sbgn 'extracellular' (4 entities) is not inside one PWML compartment: ['Fe3', 'FepA', 'enterobactin', 'ferric-enterobactin']"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-24_1203/papers/PMC12096016/strict",
+        "example": "sbgn 'extracellular' (4 entities) is not inside one PWML compartment: ['Fe3', 'TonB', 'enterobactin', 'ferric-enterobactin complex']"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-25_1216/papers/PMC12444477/strict",
+        "example": "sbgn 'cytoplasmic leaflet of the IM' (14 entities) is not inside one PWML compartment: ['KDO transferase', 'Kdo-lipid A', 'Kdo-lipid IV_A', 'LpxB']"
+       }
+      ]
+     },
+     "compartment_grouping_differs:pwml_vs_sbml": {
+      "runs": 7,
+      "total": 8,
+      "examples": [
+       {
+        "run": "-759/legs/menaquinone-strict/2026-10-22_1148/papers/PMC12421875/strict",
+        "example": "sbml 'intracellular' (18 entities) is not inside one PWML compartment: ['1,4-dihydroxy-2-naphthoic acid', '2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate', 'DHNA-CoA', 'Dimethylallylpyrophosphate']"
+       },
+       {
+        "run": "-759p/legs/chlorophyll-strict/2026-10-22_2301/papers/PMC5130987/strict",
+        "example": "sbml 'thylakoid membrane' (11 entities) is not inside one PWML compartment: ['3,8-divinyl-protochlorophyllide', 'GUN4', 'GluTR1', 'Mg-Proto IX']"
+       },
+       {
+        "run": "14-T2PW/runs_validation/c120/2026-09-08_1240/papers/PMC10031235/strict",
+        "example": "sbml 'cytosol' (11 entities) is not inside one PWML compartment: ['3-phosphoglycerate', '3PHP', 'D-3-phosphoglycerate dehydrogenase', 'L-Glutamic acid']"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-21_2014/papers/PMC12312563/strict",
+        "example": "sbml 'cell' (6 entities) is not inside one PWML compartment: ['1,4-dihydroxy-2-naphthoic acid (DHNA)', 'Magnesium', 'Oxoglutaric acid', 'SEPHCHC']"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-25_1216/papers/PMC12444477/strict",
+        "example": "sbml 'inner membrane (IM)' (9 entities) is not inside one PWML compartment: ['Kdo-lipid A', 'LPS', 'LpxK', 'MsbA']"
+       }
+      ]
+     },
+     "compartment_grouping_differs:sbml_vs_sbgn": {
+      "runs": 49,
+      "total": 49,
+      "examples": [
+       {
+        "run": "-759/legs/menaquinone-strict/2026-10-22_1148/papers/PMC12421875/strict",
+        "example": "sbml [1, 9, 18] vs sbgn [1, 9, 16]"
+       },
+       {
+        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
+        "example": "sbml [1, 1, 1, 1, 2] vs sbgn [1, 3]"
+       },
+       {
+        "run": "-759p/legs/chlorophyll-strict/2026-10-22_2301/papers/PMC5130987/strict",
+        "example": "sbml [6, 11, 54] vs sbgn [6, 9, 54]"
+       },
+       {
+        "run": "59p/legs/enterobactin-strict/2026-10-22_2101/papers/PMC12096016/strict",
+        "example": "sbml [1, 1, 17] vs sbgn [1, 18]"
+       },
+       {
+        "run": "59p/legs/sour_taste_v2-strict/2026-10-22_2233/papers/PMC7059786/strict",
+        "example": "sbml [1, 1, 1, 2, 2, 2, 3] vs sbgn [1, 1, 2, 3, 4]"
+       }
+      ]
+     },
+     "compartment_name_differs_between_payload_formats": {
+      "runs": 6,
+      "total": 9,
+      "examples": [
+       {
+        "run": "CH-755/legs/sour_taste-strict/2026-10-21_0139/papers/PMC7059786/strict",
+        "example": "sbml=cytoplasm sbgn=apical membrane"
+       },
+       {
+        "run": "CH-755/legs/sour_taste-strict/2026-10-21_0139/papers/PMC7059786/strict",
+        "example": "sbml=synaptic vesicles sbgn=synapse"
+       },
+       {
+        "run": "CH-755/legs/sour_taste-strict/2026-10-21_0139/papers/PMC7059786/strict",
+        "example": "sbml=synaptic vesicles sbgn=nerve fiber"
+       },
+       {
+        "run": "759p/legs/menaquinone-strict/2026-10-22_2154/papers/PMC12421875/strict",
+        "example": "sbml=intracellular sbgn=cell"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-24_1428/papers/PMC12444477/strict",
+        "example": "sbml=periplasmic leaflet of the IM sbgn=outer membrane"
+       }
+      ]
+     },
+     "compartment_placement_missing_in_pwml": {
+      "runs": 1,
+      "total": 1,
+      "examples": [
+       {
+        "run": "-759p/legs/chlorophyll-strict/2026-10-22_2301/papers/PMC5130987/strict",
+        "example": "CHLI2 (placed in sbgn)"
+       }
+      ]
+     },
+     "entity_missing_in_kgml": {
+      "runs": 2,
+      "total": 2,
+      "examples": [
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-22_2147/papers/PMC12096016/strict",
+        "example": "4'-phosphopantetheinyl transferase entD"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "Fe3"
+       }
+      ]
+     },
+     "entity_missing_in_pwml": {
+      "runs": 2,
+      "total": 2,
+      "examples": [
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-22_2147/papers/PMC12096016/strict",
+        "example": "4'-phosphopantetheinyl transferase entD"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "Fe3"
+       }
+      ]
+     },
+     "entity_missing_in_sbgn": {
+      "runs": 2,
+      "total": 4,
+      "examples": [
+       {
+        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
+        "example": "Celsr1"
+       },
+       {
+        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
+        "example": "Vangl2"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "Fe3"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "Fe3+"
+       }
+      ]
+     },
+     "entity_missing_in_sbml": {
+      "runs": 1,
+      "total": 1,
+      "examples": [
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-22_2147/papers/PMC12096016/strict",
+        "example": "4'-phosphopantetheinyl transferase entD"
+       }
+      ]
+     },
+     "interaction_extra_in_pwml": {
+      "runs": 3,
+      "total": 10,
+      "examples": [
+       {
+        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
+        "example": "Dvl-DAAM complex -> GTP"
+       },
+       {
+        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
+        "example": "Dvl-DAAM complex -> Adenosine triphosphate"
+       },
+       {
+        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
+        "example": "DAAM complex -> GTP"
+       },
+       {
+        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
+        "example": "DAAM complex -> Adenosine triphosphate"
+       },
+       {
+        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
+        "example": "Ras-related C3 botulinum toxin substrate 1 -> GTP"
+       }
+      ]
+     },
+     "interaction_missing_in_kgml": {
+      "runs": 7,
+      "total": 9,
+      "examples": [
+       {
+        "run": "CH-755/legs/sour_taste-strict/2026-10-21_0139/papers/PMC7059786/strict",
+        "example": "5-HT -> 5-HT"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-22_2147/papers/PMC13231680/strict",
+        "example": "phthalylsulfacetamide -> Zn2+"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-24_1203/papers/PMC13231680/strict",
+        "example": "phthalylsulfacetamide -> Zn2+"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-25_1216/papers/PMC12444477/strict",
+        "example": "cardiolipin -> LPS"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-09-02_2052/papers/PMC12452463/strict",
+        "example": "enterobactin -> ferric iron (Fe3+)"
+       }
+      ]
+     },
+     "process_extra_in_kgml": {
+      "runs": 1,
+      "total": 1,
+      "examples": [
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "{enterobactin} -> {ferri-enterobactin}"
+       }
+      ]
+     },
+     "process_extra_in_sbgn": {
+      "runs": 1,
+      "total": 1,
+      "examples": [
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "{enterobactin} -> {ferri-enterobactin}"
+       }
+      ]
+     },
+     "process_extra_in_sbml": {
+      "runs": 1,
+      "total": 1,
+      "examples": [
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "{Fe3, enterobactin} -> {ferri-enterobactin}"
+       }
+      ]
+     },
+     "process_missing_in_kgml": {
+      "runs": 3,
+      "total": 4,
+      "examples": [
+       {
+        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
+        "example": "{Dishevelled} -> {Dishevelled}"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "{Fe3+, enterobactin} -> {ferri-enterobactin}"
+       },
+       {
+        "run": "IN/Project14-T2PW/runs_smoke/2026-09-10_1135/papers/PMC13405594/strict",
+        "example": "{SREBF2} -> {SREBF2}"
+       }
+      ]
+     },
+     "process_missing_in_sbgn": {
+      "runs": 1,
+      "total": 1,
+      "examples": [
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "{Fe3+, enterobactin} -> {ferri-enterobactin}"
+       }
+      ]
+     },
+     "process_missing_in_sbml": {
+      "runs": 1,
+      "total": 1,
+      "examples": [
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "{Fe3+, enterobactin} -> {ferri-enterobactin}"
+       }
+      ]
+     },
+     "unresolved_reference:sbml": {
+      "runs": 1,
+      "total": 1,
+      "examples": [
+       {
+        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
+        "example": "interaction endpoint unresolved: Dishevelled (Dvl) -> Invs"
+       }
+      ]
+     }
+    },
+    "known_difference_totals": {
+     "d_pathwhiz_complex_wrapper": 109,
+     "f_unknown_sentinel": 182,
+     "b_sbgn_entities_only_in_interactions": 130,
+     "a_canonical_names": 0,
+     "e_pwml_withheld_interactions": 145,
+     "g_pwml_modifier_interactions": 7,
+     "b_sbgn_interactions_not_compared": 192,
+     "b_sbgn_omitted_regulatory_arcs": 0,
+     "f_unplaced_entities": 286,
+     "a_compartment_names": 68,
+     "h_pwml_extra_placements": 102,
+     "c_kgml_has_no_compartments_or_catalysts": 97
+    },
+    "compartment_renames": {
+     "pwml=cytoplasm sbml=extracellular": 8,
+     "pwml=cytoplasm sbgn=extracellular": 8,
+     "pwml=Extracellular Space sbml=extracellular": 7,
+     "pwml=endoplasmic reticulum sbml=cell": 6,
+     "pwml=cytoplasm sbml=cell": 4,
+     "pwml=cell sbml=apical membrane": 3,
+     "pwml=cell sbgn=extracellular": 3,
+     "pwml=Mitochondrion sbml=mitochondria": 3,
+     "pwml=Mitochondrion sbgn=mitochondria": 3,
+     "pwml=cell sbml=extracellular": 2,
+     "pwml=Extracellular Space sbgn=extracellular": 2,
+     "pwml=cell sbgn=apical membrane": 1,
+     "pwml=Cell Membrane sbml=ER": 1,
+     "pwml=Cell Membrane sbml=plasma membrane": 1,
+     "pwml=Cell Membrane sbgn=plasma membrane": 1,
+     "pwml=mitochondrial matrix sbml=cell": 1,
+     "pwml=Inner Membrane sbgn=inner membrane (IM)": 1,
+     "pwml=Inner Membrane sbgn=outer membrane (OM)": 1,
+     "pwml=cytosol sbgn=extracellular": 1,
+     "pwml=cytoplasm sbml=extracellular space": 1,
+     "pwml=endoplasmic reticulum sbml=plasma_membrane": 1,
+     "pwml=Endoplasmic Reticulum sbml=cell": 1,
+     "pwml=cytosol sbml=cell": 1,
+     "pwml=cytoplasm sbml=plasma membrane": 1,
+     "pwml=nucleus sbml=Golgi": 1,
+     "pwml=nucleus sbgn=Golgi": 1,
+     "pwml=cell sbml=mitochondria": 1,
+     "pwml=Extracellular Space sbml=cell": 1,
+     "pwml=Apical cell membrane sbml=apical membrane": 1,
+     "pwml=cell sbgn=saliva": 1
+    },
+    "unknown_sentinel_per_format": {
+     "pwml": 41,
+     "sbml": 0,
+     "sbgn": 141,
+     "kgml": 0
+    }
+   }
+  },
+  "faithfulness": {
+   "paper_quotes": {
+    "runs": 97,
+    "runs_no_text": 2,
+    "n": 1821,
+    "verbatim": 1099,
+    "fragments": 11,
+    "not_found": 587,
+    "no_text": 60,
+    "short": 64
+   },
+   "found_rate_of_judged": 0.6541,
+   "verbatim_rate_of_judged": 0.6476,
+   "not_found_examples": [
+    {
+     "key": "entities.subcellular_locations:apicalmembrane",
+     "quote": "permeation of H+ through an apical ion channel"
+    },
+    {
+     "key": "entities.subcellular_locations:cytoplasm",
+     "quote": "The entering H+ ions"
+    },
+    {
+     "key": "processes.transports:h+:apicalsidestate>typeiiicellcytoplasmstate",
+     "quote": "transduction of sour involves permeation of H+ through an apical ion channel subsequently identified as OTOP1"
+    },
+    {
+     "key": "processes.transports:5ht:synapticvesiclestate>synapsestate",
+     "quote": "Activity-dependent release of ATP from Type II cells and 5-HT from Type III cells"
+    },
+    {
+     "key": "processes.transports:h+:typeiiicellapicalstate>typeiiicellcytosolicstate",
+     "quote": "transduction of sour involves permeation of H + through an apical ion channel subsequently identified as OTOP1"
+    }
+   ],
+   "audit_modified_only_totals": {
+    "elements": 84,
+    "without_quote": 31,
+    "with_quote": 53,
+    "quote_verbatim": 22,
+    "quote_fragments": 0,
+    "quote_not_found": 27,
+    "no_text": 3,
+    "short_quotes": 1,
+    "promotion_candidates": 22
+   },
+   "extended": {
+    "no_extension_runs": 97,
+    "database_elements": 1715,
+    "database_no_cache": 1715,
+    "other_paper_quotes": 5,
+    "other_paper_no_cache": 5
+   }
+  }
+ }
+}
