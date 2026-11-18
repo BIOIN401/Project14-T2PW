@@ -118,6 +118,16 @@ Merged in `vision/main` (pushed): V1, V2, V3, V5, V6 at 04596e6c. Gated work sti
   no-regression and a PathWhiz import A/B); not part of vision. V7b's metrics (duplicate_compartment_boxes,
   compartment_box_overlaps, unlabeled_compartment_boxes) are kept as that lane's baseline.
 - **Grounding item (logged):** Ca++ in run 10 carries no database id.
+- **Layout baseline (V7b, 97 runs, default scope):** CORRECTNESS-FIXES.md's 425 SVG crossings, 428 enzyme links and 20/253
+  reading-order violations came from a pre-L4..L8 export (irdiff on the 8 differing runs: IR content grew, e.g. idx 5 and
+  9 from 8/10 to 16/19 reactions). The new baseline is **439 crossings, 440 enzyme links (6 > 200 px), 18/261
+  reading-order violations**, not a regression. Also: 185 compartment boxes, 0 overlaps, 14 unlabeled, duplicate boxes in
+  9 runs, 19 runs wider than 4:1.
+- **Importer messages on our PWML (input to main's post-Thursday pwml/ lane):** nucleic acid "Nucleotide type can't be
+  blank / not in list" and nucleic-acid location/visualization blank (idx 7); interaction "Element can't be blank" and
+  "wrong length" (idx 7); "Transport elements is too short" (idx 10); "Transport can't contain duplicate elements"
+  (idx 128); "Biological state must have unique biological states" (idx 10); transport/transporter visualization blank
+  (idx 10, 128). Ontology-blank messages come from the empty-DB harness.
 
 ## Rulings from the main orchestrator (2026-11-18) and carried constraints
 
