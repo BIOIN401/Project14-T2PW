@@ -118,7 +118,7 @@ def test_canonical_name_difference_is_known_not_a_failure(run):
 def test_payload_formats_that_disagree_on_a_name_fail(run):
     _, outs, ir = run
     sbgn = outs["sbgn"].decode("utf-8")
-    renamed = sbgn.replace('<label text="Glycine" />', '<label text="Glycin" />', 1)
+    renamed = re.sub(r'(<(?:\w+:)?label text=)"Glycine"', r'\1"Glycin"', sbgn, count=1)  # with or without a namespace prefix
     assert renamed != sbgn
     # SBGN keeps the Glycine ids, so it is still the same entity, but its name now differs from SBML and KGML
     assert "name_differs_between_payload_formats" in classes(consistency.cross_format(dict(outs, sbgn=renamed.encode("utf-8")), pwml_ir=ir))
@@ -180,7 +180,10 @@ def test_injected_catalyst_mismatch_is_flagged(run):
 def test_sbgn_regulatory_arcs_are_compared_with_sbml(run):
     _, outs, ir = run
     sbgn = outs["sbgn"].decode("utf-8")
-    extra = sbgn.replace("</map>", '<arc class="inhibition" id="a99" source="g1" target="p1"><start x="0" y="0" /><end x="0" y="0" /></arc></map>', 1)
+    # ElementTree's namespace registry is process-wide: once an SBML module registers the default namespace after export_sbgn
+    # did, the SBGN bytes carry an ns0: prefix, so the surgery takes the prefix the file uses
+    pre = (re.search(r"<(\w+:)?map[ >]", sbgn).group(1)) or ""
+    extra = sbgn.replace("</%smap>" % pre, '<%(p)sarc class="inhibition" id="a99" source="g1" target="p1"><%(p)sstart x="0" y="0" /><%(p)send x="0" y="0" /></%(p)sarc></%(p)smap>' % {"p": pre}, 1)
     assert extra != sbgn  # an SBGN inhibition arc that nothing in SBML or PWML explains
     assert "sbgn_regulatory_arc_extra" in classes(consistency.cross_format(dict(outs, sbgn=extra.encode("utf-8")), pwml_ir=ir))
     sbml = outs["sbml"].decode("utf-8")
