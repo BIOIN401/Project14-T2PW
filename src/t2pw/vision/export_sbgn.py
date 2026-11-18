@@ -36,8 +36,8 @@ SBGN_CLASS = {k: c for k, _, c in KINDS}
 SIZE = {"compound": (40, 40), "protein": (80, 40), "nucleic_acid": (80, 40), "protein_complex": (100, 50)}
 PROC = 20
 CELL_W, CELL_H, COLS, PAD = 200, 110, 8, 40
-ET.register_namespace("", NS)
-ET.register_namespace("t2pw", XNS)
+# Namespaces are emitted as literal xmlns attributes on the root, never via ET.register_namespace
+# (its prefix registry is process-wide, so output would depend on import order).
 
 
 def _cf(s) -> str:
@@ -323,7 +323,7 @@ def _x(s) -> str:  # drop characters XML 1.0 cannot carry
 
 
 def _el(parent, tag, **a):
-    return ET.SubElement(parent, "{%s}%s" % (NS, tag), {k.rstrip("_"): _x(v) for k, v in a.items()})
+    return ET.SubElement(parent, tag, {k.rstrip("_"): _x(v) for k, v in a.items()})
 
 
 def _bbox(parent, x, y, w, h):
@@ -333,13 +333,13 @@ def _bbox(parent, x, y, w, h):
 def _ids_ext(parent, row, tag="ids"):
     ids = _ids(row)
     if ids:
-        ET.SubElement(_el(parent, "extension"), "{%s}%s" % (XNS, tag), {k: _x(v) for k, v in ids.items()})
+        ET.SubElement(_el(parent, "extension"), "t2pw:" + tag, {k: _x(v) for k, v in ids.items()})
 
 
 def sbgn_export(payload: dict, ir: dict | None = None) -> tuple[str, dict]:
     m = _Model(payload or {}, ir)
     boxes = _layout(m)
-    root = ET.Element("{%s}sbgn" % NS)
+    root = ET.Element("sbgn", {"xmlns": NS, "xmlns:t2pw": XNS})
     mp = _el(root, "map", language="process description", version=PD, id="map1")
     for ck, c in m.comps.items():
         x0, y0, x1, y1 = boxes[ck]
@@ -358,7 +358,7 @@ def sbgn_export(payload: dict, ir: dict | None = None) -> tuple[str, dict]:
             _bbox(me, g["x"] + 5 + (i % 2) * 75, g["y"] + 5 + (i // 2) * 35, 70, 30)
     for p in m.procs:
         e = _el(mp, "glyph", **{"class": "process", "id": p["id"], "compartmentRef": m.comps[p["comp"]]["id"]})
-        ET.SubElement(_el(e, "extension"), "{%s}process" % XNS, {"kind": p["type"], "name": _x(p["name"])})
+        ET.SubElement(_el(e, "extension"), "t2pw:process", {"kind": p["type"], "name": _x(p["name"])})
         _bbox(e, p["x"], p["y"], PROC, PROC)
         _el(e, "port", id=p["id"] + "_in", x=p["x"] - 10, y=p["y"] + PROC // 2)
         _el(e, "port", id=p["id"] + "_out", x=p["x"] + PROC + 10, y=p["y"] + PROC // 2)

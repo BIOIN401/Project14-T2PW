@@ -1,0 +1,13 @@
+{
+  "lane": "V2b",
+  "branch": "vision/sbgn-fix",
+  "built": "sbgn_export no longer calls ET.register_namespace (process-wide prefix registry, import-order dependent). The root carries literal xmlns and xmlns:t2pw attributes; SBGN tags are unqualified and extension elements are written as 't2pw:<tag>'. Output for a clean import is byte-identical to before.",
+  "files": ["src/t2pw/vision/export_sbgn.py", "tests/test_vision_sbgn.py", "docs/vision/results/V2b.json"],
+  "tests": [["sbgnfix-unit", "see log", "C:/t/vis-runs/logs/sbgnfix-unit.log"]],
+  "proofs": {
+    "examples": "sbgn_export(final_mapped payload, IR) for runlist q-subset idx 3, 9, 10 equals docs/vision/evidence/V2/example_{3,9,10}.sbgn byte for byte (checkout files are CRLF via autocrlf; index is LF; compared after CRLF->LF), and also equals the pre-change exporter. Script: C:/t/vis-runs/scratch/vis-sbgnfix/proof.py",
+    "new_test": "test_bytes_independent_of_namespace_registry: fresh interpreter (python -c) imports t2pw.sbml.json_to_sbml and registers conflicting namespaces first; bytes equal the clean-import bytes; no 'ns0:'."
+  },
+  "dead_ends": ["ET.tostring(default_namespace=NS) still takes the t2pw prefix from the global registry (or ns1), so it is not registry-independent."],
+  "open_questions": []
+}

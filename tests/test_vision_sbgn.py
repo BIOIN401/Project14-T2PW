@@ -238,3 +238,32 @@ def test_validator_has_teeth():
     broken = text.replace(' compartmentRef="c1"', "", 1)
     assert any(p.startswith("pd10112") for p in problems(broken))
     assert problems(text.replace('class="process"', 'class="processs"'))  # XSD enum
+
+
+_PROG = (
+    "import sys, json, xml.etree.ElementTree as ET\n"
+    "import t2pw.sbml.json_to_sbml\n"
+    "from t2pw.vision.export_sbgn import sbgn_text\n"
+    "if sys.argv[1] == 'polluted':  # AFTER the exporter import, so it overrides any import-time registration\n"
+    "    ET.register_namespace('', 'urn:other')\n"
+    "    ET.register_namespace('x', 'http://sbgn.org/libsbgn/0.3')\n"
+    "    ET.register_namespace('y', 'urn:t2pw:sbgn-ext')\n"
+    "sys.stdout.buffer.write(sbgn_text(json.loads(sys.argv[2])).encode('utf-8'))\n"
+)
+
+
+def _run_fresh(mode: str) -> bytes:
+    import json
+    import subprocess
+    import sys
+
+    p = payload(reactions=[RX], transports=[TR], interactions=[{"entity_1": "A", "entity_2": "E1", "relationship": "Activation"}])
+    r = subprocess.run([sys.executable, "-c", _PROG, mode, json.dumps(p)], capture_output=True, timeout=120)
+    assert r.returncode == 0, r.stderr.decode()
+    return r.stdout
+
+
+def test_bytes_independent_of_namespace_registry():
+    clean, polluted = _run_fresh("clean"), _run_fresh("polluted")
+    assert clean == polluted and b"ns0:" not in clean and b"<sbgn xmlns=" in clean
+    assert b"ns0:" not in sbgn_text(payload(reactions=[RX])).encode()
