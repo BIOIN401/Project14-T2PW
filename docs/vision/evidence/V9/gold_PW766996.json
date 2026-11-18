@@ -1,0 +1,3690 @@
+{
+ "schema": "t2pw.vision.bench_gold/1",
+ "id": "PW766996",
+ "kind": "full",
+ "species": "Arabidopsis thaliana",
+ "curated_record": {
+  "accession": "PW766996",
+  "pathway_id": 777818,
+  "name": "Chlorophyll biosynthesis",
+  "content_sha256": "290e83120609f1c666bf57401192793ee1c732f0c59b64fd2e3f64b105deadd4"
+ },
+ "complete": {
+  "reactions": true,
+  "enzymes": true,
+  "transports": true,
+  "interactions": true,
+  "compartments": true
+ },
+ "reactions": [
+  {
+   "id": "PW_R2146839",
+   "label": "",
+   "inputs": [
+    {
+     "name": "5-Aminolevulinic acid",
+     "aliases": [
+      "5-Amnva",
+      "5-amino-4-oxo-pentanoate",
+      "5-amino-4-oxo-pentanoic acid",
+      "5-amino-4-oxopentanoate",
+      "5-amino-4-oxopentanoic acid",
+      "5-amino-4-oxovalerate",
+      "5-amino-4-oxovaleric acid",
+      "5-amino-levulinate",
+      "5-amino-levulinic acid",
+      "5-aminolaevulinate",
+      "5-aminolaevulinic acid",
+      "5-aminolevulinate",
+      "Aladerm",
+      "Amino-levulinic acid",
+      "Aminolevulinate",
+      "Aminolevulinic acid"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "5-amino-levulinate"
+      ],
+      [
+       "cas",
+       "106-60-5"
+      ],
+      [
+       "chebi",
+       "17549"
+      ],
+      [
+       "drugbank",
+       "db00855"
+      ],
+      [
+       "hmdb",
+       "1149"
+      ],
+      [
+       "kegg",
+       "c00430"
+      ],
+      [
+       "pubchem",
+       "137"
+      ],
+      [
+       "pwc",
+       "pw_c000894"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "outputs": [
+    {
+     "name": "Porphobilinogen",
+     "aliases": [
+      "PBG",
+      "5-(aminomethyl)-4-(carboxymethyl)-pyrrole-3-propionate",
+      "5-(aminomethyl)-4-(carboxymethyl)-pyrrole-3-propionic acid",
+      "Pbg"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "porphobilinogen"
+      ],
+      [
+       "cas",
+       "487-90-1"
+      ],
+      [
+       "chebi",
+       "17381"
+      ],
+      [
+       "hmdb",
+       "245"
+      ],
+      [
+       "kegg",
+       "c00931"
+      ],
+      [
+       "pubchem",
+       "1021"
+      ],
+      [
+       "pwc",
+       "pw_c000166"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "Water",
+     "aliases": [
+      "H2O",
+      "Dihydrogen oxide",
+      "Steam",
+      "[oh2]",
+      "Acqua",
+      "Agua",
+      "Aqua",
+      "Bound water",
+      "Dihydridooxygen",
+      "Eau",
+      "H2o",
+      "Hoh",
+      "Hydrogen hydroxide",
+      "Wasser"
+     ],
+     "ids": [
+      [
+       "cas",
+       "7732-18-5"
+      ],
+      [
+       "chebi",
+       "15377"
+      ],
+      [
+       "hmdb",
+       "2111"
+      ],
+      [
+       "kegg",
+       "c00001"
+      ],
+      [
+       "pubchem",
+       "962"
+      ],
+      [
+       "pwc",
+       "pw_c001420"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "Hydrogen Ion",
+     "aliases": [
+      "H+",
+      "H(+)",
+      "Hydrogen cation",
+      "Hydron",
+      "Proton"
+     ],
+     "ids": [
+      [
+       "chebi",
+       "15378"
+      ],
+      [
+       "hmdb",
+       "59597"
+      ],
+      [
+       "kegg",
+       "c00080"
+      ],
+      [
+       "pubchem",
+       "1038"
+      ],
+      [
+       "pwc",
+       "pw_c040034"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "enzyme": {
+    "name": "Delta-aminolevulinic acid dehydratase 1, chloroplastic",
+    "aliases": [
+     "HEMB1"
+    ],
+    "ids": [
+     [
+      "pwp",
+      "pw_p431548"
+     ],
+     [
+      "uniprot",
+      "q9sfh9"
+     ]
+    ],
+    "role": "defining"
+   },
+   "catalysts": [
+    {
+     "name": "Delta-aminolevulinic acid dehydratase 1, chloroplastic",
+     "aliases": [
+      "HEMB1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p431548"
+      ],
+      [
+       "uniprot",
+       "q9sfh9"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "reversible": false
+  },
+  {
+   "id": "PW_R2146840",
+   "label": "",
+   "inputs": [
+    {
+     "name": "Porphobilinogen",
+     "aliases": [
+      "PBG",
+      "5-(aminomethyl)-4-(carboxymethyl)-pyrrole-3-propionate",
+      "5-(aminomethyl)-4-(carboxymethyl)-pyrrole-3-propionic acid",
+      "Pbg"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "porphobilinogen"
+      ],
+      [
+       "cas",
+       "487-90-1"
+      ],
+      [
+       "chebi",
+       "17381"
+      ],
+      [
+       "hmdb",
+       "245"
+      ],
+      [
+       "kegg",
+       "c00931"
+      ],
+      [
+       "pubchem",
+       "1021"
+      ],
+      [
+       "pwc",
+       "pw_c000166"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "Water",
+     "aliases": [
+      "H2O",
+      "Dihydrogen oxide",
+      "Steam",
+      "[oh2]",
+      "Acqua",
+      "Agua",
+      "Aqua",
+      "Bound water",
+      "Dihydridooxygen",
+      "Eau",
+      "H2o",
+      "Hoh",
+      "Hydrogen hydroxide",
+      "Wasser"
+     ],
+     "ids": [
+      [
+       "cas",
+       "7732-18-5"
+      ],
+      [
+       "chebi",
+       "15377"
+      ],
+      [
+       "hmdb",
+       "2111"
+      ],
+      [
+       "kegg",
+       "c00001"
+      ],
+      [
+       "pubchem",
+       "962"
+      ],
+      [
+       "pwc",
+       "pw_c001420"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "outputs": [
+    {
+     "name": "Hydroxymethylbilane",
+     "aliases": [
+      "HMBilan",
+      "3,8,13,18-tetrakis(carboxymethyl)-19-(hydroxymethyl)bilane-2,7,12,17-tetrapropanoate",
+      "3,8,13,18-tetrakis(carboxymethyl)-19-(hydroxymethyl)bilane-2,7,12,17-tetrapropanoic acid",
+      "3,8,13,18-tetrakis(carboxymethyl)-5,10,15,22,23,24-hexahydro-19-(hydroxymethyl)-21h-biline-2,7,12,17-tetrapropanoate",
+      "3,8,13,18-tetrakis(carboxymethyl)-5,10,15,22,23,24-hexahydro-19-(hydroxymethyl)-21h-biline-2,7,12,17-tetrapropanoic acid",
+      "3-[2-[[4-(2-carboxyethyl)-5-[[4-(2-carboxyethyl)-5-[[4-(2-carboxyethyl)-3-(carboxymethyl)-1h-pyrrol-2-yl]methyl]-3-(carboxymethyl)-1h-pyrrol-2-yl]methyl]-3-(carboxymethyl)-1h-pyrrol-2-yl]methyl]-4-(carboxymethyl)-5-(hydroxymethyl)-1h-pyrrol-3-yl]propanoate",
+      "3-[2-[[4-(2-carboxyethyl)-5-[[4-(2-carboxyethyl)-5-[[4-(2-carboxyethyl)-3-(carboxymethyl)-1h-pyrrol-2-yl]methyl]-3-(carboxymethyl)-1h-pyrrol-2-yl]methyl]-3-(carboxymethyl)-1h-pyrrol-2-yl]methyl]-4-(carboxymethyl)-5-(hydroxymethyl)-1h-pyrrol-3-yl]propanoic acid",
+      "Preuroporphyrinogen",
+      "(hydroxymethyl)bilane"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "hydroxymethylbilane"
+      ],
+      [
+       "cas",
+       "73023-76-4"
+      ],
+      [
+       "chebi",
+       "16645"
+      ],
+      [
+       "hmdb",
+       "1137"
+      ],
+      [
+       "kegg",
+       "c01024"
+      ],
+      [
+       "pubchem",
+       "788"
+      ],
+      [
+       "pwc",
+       "pw_c000887"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "Ammonium",
+     "aliases": [
+      "Ammon",
+      "Ammonium ion",
+      "Ammonia ion",
+      "Ammonium chloride",
+      "Ammonium(1+)",
+      "Azanium",
+      "Nh4+",
+      "[nh4]+",
+      "[nh4](+)",
+      "Nh4(+)"
+     ],
+     "ids": [
+      [
+       "cas",
+       "14798-03-9"
+      ],
+      [
+       "chebi",
+       "28938"
+      ],
+      [
+       "hmdb",
+       "41827"
+      ],
+      [
+       "kegg",
+       "c01342"
+      ],
+      [
+       "pubchem",
+       "16741146"
+      ],
+      [
+       "pwc",
+       "pw_c022608"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "enzyme": {
+    "name": "Porphobilinogen deaminase, chloroplastic",
+    "aliases": [
+     "HEMC"
+    ],
+    "ids": [
+     [
+      "pwp",
+      "pw_p431549"
+     ],
+     [
+      "uniprot",
+      "q43316"
+     ]
+    ],
+    "role": "defining"
+   },
+   "catalysts": [
+    {
+     "name": "Porphobilinogen deaminase, chloroplastic",
+     "aliases": [
+      "HEMC"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p431549"
+      ],
+      [
+       "uniprot",
+       "q43316"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "reversible": false
+  },
+  {
+   "id": "PW_R2146841",
+   "label": "",
+   "inputs": [
+    {
+     "name": "Hydroxymethylbilane",
+     "aliases": [
+      "HMBilan",
+      "3,8,13,18-tetrakis(carboxymethyl)-19-(hydroxymethyl)bilane-2,7,12,17-tetrapropanoate",
+      "3,8,13,18-tetrakis(carboxymethyl)-19-(hydroxymethyl)bilane-2,7,12,17-tetrapropanoic acid",
+      "3,8,13,18-tetrakis(carboxymethyl)-5,10,15,22,23,24-hexahydro-19-(hydroxymethyl)-21h-biline-2,7,12,17-tetrapropanoate",
+      "3,8,13,18-tetrakis(carboxymethyl)-5,10,15,22,23,24-hexahydro-19-(hydroxymethyl)-21h-biline-2,7,12,17-tetrapropanoic acid",
+      "3-[2-[[4-(2-carboxyethyl)-5-[[4-(2-carboxyethyl)-5-[[4-(2-carboxyethyl)-3-(carboxymethyl)-1h-pyrrol-2-yl]methyl]-3-(carboxymethyl)-1h-pyrrol-2-yl]methyl]-3-(carboxymethyl)-1h-pyrrol-2-yl]methyl]-4-(carboxymethyl)-5-(hydroxymethyl)-1h-pyrrol-3-yl]propanoate",
+      "3-[2-[[4-(2-carboxyethyl)-5-[[4-(2-carboxyethyl)-5-[[4-(2-carboxyethyl)-3-(carboxymethyl)-1h-pyrrol-2-yl]methyl]-3-(carboxymethyl)-1h-pyrrol-2-yl]methyl]-3-(carboxymethyl)-1h-pyrrol-2-yl]methyl]-4-(carboxymethyl)-5-(hydroxymethyl)-1h-pyrrol-3-yl]propanoic acid",
+      "Preuroporphyrinogen",
+      "(hydroxymethyl)bilane"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "hydroxymethylbilane"
+      ],
+      [
+       "cas",
+       "73023-76-4"
+      ],
+      [
+       "chebi",
+       "16645"
+      ],
+      [
+       "hmdb",
+       "1137"
+      ],
+      [
+       "kegg",
+       "c01024"
+      ],
+      [
+       "pubchem",
+       "788"
+      ],
+      [
+       "pwc",
+       "pw_c000887"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "outputs": [
+    {
+     "name": "Water",
+     "aliases": [
+      "H2O",
+      "Dihydrogen oxide",
+      "Steam",
+      "[oh2]",
+      "Acqua",
+      "Agua",
+      "Aqua",
+      "Bound water",
+      "Dihydridooxygen",
+      "Eau",
+      "H2o",
+      "Hoh",
+      "Hydrogen hydroxide",
+      "Wasser"
+     ],
+     "ids": [
+      [
+       "cas",
+       "7732-18-5"
+      ],
+      [
+       "chebi",
+       "15377"
+      ],
+      [
+       "hmdb",
+       "2111"
+      ],
+      [
+       "kegg",
+       "c00001"
+      ],
+      [
+       "pubchem",
+       "962"
+      ],
+      [
+       "pwc",
+       "pw_c001420"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "Uroporphyrinogen III",
+     "aliases": [
+      "Urppr3",
+      "3,8,13,17-tetrakis(carboxymethyl)-5,10,15,20,22,24-hexahydro-2,7,12,18-porphinetetrapropionate",
+      "3,8,13,17-tetrakis(carboxymethyl)-5,10,15,20,22,24-hexahydro-2,7,12,18-porphinetetrapropionic acid",
+      "3,8,13,17-tetrakis(carboxymethyl)-5,10,15,20,22,24-hexahydro-21h,23h-porphine-2,7,12,18-tetrapropanoate",
+      "3,8,13,17-tetrakis(carboxymethyl)-5,10,15,20,22,24-hexahydro-21h,23h-porphine-2,7,12,18-tetrapropanoic acid",
+      "3,8,13,17-tetrakis(carboxymethyl)-5,10,15,20,22,24-hexahydroporphyrin-2,7,12,18-tetrapropanoate",
+      "3,8,13,17-tetrakis(carboxymethyl)-5,10,15,20,22,24-hexahydroporphyrin-2,7,12,18-tetrapropanoic acid",
+      "Urogen iii",
+      "Uroporphyrinogen iii",
+      "Uroporphyrinogen-iii",
+      "3,8,13,17-tetrakis(carboxymethyl)-5,10,15,20,22,24-hexahydroporphyrin-2,7,12,18-tetrapropionic acid",
+      "Uro'gen iii",
+      "3,8,13,17-tetrakis(carboxymethyl)-5,10,15,20,22,24-hexahydroporphyrin-2,7,12,18-tetrapropionate"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "uroporphyrinogen-iii"
+      ],
+      [
+       "cas",
+       "1976-85-8"
+      ],
+      [
+       "chebi",
+       "15437"
+      ],
+      [
+       "hmdb",
+       "1086"
+      ],
+      [
+       "kegg",
+       "c01051"
+      ],
+      [
+       "pubchem",
+       "1179"
+      ],
+      [
+       "pwc",
+       "pw_c000854"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "enzyme": {
+    "name": "Uroporphyrinogen-III synthase, chloroplastic",
+    "aliases": [
+     "UROS"
+    ],
+    "ids": [
+     [
+      "pwp",
+      "pw_p431550"
+     ],
+     [
+      "uniprot",
+      "o48721"
+     ]
+    ],
+    "role": "defining"
+   },
+   "catalysts": [
+    {
+     "name": "Uroporphyrinogen-III synthase, chloroplastic",
+     "aliases": [
+      "UROS"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p431550"
+      ],
+      [
+       "uniprot",
+       "o48721"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "reversible": false
+  },
+  {
+   "id": "PW_R2146842",
+   "label": "",
+   "inputs": [
+    {
+     "name": "Uroporphyrinogen III",
+     "aliases": [
+      "Urppr3",
+      "3,8,13,17-tetrakis(carboxymethyl)-5,10,15,20,22,24-hexahydro-2,7,12,18-porphinetetrapropionate",
+      "3,8,13,17-tetrakis(carboxymethyl)-5,10,15,20,22,24-hexahydro-2,7,12,18-porphinetetrapropionic acid",
+      "3,8,13,17-tetrakis(carboxymethyl)-5,10,15,20,22,24-hexahydro-21h,23h-porphine-2,7,12,18-tetrapropanoate",
+      "3,8,13,17-tetrakis(carboxymethyl)-5,10,15,20,22,24-hexahydro-21h,23h-porphine-2,7,12,18-tetrapropanoic acid",
+      "3,8,13,17-tetrakis(carboxymethyl)-5,10,15,20,22,24-hexahydroporphyrin-2,7,12,18-tetrapropanoate",
+      "3,8,13,17-tetrakis(carboxymethyl)-5,10,15,20,22,24-hexahydroporphyrin-2,7,12,18-tetrapropanoic acid",
+      "Urogen iii",
+      "Uroporphyrinogen iii",
+      "Uroporphyrinogen-iii",
+      "3,8,13,17-tetrakis(carboxymethyl)-5,10,15,20,22,24-hexahydroporphyrin-2,7,12,18-tetrapropionic acid",
+      "Uro'gen iii",
+      "3,8,13,17-tetrakis(carboxymethyl)-5,10,15,20,22,24-hexahydroporphyrin-2,7,12,18-tetrapropionate"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "uroporphyrinogen-iii"
+      ],
+      [
+       "cas",
+       "1976-85-8"
+      ],
+      [
+       "chebi",
+       "15437"
+      ],
+      [
+       "hmdb",
+       "1086"
+      ],
+      [
+       "kegg",
+       "c01051"
+      ],
+      [
+       "pubchem",
+       "1179"
+      ],
+      [
+       "pwc",
+       "pw_c000854"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "Hydrogen Ion",
+     "aliases": [
+      "H+",
+      "H(+)",
+      "Hydrogen cation",
+      "Hydron",
+      "Proton"
+     ],
+     "ids": [
+      [
+       "chebi",
+       "15378"
+      ],
+      [
+       "hmdb",
+       "59597"
+      ],
+      [
+       "kegg",
+       "c00080"
+      ],
+      [
+       "pubchem",
+       "1038"
+      ],
+      [
+       "pwc",
+       "pw_c040034"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "outputs": [
+    {
+     "name": "Coproporphyrinogen III",
+     "aliases": [
+      "Coprgn3",
+      "3,8,13,17-tetramethyl-5,10,15,20,22,24-hexahydroporphyrin-2,7,12,18-tetrapropanoate",
+      "3,8,13,17-tetramethyl-5,10,15,20,22,24-hexahydroporphyrin-2,7,12,18-tetrapropanoic acid",
+      "5,10,15,20,22,24-hexahydro-3,8,13,17-tetramethyl-2,7,12,18-porphinetetrapropionate",
+      "5,10,15,20,22,24-hexahydro-3,8,13,17-tetramethyl-2,7,12,18-porphinetetrapropionic acid",
+      "5,10,15,20,22,24-hexahydro-3,8,13,17-tetramethyl-21h,23h-porphine-2,7,12,18-tetrapropanoate",
+      "5,10,15,20,22,24-hexahydro-3,8,13,17-tetramethyl-21h,23h-porphine-2,7,12,18-tetrapropanoic acid",
+      "Coproporphyrinogen",
+      "Coproporphyrinogen iii",
+      "Coproporphyrinogen-iii",
+      "3,8,13,17-tetramethyl-5,10,15,20,22,24-hexahydroporphyrin-2,7,12,18-tetrapropionic acid",
+      "Coproporphyrin iii",
+      "3,8,13,17-tetramethyl-5,10,15,20,22,24-hexahydroporphyrin-2,7,12,18-tetrapropionate"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "coproporphyrinogen_iii"
+      ],
+      [
+       "cas",
+       "2624-63-7"
+      ],
+      [
+       "chebi",
+       "15439"
+      ],
+      [
+       "hmdb",
+       "1261"
+      ],
+      [
+       "kegg",
+       "c03263"
+      ],
+      [
+       "pubchem",
+       "321"
+      ],
+      [
+       "pwc",
+       "pw_c000974"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "Carbon dioxide",
+     "aliases": [
+      "CO2",
+      "Carbon oxide",
+      "Carbon-12 dioxide",
+      "Carbonic acid anhydride",
+      "Carbonic acid gas",
+      "Carbonic anhydride",
+      "[co2]",
+      "Co2",
+      "E 290",
+      "E-290",
+      "E290",
+      "R-744"
+     ],
+     "ids": [
+      [
+       "cas",
+       "124-38-9"
+      ],
+      [
+       "chebi",
+       "16526"
+      ],
+      [
+       "hmdb",
+       "1967"
+      ],
+      [
+       "kegg",
+       "c00011"
+      ],
+      [
+       "pubchem",
+       "280"
+      ],
+      [
+       "pwc",
+       "pw_c001316"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "enzyme": {
+    "name": "Uroporphyrinogen decarboxylase 1, chloroplastic",
+    "aliases": [
+     "HEME1"
+    ],
+    "ids": [
+     [
+      "pwp",
+      "pw_p431551"
+     ],
+     [
+      "uniprot",
+      "q93zb6"
+     ]
+    ],
+    "role": "defining"
+   },
+   "catalysts": [
+    {
+     "name": "Uroporphyrinogen decarboxylase 1, chloroplastic",
+     "aliases": [
+      "HEME1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p431551"
+      ],
+      [
+       "uniprot",
+       "q93zb6"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "reversible": false
+  },
+  {
+   "id": "PW_R2146843",
+   "label": "",
+   "inputs": [
+    {
+     "name": "Coproporphyrinogen III",
+     "aliases": [
+      "Coprgn3",
+      "3,8,13,17-tetramethyl-5,10,15,20,22,24-hexahydroporphyrin-2,7,12,18-tetrapropanoate",
+      "3,8,13,17-tetramethyl-5,10,15,20,22,24-hexahydroporphyrin-2,7,12,18-tetrapropanoic acid",
+      "5,10,15,20,22,24-hexahydro-3,8,13,17-tetramethyl-2,7,12,18-porphinetetrapropionate",
+      "5,10,15,20,22,24-hexahydro-3,8,13,17-tetramethyl-2,7,12,18-porphinetetrapropionic acid",
+      "5,10,15,20,22,24-hexahydro-3,8,13,17-tetramethyl-21h,23h-porphine-2,7,12,18-tetrapropanoate",
+      "5,10,15,20,22,24-hexahydro-3,8,13,17-tetramethyl-21h,23h-porphine-2,7,12,18-tetrapropanoic acid",
+      "Coproporphyrinogen",
+      "Coproporphyrinogen iii",
+      "Coproporphyrinogen-iii",
+      "3,8,13,17-tetramethyl-5,10,15,20,22,24-hexahydroporphyrin-2,7,12,18-tetrapropionic acid",
+      "Coproporphyrin iii",
+      "3,8,13,17-tetramethyl-5,10,15,20,22,24-hexahydroporphyrin-2,7,12,18-tetrapropionate"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "coproporphyrinogen_iii"
+      ],
+      [
+       "cas",
+       "2624-63-7"
+      ],
+      [
+       "chebi",
+       "15439"
+      ],
+      [
+       "hmdb",
+       "1261"
+      ],
+      [
+       "kegg",
+       "c03263"
+      ],
+      [
+       "pubchem",
+       "321"
+      ],
+      [
+       "pwc",
+       "pw_c000974"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "Hydrogen Ion",
+     "aliases": [
+      "H+",
+      "H(+)",
+      "Hydrogen cation",
+      "Hydron",
+      "Proton"
+     ],
+     "ids": [
+      [
+       "chebi",
+       "15378"
+      ],
+      [
+       "hmdb",
+       "59597"
+      ],
+      [
+       "kegg",
+       "c00080"
+      ],
+      [
+       "pubchem",
+       "1038"
+      ],
+      [
+       "pwc",
+       "pw_c040034"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "Oxygen",
+     "aliases": [
+      "O2",
+      "Dioxygen",
+      "Molecular oxygen",
+      "Oxygen molecule",
+      "[oo]",
+      "Dioxygene",
+      "Disauerstoff",
+      "E 948",
+      "E-948",
+      "E948"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "cpd-6641"
+      ],
+      [
+       "cas",
+       "7782-44-7"
+      ],
+      [
+       "chebi",
+       "15379"
+      ],
+      [
+       "hmdb",
+       "1377"
+      ],
+      [
+       "kegg",
+       "c00007"
+      ],
+      [
+       "pubchem",
+       "977"
+      ],
+      [
+       "pwc",
+       "pw_c001065"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "outputs": [
+    {
+     "name": "Protoporphyrinogen IX",
+     "aliases": [
+      "Protop9",
+      "5,10,15,20,22,24-hexahydro protoporphyrin ix deriv.",
+      "7,12-diethenyl-3,8,13,17-tetramethyl-5,10,15,20,22,24-hexahydroporphyrin-2,18-dipropanoate",
+      "7,12-diethenyl-3,8,13,17-tetramethyl-5,10,15,20,22,24-hexahydroporphyrin-2,18-dipropanoic acid",
+      "7,12-diethenyl-5,10,15,20,22,24-hexahydro-3,8,13,17-tetramethyl-21h,23h-porphine-2,18-dipropanoate",
+      "7,12-diethenyl-5,10,15,20,22,24-hexahydro-3,8,13,17-tetramethyl-21h,23h-porphine-2,18-dipropanoic acid",
+      "Protoporphyrinogen",
+      "Protoporphyrinogen ix",
+      "Protoporphyrinogen-ix"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "protoporphyrinogen"
+      ],
+      [
+       "cas",
+       "7412-77-3"
+      ],
+      [
+       "chebi",
+       "15435"
+      ],
+      [
+       "hmdb",
+       "1097"
+      ],
+      [
+       "kegg",
+       "c01079"
+      ],
+      [
+       "pubchem",
+       "121893"
+      ],
+      [
+       "pwc",
+       "pw_c000863"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "Water",
+     "aliases": [
+      "H2O",
+      "Dihydrogen oxide",
+      "Steam",
+      "[oh2]",
+      "Acqua",
+      "Agua",
+      "Aqua",
+      "Bound water",
+      "Dihydridooxygen",
+      "Eau",
+      "H2o",
+      "Hoh",
+      "Hydrogen hydroxide",
+      "Wasser"
+     ],
+     "ids": [
+      [
+       "cas",
+       "7732-18-5"
+      ],
+      [
+       "chebi",
+       "15377"
+      ],
+      [
+       "hmdb",
+       "2111"
+      ],
+      [
+       "kegg",
+       "c00001"
+      ],
+      [
+       "pubchem",
+       "962"
+      ],
+      [
+       "pwc",
+       "pw_c001420"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "Carbon dioxide",
+     "aliases": [
+      "CO2",
+      "Carbon oxide",
+      "Carbon-12 dioxide",
+      "Carbonic acid anhydride",
+      "Carbonic acid gas",
+      "Carbonic anhydride",
+      "[co2]",
+      "Co2",
+      "E 290",
+      "E-290",
+      "E290",
+      "R-744"
+     ],
+     "ids": [
+      [
+       "cas",
+       "124-38-9"
+      ],
+      [
+       "chebi",
+       "16526"
+      ],
+      [
+       "hmdb",
+       "1967"
+      ],
+      [
+       "kegg",
+       "c00011"
+      ],
+      [
+       "pubchem",
+       "280"
+      ],
+      [
+       "pwc",
+       "pw_c001316"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "enzyme": {
+    "name": "Coproporphyrinogen-III oxidase 1, chloroplastic",
+    "aliases": [
+     "CPX1"
+    ],
+    "ids": [
+     [
+      "pwp",
+      "pw_p431552"
+     ],
+     [
+      "uniprot",
+      "q9lr75"
+     ]
+    ],
+    "role": "defining"
+   },
+   "catalysts": [
+    {
+     "name": "Coproporphyrinogen-III oxidase 1, chloroplastic",
+     "aliases": [
+      "CPX1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p431552"
+      ],
+      [
+       "uniprot",
+       "q9lr75"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "reversible": false
+  },
+  {
+   "id": "PW_R2146844",
+   "label": "",
+   "inputs": [
+    {
+     "name": "Protoporphyrinogen IX",
+     "aliases": [
+      "Protop9",
+      "5,10,15,20,22,24-hexahydro protoporphyrin ix deriv.",
+      "7,12-diethenyl-3,8,13,17-tetramethyl-5,10,15,20,22,24-hexahydroporphyrin-2,18-dipropanoate",
+      "7,12-diethenyl-3,8,13,17-tetramethyl-5,10,15,20,22,24-hexahydroporphyrin-2,18-dipropanoic acid",
+      "7,12-diethenyl-5,10,15,20,22,24-hexahydro-3,8,13,17-tetramethyl-21h,23h-porphine-2,18-dipropanoate",
+      "7,12-diethenyl-5,10,15,20,22,24-hexahydro-3,8,13,17-tetramethyl-21h,23h-porphine-2,18-dipropanoic acid",
+      "Protoporphyrinogen",
+      "Protoporphyrinogen ix",
+      "Protoporphyrinogen-ix"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "protoporphyrinogen"
+      ],
+      [
+       "cas",
+       "7412-77-3"
+      ],
+      [
+       "chebi",
+       "15435"
+      ],
+      [
+       "hmdb",
+       "1097"
+      ],
+      [
+       "kegg",
+       "c01079"
+      ],
+      [
+       "pubchem",
+       "121893"
+      ],
+      [
+       "pwc",
+       "pw_c000863"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "Oxygen",
+     "aliases": [
+      "O2",
+      "Dioxygen",
+      "Molecular oxygen",
+      "Oxygen molecule",
+      "[oo]",
+      "Dioxygene",
+      "Disauerstoff",
+      "E 948",
+      "E-948",
+      "E948"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "cpd-6641"
+      ],
+      [
+       "cas",
+       "7782-44-7"
+      ],
+      [
+       "chebi",
+       "15379"
+      ],
+      [
+       "hmdb",
+       "1377"
+      ],
+      [
+       "kegg",
+       "c00007"
+      ],
+      [
+       "pubchem",
+       "977"
+      ],
+      [
+       "pwc",
+       "pw_c001065"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "outputs": [
+    {
+     "name": "Protoporphyrin IX",
+     "aliases": [
+      "PrtopIX",
+      "3,3'-(3,7,12,17-tetramethyl-8,13-divinyl-21h,23h-porphine-2,18-diyl)-bis-propionate",
+      "3,3'-(3,7,12,17-tetramethyl-8,13-divinyl-21h,23h-porphine-2,18-diyl)-bis-propionic acid",
+      "3,3'-(3,7,12,17-tetramethyl-8,13-divinylporphine-2,18-diyl)di",
+      "Kammerer's prophyrin",
+      "Ooporphyrin",
+      "Porphyrinogen ix",
+      "Ppix",
+      "Protoporphyrin",
+      "Protoporphyrin ix",
+      "Protoporphyrin-\"ix\"",
+      "Protoporphyrin-ix",
+      "3,7,12,17-tetramethyl-8,13-divinylporphyrin-2,18-dipropanoic acid",
+      "H2ppix",
+      "3,7,12,17-tetramethyl-8,13-divinylporphyrin-2,18-dipropanoate"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "protoporphyrin_ix"
+      ],
+      [
+       "cas",
+       "553-12-8"
+      ],
+      [
+       "chebi",
+       "15430"
+      ],
+      [
+       "drugbank",
+       "db02285"
+      ],
+      [
+       "hmdb",
+       "241"
+      ],
+      [
+       "kegg",
+       "c02191"
+      ],
+      [
+       "pwc",
+       "pw_c000163"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "Hydrogen peroxide",
+     "aliases": [
+      "H2O2",
+      "Adeka super el",
+      "Albone",
+      "Albone 35",
+      "Albone ds",
+      "Anti-keim 50",
+      "Asepticper",
+      "Baquashock",
+      "Cix",
+      "Clarigel gold",
+      "Crestal whitestrips",
+      "Crystacide",
+      "Dentasept",
+      "Deslime lp",
+      "Hioxyl",
+      "Hipox"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "hydrogen-peroxide"
+      ],
+      [
+       "cas",
+       "7722-84-1"
+      ],
+      [
+       "chebi",
+       "16240"
+      ],
+      [
+       "hmdb",
+       "3125"
+      ],
+      [
+       "kegg",
+       "c00027"
+      ],
+      [
+       "pubchem",
+       "784"
+      ],
+      [
+       "pwc",
+       "pw_c001783"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "enzyme": {
+    "name": "Protoporphyrinogen oxidase 1, chloroplastic",
+    "aliases": [
+     "PPOX1"
+    ],
+    "ids": [
+     [
+      "pwp",
+      "pw_p431553"
+     ],
+     [
+      "uniprot",
+      "p55826"
+     ]
+    ],
+    "role": "defining"
+   },
+   "catalysts": [
+    {
+     "name": "Protoporphyrinogen oxidase 1, chloroplastic",
+     "aliases": [
+      "PPOX1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p431553"
+      ],
+      [
+       "uniprot",
+       "p55826"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "reversible": false
+  },
+  {
+   "id": "PW_R2146849",
+   "label": "",
+   "inputs": [
+    {
+     "name": "Protoporphyrin IX",
+     "aliases": [
+      "PrtopIX",
+      "3,3'-(3,7,12,17-tetramethyl-8,13-divinyl-21h,23h-porphine-2,18-diyl)-bis-propionate",
+      "3,3'-(3,7,12,17-tetramethyl-8,13-divinyl-21h,23h-porphine-2,18-diyl)-bis-propionic acid",
+      "3,3'-(3,7,12,17-tetramethyl-8,13-divinylporphine-2,18-diyl)di",
+      "Kammerer's prophyrin",
+      "Ooporphyrin",
+      "Porphyrinogen ix",
+      "Ppix",
+      "Protoporphyrin",
+      "Protoporphyrin ix",
+      "Protoporphyrin-\"ix\"",
+      "Protoporphyrin-ix",
+      "3,7,12,17-tetramethyl-8,13-divinylporphyrin-2,18-dipropanoic acid",
+      "H2ppix",
+      "3,7,12,17-tetramethyl-8,13-divinylporphyrin-2,18-dipropanoate"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "protoporphyrin_ix"
+      ],
+      [
+       "cas",
+       "553-12-8"
+      ],
+      [
+       "chebi",
+       "15430"
+      ],
+      [
+       "drugbank",
+       "db02285"
+      ],
+      [
+       "hmdb",
+       "241"
+      ],
+      [
+       "kegg",
+       "c02191"
+      ],
+      [
+       "pwc",
+       "pw_c000163"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "Fe2+",
+     "aliases": [
+      "Armco iron",
+      "Carbonyl iron",
+      "Fe",
+      "Ferrovac e",
+      "Hematite",
+      "Infed",
+      "Loha",
+      "Limonite",
+      "Magnetite",
+      "Malleable iron",
+      "Metopirone",
+      "Metyrapone",
+      "Pzho",
+      "Pzh2m",
+      "Remko"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "ferric-hydroxamate-complexes"
+      ],
+      [
+       "cas",
+       "15438-31-0"
+      ],
+      [
+       "chebi",
+       "29033"
+      ],
+      [
+       "drugbank",
+       "db01592"
+      ],
+      [
+       "hmdb",
+       "692"
+      ],
+      [
+       "kegg",
+       "c14818"
+      ],
+      [
+       "pubchem",
+       "27284"
+      ],
+      [
+       "pwc",
+       "pw_c000544"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "outputs": [
+    {
+     "name": "Hydrogen Ion",
+     "aliases": [
+      "H+",
+      "H(+)",
+      "Hydrogen cation",
+      "Hydron",
+      "Proton"
+     ],
+     "ids": [
+      [
+       "chebi",
+       "15378"
+      ],
+      [
+       "hmdb",
+       "59597"
+      ],
+      [
+       "kegg",
+       "c00080"
+      ],
+      [
+       "pubchem",
+       "1038"
+      ],
+      [
+       "pwc",
+       "pw_c040034"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "Heme",
+     "aliases": [
+      "(protoporphyrinato)iron",
+      "Ferroheme",
+      "Ferroheme b",
+      "Ferroprotoheme",
+      "Ferroprotoporphyrin",
+      "Ferroprotoporphyrin ix",
+      "Ferrous protoheme",
+      "Ferrous protoheme ix",
+      "Haem",
+      "Hem",
+      "Iron protoporphyrin",
+      "Iron protoporphyrin ix",
+      "Iron(ii) protoporphyrin ix",
+      "Protoferroheme"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "heme_a"
+      ],
+      [
+       "cas",
+       "14875-96-8"
+      ],
+      [
+       "chebi",
+       "17627"
+      ],
+      [
+       "drugbank",
+       "db02577"
+      ],
+      [
+       "hmdb",
+       "3178"
+      ],
+      [
+       "kegg",
+       "c00032"
+      ],
+      [
+       "pwc",
+       "pw_c001799"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "enzyme": {
+    "name": "Ferrochelatase-2, chloroplastic",
+    "aliases": [
+     "FC2"
+    ],
+    "ids": [
+     [
+      "pwp",
+      "pw_p431565"
+     ],
+     [
+      "uniprot",
+      "o04921"
+     ]
+    ],
+    "role": "defining"
+   },
+   "catalysts": [
+    {
+     "name": "Ferrochelatase-2, chloroplastic",
+     "aliases": [
+      "FC2"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p431565"
+      ],
+      [
+       "uniprot",
+       "o04921"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "reversible": false
+  },
+  {
+   "id": "PW_R2146850",
+   "label": "",
+   "inputs": [
+    {
+     "name": "Protoporphyrin IX",
+     "aliases": [
+      "PrtopIX",
+      "3,3'-(3,7,12,17-tetramethyl-8,13-divinyl-21h,23h-porphine-2,18-diyl)-bis-propionate",
+      "3,3'-(3,7,12,17-tetramethyl-8,13-divinyl-21h,23h-porphine-2,18-diyl)-bis-propionic acid",
+      "3,3'-(3,7,12,17-tetramethyl-8,13-divinylporphine-2,18-diyl)di",
+      "Kammerer's prophyrin",
+      "Ooporphyrin",
+      "Porphyrinogen ix",
+      "Ppix",
+      "Protoporphyrin",
+      "Protoporphyrin ix",
+      "Protoporphyrin-\"ix\"",
+      "Protoporphyrin-ix",
+      "3,7,12,17-tetramethyl-8,13-divinylporphyrin-2,18-dipropanoic acid",
+      "H2ppix",
+      "3,7,12,17-tetramethyl-8,13-divinylporphyrin-2,18-dipropanoate"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "protoporphyrin_ix"
+      ],
+      [
+       "cas",
+       "553-12-8"
+      ],
+      [
+       "chebi",
+       "15430"
+      ],
+      [
+       "drugbank",
+       "db02285"
+      ],
+      [
+       "hmdb",
+       "241"
+      ],
+      [
+       "kegg",
+       "c02191"
+      ],
+      [
+       "pwc",
+       "pw_c000163"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "Water",
+     "aliases": [
+      "H2O",
+      "Dihydrogen oxide",
+      "Steam",
+      "[oh2]",
+      "Acqua",
+      "Agua",
+      "Aqua",
+      "Bound water",
+      "Dihydridooxygen",
+      "Eau",
+      "H2o",
+      "Hoh",
+      "Hydrogen hydroxide",
+      "Wasser"
+     ],
+     "ids": [
+      [
+       "cas",
+       "7732-18-5"
+      ],
+      [
+       "chebi",
+       "15377"
+      ],
+      [
+       "hmdb",
+       "2111"
+      ],
+      [
+       "kegg",
+       "c00001"
+      ],
+      [
+       "pubchem",
+       "962"
+      ],
+      [
+       "pwc",
+       "pw_c001420"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "Magnesium",
+     "aliases": [
+      "Mg2+",
+      "Magnesium ions",
+      "Magnesium ion",
+      "Magnesium, doubly charged positive ion",
+      "Magnesium, ion (mg(2+))",
+      "Mg(2+)"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "13-hydroxy-magnesium-protoporp"
+      ],
+      [
+       "cas",
+       "22537-22-0"
+      ],
+      [
+       "chebi",
+       "18420"
+      ],
+      [
+       "drugbank",
+       "db01378"
+      ],
+      [
+       "hmdb",
+       "547"
+      ],
+      [
+       "kegg",
+       "c00305"
+      ],
+      [
+       "pubchem",
+       "888"
+      ],
+      [
+       "pwc",
+       "pw_c000423"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "Adenosine triphosphate",
+     "aliases": [
+      "ATP",
+      "5'-(tetrahydrogen triphosphate) adenosine",
+      "5'-atp",
+      "Atp",
+      "Adenosine 5'-triphosphate",
+      "Adenosine 5'-triphosphorate",
+      "Adenosine 5'-triphosphoric acid",
+      "Adenylpyrophosphorate",
+      "Adenylpyrophosphoric acid",
+      "Adephos",
+      "Adetol",
+      "Adynol",
+      "Atipi",
+      "Atriphos",
+      "Cardenosine"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "atp"
+      ],
+      [
+       "cas",
+       "56-65-5"
+      ],
+      [
+       "chebi",
+       "15422"
+      ],
+      [
+       "drugbank",
+       "db00171"
+      ],
+      [
+       "hmdb",
+       "538"
+      ],
+      [
+       "kegg",
+       "c00002"
+      ],
+      [
+       "pubchem",
+       "5957"
+      ],
+      [
+       "pwc",
+       "pw_c000414"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "outputs": [
+    {
+     "name": "Mg-protoporphyrin IX",
+     "aliases": [],
+     "ids": [
+      [
+       "chebi",
+       "60492"
+      ],
+      [
+       "pwc",
+       "pw_c285208"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "Adenosine diphosphate",
+     "aliases": [
+      "ADP",
+      "Adp",
+      "Adenosindiphosphorsaeure",
+      "Adenosine 5'-pyrophosphate",
+      "Adenosine pyrophosphate",
+      "Adenosine-5'-diphosphate",
+      "Adenosine-5-diphosphate",
+      "Adenosine-diphosphate",
+      "5'-adenylphosphoric acid",
+      "Adenosine 5'-diphosphate",
+      "H3adp",
+      "5'-adenylphosphate",
+      "Adenosine 5'-diphosphoric acid",
+      "Adenosine-5'-diphosphoric acid"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "adp"
+      ],
+      [
+       "cas",
+       "58-64-0"
+      ],
+      [
+       "chebi",
+       "16761"
+      ],
+      [
+       "hmdb",
+       "1341"
+      ],
+      [
+       "kegg",
+       "c00008"
+      ],
+      [
+       "pubchem",
+       "6022"
+      ],
+      [
+       "pwc",
+       "pw_c001034"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "Phosphate",
+     "aliases": [
+      "Pi",
+      "Nfb orthophosphate",
+      "O-phosphoric acid",
+      "Ortho-phosphate",
+      "Orthophosphate (po43-)",
+      "Orthophosphate(3-)",
+      "Phosphate (po43-)",
+      "Phosphate anion(3-)",
+      "Phosphate ion (po43-)",
+      "Phosphate ion(3-)",
+      "Phosphate trianion",
+      "Phosphate(3-)",
+      "Phosphoric acid ion(3-)",
+      "[po4](3-)"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "cpd-8587"
+      ],
+      [
+       "cas",
+       "14265-44-2"
+      ],
+      [
+       "chebi",
+       "18367"
+      ],
+      [
+       "hmdb",
+       "1429"
+      ],
+      [
+       "kegg",
+       "c00009"
+      ],
+      [
+       "pubchem",
+       "1061"
+      ],
+      [
+       "pwc",
+       "pw_c001104"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "Hydrogen Ion",
+     "aliases": [
+      "H+",
+      "H(+)",
+      "Hydrogen cation",
+      "Hydron",
+      "Proton"
+     ],
+     "ids": [
+      [
+       "chebi",
+       "15378"
+      ],
+      [
+       "hmdb",
+       "59597"
+      ],
+      [
+       "kegg",
+       "c00080"
+      ],
+      [
+       "pubchem",
+       "1038"
+      ],
+      [
+       "pwc",
+       "pw_c040034"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "enzyme": {
+    "name": "Mg-Chelatase",
+    "aliases": [
+     "CHLI1",
+     "Magnesium-chelatase subunit ChlI-1, chloroplastic",
+     "CHLD",
+     "Magnesium-chelatase subunit ChlD, chloroplastic",
+     "CHLH",
+     "Magnesium-chelatase subunit ChlH, chloroplastic"
+    ],
+    "ids": [
+     [
+      "pwp",
+      "pw_p431566"
+     ],
+     [
+      "uniprot",
+      "p16127"
+     ],
+     [
+      "uniprot",
+      "q9sje1"
+     ],
+     [
+      "uniprot",
+      "q9fnb0"
+     ]
+    ],
+    "role": "defining"
+   },
+   "catalysts": [
+    {
+     "name": "Mg-Chelatase",
+     "aliases": [
+      "CHLI1",
+      "Magnesium-chelatase subunit ChlI-1, chloroplastic",
+      "CHLD",
+      "Magnesium-chelatase subunit ChlD, chloroplastic",
+      "CHLH",
+      "Magnesium-chelatase subunit ChlH, chloroplastic"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p431566"
+      ],
+      [
+       "uniprot",
+       "p16127"
+      ],
+      [
+       "uniprot",
+       "q9sje1"
+      ],
+      [
+       "uniprot",
+       "q9fnb0"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "reversible": false
+  },
+  {
+   "id": "PW_R2146851",
+   "label": "",
+   "inputs": [
+    {
+     "name": "Mg-protoporphyrin IX",
+     "aliases": [],
+     "ids": [
+      [
+       "chebi",
+       "60492"
+      ],
+      [
+       "pwc",
+       "pw_c285208"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "S-Adenosylmethionine",
+     "aliases": [
+      "SAMe",
+      "(3s)-5'-[(3-amino-3-carboxypropyl)methylsulfonio]-5'-deoxyadenosine",
+      "2-s-adenosyl-l-methionine",
+      "5'-deoxyadenosine-5'-l-methionine disulfate ditosylate",
+      "Active methionine",
+      "Ademetionine",
+      "Adenosylmethionine",
+      "Adomet",
+      "Donamet",
+      "L-s-adenosylmethionine",
+      "S-(5'-adenosyl)-l-methionine",
+      "S-(5'-deoxyadenosin-5'-yl)-l-methionine",
+      "S-adenosyl methionine",
+      "S-adenosyl-l-methionine disulfate tosylate",
+      "S-adenosyl-l-methionine",
+      "S-adenosyl-methionine"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "s-adenosylmethionine"
+      ],
+      [
+       "cas",
+       "485-80-3"
+      ],
+      [
+       "chebi",
+       "15414"
+      ],
+      [
+       "drugbank",
+       "db00118"
+      ],
+      [
+       "hmdb",
+       "1185"
+      ],
+      [
+       "kegg",
+       "c00019"
+      ],
+      [
+       "pubchem",
+       "24762165"
+      ],
+      [
+       "pwc",
+       "pw_c000921"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "outputs": [
+    {
+     "name": "S-Adenosylhomocysteine",
+     "aliases": [
+      "SAH",
+      "(s)-5'-(s)-(3-amino-3-carboxypropyl)-5'-thioadenosine",
+      "2-s-adenosyl-l-homocysteine",
+      "5'-deoxy-s-adenosyl-l-homocysteine",
+      "5'-s-(3-amino-3-carboxypropyl)-5'-thio-l-adenosine",
+      "Adenosyl-l-homocysteine",
+      "Adenosyl-homo-cys",
+      "Adenosylhomo-cys",
+      "Adenosylhomocysteine",
+      "Adohcy",
+      "Formycinylhomocysteine",
+      "L-5'-s-(3-amino-3-carboxypropyl)-5'-thior-adenosine",
+      "L-s-adenosyl-homocysteine",
+      "L-s-adenosylhomocysteine",
+      "S-(5'-adenosyl)-l-homocysteine",
+      "S-(5'-deoxyadenosin-5'-yl)-l-homocysteine"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "adenosyl-homo-cys"
+      ],
+      [
+       "cas",
+       "979-92-0"
+      ],
+      [
+       "chebi",
+       "16680"
+      ],
+      [
+       "hmdb",
+       "939"
+      ],
+      [
+       "kegg",
+       "c00021"
+      ],
+      [
+       "pubchem",
+       "25246222"
+      ],
+      [
+       "pwc",
+       "pw_c000749"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "Mg-Protoporphyrin IX 13-monomethyl ester",
+     "aliases": [],
+     "ids": [
+      [
+       "pubchem",
+       "440377"
+      ],
+      [
+       "pwc",
+       "pw_c285209"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "enzyme": {
+    "name": "Magnesium protoporphyrin IX methyltransferase, chloroplastic",
+    "aliases": [
+     "CHLM"
+    ],
+    "ids": [
+     [
+      "pwp",
+      "pw_p431567"
+     ],
+     [
+      "uniprot",
+      "q9sw18"
+     ]
+    ],
+    "role": "defining"
+   },
+   "catalysts": [
+    {
+     "name": "Magnesium protoporphyrin IX methyltransferase, chloroplastic",
+     "aliases": [
+      "CHLM"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p431567"
+      ],
+      [
+       "uniprot",
+       "q9sw18"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "reversible": false
+  },
+  {
+   "id": "PW_R2146852",
+   "label": "",
+   "inputs": [
+    {
+     "name": "Mg-Protoporphyrin IX 13-monomethyl ester",
+     "aliases": [],
+     "ids": [
+      [
+       "pubchem",
+       "440377"
+      ],
+      [
+       "pwc",
+       "pw_c285209"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "NADPH",
+     "aliases": [
+      "2'-(dihydrogen phosphate) 5'-(trihydrogen pyrophosphate) adenosine 5'-ester with 1,4-dihydro-1-b-d-ribofuranosylnicotinamide",
+      "2'-(dihydrogen phosphate) 5'-(trihydrogen pyrophosphate) adenosine 5'-ester with 1,4-dihydro-1-beta-delta-ribofuranosylnicotinamide",
+      "Adenosine 5'-(trihydrogen diphosphate) 2'-(dihydrogen phosphate) p'-5'-ester with 1,4-dihydro-1-beta-d-ribofuranosyl-3-pyridinecarboxamide",
+      "Adenosine 5'-(trihydrogen diphosphate) 2'-(dihydrogen phosphate) p'-5'-ester with 1,4-dihydro-1-beta-delta-ribofuranosyl-3-pyridinecarboxamide",
+      "Dihydrocodehydrogenase ii",
+      "Dihydronicotinamide adenine dinucleotide phosphate",
+      "Dihydronicotinamide adenine dinucleotide-p",
+      "Dihydrotriphosphopyridine nucleotide reduced",
+      "Nadp-reduced",
+      "Nadph",
+      "Nicotinamide-adenine-dinucleotide-phosphorate",
+      "Nicotinamide-adenine-dinucleotide-phosphoric acid",
+      "Reduced codehydrase ii",
+      "Reduced coenzyme ii",
+      "Reduced cozymase ii"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "nadph"
+      ],
+      [
+       "cas",
+       "53-57-6"
+      ],
+      [
+       "chebi",
+       "16474"
+      ],
+      [
+       "hmdb",
+       "221"
+      ],
+      [
+       "kegg",
+       "c00005"
+      ],
+      [
+       "pubchem",
+       "22833512"
+      ],
+      [
+       "pwc",
+       "pw_c000146"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "Oxygen",
+     "aliases": [
+      "O2",
+      "Dioxygen",
+      "Molecular oxygen",
+      "Oxygen molecule",
+      "[oo]",
+      "Dioxygene",
+      "Disauerstoff",
+      "E 948",
+      "E-948",
+      "E948"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "cpd-6641"
+      ],
+      [
+       "cas",
+       "7782-44-7"
+      ],
+      [
+       "chebi",
+       "15379"
+      ],
+      [
+       "hmdb",
+       "1377"
+      ],
+      [
+       "kegg",
+       "c00007"
+      ],
+      [
+       "pubchem",
+       "977"
+      ],
+      [
+       "pwc",
+       "pw_c001065"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "Hydrogen Ion",
+     "aliases": [
+      "H+",
+      "H(+)",
+      "Hydrogen cation",
+      "Hydron",
+      "Proton"
+     ],
+     "ids": [
+      [
+       "chebi",
+       "15378"
+      ],
+      [
+       "hmdb",
+       "59597"
+      ],
+      [
+       "kegg",
+       "c00080"
+      ],
+      [
+       "pubchem",
+       "1038"
+      ],
+      [
+       "pwc",
+       "pw_c040034"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "outputs": [
+    {
+     "name": "3,8-divinyl protochlorophyllide a",
+     "aliases": [],
+     "ids": [
+      [
+       "chebi",
+       "58632"
+      ],
+      [
+       "pwc",
+       "pw_c285210"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "NADP",
+     "aliases": [
+      "Adenine-nicotinamide dinucleotide phosphate",
+      "Codehydrase ii",
+      "Codehydrogenase ii",
+      "Coenzyme ii",
+      "Cozymase ii",
+      "Nad phosphate",
+      "Nadp",
+      "Nadp+",
+      "Nicotinamide adenine dinucleotide phosphate",
+      "Nicotinamide-adenine dinucleotide phosphate",
+      "Tpn",
+      "Triphosphopyridine nucleotide",
+      "B-nadp",
+      "B-nicotinamide adenine dinucleotide phosphate",
+      "B-tpn"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "nad(p)"
+      ],
+      [
+       "cas",
+       "53-59-8"
+      ],
+      [
+       "chebi",
+       "18009"
+      ],
+      [
+       "hmdb",
+       "217"
+      ],
+      [
+       "kegg",
+       "c00006"
+      ],
+      [
+       "pubchem",
+       "5886"
+      ],
+      [
+       "pwc",
+       "pw_c000143"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "Water",
+     "aliases": [
+      "H2O",
+      "Dihydrogen oxide",
+      "Steam",
+      "[oh2]",
+      "Acqua",
+      "Agua",
+      "Aqua",
+      "Bound water",
+      "Dihydridooxygen",
+      "Eau",
+      "H2o",
+      "Hoh",
+      "Hydrogen hydroxide",
+      "Wasser"
+     ],
+     "ids": [
+      [
+       "cas",
+       "7732-18-5"
+      ],
+      [
+       "chebi",
+       "15377"
+      ],
+      [
+       "hmdb",
+       "2111"
+      ],
+      [
+       "kegg",
+       "c00001"
+      ],
+      [
+       "pubchem",
+       "962"
+      ],
+      [
+       "pwc",
+       "pw_c001420"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "enzyme": {
+    "name": "Magnesium-protoporphyrin IX monomethyl ester [oxidative] cyclase, chloroplastic",
+    "aliases": [
+     "CRD1"
+    ],
+    "ids": [
+     [
+      "pwp",
+      "pw_p431568"
+     ],
+     [
+      "uniprot",
+      "q9m591"
+     ]
+    ],
+    "role": "defining"
+   },
+   "catalysts": [
+    {
+     "name": "Magnesium-protoporphyrin IX monomethyl ester [oxidative] cyclase, chloroplastic",
+     "aliases": [
+      "CRD1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p431568"
+      ],
+      [
+       "uniprot",
+       "q9m591"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "reversible": false
+  },
+  {
+   "id": "PW_R2146853",
+   "label": "",
+   "inputs": [
+    {
+     "name": "3,8-divinyl protochlorophyllide a",
+     "aliases": [],
+     "ids": [
+      [
+       "chebi",
+       "58632"
+      ],
+      [
+       "pwc",
+       "pw_c285210"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "Hydrogen Ion",
+     "aliases": [
+      "H+",
+      "H(+)",
+      "Hydrogen cation",
+      "Hydron",
+      "Proton"
+     ],
+     "ids": [
+      [
+       "chebi",
+       "15378"
+      ],
+      [
+       "hmdb",
+       "59597"
+      ],
+      [
+       "kegg",
+       "c00080"
+      ],
+      [
+       "pubchem",
+       "1038"
+      ],
+      [
+       "pwc",
+       "pw_c040034"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "NADPH",
+     "aliases": [
+      "2'-(dihydrogen phosphate) 5'-(trihydrogen pyrophosphate) adenosine 5'-ester with 1,4-dihydro-1-b-d-ribofuranosylnicotinamide",
+      "2'-(dihydrogen phosphate) 5'-(trihydrogen pyrophosphate) adenosine 5'-ester with 1,4-dihydro-1-beta-delta-ribofuranosylnicotinamide",
+      "Adenosine 5'-(trihydrogen diphosphate) 2'-(dihydrogen phosphate) p'-5'-ester with 1,4-dihydro-1-beta-d-ribofuranosyl-3-pyridinecarboxamide",
+      "Adenosine 5'-(trihydrogen diphosphate) 2'-(dihydrogen phosphate) p'-5'-ester with 1,4-dihydro-1-beta-delta-ribofuranosyl-3-pyridinecarboxamide",
+      "Dihydrocodehydrogenase ii",
+      "Dihydronicotinamide adenine dinucleotide phosphate",
+      "Dihydronicotinamide adenine dinucleotide-p",
+      "Dihydrotriphosphopyridine nucleotide reduced",
+      "Nadp-reduced",
+      "Nadph",
+      "Nicotinamide-adenine-dinucleotide-phosphorate",
+      "Nicotinamide-adenine-dinucleotide-phosphoric acid",
+      "Reduced codehydrase ii",
+      "Reduced coenzyme ii",
+      "Reduced cozymase ii"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "nadph"
+      ],
+      [
+       "cas",
+       "53-57-6"
+      ],
+      [
+       "chebi",
+       "16474"
+      ],
+      [
+       "hmdb",
+       "221"
+      ],
+      [
+       "kegg",
+       "c00005"
+      ],
+      [
+       "pubchem",
+       "22833512"
+      ],
+      [
+       "pwc",
+       "pw_c000146"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "outputs": [
+    {
+     "name": "NADP",
+     "aliases": [
+      "Adenine-nicotinamide dinucleotide phosphate",
+      "Codehydrase ii",
+      "Codehydrogenase ii",
+      "Coenzyme ii",
+      "Cozymase ii",
+      "Nad phosphate",
+      "Nadp",
+      "Nadp+",
+      "Nicotinamide adenine dinucleotide phosphate",
+      "Nicotinamide-adenine dinucleotide phosphate",
+      "Tpn",
+      "Triphosphopyridine nucleotide",
+      "B-nadp",
+      "B-nicotinamide adenine dinucleotide phosphate",
+      "B-tpn"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "nad(p)"
+      ],
+      [
+       "cas",
+       "53-59-8"
+      ],
+      [
+       "chebi",
+       "18009"
+      ],
+      [
+       "hmdb",
+       "217"
+      ],
+      [
+       "kegg",
+       "c00006"
+      ],
+      [
+       "pubchem",
+       "5886"
+      ],
+      [
+       "pwc",
+       "pw_c000143"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "Chlorophyllide a",
+     "aliases": [],
+     "ids": [
+      [
+       "chebi",
+       "83348"
+      ],
+      [
+       "pwc",
+       "pw_c285211"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "enzyme": {
+    "name": "Protochlorophyllide reductase A, chloroplastic",
+    "aliases": [
+     "PORA"
+    ],
+    "ids": [
+     [
+      "pwp",
+      "pw_p431569"
+     ],
+     [
+      "uniprot",
+      "q42536"
+     ]
+    ],
+    "role": "defining"
+   },
+   "catalysts": [
+    {
+     "name": "Protochlorophyllide reductase A, chloroplastic",
+     "aliases": [
+      "PORA"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p431569"
+      ],
+      [
+       "uniprot",
+       "q42536"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "reversible": false
+  },
+  {
+   "id": "PW_R2146854",
+   "label": "",
+   "inputs": [
+    {
+     "name": "Chlorophyllide a",
+     "aliases": [],
+     "ids": [
+      [
+       "chebi",
+       "83348"
+      ],
+      [
+       "pwc",
+       "pw_c285211"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "Phytyl diphosphate",
+     "aliases": [
+      "Phytldp"
+     ],
+     "ids": [
+      [
+       "chebi",
+       "18187"
+      ],
+      [
+       "hmdb",
+       "11116"
+      ],
+      [
+       "pubchem",
+       "5280787"
+      ],
+      [
+       "pwc",
+       "pw_c006758"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "Hydrogen Ion",
+     "aliases": [
+      "H+",
+      "H(+)",
+      "Hydrogen cation",
+      "Hydron",
+      "Proton"
+     ],
+     "ids": [
+      [
+       "chebi",
+       "15378"
+      ],
+      [
+       "hmdb",
+       "59597"
+      ],
+      [
+       "kegg",
+       "c00080"
+      ],
+      [
+       "pubchem",
+       "1038"
+      ],
+      [
+       "pwc",
+       "pw_c040034"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "outputs": [
+    {
+     "name": "Chlorophyll a",
+     "aliases": [
+      "Chlor a",
+      "[3,7,11,15-tetramethyl-2-hexadecenyl 9-ethenyl-14-ethyl-21-(methoxycarbonyl)-4,8,13,18-tetramethyl-20-oxo-3-phorbinepropanoato(2-)-n23,n24,n25,n26]magnesium, 9ci"
+     ],
+     "ids": [
+      [
+       "cas",
+       "479-61-8"
+      ],
+      [
+       "chebi",
+       "18230"
+      ],
+      [
+       "drugbank",
+       "db02133"
+      ],
+      [
+       "hmdb",
+       "38578"
+      ],
+      [
+       "kegg",
+       "c05306"
+      ],
+      [
+       "pubchem",
+       "45109766"
+      ],
+      [
+       "pwc",
+       "pw_c019423"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "Pyrophosphate",
+     "aliases": [
+      "Ppi",
+      "(4-)diphosphoric acid ion",
+      "(p2o74-)diphosphate",
+      "Diphosphate",
+      "Diphosphoric acid",
+      "Pyrometaphosphate",
+      "Pyrophosphate tetraanion",
+      "Pyrophosphate(4-) ion",
+      "[o3popo3](4-)",
+      "Diphosphat",
+      "P2o7(4-)",
+      "Pyrophosphat",
+      "Pyrophosphate ion",
+      "Phosphonato phosphoric acid"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "ppi"
+      ],
+      [
+       "cas",
+       "14000-31-8"
+      ],
+      [
+       "chebi",
+       "18361"
+      ],
+      [
+       "drugbank",
+       "db04160"
+      ],
+      [
+       "hmdb",
+       "250"
+      ],
+      [
+       "kegg",
+       "c00013"
+      ],
+      [
+       "pubchem",
+       "644102"
+      ],
+      [
+       "pwc",
+       "pw_c000170"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "enzyme": {
+    "name": "chlorophyll synthase",
+    "aliases": [
+     "G4",
+     "chlorophyll synthetase"
+    ],
+    "ids": [
+     [
+      "pwp",
+      "pw_p014694"
+     ],
+     [
+      "uniprot",
+      "q38833"
+     ]
+    ],
+    "role": "defining"
+   },
+   "catalysts": [
+    {
+     "name": "chlorophyll synthase",
+     "aliases": [
+      "G4",
+      "chlorophyll synthetase"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p014694"
+      ],
+      [
+       "uniprot",
+       "q38833"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "reversible": false
+  },
+  {
+   "id": "PW_R2146855",
+   "label": "",
+   "inputs": [
+    {
+     "name": "Chlorophyll a",
+     "aliases": [
+      "Chlor a",
+      "[3,7,11,15-tetramethyl-2-hexadecenyl 9-ethenyl-14-ethyl-21-(methoxycarbonyl)-4,8,13,18-tetramethyl-20-oxo-3-phorbinepropanoato(2-)-n23,n24,n25,n26]magnesium, 9ci"
+     ],
+     "ids": [
+      [
+       "cas",
+       "479-61-8"
+      ],
+      [
+       "chebi",
+       "18230"
+      ],
+      [
+       "drugbank",
+       "db02133"
+      ],
+      [
+       "hmdb",
+       "38578"
+      ],
+      [
+       "kegg",
+       "c05306"
+      ],
+      [
+       "pubchem",
+       "45109766"
+      ],
+      [
+       "pwc",
+       "pw_c019423"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "Oxygen",
+     "aliases": [
+      "O2",
+      "Dioxygen",
+      "Molecular oxygen",
+      "Oxygen molecule",
+      "[oo]",
+      "Dioxygene",
+      "Disauerstoff",
+      "E 948",
+      "E-948",
+      "E948"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "cpd-6641"
+      ],
+      [
+       "cas",
+       "7782-44-7"
+      ],
+      [
+       "chebi",
+       "15379"
+      ],
+      [
+       "hmdb",
+       "1377"
+      ],
+      [
+       "kegg",
+       "c00007"
+      ],
+      [
+       "pubchem",
+       "977"
+      ],
+      [
+       "pwc",
+       "pw_c001065"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "outputs": [
+    {
+     "name": "Chlorophyll b",
+     "aliases": [
+      "CB"
+     ],
+     "ids": [
+      [
+       "cas",
+       "519-62-0"
+      ],
+      [
+       "drugbank",
+       "db04506"
+      ],
+      [
+       "hmdb",
+       "31146"
+      ],
+      [
+       "kegg",
+       "c05307"
+      ],
+      [
+       "pwc",
+       "pw_c012341"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "Water",
+     "aliases": [
+      "H2O",
+      "Dihydrogen oxide",
+      "Steam",
+      "[oh2]",
+      "Acqua",
+      "Agua",
+      "Aqua",
+      "Bound water",
+      "Dihydridooxygen",
+      "Eau",
+      "H2o",
+      "Hoh",
+      "Hydrogen hydroxide",
+      "Wasser"
+     ],
+     "ids": [
+      [
+       "cas",
+       "7732-18-5"
+      ],
+      [
+       "chebi",
+       "15377"
+      ],
+      [
+       "hmdb",
+       "2111"
+      ],
+      [
+       "kegg",
+       "c00001"
+      ],
+      [
+       "pubchem",
+       "962"
+      ],
+      [
+       "pwc",
+       "pw_c001420"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "enzyme": {
+    "name": "chlorophyllide-a oxygenase",
+    "aliases": [
+     "CAO",
+     "Chlorophyllide a oxygenase, chloroplastic"
+    ],
+    "ids": [
+     [
+      "pwp",
+      "pw_p014695"
+     ],
+     [
+      "uniprot",
+      "q9mba1"
+     ]
+    ],
+    "role": "defining"
+   },
+   "catalysts": [
+    {
+     "name": "chlorophyllide-a oxygenase",
+     "aliases": [
+      "CAO",
+      "Chlorophyllide a oxygenase, chloroplastic"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p014695"
+      ],
+      [
+       "uniprot",
+       "q9mba1"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "reversible": false
+  },
+  {
+   "id": "PW_R2146856",
+   "label": "",
+   "inputs": [
+    {
+     "name": "Chlorophyll a",
+     "aliases": [
+      "Chlor a",
+      "[3,7,11,15-tetramethyl-2-hexadecenyl 9-ethenyl-14-ethyl-21-(methoxycarbonyl)-4,8,13,18-tetramethyl-20-oxo-3-phorbinepropanoato(2-)-n23,n24,n25,n26]magnesium, 9ci"
+     ],
+     "ids": [
+      [
+       "cas",
+       "479-61-8"
+      ],
+      [
+       "chebi",
+       "18230"
+      ],
+      [
+       "drugbank",
+       "db02133"
+      ],
+      [
+       "hmdb",
+       "38578"
+      ],
+      [
+       "kegg",
+       "c05306"
+      ],
+      [
+       "pubchem",
+       "45109766"
+      ],
+      [
+       "pwc",
+       "pw_c019423"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "Hydrogen Ion",
+     "aliases": [
+      "H+",
+      "H(+)",
+      "Hydrogen cation",
+      "Hydron",
+      "Proton"
+     ],
+     "ids": [
+      [
+       "chebi",
+       "15378"
+      ],
+      [
+       "hmdb",
+       "59597"
+      ],
+      [
+       "kegg",
+       "c00080"
+      ],
+      [
+       "pubchem",
+       "1038"
+      ],
+      [
+       "pwc",
+       "pw_c040034"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "outputs": [
+    {
+     "name": "pheophytin a",
+     "aliases": [
+      "PheoA"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "cpd-8155"
+      ],
+      [
+       "chebi",
+       "44898"
+      ],
+      [
+       "kegg",
+       "c05797"
+      ],
+      [
+       "pubchem",
+       "5459387"
+      ],
+      [
+       "pwc",
+       "pw_c057917"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "Magnesium",
+     "aliases": [
+      "Mg2+",
+      "Magnesium ions",
+      "Magnesium ion",
+      "Magnesium, doubly charged positive ion",
+      "Magnesium, ion (mg(2+))",
+      "Mg(2+)"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "13-hydroxy-magnesium-protoporp"
+      ],
+      [
+       "cas",
+       "22537-22-0"
+      ],
+      [
+       "chebi",
+       "18420"
+      ],
+      [
+       "drugbank",
+       "db01378"
+      ],
+      [
+       "hmdb",
+       "547"
+      ],
+      [
+       "kegg",
+       "c00305"
+      ],
+      [
+       "pubchem",
+       "888"
+      ],
+      [
+       "pwc",
+       "pw_c000423"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "enzyme": {
+    "name": "Magnesium dechelatase SGR1, chloroplastic",
+    "aliases": [
+     "SGR1"
+    ],
+    "ids": [
+     [
+      "pwp",
+      "pw_p431570"
+     ],
+     [
+      "uniprot",
+      "o82741"
+     ]
+    ],
+    "role": "defining"
+   },
+   "catalysts": [
+    {
+     "name": "Magnesium dechelatase SGR1, chloroplastic",
+     "aliases": [
+      "SGR1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p431570"
+      ],
+      [
+       "uniprot",
+       "o82741"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "reversible": false
+  }
+ ],
+ "off_scope_reactions": [],
+ "enzymes": [
+  {
+   "id": "E1",
+   "name": "Delta-aminolevulinic acid dehydratase 1, chloroplastic",
+   "aliases": [
+    "HEMB1"
+   ],
+   "ids": [
+    [
+     "pwp",
+     "pw_p431548"
+    ],
+    [
+     "uniprot",
+     "q9sfh9"
+    ]
+   ],
+   "role": "defining",
+   "for": [
+    "PW_R2146839"
+   ]
+  },
+  {
+   "id": "E2",
+   "name": "Porphobilinogen deaminase, chloroplastic",
+   "aliases": [
+    "HEMC"
+   ],
+   "ids": [
+    [
+     "pwp",
+     "pw_p431549"
+    ],
+    [
+     "uniprot",
+     "q43316"
+    ]
+   ],
+   "role": "defining",
+   "for": [
+    "PW_R2146840"
+   ]
+  },
+  {
+   "id": "E3",
+   "name": "Uroporphyrinogen-III synthase, chloroplastic",
+   "aliases": [
+    "UROS"
+   ],
+   "ids": [
+    [
+     "pwp",
+     "pw_p431550"
+    ],
+    [
+     "uniprot",
+     "o48721"
+    ]
+   ],
+   "role": "defining",
+   "for": [
+    "PW_R2146841"
+   ]
+  },
+  {
+   "id": "E4",
+   "name": "Uroporphyrinogen decarboxylase 1, chloroplastic",
+   "aliases": [
+    "HEME1"
+   ],
+   "ids": [
+    [
+     "pwp",
+     "pw_p431551"
+    ],
+    [
+     "uniprot",
+     "q93zb6"
+    ]
+   ],
+   "role": "defining",
+   "for": [
+    "PW_R2146842"
+   ]
+  },
+  {
+   "id": "E5",
+   "name": "Coproporphyrinogen-III oxidase 1, chloroplastic",
+   "aliases": [
+    "CPX1"
+   ],
+   "ids": [
+    [
+     "pwp",
+     "pw_p431552"
+    ],
+    [
+     "uniprot",
+     "q9lr75"
+    ]
+   ],
+   "role": "defining",
+   "for": [
+    "PW_R2146843"
+   ]
+  },
+  {
+   "id": "E6",
+   "name": "Protoporphyrinogen oxidase 1, chloroplastic",
+   "aliases": [
+    "PPOX1"
+   ],
+   "ids": [
+    [
+     "pwp",
+     "pw_p431553"
+    ],
+    [
+     "uniprot",
+     "p55826"
+    ]
+   ],
+   "role": "defining",
+   "for": [
+    "PW_R2146844"
+   ]
+  },
+  {
+   "id": "E7",
+   "name": "Ferrochelatase-2, chloroplastic",
+   "aliases": [
+    "FC2"
+   ],
+   "ids": [
+    [
+     "pwp",
+     "pw_p431565"
+    ],
+    [
+     "uniprot",
+     "o04921"
+    ]
+   ],
+   "role": "defining",
+   "for": [
+    "PW_R2146849"
+   ]
+  },
+  {
+   "id": "E8",
+   "name": "Mg-Chelatase",
+   "aliases": [
+    "CHLI1",
+    "Magnesium-chelatase subunit ChlI-1, chloroplastic",
+    "CHLD",
+    "Magnesium-chelatase subunit ChlD, chloroplastic",
+    "CHLH",
+    "Magnesium-chelatase subunit ChlH, chloroplastic"
+   ],
+   "ids": [
+    [
+     "pwp",
+     "pw_p431566"
+    ],
+    [
+     "uniprot",
+     "p16127"
+    ],
+    [
+     "uniprot",
+     "q9sje1"
+    ],
+    [
+     "uniprot",
+     "q9fnb0"
+    ]
+   ],
+   "role": "defining",
+   "for": [
+    "PW_R2146850"
+   ]
+  },
+  {
+   "id": "E9",
+   "name": "Magnesium protoporphyrin IX methyltransferase, chloroplastic",
+   "aliases": [
+    "CHLM"
+   ],
+   "ids": [
+    [
+     "pwp",
+     "pw_p431567"
+    ],
+    [
+     "uniprot",
+     "q9sw18"
+    ]
+   ],
+   "role": "defining",
+   "for": [
+    "PW_R2146851"
+   ]
+  },
+  {
+   "id": "E10",
+   "name": "Magnesium-protoporphyrin IX monomethyl ester [oxidative] cyclase, chloroplastic",
+   "aliases": [
+    "CRD1"
+   ],
+   "ids": [
+    [
+     "pwp",
+     "pw_p431568"
+    ],
+    [
+     "uniprot",
+     "q9m591"
+    ]
+   ],
+   "role": "defining",
+   "for": [
+    "PW_R2146852"
+   ]
+  },
+  {
+   "id": "E11",
+   "name": "Protochlorophyllide reductase A, chloroplastic",
+   "aliases": [
+    "PORA"
+   ],
+   "ids": [
+    [
+     "pwp",
+     "pw_p431569"
+    ],
+    [
+     "uniprot",
+     "q42536"
+    ]
+   ],
+   "role": "defining",
+   "for": [
+    "PW_R2146853"
+   ]
+  },
+  {
+   "id": "E12",
+   "name": "chlorophyll synthase",
+   "aliases": [
+    "G4",
+    "chlorophyll synthetase"
+   ],
+   "ids": [
+    [
+     "pwp",
+     "pw_p014694"
+    ],
+    [
+     "uniprot",
+     "q38833"
+    ]
+   ],
+   "role": "defining",
+   "for": [
+    "PW_R2146854"
+   ]
+  },
+  {
+   "id": "E13",
+   "name": "chlorophyllide-a oxygenase",
+   "aliases": [
+    "CAO",
+    "Chlorophyllide a oxygenase, chloroplastic"
+   ],
+   "ids": [
+    [
+     "pwp",
+     "pw_p014695"
+    ],
+    [
+     "uniprot",
+     "q9mba1"
+    ]
+   ],
+   "role": "defining",
+   "for": [
+    "PW_R2146855"
+   ]
+  },
+  {
+   "id": "E14",
+   "name": "Magnesium dechelatase SGR1, chloroplastic",
+   "aliases": [
+    "SGR1"
+   ],
+   "ids": [
+    [
+     "pwp",
+     "pw_p431570"
+    ],
+    [
+     "uniprot",
+     "o82741"
+    ]
+   ],
+   "role": "defining",
+   "for": [
+    "PW_R2146856"
+   ]
+  }
+ ],
+ "transports": [],
+ "interactions": [],
+ "compartments": [
+  {
+   "id": "C1",
+   "name": "Chloroplast",
+   "aliases": [],
+   "ids": [],
+   "role": "defining"
+  }
+ ],
+ "skipped_processes": []
+}
