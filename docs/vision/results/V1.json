@@ -59,6 +59,29 @@
    "a reaction listing no currency matches a reversed row whatever its cofactors (needed for test_f3), so a paper's bare 'glucose -> G6P' still absorbs a database G6Pase as 'orientation reversed'. The stricter alternative (reverse only when currency mirrors exactly, both empty included) would stop test_f3's reverse merging"
   ]
  },
+ "review_round_3": {
+  "ruling": "VD-11 (sub-orchestrator): under-merge wins (a missed merge shows a step twice; a wrong merge loses a step and attaches a false database confirmation). Forward match: either row lists no currency, or equal currency, NAD+/NADP+ and NADH/NADPH variants allowed. Reversed match: only when both rows list currency and it mirrors (variants allowed); a row with no currency never reverse-merges. State rule (F1) and id rule (F4) kept",
+  "code_commit": "30d4f7d7",
+  "implementation": "_rx_sets returns the currency on each side as families (pipeline/cofactor_policy.py _CURRENCY spellings -> family key, so water == H2O and orthophosphate == Pi) with NADP+ -> NAD+ and NADPH -> NADH folded; _Index._rx_match applies the forward / reversed rules above",
+  "resolves": "both round-2 open questions: 'G6P + ADP -> glucose + ATP' no longer merges forward into G6Pase; a bare 'glucose -> G6P' no longer absorbs G6Pase as 'orientation reversed'",
+  "tests_changed": [
+   "test_merge_reversed_reaction -> test_bare_reversed_reaction_stays_separate: bare 'B -> A' vs bare 'A -> B' now stays separate",
+   "test_f3: 'B + NADH -> A + NAD+' vs bare 'A -> B' now stays separate (forward 'A + ATP -> B + ADP + H+' still merges); the mirrored-currency merge moved to test_vd11_nad_variants_merge_forward_and_mirrored_reverse",
+   "test_r1: back to the natural order (G6Pase first); passes now that forward needs equal currency"
+  ],
+  "tests_new": [
+   "test_vd11_forward_needs_same_currency: 'G6P + ADP -> glucose + ATP' stays apart from G6Pase; 'G6P + water -> glucose + orthophosphate' and bare 'G6P -> glucose' merge",
+   "test_vd11_bare_reaction_does_not_absorb_reversed_step: bare 'glucose -> G6P' vs G6Pase stays apart",
+   "test_vd11_nad_variants_merge_forward_and_mirrored_reverse: 'X + NADP+ -> Y + NADPH' merges forward into 'X + NAD+ -> Y + NADH'; mirrored NADH/NAD+ and NADPH/NADP+ merge reversed; 'Y + NAD+ -> X + NADH' (not mirrored) stays apart"
+  ],
+  "tests": [
+   {"label": "model-unit-8-prefix", "what": "changed and new tests against the unfixed code 94a8a593", "counts": "6 failed (bare reversed, f3, r1 order, vd11 forward, vd11 bare absorb, vd11 NAD variants: mirrored NADPH/NADP+ did not merge), 25 passed, survivors 0. The NAD+/NADP+ FORWARD variant part already merged on 94a8a593 (forward ignored currency); it is a guard, not a regression test", "log": "C:/t/vis-runs/logs/model-unit-8.log"},
+   {"label": "model-unit-9", "what": "after the fix, gate min 2 GB", "counts": "not run: GATE_BLOCKED (free RAM ~1 GB for 30 min; child never started)", "log": "C:/t/vis-runs/logs/model-unit-9.log"},
+   {"label": "model-unit-10", "what": "after the fix, gate min 1 GB (RULES.md update)", "counts": "31 passed, 0 failed, 0 errors, survivors 0", "log": "C:/t/vis-runs/logs/model-unit-10.log"}
+  ],
+  "proof": {"label": "model-proof-4", "result": "identity 152/152 (DEFAULT and FULL == base, json.dumps identical); paper-only new dangling 0; reactions kept 612/621, rows 6285/6326, base_unresolved_refs 167, rx_with_grounded_edge 549/621: unchanged (merge rules do not touch the base); survivors 0", "log": "C:/t/vis-runs/logs/model-proof-4.log"},
+  "open_questions": []
+ },
  "built": [
   "src/t2pw/vision/payload.py: build_big_payload (base deep-copied, input untouched), element keys '<section path>:<signature>' with '#n' ordinals (base first, extension appended, so existing keys never change), row_provenance (lineage origin -> kind; no lineage + evidence -> paper 'no lineage; evidence quote'; neither -> unclassified), sources table, merge_extension, compute_hops, save/load_big_payload, big_from_run",
   "src/t2pw/vision/view.py: ScopeSpec + PAPER_ONLY / DEFAULT(max_hops=1) / FULL, more_detailed / less_detailed, view (reference-closed), view_stats, unresolved_refs",
