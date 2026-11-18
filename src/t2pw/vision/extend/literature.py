@@ -139,7 +139,8 @@ def screen(item: Dict[str, Any], paper: Dict[str, Any]) -> Optional[str]:
 
 
 def clean_text(value: Any) -> str:
-    text = html.unescape(re.sub(r"<[^>]+>", " ", str(value or "")))
+    # unescape first: Europe PMC titles carry '&lt;i&gt;' as well as '<i>'
+    text = re.sub(r"<[^>]+>", " ", html.unescape(str(value or "")))
     return re.sub(r"\s+", " ", text).strip()
 
 
@@ -153,7 +154,11 @@ def organism_verdict(requested: Optional[str], text: str) -> Tuple[str, List[str
 # ---------------------------------------------------------------- quotes and passages
 
 def normalise(text: Any) -> str:
-    return re.sub(r"\s+", " ", unicodedata.normalize("NFKC", str(text or ""))).strip().casefold()
+    """NFKC, casefold, whitespace collapsed, and no space before closing / after opening punctuation:
+    full text from XML puts a space wherever a tag ended ('in <i>B. subtilis</i>.' -> 'subtilis .')."""
+    text = re.sub(r"\s+", " ", unicodedata.normalize("NFKC", str(text or "")))
+    text = re.sub(r"\s+([.,;:!?)\]])", r"\1", text)
+    return re.sub(r"([(\[])\s+", r"\1", text).strip().casefold()
 
 
 def quote_in(quote: Any, text: str) -> bool:
@@ -301,9 +306,17 @@ def extend_literature(big: Dict[str, Any], *, paper: Optional[Dict[str, Any]] = 
         def json(self):
             return json.loads(self.text)
 
-    class _Client:
+    class _Client:   # records what fetch_full_text swallows (live: 7 of 9 open-access texts timed out silently)
+        def __init__(self):
+            self.errors: List[str] = []
+
         def get(self, url, params=None, **_):
-            return _Resp(get(url + ("?" + urlencode(params) if params else ""), deadline=deadline, cache_dir=cache))
+            try:
+                return _Resp(get(url + ("?" + urlencode(params) if params else ""), deadline=deadline,
+                                 cache_dir=cache))
+            except Exception as exc:  # noqa: BLE001
+                self.errors.append(type(exc).__name__)
+                raise
 
     # 1-2: search and screen
     hits: List[List[Dict[str, Any]]] = []
@@ -366,8 +379,11 @@ def extend_literature(big: Dict[str, Any], *, paper: Optional[Dict[str, Any]] = 
             texts = [abstract] if abstract else []
             if ids["pmcid"] and (item.get("isOpenAccess") == "Y" or item.get("inEPMC") == "Y"):
                 cand = CandidatePaper(id=ids["pmcid"], source="europepmc", title=title or "")
-                full = fetch_full_text(cand, client=_Client(), use_cache=False)
+                client = _Client()
+                full = fetch_full_text(cand, client=client, use_cache=False)
                 entry["full_text_chars"] = len(full)
+                if client.errors:
+                    entry["full_text_errors"] = client.errors
                 texts += passages(full, terms, passages_per_paper)
             texts = texts[:left]
             entry["passages"] = len(texts)

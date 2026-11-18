@@ -107,6 +107,31 @@ def test_quote_check_rejects_paraphrase_and_accepts_verbatim():
     assert by_id["PMID:30000002"]["rejected"] == {"quote_not_verbatim": 1}
 
 
+def test_xml_spacing_artefacts_and_escaped_titles():
+    from t2pw.vision.extend.literature import clean_text
+
+    # live: itertext puts a space where a tag ended ('in <i>B. subtilis</i>.' -> 'subtilis .')
+    assert quote_in("catalyzed by HepT ( HepS ) in B. subtilis.", "is catalyzed by HepT (HepS) in B. subtilis . Next")
+    assert not quote_in("catalyzed by HepS in B. subtilis.", "is catalyzed by HepT (HepS) in B. subtilis . Next")
+    assert clean_text("Menaquinone in &lt;i&gt;Lactococcus lactis&lt;/i&gt;: advances") == \
+        "Menaquinone in Lactococcus lactis : advances"
+
+
+def test_full_text_failure_is_recorded():
+    real = fake_get()
+
+    def get(url, *, deadline, cache_dir):
+        if "fullTextXML" in url:
+            raise TimeoutError("read timeout")
+        return real(url, deadline=deadline, cache_dir=cache_dir)
+
+    big, report = run(get=get)
+    by_id = {p["source_id"]: p for p in report["papers"]}
+    assert by_id["PMC9000001"]["full_text_chars"] == 0
+    assert by_id["PMC9000001"]["full_text_errors"] == ["TimeoutError"]
+    assert by_id["PMC9000001"]["passages"] == 1          # the abstract only
+
+
 def test_input_paper_preprint_and_no_journal_are_dropped():
     big, report = run()
     why = {x["id"]: (x["decision"], x["reason"]) for x in report["candidates"]}
