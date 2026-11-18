@@ -22,7 +22,7 @@ import re
 import sys
 import traceback
 import xml.etree.ElementTree as ET
-from collections import defaultdict
+from collections import Counter, defaultdict
 from itertools import combinations
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -140,6 +140,11 @@ def pwml_layout_metrics(pwml: bytes | str) -> Dict[str, Any]:
     labels_too_wide          labels whose widest wrapped line is wider than the label box
     labels_outside_box       labels whose drawn box is not inside a membrane box
     internal_labels          labels that show a generated state name (starting ``__`` or ``AutoState_``)
+    compartment_boxes        membrane boxes (bounding boxes of the membrane paths)
+    compartment_box_overlaps pairs of compartment boxes that intersect (containment counts)
+    unlabeled_compartment_boxes  boxes with no label whose drawn top-left corner lies inside them
+    duplicate_compartment_boxes  extra labelled boxes carrying a name another box already carries (PathWhiz draws one box per
+                             biological state, so two states in one location show as two boxes with the same name)
     compound_locations, used_compound_locations, distinct_compound_state
     duplicated_compound_locations   drawn extra copies: used locations beyond one per (compound, biological state)
     duplicated_compound_keys        (compound, state) pairs drawn more than once
@@ -185,6 +190,7 @@ def pwml_layout_metrics(pwml: bytes | str) -> Dict[str, Any]:
             membranes.append((min(p[0] for p in pts), min(p[1] for p in pts), max(p[0] for p in pts), max(p[1] for p in pts)))
     labels = 0
     too_wide, outside, internal, lab_over = [], 0, 0, 0
+    label_corner, shown = [], Counter()  # label top-left corners; names of the labels a viewer shows (not generated state names)
     for lb in pv.iter("label-location"):
         text, sc = _txt(lb, "label-text"), _num(lb, "scale-x", 1.0) or 1.0
         bw, lh = LABEL_GEOM.get(_txt(lb, "visualization-template-id"), (160, 10))
@@ -192,11 +198,17 @@ def pwml_layout_metrics(pwml: bytes | str) -> Dict[str, Any]:
         x, y = _num(lb, "x"), _num(lb, "y")
         r = (x + 5 * sc, y + 25 * sc, x + (5 + bw) * sc, y + (40 + lh * len(lines)) * sc)
         labels += 1
+        label_corner.append(r[:2])
         internal += text.strip().startswith(("__", "AutoState_"))
+        if not text.strip().startswith(("__", "AutoState_")):
+            shown[_norm(text)] += 1
         outside += not any(m[0] <= r[0] and m[1] <= r[1] and r[2] <= m[2] and r[3] <= m[3] for m in membranes)
         lab_over += sum(_overlap(r, n["r"]) for n in nodes)
         if lines and max(_text_width(ln) for ln in lines) * sc > (bw - LABEL_MARGIN) * sc:
             too_wide.append(text)
+    box_pairs = [(i, j) for (i, a), (j, b) in combinations(enumerate(membranes), 2) if _overlap(a, b)]
+    unlabeled = [i for i, m in enumerate(membranes) if not any(m[0] <= c[0] <= m[2] and m[1] <= c[1] <= m[3] for c in label_corner)]
+    dup_boxes = {k: n for k, n in shown.items() if n > 1}
 
     # ---- reactions: drawn compounds, enzymes, reading order, duplicates, enzyme distance
     rx = []
@@ -268,12 +280,15 @@ def pwml_layout_metrics(pwml: bytes | str) -> Dict[str, Any]:
         "node_overlaps": len(overlaps), "label_node_overlaps": lab_over, "edge_crossings": len(crossing),
         "precedence_pairs": prec, "reading_order_violations": len(back),
         "labels_too_wide": len(too_wide), "labels_outside_box": outside, "internal_labels": internal,
+        "compartment_boxes": len(membranes), "compartment_box_overlaps": len(box_pairs), "unlabeled_compartment_boxes": len(unlabeled),
+        "duplicate_compartment_boxes": sum(n - 1 for n in dup_boxes.values()),
         "compound_locations": len(cstate), "used_compound_locations": len(used & set(cstate)), "distinct_compound_state": len(per),
         "duplicated_compound_locations": sum(len(v) - 1 for v in dup_keys.values()), "duplicated_compound_keys": len(dup_keys),
         "enzymes_drawn": n_enz, "enzyme_distance_max": round(dmax), "enzyme_distance_gt200": len(far),
         "examples": {"overlaps": overlaps[:3], "crossings": crossing[:3], "reading_order": back[:3],
                      "labels_too_wide": too_wide[:3], "far_enzymes": far[:3],
-                     "duplicated": [[nm.get(k[0], k[0]), len(v)] for k, v in list(dup_keys.items())[:3]]},
+                     "duplicated": [[nm.get(k[0], k[0]), len(v)] for k, v in list(dup_keys.items())[:3]],
+                     "box_overlaps": box_pairs[:3], "unlabeled_boxes": unlabeled[:3], "duplicate_boxes": list(dup_boxes.items())[:3]},
     }
 
 
@@ -369,7 +384,10 @@ def svg_layout_metrics(svg: str) -> Dict[str, Any]:
         en = min(cand, key=lambda n: _dist_to_rect(ends[k], n[2]))
         jn = min(jx, key=lambda j: _dist_to_rect(ends[1 - k], j[2]))
         d.append(math.dist(en[3], jn[3]))
-    return dict(crossings=M.crossings(edges), bends=sum(max(0, len(e.pts) - 2) for e in edges),
+    vb = [float(v) for v in re.findall(r"-?\d+(?:\.\d+)?", root.get("viewBox") or "")]
+    return dict(canvas_w=vb[2] if len(vb) == 4 else None, canvas_h=vb[3] if len(vb) == 4 else None,
+                aspect_ratio=round(vb[2] / vb[3], 2) if len(vb) == 4 and vb[3] else None,  # the core view's width / height
+                crossings=M.crossings(edges), bends=sum(max(0, len(e.pts) - 2) for e in edges),
                 enzyme_links=len(d), enzyme_links_gt200=sum(1 for x in d if x > FAR_ENZYME), enzyme_link_max=round(max(d, default=0)),
                 edges=len(edges), drawings=len(ents),
                 node_overlaps=sum(1 for a, b in combinations(nodes, 2) if _overlap(a[2], b[2])),
@@ -379,12 +397,17 @@ def svg_layout_metrics(svg: str) -> Dict[str, Any]:
 
 # --------------------------------------------------------------------------- the 97 runs
 def _sum(rows: List[Dict[str, Any]]) -> Dict[str, Any]:
-    keys = [k for k, v in rows[0].items() if isinstance(v, (int, float)) and k not in ("canvas_w", "canvas_h", "enzyme_distance_max", "enzyme_link_max")] if rows else []
+    keys = [k for k, v in rows[0].items() if isinstance(v, (int, float)) and k not in ("canvas_w", "canvas_h", "aspect_ratio", "enzyme_distance_max", "enzyme_link_max")] if rows else []
     t = {k: sum(r[k] for r in rows) for k in keys}
     t["runs"] = len(rows)
-    for k in ("node_overlaps", "edge_crossings", "reading_order_violations", "labels_too_wide", "duplicated_compound_locations", "enzyme_distance_gt200"):
+    for k in ("node_overlaps", "edge_crossings", "reading_order_violations", "labels_too_wide", "duplicated_compound_locations", "enzyme_distance_gt200",
+              "compartment_box_overlaps", "unlabeled_compartment_boxes", "duplicate_compartment_boxes"):
         if k in keys:
             t["runs_with_" + k] = sum(1 for r in rows if r[k])
+    if rows and "aspect_ratio" in rows[0]:
+        ar = sorted(r["aspect_ratio"] for r in rows if r["aspect_ratio"])
+        t["runs_aspect_gt_4"] = sum(1 for a in ar if a > 4)  # wider than 4:1: labels unreadable at page width
+        t["aspect_ratio_median"], t["aspect_ratio_max"] = (ar[len(ar) // 2], ar[-1]) if ar else (None, None)
     return t
 
 
@@ -435,6 +458,7 @@ def main(argv=None) -> int:
     totals = {"scope": a.scope, "pwml": _sum([r["pwml"] for r in ok]), "svg": _sum([r["svg"] for r in ok]),
               "crashed": [r["run"] for r in runs if "crash" in r],
               "svg_model_mismatch": [{"run": r["run"], "idx": r["idx"], "svg_vs_model": r["svg_vs_model"]} for r in ok if not r["svg_equals_model"]]}
+    totals["svg"]["aspect_gt_4_idx"] = [r["idx"] for r in ok if (r["svg"]["aspect_ratio"] or 0) > 4]
     Path(a.out).write_text(json.dumps({"totals": totals, "runs": runs}, indent=1, default=str), encoding="utf-8")
     if a.totals_out:
         Path(a.totals_out).write_text(json.dumps(totals, indent=1), encoding="utf-8")

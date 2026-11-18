@@ -180,3 +180,22 @@ def test_gallery_refuses_a_harness_that_is_not_the_t2pw_vis_copy(tmp_path):
     (tmp_path / "run_import.py").write_text('PROJECT = "t2pw-vis"\n', encoding="utf-8")
     GA._check_harness(tmp_path)
     assert len(GA.DEFAULT_PICK) == 6 and GA._idx("3, 4") == [3, 4] and GA._idx(None) == list(GA.DEFAULT_PICK)
+
+
+# --------------------------------------------------------------------------- compartment boxes and aspect ratio (review of the gallery)
+def test_compartment_box_overlap_unlabeled_and_duplicate():
+    sq = lambda x0, y0, x1, y1: "M%d %d L%d %d L%d %d L%d %d Z" % (x0, y0, x1, y0, x1, y1, x0, y1)
+    m = LM.pwml_layout_metrics(pwml(membranes=[sq(0, 0, 400, 400), sq(300, 300, 700, 700), sq(1000, 0, 1400, 400)],
+                                    labels=[("ER", 10, 10), ("ER", 310, 310)]))  # two boxes named ER, the third has no label, A and B intersect
+    assert (m["compartment_boxes"], m["compartment_box_overlaps"], m["unlabeled_compartment_boxes"], m["duplicate_compartment_boxes"]) == (3, 1, 1, 1)
+    assert m["examples"]["box_overlaps"] == [(0, 1)] and m["examples"]["unlabeled_boxes"] == [2] and m["examples"]["duplicate_boxes"] == [("er", 2)]
+    ok = LM.pwml_layout_metrics(pwml(membranes=[sq(0, 0, 400, 400), sq(500, 0, 900, 400)], labels=[("ER", 10, 10), ("Golgi", 510, 10), ("__auto_state__", 20, 200)]))
+    assert (ok["compartment_box_overlaps"], ok["unlabeled_compartment_boxes"], ok["duplicate_compartment_boxes"]) == (0, 0, 0)  # generated names are not shown names
+
+
+def test_svg_aspect_ratio_and_totals():
+    wide = SVG.replace('<svg xmlns="http://www.w3.org/2000/svg">', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 200">')
+    m = LM.svg_layout_metrics(wide)
+    assert (m["aspect_ratio"], m["canvas_w"], m["canvas_h"]) == (5.0, 1000.0, 200.0) and LM.svg_layout_metrics(SVG)["aspect_ratio"] is None
+    t = LM._sum([dict(aspect_ratio=5.0, crossings=1), dict(aspect_ratio=2.0, crossings=2), dict(aspect_ratio=None, crossings=0)])
+    assert (t["crossings"], t["runs_aspect_gt_4"], t["aspect_ratio_max"]) == (3, 1, 5.0)

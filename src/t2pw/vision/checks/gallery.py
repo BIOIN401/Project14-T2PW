@@ -157,8 +157,9 @@ def _shrink(src: Path, dst: Path, limit: int = MAX_PNG, width: int = 1200) -> No
 
 
 _PW_KEYS = ("nodes", "node_overlaps", "edge_crossings", "reading_order_violations", "precedence_pairs", "labels_too_wide", "labels_outside_box",
-            "label_node_overlaps", "duplicated_compound_locations", "enzyme_distance_gt200", "enzymes_drawn", "enzyme_distance_max")
-_SVG_KEYS = ("crossings", "bends", "enzyme_links_gt200", "enzyme_links", "enzyme_link_max", "node_overlaps", "labels_truncated", "drawings")
+            "label_node_overlaps", "duplicated_compound_locations", "enzyme_distance_gt200", "enzymes_drawn", "enzyme_distance_max",
+            "compartment_boxes", "compartment_box_overlaps", "unlabeled_compartment_boxes", "duplicate_compartment_boxes")
+_SVG_KEYS = ("aspect_ratio", "crossings", "bends", "enzyme_links_gt200", "enzyme_links", "enzyme_link_max", "node_overlaps", "labels_truncated", "drawings")
 
 
 def _table(title: str, d: Dict[str, Any], keys) -> str:
