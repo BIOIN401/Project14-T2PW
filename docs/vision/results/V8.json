@@ -2,25 +2,63 @@
  "lane": "V8",
  "branch": "vision/extend-lit",
  "base": "d2e5fa7e",
- "status": "needs-decision: code, tests and live proof done; the live run admitted 1 step over 4 runs, so the 10-step hand-check could not be met (1/1 fidelity, 1/1 biology, 15 refusals audited). Round-1 fixes (quote spacing normalisation, escaped titles, full-text errors recorded) need v8-unit-2 and v8-live-2",
+ "status": "round 1 committed; VD-18: rerun queued by the sub-orchestrator (chain11); hand-check of every admitted step from live and live2 (up to 10) follows",
  "live_round_1": {
   "log": "C:/t/vis-runs/logs/v8-live-1.log (BW_EXIT=0, 0 survivors, 577.7 s, budget 300 s / 12 LLM calls per run)",
   "runs": {
-   "PMC12421875-menaquinone": {"seconds": 177.6, "status": "ok", "frontier": "1 substrate, 1 product, 2 enzymes", "queries": "2 ok (10 hits each)",
-     "candidates": "5 kept; dropped: 10 over_max_papers, 2 abstract_names_other_organism, 1 input_paper",
-     "papers_read": "5: 2 with full text (PMC13586869 70214 chars, 3 passages; PMC13028806 62542 chars, 2 passages), 3 abstract only (1 of them open access but the full-text request failed)",
-     "llm": "8 calls, 8575 prompt + 5744 completion tokens, 0 errors", "extracted": 15,
-     "rejected": "quote_not_verbatim 2, roles_unassignable 9, states_no_reaction_relation 2, not_connected 1", "admitted": 1, "merged_into_base": 1, "added_hop_1": 0},
-   "PMC12096016-enterobactin": {"seconds": 83.1, "status": "ok", "frontier": "3 substrates, 2 products, 4 enzymes", "queries": "3 ok (10 hits each)",
-     "candidates": "5 kept; dropped: 21 over_max_papers, 3 preprint, 1 abstract_names_other_organism",
-     "papers_read": "5, abstract only (1 open access, full-text request failed)", "llm": "5 calls, 4237 + 446 tokens, 0 errors",
-     "extracted": 0, "rejected": "none", "admitted": 0, "merged_into_base": 0, "added_hop_1": 0},
-   "PMC12312563-listeria-mend": {"seconds": 92.0, "status": "no_candidates", "frontier": "2 substrates, 1 product, 1 enzyme",
-     "queries": "3 failed, ReadTimeout (Europe PMC)", "candidates": "0", "papers_read": 0, "llm": "0 calls", "extracted": 0, "admitted": 0},
-   "PMC12376012-human": {"seconds": 223.6, "status": "ok", "frontier": "4 substrates, 5 products, 12 enzymes", "queries": "3 ok (10 hits each)",
-     "candidates": "5 kept; dropped: 21 over_max_papers, 3 abstract_names_other_organism",
-     "papers_read": "5, abstract only (all 5 open access, every full-text request failed)", "llm": "5 calls, 4656 + 334 tokens, 0 errors",
-     "extracted": 2, "rejected": "states_no_reaction_relation 1, roles_unassignable 1", "admitted": 0, "merged_into_base": 0, "added_hop_1": 0}
+   "PMC12421875-menaquinone": {
+    "seconds": 177.6,
+    "status": "ok",
+    "frontier": "1 substrate, 1 product, 2 enzymes",
+    "queries": "2 ok (10 hits each)",
+    "candidates": "5 kept; dropped: 10 over_max_papers, 2 abstract_names_other_organism, 1 input_paper",
+    "papers_read": "5: 2 with full text (PMC13586869 70214 chars, 3 passages; PMC13028806 62542 chars, 2 passages), 3 abstract only (1 of them open access but the full-text request failed)",
+    "llm": "8 calls, 8575 prompt + 5744 completion tokens, 0 errors",
+    "extracted": 15,
+    "rejected": "quote_not_verbatim 2, roles_unassignable 9, states_no_reaction_relation 2, not_connected 1",
+    "admitted": 1,
+    "merged_into_base": 1,
+    "added_hop_1": 0
+   },
+   "PMC12096016-enterobactin": {
+    "seconds": 83.1,
+    "status": "ok",
+    "frontier": "3 substrates, 2 products, 4 enzymes",
+    "queries": "3 ok (10 hits each)",
+    "candidates": "5 kept; dropped: 21 over_max_papers, 3 preprint, 1 abstract_names_other_organism",
+    "papers_read": "5, abstract only (1 open access, full-text request failed)",
+    "llm": "5 calls, 4237 + 446 tokens, 0 errors",
+    "extracted": 0,
+    "rejected": "none",
+    "admitted": 0,
+    "merged_into_base": 0,
+    "added_hop_1": 0
+   },
+   "PMC12312563-listeria-mend": {
+    "seconds": 92.0,
+    "status": "no_candidates",
+    "frontier": "2 substrates, 1 product, 1 enzyme",
+    "queries": "3 failed, ReadTimeout (Europe PMC)",
+    "candidates": "0",
+    "papers_read": 0,
+    "llm": "0 calls",
+    "extracted": 0,
+    "admitted": 0
+   },
+   "PMC12376012-human": {
+    "seconds": 223.6,
+    "status": "ok",
+    "frontier": "4 substrates, 5 products, 12 enzymes",
+    "queries": "3 ok (10 hits each)",
+    "candidates": "5 kept; dropped: 21 over_max_papers, 3 abstract_names_other_organism",
+    "papers_read": "5, abstract only (all 5 open access, every full-text request failed)",
+    "llm": "5 calls, 4656 + 334 tokens, 0 errors",
+    "extracted": 2,
+    "rejected": "states_no_reaction_relation 1, roles_unassignable 1",
+    "admitted": 0,
+    "merged_into_base": 0,
+    "added_hop_1": 0
+   }
   },
   "views": "default and full views equal the base sizes on all 4 runs (the only admitted step merged into a base row); unresolved_refs unchanged (human run 2 = base)",
   "handcheck": "docs/vision/evidence/V8/handcheck.json: admitted 1 -> fidelity 1/1, biology 1/1; 15 refusals audited, 0 refused wrongly by the rules, 4 true single-step reactions lost to the admission span parser's sentence shapes, 1 to a stitched model quote, 1 quote miss was an XML spacing artefact (fixed; it would then be refused as B. subtilis, correctly)",
@@ -58,22 +96,50 @@
   "secret_scan.py: skips __pycache__; the URL-credential pattern now needs '://' (the bare form matched payload element keys); an e-mail pattern added for author addresses"
  ],
  "tests": [
-  {"label": "v8-compile", "counts": "py_compile clean (run directly, light)", "log": null},
-  {"label": "v8-unit-1", "counts": "47 passed (14 V8 + V4 merge file), BW_EXIT=0, 0 survivors (sub-orchestrator's batch), round-0 code", "log": "C:/t/vis-runs/logs/v8-unit-1.log"},
-  {"label": "v8-unit-2", "counts": "NOT RUN: round-1 code, for the sub-orchestrator's batch (expect 49)", "log": "C:/t/vis-runs/logs/v8-unit-2.log"}
+  {
+   "label": "v8-compile",
+   "counts": "py_compile clean (run directly, light)",
+   "log": null
+  },
+  {
+   "label": "v8-unit-1",
+   "counts": "47 passed (14 V8 + V4 merge file), BW_EXIT=0, 0 survivors (sub-orchestrator's batch), round-0 code",
+   "log": "C:/t/vis-runs/logs/v8-unit-1.log"
+  },
+  {
+   "label": "v8-unit-2",
+   "counts": "NOT RUN: round-1 code, for the sub-orchestrator's batch (expect 49)",
+   "log": "C:/t/vis-runs/logs/v8-unit-2.log"
+  }
  ],
  "commands_to_run": [
-  {"label": "v8-unit-2", "floor_gb": 2, "lock": true,
+  {
+   "label": "v8-unit-2",
+   "floor_gb": 2,
+   "lock": true,
    "cmd": "mkdir -p C:/t/vis-runs/bt/vis-extend-lit/2 && cd C:/t/vis-extend-lit && PYTHONPATH=C:/t/vis-extend-lit/src T2PW_OFFLINE_CURATOR=1 bash C:/t/vis-runs/bw.sh vis-extend-lit v8-unit-2 600 C:/t/vis-runs/json/v8-unit-2.json 2 -- C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe C:/t/vis-extend-lit/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/vis-extend-lit -q --basetemp=C:/t/vis-runs/bt/vis-extend-lit/2/t tests/test_vision_extend_lit.py tests/test_vision_extend_merge.py > C:/t/vis-runs/logs/v8-unit-2.log 2>&1",
-   "expect": "49 passed (16 V8 + 33 V4), 0 survivors"},
-  {"label": "v8-live-2", "floor_gb": 4, "lock": true, "network": "Europe PMC search + fullTextXML", "llm": "rag_prose_extraction",
+   "expect": "49 passed (16 V8 + 33 V4), 0 survivors"
+  },
+  {
+   "label": "v8-live-2",
+   "floor_gb": 4,
+   "lock": true,
+   "network": "Europe PMC search + fullTextXML",
+   "llm": "rag_prose_extraction",
    "cmd": "cd C:/t/vis-extend-lit && PYTHONPATH=C:/t/vis-extend-lit/src bash C:/t/vis-runs/bw.sh vis-extend-lit v8-live-2 3000 C:/t/vis-runs/json/v8-live-2.json 4 -- C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe C:/t/vis-runs/scratch/vis-extend-db/launch.py C:/t/vis-extend-lit/docs/vision/evidence/V8/live_proof.py C:/t/vis-runs/scratch/vis-extend-lit/live2 300 12 > C:/t/vis-runs/logs/v8-live-2.log 2>&1",
-   "expect": "only worth running after the decision below, or to get past the Europe PMC timeouts (successful responses are cached by URL, failed ones are retried). Output to scratch first; copy to evidence after a secret scan"},
-  {"label": "v8-secrets-2", "floor_gb": 0, "lock": false,
+   "expect": "only worth running after the decision below, or to get past the Europe PMC timeouts (successful responses are cached by URL, failed ones are retried). Output to scratch first; copy to evidence after a secret scan"
+  },
+  {
+   "label": "v8-secrets-2",
+   "floor_gb": 0,
+   "lock": false,
    "cmd": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe C:/t/vis-runs/scratch/vis-extend-db/launch.py C:/t/vis-extend-lit/docs/vision/evidence/V8/secret_scan.py C:/t/vis-extend-lit/docs/vision/evidence/V8 C:/t/vis-extend-lit/docs/vision/results/V8.json C:/t/vis-runs/logs/v8-live-1.log C:/t/vis-runs/logs/v8-unit-1.log",
-   "expect": "TOTAL 0 (counts only)"}
+   "expect": "TOTAL 0 (counts only)"
+  }
  ],
- "proofs": ["v8-live-1: see live_round_1; hand-check docs/vision/evidence/V8/handcheck.json"],
+ "proofs": [
+  "v8-live-1: see live_round_1; hand-check docs/vision/evidence/V8/handcheck.json"
+ ],
  "dead_ends": [
   "rag.acquire.search_candidates not used for the search itself: its CandidatePaper drops the Europe PMC journal, pubType, source (PPR), pmid, pmcid and doi fields the peer-review screen and the input-paper match need. build_query, _EUROPEPMC_SEARCH, CandidatePaper and fetch_full_text are reused; the GET goes through vision.extend.http.get_text (deadline, URL cache, t2pw-vision User-Agent)",
   "rag.admission.admit_candidates not used: it is gap-bound (needs detect_gaps output and admits only gap fillers). Its evidence core, validate_evidence_span (one statement, participants set-equal, direction, catalyst attached), is used per step, plus organisms_in_span / compare_organism",
@@ -88,5 +154,61 @@
   "Budget defaults (120 s, 8 calls) come from the brief; with a real model each call takes ~10-30 s, so a run reads 2-4 papers. The live proof uses 300 s / 12 calls. A call already started may overrun the deadline by its own timeout",
   "Wiring: extend_big_payload does not dispatch 'literature' (passing it there is recorded as a failed source, fail-open). The wiring lane should call literature.run_if_enabled after the DB extension so DB rows are present for merges",
   "Stoichiometry stated in a quote is not carried (convert.to_rows reaction rows have none, as for the DB extension)"
- ]
+ ],
+ "decision_vd18": "(a) rerun live now (sub-orchestrator chain11: v8-unit-2, v8-live-2, v8-secrets-3); (b) widening the rag/admission.py span parser is deferred to its own lane under the main orchestrator, with a no-regression proof; (c), (d) rejected: the evidence bar stays. V8 merge bar: quote fidelity 100% of admitted steps (up to 10 checked), biology misses explained, static review, low yield reported; low yield does not block the merge (behind T2PW_EXTEND, nothing calls it)",
+ "admission_parser_lane_input": {
+  "why": "true single-step reactions stated in one sentence that rag.admission.validate_evidence_span refused as evidence_relation_roles_unassignable (v8-live-1, quotes verbatim from the cited full text, truncated at 300 chars)",
+  "steps": [
+   {
+    "run": "PMC12421875-menaquinone",
+    "paper": "PMC13586869",
+    "refusal": "admission: evidence_relation_roles_unassignable",
+    "quote": "acetyl-CoA is first converted into acetyl-Pi by phosphotransacetylase under aerobic conditions",
+    "claim_inputs": [
+     "acetyl-CoA"
+    ],
+    "claim_outputs": [
+     "acetyl-Pi"
+    ]
+   },
+   {
+    "run": "PMC12421875-menaquinone",
+    "paper": "PMC13586869",
+    "refusal": "admission: evidence_relation_roles_unassignable",
+    "quote": "acetyl-Pi is further converted into acetate, catalyzed by acetate kinase, along with the production of ATP",
+    "claim_inputs": [
+     "acetyl-Pi"
+    ],
+    "claim_outputs": [
+     "acetate",
+     "ATP"
+    ]
+   },
+   {
+    "run": "PMC12421875-menaquinone",
+    "paper": "PMC13586869",
+    "refusal": "admission: evidence_relation_roles_unassignable",
+    "quote": "NADH generated from glycolysis acts as the electron donor and is oxidized to NAD⁺ by NADH dehydrogenase",
+    "claim_inputs": [
+     "NADH"
+    ],
+    "claim_outputs": [
+     "NAD⁺"
+    ]
+   },
+   {
+    "run": "PMC12421875-menaquinone",
+    "paper": "PMC13586869",
+    "refusal": "admission: evidence_relation_roles_unassignable",
+    "quote": "Two molecules of IPP and one molecule of DMAPP are then condensed into farnesyl diphosphate (FPP, C15), which is catalyzed by geranylgeranyl diphosphate synthase (IspA).",
+    "claim_inputs": [
+     "IPP",
+     "DMAPP"
+    ],
+    "claim_outputs": [
+     "farnesyl diphosphate"
+    ]
+   }
+  ]
+ }
 }
