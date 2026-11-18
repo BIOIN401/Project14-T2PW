@@ -431,8 +431,15 @@ def test_s1_unused_species_row_never_chooses_the_organism():
     b = base()
     b["entities"]["species"].append({"name": "Arabidopsis thaliana", "taxonomy_id": "3702", "evidence": "x"})
     b["entities"]["proteins"].append({"name": "E9", "species": "Lactococcus lactis", "evidence": "E9"})
+    b["entities"]["protein_complexes"].append({"name": "MenA", "species": "Arabidopsis thaliana", "components": []})
     ctx = paper_context(build_big_payload(b))
+    # the processes' states name E. coli: protein species (L. lactis, a borrowed Arabidopsis) do not count
+    assert ctx["species"] == [{"name": "Escherichia coli", "taxonomy_id": "562"}]
+    for st in b["biological_states"]:
+        st.pop("species")
+    ctx = paper_context(build_big_payload(b))   # no state names a species: protein species are used
     assert ctx["species"] == [{"name": "Escherichia coli", "taxonomy_id": "562"},
+                              {"name": "Arabidopsis thaliana", "taxonomy_id": "3702"},
                               {"name": "Lactococcus lactis", "taxonomy_id": None}]   # used, no species row
 
 
@@ -508,6 +515,46 @@ def test_s5_grounded_rows_never_join_on_a_synonym_alone():
     assert step["inputs"] == ["coproporphyrinogen III", "O2"]
     assert step["outputs"] == ["Coproporphyrin III [pathbank]", "H2O2"]     # not a self-loop
     assert report["sources"]["pathbank"]["counts"]["name_join_refused_no_shared_id"] == 1
+
+
+def test_s5b_incoming_synonym_naming_another_incoming_entity_is_dropped():
+    # live round 3: PathBank's coproporphyrinogen III lists 'Coproporphyrin III' as a synonym; after it
+    # joined the paper row, merge_extension rewrote the CPOX product onto the paper's substrate
+    b = base()
+    b["entities"]["compounds"].append({"name": "coproporphyrinogen III", "mapped_ids": {"kegg": "C03263"},
+                                       "evidence": "x"})
+    gen = dict(part("coproporphyrinogen III", "C03263"), synonyms=["Coproporphyrin III"])
+    big, report = run_on(b, [rxn("PW_R213418", [gen, part("O2", "C00007")],
+                                 [part("Coproporphyrin III", "C05770"), part("H2O2", "C00027")])])
+    assert big["extension"]["processes"]["reactions"][0]["outputs"] == ["Coproporphyrin III", "H2O2"]
+    assert report["sources"]["pathbank"]["counts"]["synonyms_dropped_batch_collision"] == 1
+
+
+def test_reactome_atp_coupled_transport_is_a_transport(tmp_path):
+    # live round 3 hand check: R-HSA-9843721 'ABCC1,ABCG2 transport C18-S1P' came out as C18-S1P -> C18-S1P
+    url = "https://reactome.org/ContentService"
+    se = lambda i, n, c, chebi: {"peDbId": i, "displayName": f"{n} [{c}]", "schemaClass": "SimpleEntity",
+                                 "refEntities": [{"identifier": chebi, "displayName": f"{n} [ChEBI:{chebi}]",
+                                                  "schemaClass": "ReferenceMolecule"}]}
+    cache_put(tmp_path, f"{url}/data/query/R-T-2", {
+        "displayName": "transport S1P", "input": [{"dbId": 1}, {"dbId": 2}, {"dbId": 3}],
+        "output": [{"dbId": 4}, {"dbId": 5}, {"dbId": 6}, {"dbId": 7}],
+        "compartment": [{"displayName": "cytosol"}, {"displayName": "extracellular region"}]})
+    cache_put(tmp_path, f"{url}/data/participants/R-T-2", [
+        se(1, "C18-S1P", "cytosol", "37550"), se(2, "ATP", "cytosol", "30616"), se(3, "H2O", "cytosol", "15377"),
+        se(4, "C18-S1P", "extracellular region", "37550"), se(5, "ADP", "cytosol", "456216"),
+        se(6, "H+", "cytosol", "15378"), se(7, "Pi", "cytosol", "43474")])
+    step, _ = reaction_step("R-T-2", deadline=0, cache_dir=tmp_path)
+    assert (step["kind"], step["cargo"]["name"], step["from_location"], step["to_location"]) == \
+        ("transport", "C18-S1P", "cytosol", "extracellular region")
+    assert "coupled currency not carried" in step["note"]
+
+
+def test_self_loop_reaction_is_skipped():
+    big, report = run_on(base(), [rxn("R-L", [part("C", "C90003"), part("ATP", "C00002")],
+                                      [part("C", "C90003"), part("ADP", "C00008")])])
+    assert "processes" not in big["extension"]
+    assert report["sources"]["pathbank"]["counts"]["skipped_self_loop"] == 1
 
 
 def test_source_provenance_names_the_pathway_and_step():

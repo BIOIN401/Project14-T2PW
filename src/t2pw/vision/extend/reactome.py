@@ -13,6 +13,9 @@ import re
 import time
 from typing import Any, Dict, List, Optional, Tuple
 
+from t2pw.vision.payload import is_currency
+
+from .convert import currency_name
 from .http import get_text
 
 BASE = "https://reactome.org/ContentService"
@@ -107,10 +110,17 @@ def reaction_step(st_id: str, deadline: float, cache_dir) -> Tuple[Optional[Dict
     key = lambda p: json.dumps([p["type"], p["name"], p.get("ids"), [c.get("ids") for c in p.get("components") or []]],
                                sort_keys=True)
     ins, outs = side["input"], side["output"]
-    if len(ins) == 1 and len(outs) == 1 and key(ins[0][0]) == key(outs[0][0]) and ins[0][1] != outs[0][1]:
-        return {"kind": "transport", "accession": st_id, "name": q.get("displayName"), "cargo": ins[0][0],
-                "enzymes": enzymes, "from_location": ins[0][1], "to_location": outs[0][1],
-                "note": "; ".join(notes)}, None
+    # one cargo changes compartment and everything else is currency (ATP + H2O -> ADP + Pi + H+):
+    # a transport. Written as a reaction it would read 'cargo -> cargo' with no compartment.
+    moved = [(p, c, oc) for p, c in ins for q2, oc in outs if key(p) == key(q2) and c != oc]
+    rest = [p for p, _ in ins + outs if all(key(p) != key(m[0]) for m in moved)]
+    is_cur = lambda p: p["type"] == "compound" and (currency_name(p) or is_currency(p["name"]))
+    if len(moved) == 1 and all(is_cur(p) for p in rest):
+        cargo, frm, to = moved[0]
+        extra = ["coupled currency not carried: " + ", ".join(p["name"] for p in rest)] if rest else []
+        return {"kind": "transport", "accession": st_id, "name": q.get("displayName"), "cargo": cargo,
+                "enzymes": enzymes, "from_location": frm, "to_location": to,
+                "note": "; ".join(notes + extra)}, None
     return {"kind": "reaction", "accession": st_id, "name": q.get("displayName"),
             "inputs": [p for p, _ in ins], "outputs": [p for p, _ in outs], "enzymes": enzymes,
             "location": comps[0] if len(comps) == 1 else None, "location_go": go,

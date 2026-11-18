@@ -356,6 +356,10 @@ def to_rows(big: Dict[str, Any], pw: Dict[str, Any]):
             if not ins or not outs:
                 counts["skipped_one_sided"] += 1
                 continue
+            a, b, _, _ = index._rx_sets({"inputs": ins, "outputs": outs})
+            if a == b:   # 'X -> X' after currency: a transport or a wrong join, never a reaction
+                counts["skipped_self_loop"] += 1
+                continue
             row: Dict[str, Any] = {"name": step.get("name") or f"{' + '.join(ins)} -> {' + '.join(outs)}",
                                    "inputs": ins, "outputs": outs,
                                    "enzymes": [actor(e) for e in step.get("enzymes") or []]}
@@ -396,6 +400,24 @@ def to_rows(big: Dict[str, Any], pw: Dict[str, Any]):
             counts[f"skipped_{kind}"] += 1
             continue
         counts[f"steps_{kind}"] += 1
+
+    # A synonym equal to another incoming entity's name: merge_extension aliases every name of a
+    # matched row to that row, so the other entity's references would be rewritten onto it (live:
+    # PathBank coproporphyrinogen III lists 'Coproporphyrin III', which then became the paper's
+    # coproporphyrinogen III inside the CPOX step). Drop such synonyms.
+    batch_names = {norm(r.get("name")) for s, rs in rows.items() if s.startswith("entities.") for r in rs}
+    for s, rs in rows.items():
+        if not s.startswith("entities."):
+            continue
+        for r in rs:
+            syn = r.get("synonyms") or []
+            kept = [x for x in syn if norm(x) == norm(r.get("name")) or norm(x) not in batch_names]
+            if len(kept) != len(syn):
+                counts["synonyms_dropped_batch_collision"] += len(syn) - len(kept)
+                if kept:
+                    r["synonyms"] = kept
+                else:
+                    r.pop("synonyms", None)
 
     source = {"kind": "database", "pmid": None, "pmcid": None, "doi": None, "title": pw.get("name"),
               "db": db, "accession": pw.get("accession"), "url": pw.get("url"),

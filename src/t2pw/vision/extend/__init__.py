@@ -45,24 +45,28 @@ def _default_fetcher(name: str) -> Callable:
 
 
 def used_species(big: Dict[str, Any]) -> Dict[str, str]:
-    """{normalized name: name as written} of the species the paper's proteins / complexes or its
-    processes' states use. A species row nothing uses (an extraction artefact, e.g. a stray
-    'Arabidopsis thaliana') never chooses the organism."""
+    """{normalized name: name as written} of the species the states of the paper's processes use,
+    else (no state names one) the species of its proteins / complexes. A species row nothing uses
+    (an extraction artefact, e.g. a stray 'Arabidopsis thaliana') never chooses the organism."""
     base = big.get("base") or {}
     state_species = {norm(r.get("name")): r.get("species") for r in base.get(STATES) or [] if isinstance(r, dict)}
-    used: Dict[str, str] = {}
+    by_states: Dict[str, str] = {}
+    by_proteins: Dict[str, str] = {}
     for section, _, row, is_base in keyed_rows(big):
         if not is_base or not isinstance(row, dict):
             continue
-        names = []
         if section in ("entities.proteins", "entities.protein_complexes"):
-            names = [row.get(f) for f in ("species", "organism")]
+            names, into = [row.get(f) for f in ("species", "organism")], by_proteins
         elif section.startswith("processes."):
-            names = [state_species.get(norm(st)) for st in refs(section, row)[1]]
+            names, into = [state_species.get(norm(st)) for st in refs(section, row)[1]], by_states
+        else:
+            continue
         for n in names:
             if isinstance(n, str) and norm(n):
-                used.setdefault(norm(n), n.strip())
-    return used
+                into.setdefault(norm(n), n.strip())
+    # the states the processes run in name the organism; protein species only when no state does
+    # (live: menaquinone's MenA/MenI wrappers carry a borrowed 'Arabidopsis thaliana' identity)
+    return by_states or by_proteins
 
 
 def paper_context(big: Dict[str, Any]) -> Dict[str, Any]:
