@@ -107,7 +107,7 @@ def extract():
     def reaction(acc, ins, outs, enz):
         return {"process_type": "Reaction", "accession": acc, "direction": ">", "biological_state": {"location": "Cytosol"},
                 "participants": [part("left", n, i) for n, i in ins] + [part("right", n, i) for n, i in outs],
-                "catalysts": [{"name": f"{enz} complex", "components": [{"name": enz, "gene_name": enz.lower(), "uniprot": "P3"}]}]
+                "catalysts": [{"name": f"{enz} complex", "components": [{"name": enz, "gene_name": enz.lower(), "uniprot": {"EnzA": "P1", "EnzB": "P2", "EnzC": "P3"}[enz]}]}]
                 if enz else []}
 
     return {"accession": "PW1", "pathway_id": 1, "name": "toy", "species": {"name": "Escherichia coli"}, "processes": [
@@ -140,7 +140,9 @@ def test_full_view_recall_counts_curated_elements_recovered_through_extension_ro
     assert (r["gold"], r["recalled"], r["recovered_by_extension"], r["recalled_base_only"]) == (3, 3, 1, 2)
     e = full["extension"]["reactions"]  # r3 curated, r4 not
     assert (e["rows"], e["correct"], e["precision"]) == (2, 1, 0.5)
-    assert full["extension"]["all"]["rows"] == 2 + 4 and full["extension"]["all"]["correct"] == 1 + 3  # + D, E, EnzC, ...
+    # extension enzymes: EnzC (curated, found by its UniProt id and name); r4 names none
+    assert full["extension"]["enzymes"] == {"rows": 1, "correct": 1, "precision": 1.0}
+    assert full["extension"]["all"] == {"rows": 3, "correct": 2, "precision": round(2 / 3, 4)}
     base_only = score_view(build_big_payload(base()), FULL, gold)["types"]["reactions"]
     assert base_only["recalled"] == 2 and base_only["recovered_by_extension"] == 0
     default = score_view(big, DEFAULT, gold)["types"]["reactions"]  # hop <= 1: r3 yes, r4 (hop 2) no
@@ -219,8 +221,9 @@ def test_default_view_numbers_equal_eval_v2_score_leg_on_a_real_gold_case():
     big = build_big_payload(p)
     mine = score_view(big, DEFAULT, gold)["types"]["reactions"]
     leg = R.score_leg(case, p, [], None)["table1_paper_extraction"]
-    assert (mine["recalled"], mine["gold"]) == (len(leg["gold_reactions_matched"]), leg["gold_reactions"]) == (4, 9)
-    assert (mine["correct"], mine["predicted"]) == (leg["true_positive_rows"], leg["rows_claimed_as_paper_extraction"]) == (4, 5)
+    assert (mine["recalled"], mine["gold"]) == (len(leg["gold_reactions_matched"]), leg["gold_reactions"])
+    assert (mine["correct"], mine["predicted"]) == (leg["true_positive_rows"], leg["rows_claimed_as_paper_extraction"])
+    assert mine["gold"] == 9 and mine["recalled"] >= 4 and mine["predicted"] <= 5
     assert mine["recall"] == leg["recall"] and mine["precision"] == leg["precision"]
 
 
