@@ -97,6 +97,22 @@ Merged in `vision/main` (pushed): V1, V2, V3, V5, V6 at 04596e6c. Gated work sti
 | VD-15 | Web (V10): re-scope on a request thread uses the keyword fallback only (no LLM call in a request); `generate()` gets a public `offline` keyword (default True = old behaviour), the serialised child passes offline=False; single uvicorn worker assumed; cache path versioned | main-orchestrator rulings (own process, production DB, no env swap) and app.py's "no LLM on a request path" |
 | VD-7 | Per-job extension budget defaults: 3 curated pathways, 5 outside papers, 120 s | VISION § 7 open point; conservative until the PO sets numbers |
 
+## What I saw in the screenshots (2026-11-18, gallery from V7b chain3: runs 7, 10, 14, 116, 126, 128)
+
+- **Our renderer.** Run 7 (Arabidopsis, 23 reactions) reads well: lanes per compartment, main chain left to right,
+  enzymes beside their steps. Run 116 (sphingolipids) is drawn very wide; at page width the labels are unreadable
+  (aspect-ratio metric requested from V7b).
+- **PathWhiz (local harness, t2pw/09).** Chains read left to right and imports succeed. Problems seen:
+  (1) one compartment box per biological state, so the same location appears twice (ER x2 in 116, plastid x2 in 7);
+  (2) in run 10, compartment boxes overlap, one box has no label, and long transport lines cross boxes;
+  (3) compound structure images are wrong (5-HT drawn as a diamine, sphingomyelin as a steroid). A scout traced (3)
+  to the harness, not our PWML: the harness gives new compounds sequential `pwc_id`s, and the viewer loads
+  `moldb.wishartlab.com/molecules/<pwc_id>/image.png`, i.e. an unrelated production compound. Our PWML carries correct
+  ids (serotonin HMDB0000259, ChEBI 28790) and no structure.
+- **Grounding gap seen:** Ca++ in run 10 has no database id.
+- Items (1) and (2) are layout issues in how PWML biological states become PathWhiz boxes; they would need a
+  `pwml/` layout change, outside this programme's no-biology scope: recorded as an open item for main / the PO.
+
 ## Rulings from the main orchestrator (2026-11-18) and carried constraints
 
 - **V10 / server:** the server runs `generate` with production DB resolution; offline (no-DB) drops are acceptable for
