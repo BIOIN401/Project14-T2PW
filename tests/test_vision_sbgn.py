@@ -242,12 +242,12 @@ def test_validator_has_teeth():
 
 _PROG = (
     "import sys, json, xml.etree.ElementTree as ET\n"
-    "if sys.argv[1] == 'polluted':\n"
-    "    import t2pw.sbml.json_to_sbml\n"
+    "import t2pw.sbml.json_to_sbml\n"
+    "from t2pw.vision.export_sbgn import sbgn_text\n"
+    "if sys.argv[1] == 'polluted':  # AFTER the exporter import, so it overrides any import-time registration\n"
     "    ET.register_namespace('', 'urn:other')\n"
     "    ET.register_namespace('x', 'http://sbgn.org/libsbgn/0.3')\n"
     "    ET.register_namespace('y', 'urn:t2pw:sbgn-ext')\n"
-    "from t2pw.vision.export_sbgn import sbgn_text\n"
     "sys.stdout.buffer.write(sbgn_text(json.loads(sys.argv[2])).encode('utf-8'))\n"
 )
 
