@@ -225,6 +225,30 @@ def test_enzyme_is_credited_only_through_a_reaction_that_matches_the_gold_reacti
     assert enzymes(["EnzB"], [])["recalled"] == 0            # wrong enzyme on the right reaction
 
 
+def test_full_gold_with_unflagged_currency_still_matches_a_row_that_omits_it():
+    """Chlorophyll PW_R2146839 (ALA -> PBG + H2O + H+): PathBank flags no currency, the pipeline row has none."""
+    def g(**t):
+        return {"name": t["name"], "aliases": t.get("aliases", []), "ids": t.get("ids", []), "role": "defining"}
+
+    gold = {"id": "PW9", "kind": "full", "complete": {}, "off_scope_reactions": [], "enzymes": [], "transports": [],
+            "interactions": [], "compartments": [],
+            "reactions": [{"id": "PW_R2146839", "label": "", "reversible": False, "enzyme": None, "catalysts": [],
+                           "inputs": [g(name="5-Aminolevulinic acid", ids=[["chebi", "17549"]], aliases=["5-amino-4-oxopentanoate"])],
+                           "outputs": [g(name="Porphobilinogen", ids=[["chebi", "17381"]], aliases=["PBG"]),
+                                       g(name="Water", aliases=["H2O"]), g(name="Hydrogen Ion", aliases=["H+", "H(+)"])]}]}
+    b = {"entities": {"compounds": [comp("ALA", 17549), comp("PBG", 17381)], "proteins": []},
+         "processes": {"reactions": [rx("ala to pbg", ["ALA"], ["PBG"], [], evidence="x")], "transports": [], "interactions": []}}
+    t = score_view(build_big_payload(b), FULL, gold)["types"]["reactions"]
+    assert (t["recalled"], t["correct"]) == (1, 1)                       # matched through the chebi ids, currency demoted
+    paper = score_view(build_big_payload(b), FULL, {**gold, "kind": "paper"})["types"]["reactions"]
+    assert paper["recalled"] == 0                                        # paper gold keeps its roles: no silent change
+    only_currency = {**gold, "reactions": [{**gold["reactions"][0], "inputs": [g(name="Water", aliases=["H2O"])],
+                                            "outputs": [g(name="Hydrogen Ion", aliases=["H+"])]}]}
+    c = {"entities": {"compounds": [], "proteins": []}, "processes": {"reactions": [
+        rx("w", ["water"], ["H+"], [], evidence="x")], "transports": [], "interactions": []}}
+    assert score_view(build_big_payload(c), FULL, only_currency)["types"]["reactions"]["recalled"] == 1  # a side of only currency stays defining
+
+
 def test_paper_only_ignores_extension_rows_even_with_a_paper_record():
     paper_rec = {"kind": "paper", "source": "paper", "quote": "C to D", "stage": "extend_lit", "note": ""}
     big = merge_extension(build_big_payload(base()), {"entities.compounds": [comp("D", 4)],

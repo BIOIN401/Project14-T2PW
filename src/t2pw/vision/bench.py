@@ -23,7 +23,7 @@ from typing import Any, Callable, Dict, List, Mapping, Optional, Sequence, Tuple
 from t2pw.bench.eval_v2 import matcher as M
 from t2pw.bench.eval_v2.gold import Reaction, Term
 from t2pw.bench.eval_v2.reactions import _row_key, match_reaction  # _row_key: the duplicate-row key of score_leg
-from t2pw.vision.payload import grounded_ids, iter_sections, keyed_rows, signature
+from t2pw.vision.payload import grounded_ids, is_currency, iter_sections, keyed_rows, signature
 from t2pw.vision.view import ScopeSpec, view
 
 SCHEMA_GOLD = "t2pw.vision.bench_gold/1"
@@ -317,6 +317,21 @@ def _bridged(row: Mapping[str, Any], g: Mapping[str, Any], ctx: _Ctx) -> Dict[st
     return out
 
 
+def scoring_terms(terms: Sequence[Mapping[str, Any]], demote_currency: bool) -> Tuple[Term, ...]:
+    """Gold terms of one reaction side as eval_v2 ``Term``s. With ``demote_currency`` (full gold), a
+    term whose name or alias is a ubiquitous currency metabolite (payload.is_currency: water, H+, ATP,
+    NADH, O2 ...) is a cofactor, not a defining participant, unless that would leave the side with no
+    defining term. PathBank leaves ``currency`` unset on many records (all 66 participants of the
+    chlorophyll record), so water and H+ arrive as defining while the pipeline keeps currency out of
+    reaction identity; without this a correct predicted row misses every curated reaction that lists them.
+    The gold itself is not changed."""
+    roles = ["cofactor" if t["role"] == "cofactor" or (demote_currency and any(is_currency(x) for x in (t["name"], *t["aliases"])))
+             else "defining" for t in terms]
+    if "defining" not in roles:
+        roles = ["defining"] * len(terms)
+    return tuple(Term(t["name"], tuple(t["aliases"]), r) for t, r in zip(terms, roles))
+
+
 def _m_reaction(g, objs, row, ctx) -> bool:
     return match_reaction(objs[g["id"]], _bridged(row, g, ctx))[0] == "full"
 
@@ -407,8 +422,9 @@ def score_view(big: Mapping[str, Any], scope: ScopeSpec, gold_case: Mapping[str,
     ctx = _Ctx(vw)
     items = _items(big, vw)
     gold = {t: _gold_elems(gold_case, t, scope) for t in TYPES}
-    objs = {g["id"]: Reaction(g["id"], g.get("label") or "", tuple(Term(t["name"], tuple(t["aliases"]), t["role"]) for t in g["inputs"]),
-                              tuple(Term(t["name"], tuple(t["aliases"]), t["role"]) for t in g["outputs"]), None, bool(g.get("reversible")), "")
+    full = gold_case.get("kind") == "full"  # paper gold keeps its hand-set roles (eval_v2 parity)
+    objs = {g["id"]: Reaction(g["id"], g.get("label") or "", scoring_terms(g["inputs"], full), scoring_terms(g["outputs"], full),
+                              None, bool(g.get("reversible")), "")
             for g in [*gold["reactions"], *(gold_case.get("off_scope_reactions") or [])]}
     match: Dict[str, Callable[[Any, Any], bool]] = {
         "reactions": lambda g, p: _m_reaction(g, objs, p["row"], ctx),
