@@ -51,6 +51,7 @@ Plan: `docs/vision/PLAN.md`. Branch `vision/main` from `origin/main` `a6c07e16`.
 | 2026-11-17 | V5 | merge | sub-orchestrator | `vision/main` e7fa005d | MERGED | condition: `scope.py` reads `vision/prompts/*.txt` at import; the pyproject package-data entry `"t2pw.vision" = ["prompts/*"]` comes with V6 (present on `vision/generate`). Confirm it is merged before any non-editable install or deploy |
 | 2026-11-18 | wave 1 + V5 | post-merge suites | sub-orchestrator queue (`suite.sh`, one lock hold, holder vis-suite) | detached snapshot `C:/t/vis-suite-e7fa` at e7fa005d | PASS | SMOKE 511, golden 2/8/4/24, equivalence run_pathway 8 / app_vs_service 14 / default_path 6, vision 153; 0 survivors (`evidence/suites/suite-e7fa005d.txt`) |
 | 2026-11-18 | V6 | gated run result | queue_v6.sh | `vision/generate` d93c0748 | partial | PWML 97/97 byte-identical in both arms (final payload on, and =0); 2 focused tests fail: paper-only PWML has 0 reactions vs 1 in SBML/SBGN/KGML (root cause being traced, pwml/ untouched); cache-key test collides with the conftest flag pin |
+| 2026-11-18 | V6 | fix r2 + re-run + review r2 | same implementer (sonnet/high); reviewer (opus/high) | `vision/generate` 163a9279 | APPROVE WITH NOTES | root cause (b): strict quarantine drops the paper-only reaction on purpose; SBML/SBGN/KGML now built from the same quarantine output; SBML = clean_model `sbml_text`; re-run: PWML 97/97 identical, matrix 210/210 ok, 0 survivors. Fix r3 before merge: a PWML refusal yields no format at all (F1a) |
 | 2026-11-17 | V6 | gated run | sub-orchestrator queue (`C:/t/vis-runs/queue_v6.sh`) | holder vis-generate | waiting | needs the heavy lock free and 4 GB RAM (1.3-1.7 GB free: desktop apps, not a leak per main) |
 
 ## Decisions made by the sub-orchestrator (PO gave full autonomy; recommended option each time)
@@ -69,6 +70,15 @@ Plan: `docs/vision/PLAN.md`. Branch `vision/main` from `origin/main` `a6c07e16`.
 | VD-11 | Reaction merge identity: forward match merges when either row lists no cofactors, cofactors are equal, or differ only by NAD/NADP variants; a reversed match merges only when both rows list cofactors and they mirror | a wrong merge loses a step and attaches a false database confirmation; a missed merge only shows a step twice |
 | VD-12 | Wave-1 lanes add only new files, so SMOKE, golden-seam and equivalence run once on the combined merge result instead of after each lane | the Thursday demo has priority on the heavy lock and RAM; a per-lane run adds no information when no existing file changes |
 | VD-7 | Per-job extension budget defaults: 3 curated pathways, 5 outside papers, 120 s | VISION § 7 open point; conservative until the PO sets numbers |
+
+## Rulings from the main orchestrator (2026-11-18) and carried constraints
+
+- **V10 / server:** the server runs `generate` with production DB resolution; offline (no-DB) drops are acceptable for
+  tests only. `generate()` runs serialised in its own process; no process-wide env swap in the server. No exporter-side
+  hook. The quarantine step and the PWML export step must always see the same DB availability (V6 review F2).
+- **V7 cross-format check item:** PWML writes canonical (mapped) names while SBML/SBGN/KGML write the stored payload
+  names (V6 review F1b); the consistency check must compare by identity, and report name differences separately.
+- **Deploy:** `vision/prompts/*.txt` and `diagram/fonts/*` ship only through the pyproject package-data entries added by V6.
 
 ## Deferrals
 
