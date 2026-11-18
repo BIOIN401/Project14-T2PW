@@ -96,6 +96,7 @@ def aggregate(runs: List[Dict[str, Any]], scopes: List[str]) -> Dict[str, Any]:
         classes: Dict[str, Dict[str, Any]] = {}
         invalid: Dict[str, Dict[str, Any]] = defaultdict(lambda: {"runs": 0, "examples": []})
         known, renamed, sentinel = Counter(), Counter(), Counter()
+        no_overlap_ex: List[Dict[str, Any]] = []
         for r, x in recs:
             if len(x["generated"]) < len(FMTS):
                 t["refused"].append({"run": r["run"][-90:], "errors": {k: v[:120] for k, v in list(x["errors"].items())[:1]}})
@@ -118,6 +119,9 @@ def aggregate(runs: List[Dict[str, Any]], scopes: List[str]) -> Dict[str, Any]:
                     for e in f["examples"]:
                         if len(d["examples"]) < 5:
                             d["examples"].append({"run": r["run"][-70:], "example": e})
+                for e in (c.get("known_examples") or {}).get("m_nonanchored_no_placement_overlap", []):
+                    if len(no_overlap_ex) < 5:
+                        no_overlap_ex.append({"run": r["run"][-70:], "example": e})
                 for k, v in c["known"].items():
                     if isinstance(v, dict):  # every renamed compartment pair, and the Unknown sentinel per format, summed over runs
                         renamed.update(v.get("pairs") or {})
@@ -128,6 +132,7 @@ def aggregate(runs: List[Dict[str, Any]], scopes: List[str]) -> Dict[str, Any]:
         t["cross_format_failure_classes"] = dict(sorted(classes.items()))
         t["known_difference_totals"] = dict(known)
         t["compartment_renames"] = dict(renamed.most_common())
+        t["nonanchored_no_placement_overlap_examples"] = no_overlap_ex  # the count is known_difference_totals.m_nonanchored_no_placement_overlap
         t["unknown_sentinel_per_format"] = dict(sentinel)
         out["scopes"][s] = t
     fa = [r["faithfulness"] for r in runs if "faithfulness" in r]

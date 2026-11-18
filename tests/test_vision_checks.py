@@ -149,6 +149,18 @@ def test_injected_compartment_grouping_mismatch_is_flagged(run):
     assert "compartment_placement_differs:sbml_vs_sbgn" not in classes(told) and told["known"]["j_sbgn_assumed_placements"]["n"] == 1
 
 
+def test_nonanchored_entity_with_no_placement_overlap_is_counted(run):
+    _, outs, ir = run
+    base = consistency.cross_format(outs, pwml_ir=ir)
+    assert base["known"]["m_nonanchored_no_placement_overlap"]["n"] == 0
+    sbml = outs["sbml"].decode("utf-8")
+    moved = sbml.replace('name="Glycine" compartment="c_mitochondrial_matrix"', 'name="Glycine" compartment="c_cell"', 1)
+    two = moved.replace("</listOfSpecies>", '<species id="s_99_x" name="Glycine" compartment="c_elsewhere"/></listOfSpecies>', 1)
+    assert two != moved != sbml  # SBML now has Glycine in two compartments, neither PWML's
+    m = consistency.cross_format(dict(outs, sbml=two.encode("utf-8")), pwml_ir=ir)["known"]["m_nonanchored_no_placement_overlap"]
+    assert m["n"] == 1 and m["examples"][0].startswith("Glycine:")
+
+
 def test_sbml_only_placement_is_a_known_class_not_a_failure(run):
     _, outs, ir = run
     sbml = outs["sbml"].decode("utf-8")

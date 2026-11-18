@@ -533,6 +533,7 @@ def cross_format(outputs: Dict[str, bytes], *, pwml_ir: Optional[dict] = None, s
             for cluster in v:
                 pl[f][cluster].add(c)
     k_pwml = 0  # placements SBML lists and PWML does not draw
+    no_overlap: List[str] = []  # diagnostic: entities with several placements where no PWML placement maps to any SBML one
     for f in ("sbml", "sbgn"):
         if "pwml" in models and f in models:
             both = placed["pwml"] & placed[f]
@@ -541,6 +542,12 @@ def cross_format(outputs: Dict[str, bytes], *, pwml_ir: Optional[dict] = None, s
             for c in anchored:
                 gp[next(iter(pl["pwml"][c]))].add(c)
                 gf[next(iter(pl[f][c]))].add(c)
+            if f == "sbml":  # PWML compartment -> the SBML names the anchored entities show it stands for
+                stands_for = {cp: {norm(next(iter(pl[f][c]))) for c in block} for cp, block in gp.items()}
+                for c in sorted(both - anchored, key=name_of):
+                    s = {norm(x) for x in pl[f][c]}
+                    if not any(norm(p) in s or stands_for.get(p, set()) & s for p in pl["pwml"][c]):
+                        no_overlap.append("%s: pwml=%s sbml=%s" % (name_of(c), sorted(pl["pwml"][c]), sorted(pl[f][c])))
             for c in both:
                 d = len(pl["pwml"][c]) - len(pl[f][c])
                 extra_pw += max(d, 0)
@@ -577,6 +584,8 @@ def cross_format(outputs: Dict[str, bytes], *, pwml_ir: Optional[dict] = None, s
             _add(fails, "compartment_placement_differs:sbml_vs_sbgn", ex)
         known["j_sbgn_assumed_placements"] = {"n": min(len(dev), allowed), "report_allows": allowed, "examples": dev[:5],
                                               "note": "placements SBGN has that SBML does not, up to the exporter's compartment_assumed notes"}
+    known["m_nonanchored_no_placement_overlap"] = {"n": len(no_overlap), "examples": no_overlap[:5],
+                                                    "note": "diagnostic, not a failure: an entity with several placements in PWML or SBML where no PWML placement maps to any SBML one"}
     known["k_sbml_only_placements"] = {"n": k_pwml + k_sbgn, "vs_pwml": k_pwml, "vs_sbgn": k_sbgn,
                                        "note": "compartments SBML lists for an entity that PWML / SBGN do not draw it in (no process uses it there)"}
     known["a_compartment_names"] = {"n": sum(names_a.values()), "pairs": dict(names_a), "examples": list(names_a)[:5],

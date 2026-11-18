@@ -3,6 +3,7 @@
   "branch": "vision/checks",
   "base": "04596e6c",
   "status": "done: round-3 proof run (cross-format ok 71/97 default, up from 38) and 60 tests pass across test_vision_checks.py (21) and test_vision_sbgn.py at e3886c78",
+  "f2_nonanchored_no_overlap": "Diagnostic added in code (consistency known m_nonanchored_no_placement_overlap, examples in run_checks totals nonanchored_no_placement_overlap_examples; one test). It cannot be computed from report97-r3.json: that report keeps per-run counts and failure examples, not each entity's PWML and SBML placements. One light re-run of run_checks (97 runs, about 70 s, floor 4 GB) fills totals97.json; the orchestrator queues it.",
   "round_3_proof": {
     "run": "batch1 of the orchestrator chain, BW_EXIT 0, 0 survivors; log C:/t/vis-runs/logs/batch1-v7a-proof.log; totals docs/vision/evidence/V7a/totals97.json (round 3 replaces round 2); full report C:/t/vis-runs/scratch/checks/report97-r3.json",
     "tree": {"path": "C:\\t\\vis-checks", "head": "9c2921fbd8af1007d630a3307b8cb24932d04a77", "dirty": false},
@@ -32,7 +33,7 @@
       "f Unknown sentinel": "182 (pwml 41, sbgn 141, sbml 0, kgml 0); unplaced entities 286",
       "g PWML modifier interactions": 7,
       "h extra PWML placements": 183,
-      "j SBGN assumed placements (bounded by the exporter's compartment_assumed notes)": 46,
+      "j SBGN places 46 transporter/enzyme glyphs in a compartment SBML contradicts (open question for the exporter: the number is only the part the exporter's own compartment_assumed notes admit; it is not 'consistent', and the 39 further items below have no note at all)": 46,
       "k SBML-only placements": 191
     },
     "remaining_placement_failures": "The 39 items are enzyme or protein entities whose SBML state compartment differs from the compartment SBGN drew them in, e.g. 'EntB: sbml=Cytoplasm sbgn=cell', 'CYP51A1: sbml=Endoplasmic Reticulum Membrane sbgn=endoplasmic reticulum', 'FepA: sbml=outer membrane sbgn=extracellular', 'MsbA: sbgn only cytoplasmic leaflet of the IM'. export_sbgn places an enzyme or modifier in the compartment of its reaction (_mods uses the reaction's compartment) and writes no compartment_assumed note for it, so the exporter's own notes (transporter, interaction source, reaction state from IR) under-count the assumption and cannot bound these. A V2 exporter note for enzyme placement would let the check bound them; that is an exporter edit, outside this lane.",
