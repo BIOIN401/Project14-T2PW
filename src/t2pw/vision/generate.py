@@ -130,7 +130,8 @@ def generate(big: Dict[str, Any], scope: ScopeSpec = DEFAULT, fmt: str = "pwml",
     """One format of one scoped view, as bytes.
 
     ``export``: PWML export controls (pathway_name, strict_db, export_mode, pathway_context); the default is the
-    exporter's own. ``meta``: paper metadata for SBML/KGML (clean model ``read_run_meta``). Both are part of the
+    exporter's own. ``meta``: paper metadata for SBML/KGML (clean model ``read_run_meta``). Both, plus the two
+    environment switches the PWML bytes depend on (T2PW_FINAL_PAYLOAD, T2PW_PWML_LAYOUT), are part of the
     cache key next to the view hash, so a different control never returns another control's bytes.
     Raises GenerateError when the PWML export refuses the view (pwml, svg and html need it; sbgn falls back to its grid).
     """
@@ -138,7 +139,10 @@ def generate(big: Dict[str, Any], scope: ScopeSpec = DEFAULT, fmt: str = "pwml",
         raise ValueError("fmt must be one of %s, got %r" % (", ".join(FORMATS), fmt))
     v = view(big, scope)
     opts, meta = dict(export or {}), dict(meta or {})
-    vh, oh = _sha(_canon(v)), _sha(_canon([opts, meta]))[:8]
+    from t2pw.pwml.layout import layout_version
+    from t2pw.service.final_payload import final_payload_enabled
+    env = {"final_payload": final_payload_enabled(), "layout": layout_version()}  # both change the PWML bytes
+    vh, oh = _sha(_canon(v)), _sha(_canon([opts, meta, env]))[:8]
     cache = Path(cache_dir) if cache_dir else None
     hit = cache / ("%s.%s.%s" % (vh, oh, fmt)) if cache else None
     if hit is not None and hit.exists():
@@ -174,7 +178,9 @@ def generate(big: Dict[str, Any], scope: ScopeSpec = DEFAULT, fmt: str = "pwml",
             out = (diagram.render_svg(ir) if fmt == "svg" else diagram.render_html(ir)).encode("utf-8")
     if hit is not None:
         cache.mkdir(parents=True, exist_ok=True)
-        hit.write_bytes(out)
+        tmp = hit.with_name("%s.%d.tmp" % (hit.name, os.getpid()))
+        tmp.write_bytes(out)
+        os.replace(tmp, hit)  # atomic: a concurrent reader never sees half a file
     return out
 
 

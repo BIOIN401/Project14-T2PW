@@ -96,10 +96,22 @@ def test_scope_reaches_every_format():
         pw = n_pwml(gen(b, sc, "pwml"))
         sbml = libsbml.readSBMLFromString(gen(b, sc, "sbml").decode()).getModel().getNumReactions()
         sbgn = len(re.findall(rb'class="process"', gen(b, sc, "sbgn")))
-        sb[tag] = (pw, sbml, sbgn)
-        assert pw == sbml == sbgn, (tag, pw, sbml, sbgn)
-    assert sb["paper"] == (1, 1, 1) and sb["default"] == (2, 2, 2)
-    assert gen(b, PAPER_ONLY, "svg") != gen(b, DEFAULT, "svg")
+        kgml = len(re.findall(rb"<reaction\b", gen(b, sc, "kgml")))
+        sb[tag] = (pw, sbml, sbgn, kgml)
+        assert pw == sbml == sbgn == kgml, (tag, pw, sbml, sbgn, kgml)
+    assert sb["paper"] == (1, 1, 1, 1) and sb["default"] == (2, 2, 2, 2)
+    for f in ("svg", "html"):
+        assert gen(b, PAPER_ONLY, f) != gen(b, DEFAULT, f)
+
+
+def test_cache_key_includes_env_switches(tmp_path, monkeypatch):
+    b = big()
+    gen(b, DEFAULT, "sbml", cache_dir=tmp_path)
+    monkeypatch.setenv("T2PW_PWML_LAYOUT", "v1")
+    gen(b, DEFAULT, "sbml", cache_dir=tmp_path)
+    monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "0")
+    gen(b, DEFAULT, "sbml", cache_dir=tmp_path)
+    assert len(list(tmp_path.glob("*.sbml"))) == 3 and not list(tmp_path.glob("*.tmp"))
 
 
 def test_refused_export_raises(monkeypatch):
