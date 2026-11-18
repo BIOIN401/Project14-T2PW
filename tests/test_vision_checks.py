@@ -193,7 +193,7 @@ def test_unknown_sentinel_is_only_a_protein_in_pwml_and_never_in_the_clean_model
 # ---------------------------------------------------------------- faithfulness
 
 def test_short_quotes_are_counted_apart_and_ids_match_whole_tokens():
-    text = "ALAS makes aminolevulinic acid from glycine and succinyl-CoA in the matrix."
+    text = "ALAS: " + QUOTE + " in the matrix."  # holds the default quote, so the only change below is the short one
     res = faithfulness.paper_view(big_with("glycine"), text)  # 7 characters: found in any text, so not judged
     assert res["short"] >= 1 and res["not_found"] == faithfulness.paper_view(big_with(), text)["not_found"]
     assert faithfulness._has("glycine", "free glycine here") and not faithfulness._has("glycine", "polyglycine here")
