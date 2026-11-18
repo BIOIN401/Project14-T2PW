@@ -1,0 +1,81 @@
+{
+ "run": "runs_papers/ORCH-759p/legs/menaquinone-strict/2026-10-22_2154/papers/PMC12421875/strict",
+ "seconds": 4.6,
+ "report": {
+  "budget_s": 120.0,
+  "max_pathways": 3,
+  "sources": {
+   "pathbank": {
+    "status": "no_candidates",
+    "pathways": [],
+    "notes": [
+     "species: Lactococcus lactis (exact), Lactococcus lactis subsp. lactis (strain KF147) (exact), Lactococcus lactis subsp. lactis Il1403 (binomial), Lactococcus lactis subsp. cremoris SK11 (binomial), Lactococcus lactis subsp. cremoris MG1363 (binomial), Lactococcus lactis subsp. lactis (binomial), Lactococcus lactis subsp. cremoris (binomial), Lactococcus lactis subsp. lactis A12 (binomial), Lactococcus lactis subsp. lactis KLDS 4.0325 (binomial)",
+     "query ids: 6 PathBank compounds, 7 UniProt",
+     "no pathway shares >= 2 entities",
+     "read timeout per query 59 s; the budget is not hard inside one extract",
+     "candidates: "
+    ],
+    "counts": {},
+    "budget_s": 60.0
+   },
+   "reactome": {
+    "status": "no_candidates",
+    "pathways": [],
+    "notes": [
+     "species not in Reactome: Lactococcus lactis, Lactococcus lactis subsp. lactis KF147"
+    ],
+    "counts": {},
+    "budget_s": 57.8
+   },
+   "wikipathways": {
+    "status": "no_candidates",
+    "pathways": [],
+    "notes": [
+     "species ['lactococcus lactis']; candidates: "
+    ],
+    "counts": {},
+    "budget_s": 115.5
+   }
+  },
+  "species": [
+   {
+    "name": "Lactococcus lactis",
+    "taxonomy_id": "1358"
+   },
+   {
+    "name": "Lactococcus lactis subsp. lactis KF147",
+    "taxonomy_id": "684738"
+   }
+  ],
+  "failed": [],
+  "placement": {},
+  "overlay_entities_hop_none": 0,
+  "currency_only_twins": {
+   "count": 0,
+   "pairs": []
+  }
+ },
+ "base": {
+  "entities": 36,
+  "reactions": 19,
+  "transports": 2,
+  "interactions": 1,
+  "unresolved_refs": 0
+ },
+ "default": {
+  "entities": 36,
+  "reactions": 19,
+  "transports": 2,
+  "interactions": 1,
+  "unresolved_refs": 0
+ },
+ "full": {
+  "entities": 36,
+  "reactions": 19,
+  "transports": 2,
+  "interactions": 1,
+  "unresolved_refs": 0
+ },
+ "merged_into_base": [],
+ "added_steps": []
+}
