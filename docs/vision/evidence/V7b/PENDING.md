@@ -1,7 +1,6 @@
 # V7b evidence
 
-Present: `totals97.json` (layout metrics over the 97 stored runs, default scope), `compare_corr_fixes.py` (per-run SVG counts
-against the CORRECTNESS-FIXES run), `irdiff.py` (not yet run: today's IR against the 2026-11-14 IR for the 8 differing runs).
-
-Pending: `gallery/` (index.html plus small PNGs, our render next to the PathWhiz render of the same PWML, six runs). It needs
-Docker and the 4 GB floor; commands are in `docs/vision/results/V7b.json` under `commands_still_to_run`.
+Nothing pending. Files: `totals97.json` (first 97-run metrics, before the compartment-box metrics), `totals97b.json` (final),
+`compare_corr_fixes.py` + `irdiff.py` + `irdiff_result.json` (why 8 runs differ from the CORRECTNESS-FIXES figures),
+`pathwhiz_import_results.json` (PathWhiz importer messages per gallery run), `gallery/` (index.html and 12 PNGs, each under 300 KB).
+Verdicts and findings: `docs/vision/results/V7b.json`.
