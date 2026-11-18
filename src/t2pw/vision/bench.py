@@ -325,7 +325,7 @@ def _m_interaction(g, row, ctx) -> bool:
     e1, e2 = row.get("entity_1"), row.get("entity_2")
     ok = any(all(any(_hit(t, e, ctx) for t in side) for side, e in ((g["a"], x), (g["b"], y))) for x, y in ((e1, e2), (e2, e1)))
     r1, r2 = g.get("relationship"), _rel(row.get("relationship"))
-    return ok and not (r1 and r2 and r1 != r2)
+    return ok and {r1, r2} != {"activation", "inhibition"}  # binding fits either: a paper says "binds", PathBank "activation"
 
 
 def _m_compartment(g, row, ctx) -> bool:
