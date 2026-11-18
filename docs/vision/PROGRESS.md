@@ -40,6 +40,13 @@ Plan: `docs/vision/PLAN.md`. Branch `vision/main` from `origin/main` `a6c07e16`.
 | 2026-11-17 | V2 | merge | sub-orchestrator | `vision/main` aedb2d15 | MERGED | post-merge suites queued (RAM 1.2 GB free, waiting for 4 GB) |
 | 2026-11-17 | V3 | fix r1 + review r2 | same implementer (sonnet/medium); same reviewer (sonnet/high) | `vision/diagram` ff8be7c3 | APPROVE WITH NITS | 9 tests incl. reaction+transport fixture with pinned SVG hash |
 | 2026-11-17 | V3 | merge | sub-orchestrator | `vision/main` 135cfb64 | MERGED | post-merge suites queued with V2 (new files only; one combined run, VD-12) |
+| 2026-11-17 | V1 | fix r3 + review r4 | same / same | `vision/model` cee6bae4 | APPROVE WITH NOTES | VD-11 implemented; 31 tests; identity 152/152 |
+| 2026-11-17 | V1 | merge | sub-orchestrator | `vision/main` 4260ea80 | MERGED | pushed; post-merge suites wait for the heavy lock |
+| 2026-11-17 | - | PC restart | - | - | - | all agents stopped; lanes re-dispatched; partial V6 work kept in its worktree |
+| 2026-11-17 | V4 | implementer | general-purpose (opus/high) | `vision/extend-db`, `C:/t/vis-extend-db` | running | code commit db7896c2; tests wait for the heavy lock (demo `llm-ab`) |
+| 2026-11-17 | V5 | implementer | general-purpose (sonnet/high) | `vision/scope`, `C:/t/vis-scope` | fix r1 | static review (sonnet/high) CHANGES_REQUESTED: negation lookahead keeps the depth word |
+| 2026-11-17 | V6 | implementer | general-purpose (sonnet/high) | `vision/generate`, `C:/t/vis-generate` | fix r1 | static review (opus/high) CHANGES_REQUESTED: proof never pins T2PW_FINAL_PAYLOAD; flags missing from the cache key. Proof now in two arms (flag on, flag 0), 97/97 each |
+| 2026-11-17 | V9 | implementer | general-purpose (sonnet/high) | `vision/bench`, `C:/t/vis-bench` | running | tests wait for the heavy lock |
 
 ## Decisions made by the sub-orchestrator (PO gave full autonomy; recommended option each time)
 
