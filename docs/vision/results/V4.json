@@ -1,7 +1,49 @@
 {
  "lane": "V4",
  "branch": "vision/extend-db",
- "status": "needs-decision: round 3 (0fc6f3d2) unit-tested 30/30 and live-proved; its fresh hand check is 7/10 for biology, below the 9/10 bar. Our conversion is right in 9 of the 10; of the 3 wrong steps, 2 are curated-source errors and 1 was ours. Round 4 (73863779) fixes ours plus two more found in the round-3 evidence, but is NOT tested yet (33 tests written, py_compiled): it needs a unit run and a live rerun. T2PW_EXTEND stays default OFF.",
+ "status": "done (pending static review): round 4 (73863779) unit-tested 33/33 and live-proved on 6 runs; fresh 10-step check: conversion fidelity 10/10 (merge gate >= 9/10 met), biology 9/10 (the miss is a PathBank source error, curator note). The 3 round-3 wrongs: ours fixed, 2 source errors unchanged and noted. T2PW_EXTEND stays default OFF; turning it on needs biology >= 9/10 as a standing gate (gates_ruling).",
+ "live_round_4": {
+  "tests": "batch2-v4-unit: 33 passed (C:/t/vis-runs/logs/batch2-v4-unit.log); v4-live-4: BW_EXIT=0, 0 survivors (C:/t/vis-runs/logs/v4-live-4.log, dump C:/t/vis-runs/scratch/vis-extend-db/dump4); evidence docs/vision/evidence/V4 (round 3 is in commit 12dbb847)",
+  "per_run": {
+   "menaquinone": "species now L. lactis only (S1b); no PathBank / Reactome / WikiPathways pathway shares >= 2 entities -> no extension; DEFAULT = FULL = base (19 reactions). Round 3 attached the Arabidopsis ubiquinone pathway.",
+   "enterobactin": "unchanged: 6 merged / 12 hop1 / 3 hop2+ / 1 none; 1 H+-only twin",
+   "lipid A": "unchanged: 0 / 9 / 73 / 3; WikiPathways WP2472 0 steps",
+   "human": "14 / 81 / 39 / 92; the C18-S1P step is now a transport cytosol -> extracellular region with ABCC1 and ABCG2 as transporters; reactions FULL 208",
+   "Arabidopsis": "0 / 37 / 33 / 4; PW_R213418 now reads coproporphyrinogen III + O2 -> Coproporphyrin III + H2O2 (S5b)",
+   "mouse": "unchanged: 1 / 42 / 44 / 36"
+  },
+  "recheck_round_3_wrongs": {
+   "R-HSA-9843721 (ours)": "fixed: transport, cargo C18-S1P, from 'cytosol (Homo sapiens)' to 'extracellular region (Homo sapiens)'",
+   "PW766996 PW_R2146855 CAO on chlorophyll a (source)": "unchanged, faithful to PathBank; curator note",
+   "PW000760 PW_R1998772 ferric citrate lumped (source)": "unchanged, faithful to PathBank; curator note",
+   "also": "PW_R213418 coproporphyrin self-loop fixed; menaquinone no longer extended with an Arabidopsis pathway"
+  },
+  "hand_check": {
+   "sample": "sample.py seed 4 over the round-4 added reaction steps, excluding the 20 steps checked in rounds 2-3: 4 PathBank hop-1, 4 WikiPathways hop-1, 2 Reactome (any hop). Fidelity read back from the source: PathBank by a read-only SELECT per reaction (fidelity.py through launch.py), WikiPathways from the cached GPML line, Reactome from the cached ContentService record. Biology against UniProt / known enzymology.",
+   "steps": [
+    {"step": "human PathBank PW000148 PW_R001193 sphingosine-1-phosphate -> ethanolamine phosphate + palmitaldehyde (SGPL1)", "fidelity": "match (source: Sphingosine 1-phosphate > O-Phosphoethanolamine + Palmitaldehyde; our 'ethanolamine phosphate' is the paper's row joined by id)", "biology": "wrong (source): UniProt O95470: sphing-4-enine 1-phosphate = (2E)-hexadecenal + phosphoethanolamine; hexadecanal (palmitaldehyde) comes from sphinganine 1-phosphate"},
+    {"step": "human PathBank PW000148 PW_R001218 ceramide + UDP-glucose -> glucosylceramide + UDP (UGCG)", "fidelity": "match", "biology": "correct"},
+    {"step": "mouse PathBank PW064670 PW_R109721 testosterone + NAD+ <> androstenedione + NADH + H+ (HSD17B3)", "fidelity": "match (NAD -> NAD+, Hydrogen Ion -> H+ by the currency id table)", "biology": "correct (reversible 17beta-HSD step)"},
+    {"step": "Arabidopsis PathBank PW124167 PW_R213421 hydroxymethylbilane -> uroporphyrinogen III + H2O (UROS)", "fidelity": "match", "biology": "correct"},
+    {"step": "human WikiPathways WP1422 id3beb065f dihydroceramide -> DH-Cer-1-P", "fidelity": "match (GPML label 'DHCer1P'; joined by id to the WP4725 row 'DH-Cer-1-P')", "biology": "correct (ceramide kinase also phosphorylates dihydroceramide)"},
+    {"step": "mouse WikiPathways WP1264 da314 estradiol sulfate -> estradiol (STS)", "fidelity": "match", "biology": "correct"},
+    {"step": "mouse WikiPathways WP1264 b964e estrone -> 16alpha-hydroxyestrone", "fidelity": "match", "biology": "correct (CYP 16alpha-hydroxylation)"},
+    {"step": "mouse WikiPathways WP1264 b75f6 estradiol -> estradiol sulfate (SULT1E1)", "fidelity": "match", "biology": "correct"},
+    {"step": "mouse Reactome R-MMU-6786239 CYP4V2 omega-hydroxylates DHA to HDoHE", "fidelity": "match (no compartment chosen: ER membrane + cytosol)", "biology": "correct"},
+    {"step": "mouse Reactome R-MMU-193845 CYP8B1 12-hydroxylates 4CHOL7a,27DONE", "fidelity": "match", "biology": "correct"}
+   ],
+   "conversion_fidelity": "10/10 (merge gate >= 9/10: met)",
+   "biology": "9/10; the miss is a PathBank source error (S1P lyase product named palmitaldehyde instead of (2E)-hexadecenal), recorded as a curator note",
+   "note": "both bars hold on this sample; the standing biology gate for T2PW_EXTEND on is still open across rounds (rounds 2-3 found source errors KDSR, CAO, ferric citrate, now S1P lyase)"
+  }
+ },
+ "gates_ruling": {
+  "source": "main orchestrator, 2026-11-18",
+  "conversion_fidelity": "each checked step must match its source record; >= 9/10 on a fresh 10-step check is required to merge",
+  "biology": "whether each step is true; reported with every miss explained; source errors become curator notes on rows whose provenance names the source record; no merge minimum",
+  "standing_condition": "biology >= 9/10 is the gate for ever turning T2PW_EXTEND on by default",
+  "likely_route": "a later lane: cross-check database-sourced enzyme steps against UniProt catalytic activity / Rhea before admission (CAO on chlorophyll a, KDSR with NADPH on the wrong side and similar source errors would be caught that way)"
+ },
  "round_4": {
   "commit": "73863779",
   "S1b": "used_species: the species of the states the paper's processes use; protein / complex species only when no state names one. Round 3 still chose Arabidopsis for menaquinone because the MenA / MenI wrapper complexes carry a borrowed 'Arabidopsis thaliana' species (and a protein 'Unknown' with an Arabidopsis PathBank identity). Test: test_s1_unused_species_row_never_chooses_the_organism (extended)",
@@ -40,6 +82,9 @@
    "also_seen_outside_the_sample": "PW_R213418 (Arabidopsis) still reads coproporphyrinogen III -> coproporphyrinogen III in round 3: fixed by round_4.S5b (and the self-loop guard). Menaquinone still extended with the Arabidopsis ubiquinone pathway: fixed by round_4.S1b."
   }
  },
+ "curator_notes_round_4": [
+  "PathBank PW000148 (Sphingolipid Metabolism, human) PW_R001193: SGPL1 on sphingosine 1-phosphate gives (2E)-hexadecenal + phosphoethanolamine (UniProt O95470); the record names palmitaldehyde (hexadecanal), the product from sphinganine 1-phosphate. The overlay row's provenance names pathbank:PW000148 / PW_R001193."
+ ],
  "curator_notes_round_3": [
   "PathBank PW766996 (Chlorophyll biosynthesis, Arabidopsis) PW_R2146855: CAO is written on chlorophyll a; UniProt Q9MBA1 says it acts on chlorophyllide a only.",
   "PathBank PW000760 (E. coli siderophore NRPS) PW_R1998772: ferric-citrate ABC transport and iron release lumped into one cytosolic ATP hydrolysis."
@@ -188,6 +233,7 @@
  ],
  "secrets_scan": {
   "how": "Light scripts run directly (no heavy lock): launch.py loads the primary .env inside the process; secret_scan.py and secret_scan2.py print per-file counts only, never a value. Files: the 6 evidence files, this record, every C:/t/vis-runs/logs/v4-* file, the analysis printout.",
+  "round_4": "v4-secrets-6 and v4-secrets-7 (direct, counts only) over the round-4 evidence, this record and every *v4* log (incl. v4-live-4.log, batch2-v4-unit.log): OpenRouter key prefix 0, DB host 0, DB port 0 (whole token, after a colon, after 'port'), DB password 0, credential-shaped patterns 0 in every file; DB user word count 555 (public database name, accepted).",
   "round_3": "v4-secrets-4 and v4-secrets-5 (direct, counts only) over the round-3 evidence, this record, every *v4* log (incl. v4-live-3.log and batch1-v4-unit.log) and the analysis printout, excluding the scans' own output logs (which list the pattern labels): OpenRouter key prefix 0, DB host 0, DB port 0 (whole token, after a colon, after 'port'), DB password 0, credential-shaped patterns 0 in every file. DB user word count 582 (the public database name, accepted as before).",
   "v4-secrets-2": {"openrouter_key_prefix": 0, "db_host": 0, "db_port_whole_token": 0, "note": "0 in every file"},
   "v4-secrets-3": {"db_password": 0, "port_after_colon": 0, "port_after_port_keyword": 0, "user_equals": 0, "user_colon": 0, "pathbank_at_sign": 0, "double_slash_pathbank": 0, "pathbank_colon_token_other_than_PW_accession": 0, "note": "0 in every file"},

@@ -1,55 +1,40 @@
 {
  "run": "runs_papers/ORCH-759p/legs/menaquinone-strict/2026-10-22_2154/papers/PMC12421875/strict",
- "seconds": 28.3,
+ "seconds": 4.6,
  "report": {
   "budget_s": 120.0,
   "max_pathways": 3,
   "sources": {
    "pathbank": {
-    "status": "ok",
-    "pathways": [
-     {
-      "source_id": "pathbank:PW123993",
-      "accession": "PW123993",
-      "name": "Ubiquinone Biosynthesis",
-      "overlap": {
-       "compounds": 2
-      },
-      "steps": 44
-     }
-    ],
+    "status": "no_candidates",
+    "pathways": [],
     "notes": [
-     "species: Arabidopsis thaliana (exact), Lactococcus lactis (exact), Lactococcus lactis subsp. lactis (strain KF147) (exact), Lactococcus lactis subsp. lactis Il1403 (binomial), Lactococcus lactis subsp. cremoris SK11 (binomial), Lactococcus lactis subsp. cremoris MG1363 (binomial), Lactococcus lactis subsp. lactis (binomial), Lactococcus lactis subsp. cremoris (binomial), Lactococcus lactis subsp. lactis A12 (binomial), Lactococcus lactis subsp. lactis KLDS 4.0325 (binomial)",
+     "species: Lactococcus lactis (exact), Lactococcus lactis subsp. lactis (strain KF147) (exact), Lactococcus lactis subsp. lactis Il1403 (binomial), Lactococcus lactis subsp. cremoris SK11 (binomial), Lactococcus lactis subsp. cremoris MG1363 (binomial), Lactococcus lactis subsp. lactis (binomial), Lactococcus lactis subsp. cremoris (binomial), Lactococcus lactis subsp. lactis A12 (binomial), Lactococcus lactis subsp. lactis KLDS 4.0325 (binomial)",
      "query ids: 6 PathBank compounds, 7 UniProt",
+     "no pathway shares >= 2 entities",
      "read timeout per query 59 s; the budget is not hard inside one extract",
-     "candidates: PW123993 Ubiquinone Biosynthesis {'compounds': 2}"
+     "candidates: "
     ],
-    "counts": {
-     "steps_reaction": 36,
-     "currency_renamed": 24,
-     "renamed_name_conflict": 2,
-     "no_compartment": 1,
-     "steps_transport": 8
-    },
+    "counts": {},
     "budget_s": 60.0
    },
    "reactome": {
     "status": "no_candidates",
     "pathways": [],
     "notes": [
-     "Reactome lists Arabidopsis thaliana without a taxId: source skipped"
+     "species not in Reactome: Lactococcus lactis, Lactococcus lactis subsp. lactis KF147"
     ],
     "counts": {},
-    "budget_s": 45.9
+    "budget_s": 57.8
    },
    "wikipathways": {
     "status": "no_candidates",
     "pathways": [],
     "notes": [
-     "species ['arabidopsis thaliana', 'lactococcus lactis']; candidates: "
+     "species ['lactococcus lactis']; candidates: "
     ],
     "counts": {},
-    "budget_s": 91.8
+    "budget_s": 115.5
    }
   },
   "species": [
@@ -60,20 +45,11 @@
    {
     "name": "Lactococcus lactis subsp. lactis KF147",
     "taxonomy_id": "684738"
-   },
-   {
-    "name": "Arabidopsis thaliana",
-    "taxonomy_id": "3702"
    }
   ],
   "failed": [],
-  "placement": {
-   "pathbank:PW123993": {
-    "hop_2_plus": 39,
-    "hop_1": 5
-   }
-  },
-  "overlay_entities_hop_none": 27,
+  "placement": {},
+  "overlay_entities_hop_none": 0,
   "currency_only_twins": {
    "count": 0,
    "pairs": []
@@ -87,533 +63,19 @@
   "unresolved_refs": 0
  },
  "default": {
-  "entities": 49,
-  "reactions": 23,
-  "transports": 3,
+  "entities": 36,
+  "reactions": 19,
+  "transports": 2,
   "interactions": 1,
   "unresolved_refs": 0
  },
  "full": {
-  "entities": 149,
-  "reactions": 55,
-  "transports": 10,
+  "entities": 36,
+  "reactions": 19,
+  "transports": 2,
   "interactions": 1,
   "unresolved_refs": 0
  },
  "merged_into_base": [],
- "added_steps": [
-  {
-   "hop": 2,
-   "name": "L-Tyrosine + Oxoglutaric acid -> 4-Hydroxyphenylpyruvic acid + L-Glutamic acid",
-   "in": [
-    "L-Tyrosine",
-    "Oxoglutaric acid"
-   ],
-   "out": [
-    "4-Hydroxyphenylpyruvic acid",
-    "L-Glutamic acid"
-   ],
-   "note": "pathbank PW123993 reaction PW_R213111; source direction >; source compartment: Cytoplasm"
-  },
-  {
-   "hop": 4,
-   "name": "Solanesyl pyrophosphate + Homogentisic acid -> PPi + 2-methyl-6-solanesyl-1,4-benzoquinol + CO2",
-   "in": [
-    "Solanesyl pyrophosphate",
-    "Homogentisic acid"
-   ],
-   "out": [
-    "PPi",
-    "2-methyl-6-solanesyl-1,4-benzoquinol",
-    "CO2"
-   ],
-   "note": "pathbank PW123993 reaction PW_R213113; source direction >; source compartment: Chloroplast"
-  },
-  {
-   "hop": 5,
-   "name": "2-methyl-6-solanesyl-1,4-benzoquinol + 6-Geranylgeranyl-2-methylbenzene-1,4-diol + 2-Methyl-6-phytylhydroquinone + S-Adenosylmethionine -> plastoquinol-9",
-   "in": [
-    "2-methyl-6-solanesyl-1,4-benzoquinol",
-    "6-Geranylgeranyl-2-methylbenzene-1,4-diol",
-    "2-Methyl-6-phytylhydroquinone",
-    "S-Adenosylmethionine"
-   ],
-   "out": [
-    "plastoquinol-9"
-   ],
-   "note": "pathbank PW123993 reaction PW_R213114; source direction >; source compartment: Chloroplast"
-  },
-  {
-   "hop": 4,
-   "name": "Phytyl pyrophosphate + Homogentisic acid -> PPi + CO2 + 2-Methyl-6-phytylhydroquinone",
-   "in": [
-    "Phytyl pyrophosphate",
-    "Homogentisic acid"
-   ],
-   "out": [
-    "PPi",
-    "CO2",
-    "2-Methyl-6-phytylhydroquinone"
-   ],
-   "note": "pathbank PW123993 reaction PW_R213115; source direction >; source compartment: Chloroplast"
-  },
-  {
-   "hop": 5,
-   "name": "2-Methyl-6-phytylhydroquinone -> \u03b4-Tocopherol",
-   "in": [
-    "2-Methyl-6-phytylhydroquinone"
-   ],
-   "out": [
-    "\u03b4-Tocopherol"
-   ],
-   "note": "pathbank PW123993 reaction PW_R213116; source direction >; source compartment: Chloroplast"
-  },
-  {
-   "hop": 5,
-   "name": "S-Adenosylmethionine + \u03b4-Tocopherol -> S-Adenosylhomocysteine + \u03b2-tocopherol",
-   "in": [
-    "S-Adenosylmethionine",
-    "\u03b4-Tocopherol"
-   ],
-   "out": [
-    "S-Adenosylhomocysteine",
-    "\u03b2-tocopherol"
-   ],
-   "note": "pathbank PW123993 reaction PW_R213117; source direction >; source compartment: Chloroplast"
-  },
-  {
-   "hop": 5,
-   "name": "2-Methyl-6-phytylhydroquinone + S-Adenosylmethionine -> 2,3-Dimethyl-5-phytyl-1,4-hydroquinone + S-Adenosylhomocysteine",
-   "in": [
-    "2-Methyl-6-phytylhydroquinone",
-    "S-Adenosylmethionine"
-   ],
-   "out": [
-    "2,3-Dimethyl-5-phytyl-1,4-hydroquinone",
-    "S-Adenosylhomocysteine"
-   ],
-   "note": "pathbank PW123993 reaction PW_R213118; source direction >; source compartment: Chloroplast"
-  },
-  {
-   "hop": 6,
-   "name": "2,3-Dimethyl-5-phytyl-1,4-hydroquinone -> \u03b3-Tocopherol",
-   "in": [
-    "2,3-Dimethyl-5-phytyl-1,4-hydroquinone"
-   ],
-   "out": [
-    "\u03b3-Tocopherol"
-   ],
-   "note": "pathbank PW123993 reaction PW_R213119; source direction >; source compartment: Chloroplast"
-  },
-  {
-   "hop": 5,
-   "name": "S-Adenosylmethionine + \u03b3-Tocopherol -> S-Adenosylhomocysteine + \u03b1-Tocopherol",
-   "in": [
-    "S-Adenosylmethionine",
-    "\u03b3-Tocopherol"
-   ],
-   "out": [
-    "S-Adenosylhomocysteine",
-    "\u03b1-Tocopherol"
-   ],
-   "note": "pathbank PW123993 reaction PW_R213120; source direction >; source compartment: Chloroplast"
-  },
-  {
-   "hop": 4,
-   "name": "Geranylgeranyl-PP + Homogentisic acid -> PPi + CO2 + 6-Geranylgeranyl-2-methylbenzene-1,4-diol",
-   "in": [
-    "Geranylgeranyl-PP",
-    "Homogentisic acid"
-   ],
-   "out": [
-    "PPi",
-    "CO2",
-    "6-Geranylgeranyl-2-methylbenzene-1,4-diol"
-   ],
-   "note": "pathbank PW123993 reaction PW_R213121; source direction >; source compartment: Chloroplast"
-  },
-  {
-   "hop": 5,
-   "name": "6-Geranylgeranyl-2-methylbenzene-1,4-diol + S-Adenosylmethionine -> S-Adenosylhomocysteine + 6-geranylgeranyl-2,3-dimethylbenzene-1,4-diol",
-   "in": [
-    "6-Geranylgeranyl-2-methylbenzene-1,4-diol",
-    "S-Adenosylmethionine"
-   ],
-   "out": [
-    "S-Adenosylhomocysteine",
-    "6-geranylgeranyl-2,3-dimethylbenzene-1,4-diol"
-   ],
-   "note": "pathbank PW123993 reaction PW_R213122; source direction >; source compartment: Chloroplast"
-  },
-  {
-   "hop": 6,
-   "name": "6-geranylgeranyl-2,3-dimethylbenzene-1,4-diol -> \u03b3-Tocotrienol",
-   "in": [
-    "6-geranylgeranyl-2,3-dimethylbenzene-1,4-diol"
-   ],
-   "out": [
-    "\u03b3-Tocotrienol"
-   ],
-   "note": "pathbank PW123993 reaction PW_R213123; source direction >; source compartment: Chloroplast"
-  },
-  {
-   "hop": 5,
-   "name": "S-Adenosylmethionine + \u03b3-Tocotrienol -> \u03b1-Tocotrienol + S-Adenosylhomocysteine",
-   "in": [
-    "S-Adenosylmethionine",
-    "\u03b3-Tocotrienol"
-   ],
-   "out": [
-    "\u03b1-Tocotrienol",
-    "S-Adenosylhomocysteine"
-   ],
-   "note": "pathbank PW123993 reaction PW_R213124; source direction >; source compartment: Chloroplast"
-  },
-  {
-   "hop": 5,
-   "name": "6-Geranylgeranyl-2-methylbenzene-1,4-diol -> d-Tocotrienol",
-   "in": [
-    "6-Geranylgeranyl-2-methylbenzene-1,4-diol"
-   ],
-   "out": [
-    "d-Tocotrienol"
-   ],
-   "note": "pathbank PW123993 reaction PW_R213125; source direction >; source compartment: Chloroplast"
-  },
-  {
-   "hop": 5,
-   "name": "S-Adenosylmethionine + d-Tocotrienol -> \u03b2-Tocotrienol + S-Adenosylhomocysteine",
-   "in": [
-    "S-Adenosylmethionine",
-    "d-Tocotrienol"
-   ],
-   "out": [
-    "\u03b2-Tocotrienol",
-    "S-Adenosylhomocysteine"
-   ],
-   "note": "pathbank PW123993 reaction PW_R213126; source direction >; source compartment: Chloroplast"
-  },
-  {
-   "hop": 1,
-   "name": "chorismate -> Isochorismate [pathbank]",
-   "in": [
-    "chorismate"
-   ],
-   "out": [
-    "Isochorismate [pathbank]"
-   ],
-   "note": "pathbank PW123993 reaction PW_R213127; source direction <>; source compartment: Chloroplast"
-  },
-  {
-   "hop": 1,
-   "name": "Isochorismate [pathbank] + Oxoglutaric acid -> CO2 + 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
-   "in": [
-    "Isochorismate [pathbank]",
-    "Oxoglutaric acid"
-   ],
-   "out": [
-    "CO2",
-    "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate"
-   ],
-   "note": "pathbank PW123993 reaction PW_R213163; source direction >; source compartment: Chloroplast"
-  },
-  {
-   "hop": 1,
-   "name": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate -> (1R,6R)-6-hydroxy-2-succinylcyclohexa-2,4-diene-1-carboxylate + Pyruvic acid",
-   "in": [
-    "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate"
-   ],
-   "out": [
-    "(1R,6R)-6-hydroxy-2-succinylcyclohexa-2,4-diene-1-carboxylate",
-    "Pyruvic acid"
-   ],
-   "note": "pathbank PW123993 reaction PW_R213164; source direction >; source compartment: Chloroplast"
-  },
-  {
-   "hop": 2,
-   "name": "(1R,6R)-6-hydroxy-2-succinylcyclohexa-2,4-diene-1-carboxylate -> 2-succinylbenzoate [pathbank] + H2O",
-   "in": [
-    "(1R,6R)-6-hydroxy-2-succinylcyclohexa-2,4-diene-1-carboxylate"
-   ],
-   "out": [
-    "2-succinylbenzoate [pathbank]",
-    "H2O"
-   ],
-   "note": "pathbank PW123993 reaction PW_R213165; source direction >; source compartment: Chloroplast"
-  },
-  {
-   "hop": 3,
-   "name": "ATP + 2-succinylbenzoate [pathbank] + Coenzyme A -> AMP + PPi + 2-Succinylbenzoyl-CoA",
-   "in": [
-    "ATP",
-    "2-succinylbenzoate [pathbank]",
-    "Coenzyme A"
-   ],
-   "out": [
-    "AMP",
-    "PPi",
-    "2-Succinylbenzoyl-CoA"
-   ],
-   "note": "pathbank PW123993 reaction PW_R213166; source direction >; source compartment: Chloroplast"
-  },
-  {
-   "hop": 4,
-   "name": "2-Succinylbenzoyl-CoA -> 1,4-dihydroxy-2-naphthoyl-CoA + H2O",
-   "in": [
-    "2-Succinylbenzoyl-CoA"
-   ],
-   "out": [
-    "1,4-dihydroxy-2-naphthoyl-CoA",
-    "H2O"
-   ],
-   "note": "pathbank PW123993 reaction PW_R213167; source direction >; source compartment: Peroxisome"
-  },
-  {
-   "hop": 4,
-   "name": "1,4-dihydroxy-2-naphthoyl-CoA + H2O -> 1,4-dihydroxy-2-naphthoate + Coenzyme A",
-   "in": [
-    "1,4-dihydroxy-2-naphthoyl-CoA",
-    "H2O"
-   ],
-   "out": [
-    "1,4-dihydroxy-2-naphthoate",
-    "Coenzyme A"
-   ],
-   "note": "pathbank PW123993 reaction PW_R213168; source direction >; source compartment: Peroxisome"
-  },
-  {
-   "hop": 5,
-   "name": "Phytyl pyrophosphate + 2-Carboxy-1,4-naphthoquinone -> CO2 + PPi + Demethylphylloquinone",
-   "in": [
-    "Phytyl pyrophosphate",
-    "2-Carboxy-1,4-naphthoquinone"
-   ],
-   "out": [
-    "CO2",
-    "PPi",
-    "Demethylphylloquinone"
-   ],
-   "note": "pathbank PW123993 reaction PW_R213169; source direction >; source compartment: Chloroplast"
-  },
-  {
-   "hop": 6,
-   "name": "Demethylphylloquinone + NADPH + H+ -> Demethylphylloquinol + NADP+",
-   "in": [
-    "Demethylphylloquinone",
-    "NADPH",
-    "H+"
-   ],
-   "out": [
-    "Demethylphylloquinol",
-    "NADP+"
-   ],
-   "note": "pathbank PW123993 reaction PW_R213170; source direction >; source compartment: Chloroplast"
-  },
-  {
-   "hop": 5,
-   "name": "Demethylphylloquinol + S-Adenosylmethionine -> S-Adenosylhomocysteine + Phylloquinol",
-   "in": [
-    "Demethylphylloquinol",
-    "S-Adenosylmethionine"
-   ],
-   "out": [
-    "S-Adenosylhomocysteine",
-    "Phylloquinol"
-   ],
-   "note": "pathbank PW123993 reaction PW_R213171; source direction >; source compartment: Chloroplast"
-  },
-  {
-   "hop": 6,
-   "name": "NADH + Phylloquinone + H+ -> Phylloquinol + NAD+",
-   "in": [
-    "NADH",
-    "Phylloquinone",
-    "H+"
-   ],
-   "out": [
-    "Phylloquinol",
-    "NAD+"
-   ],
-   "note": "pathbank PW123993 reaction PW_R213172; source direction >; source compartment: Cell Membrane"
-  },
-  {
-   "hop": 2,
-   "name": "4-Hydroxybenzoic acid + Polyprenyl diphosphate -> PPi + 4-Hydroxy-3-polyprenylbenzoate",
-   "in": [
-    "4-Hydroxybenzoic acid",
-    "Polyprenyl diphosphate"
-   ],
-   "out": [
-    "PPi",
-    "4-Hydroxy-3-polyprenylbenzoate"
-   ],
-   "note": "pathbank PW123993 reaction PW_R213173; source direction >; source compartment: Mitochondrion"
-  },
-  {
-   "hop": 4,
-   "name": "S-Adenosylmethionine + 3-Polyprenyl-4,5-dihydroxybenzoate -> S-Adenosylhomocysteine + 3-Polyprenyl-4-hydroxy-5-methoxybenzoate",
-   "in": [
-    "S-Adenosylmethionine",
-    "3-Polyprenyl-4,5-dihydroxybenzoate"
-   ],
-   "out": [
-    "S-Adenosylhomocysteine",
-    "3-Polyprenyl-4-hydroxy-5-methoxybenzoate"
-   ],
-   "note": "pathbank PW123993 reaction PW_R213174; source direction >; source compartment: Mitochondrion"
-  },
-  {
-   "hop": 6,
-   "name": "2-Polyprenyl-6-methoxyphenol + O2 -> H2O + 2-Polyprenyl-6-methoxy-1,4-benzoquinone",
-   "in": [
-    "2-Polyprenyl-6-methoxyphenol",
-    "O2"
-   ],
-   "out": [
-    "H2O",
-    "2-Polyprenyl-6-methoxy-1,4-benzoquinone"
-   ],
-   "note": "pathbank PW123993 reaction PW_R213175; source direction >; source compartment: Mitochondrion"
-  },
-  {
-   "hop": 5,
-   "name": "S-Adenosylmethionine + 2-Polyprenyl-6-methoxy-1,4-benzoquinone -> S-Adenosylhomocysteine + 2-Polyprenyl-3-methyl-6-methoxy-1,4-benzoquinone",
-   "in": [
-    "S-Adenosylmethionine",
-    "2-Polyprenyl-6-methoxy-1,4-benzoquinone"
-   ],
-   "out": [
-    "S-Adenosylhomocysteine",
-    "2-Polyprenyl-3-methyl-6-methoxy-1,4-benzoquinone"
-   ],
-   "note": "pathbank PW123993 reaction PW_R213176; source direction >; source compartment: Mitochondrion"
-  },
-  {
-   "hop": 5,
-   "name": "S-Adenosylmethionine + 2-Polyprenyl-3-methyl-5-hydroxy-6-methoxy-1,4-benzoquinone -> S-Adenosylhomocysteine + Ubiquinone",
-   "in": [
-    "S-Adenosylmethionine",
-    "2-Polyprenyl-3-methyl-5-hydroxy-6-methoxy-1,4-benzoquinone"
-   ],
-   "out": [
-    "S-Adenosylhomocysteine",
-    "Ubiquinone"
-   ],
-   "note": "pathbank PW123993 reaction PW_R213177; source direction >; source compartment: Mitochondrion"
-  },
-  {
-   "hop": 1,
-   "name": "chorismate -> Pyruvic acid + 4-Hydroxybenzoic acid",
-   "in": [
-    "chorismate"
-   ],
-   "out": [
-    "Pyruvic acid",
-    "4-Hydroxybenzoic acid"
-   ],
-   "note": "pathbank PW123993 reaction PW_R213178; source direction <>; source compartment: not given"
-  },
-  {
-   "hop": 3,
-   "name": "4-Hydroxy-3-polyprenylbenzoate -> 3-Polyprenyl-4,5-dihydroxybenzoate",
-   "in": [
-    "4-Hydroxy-3-polyprenylbenzoate"
-   ],
-   "out": [
-    "3-Polyprenyl-4,5-dihydroxybenzoate"
-   ],
-   "note": "pathbank PW123993 reaction PW_R213180; source direction >; source compartment: Mitochondrion"
-  },
-  {
-   "hop": 5,
-   "name": "3-Polyprenyl-4-hydroxy-5-methoxybenzoate -> 2-Polyprenyl-6-methoxyphenol",
-   "in": [
-    "3-Polyprenyl-4-hydroxy-5-methoxybenzoate"
-   ],
-   "out": [
-    "2-Polyprenyl-6-methoxyphenol"
-   ],
-   "note": "pathbank PW123993 reaction PW_R213181; source direction >; source compartment: Mitochondrion"
-  },
-  {
-   "hop": 6,
-   "name": "2-Polyprenyl-3-methyl-6-methoxy-1,4-benzoquinone -> 2-Polyprenyl-3-methyl-5-hydroxy-6-methoxy-1,4-benzoquinone",
-   "in": [
-    "2-Polyprenyl-3-methyl-6-methoxy-1,4-benzoquinone"
-   ],
-   "out": [
-    "2-Polyprenyl-3-methyl-5-hydroxy-6-methoxy-1,4-benzoquinone"
-   ],
-   "note": "pathbank PW123993 reaction PW_R213182; source direction >; source compartment: Mitochondrion"
-  },
-  {
-   "hop": 3,
-   "name": "4-Hydroxyphenylpyruvic acid + O2 -> CO2 + Homogentisic acid",
-   "in": [
-    "4-Hydroxyphenylpyruvic acid",
-    "O2"
-   ],
-   "out": [
-    "CO2",
-    "Homogentisic acid"
-   ],
-   "note": "pathbank PW123993 reaction PW_R007368; source direction >; source compartment: Cytoplasm"
-  },
-  {
-   "hop": 4,
-   "name": "Homogentisic acid transport",
-   "in": null,
-   "out": null,
-   "note": "pathbank PW123993 transport PW_T010892; source direction >"
-  },
-  {
-   "hop": 1,
-   "name": "chorismate transport",
-   "in": null,
-   "out": null,
-   "note": "pathbank PW123993 transport PW_T010893; source direction >"
-  },
-  {
-   "hop": 4,
-   "name": "2-Succinylbenzoyl-CoA transport",
-   "in": null,
-   "out": null,
-   "note": "pathbank PW123993 transport PW_T010894; source direction >"
-  },
-  {
-   "hop": 4,
-   "name": "2-Succinylbenzoyl-CoA transport",
-   "in": null,
-   "out": null,
-   "note": "pathbank PW123993 transport PW_T010895; source direction >"
-  },
-  {
-   "hop": 5,
-   "name": "1,4-dihydroxy-2-naphthoate transport",
-   "in": null,
-   "out": null,
-   "note": "pathbank PW123993 transport PW_T010896; source direction >"
-  },
-  {
-   "hop": 5,
-   "name": "1,4-dihydroxy-2-naphthoate transport",
-   "in": null,
-   "out": null,
-   "note": "pathbank PW123993 transport PW_T010897; source direction >"
-  },
-  {
-   "hop": 2,
-   "name": "4-Hydroxybenzoic acid transport",
-   "in": null,
-   "out": null,
-   "note": "pathbank PW123993 transport PW_T010900; source direction >"
-  },
-  {
-   "hop": 6,
-   "name": "Phylloquinol transport",
-   "in": null,
-   "out": null,
-   "note": "pathbank PW123993 transport PW_T010901; source direction >"
-  }
- ]
+ "added_steps": []
 }

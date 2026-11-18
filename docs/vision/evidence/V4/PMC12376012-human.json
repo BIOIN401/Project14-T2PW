@@ -1,6 +1,6 @@
 {
  "run": "runs_verify/2026-09-06_1425/papers/PMC12376012/research",
- "seconds": 68.3,
+ "seconds": 61.4,
  "report": {
   "budget_s": 120.0,
   "max_pathways": 3,
@@ -85,12 +85,12 @@
      "29 ids probed; candidates: R-HSA-1660661 Sphingolipid de novo biosynthesis 10; R-HSA-9845614 Sphingolipid catabolism 3"
     ],
     "counts": {
-     "currency_renamed": 1,
-     "no_compartment": 2,
-     "steps_reaction": 2,
-     "complex_joined_by_members": 1
+     "steps_transport": 1,
+     "complex_joined_by_members": 1,
+     "no_compartment": 1,
+     "steps_reaction": 1
     },
-    "budget_s": 29.3
+    "budget_s": 29.7
    },
    "wikipathways": {
     "status": "ok",
@@ -176,7 +176,7 @@
      "renamed_name_conflict": 4,
      "name_join_refused_no_shared_id": 1
     },
-    "budget_s": 53.8
+    "budget_s": 59.1
    }
   },
   "species": [
@@ -205,25 +205,25 @@
     "hop_2_plus": 6,
     "hop_none": 8
    },
-   "pathbank:PW000148": {
-    "merged_into_base": 2,
-    "hop_1": 19,
-    "hop_2_plus": 7
-   },
    "wikipathways:WP4726": {
     "merged_into_base": 2,
     "hop_1": 14,
     "hop_2_plus": 17,
     "hop_none": 80
    },
-   "reactome:R-HSA-1660661": {
-    "hop_2_plus": 1
+   "pathbank:PW000148": {
+    "merged_into_base": 2,
+    "hop_1": 19,
+    "hop_2_plus": 7
    },
    "reactome:R-HSA-9845614": {
     "hop_2_plus": 1
+   },
+   "reactome:R-HSA-1660661": {
+    "hop_2_plus": 1
    }
   },
-  "overlay_entities_hop_none": 118,
+  "overlay_entities_hop_none": 119,
   "currency_only_twins": {
    "count": 0,
    "pairs": []
@@ -245,8 +245,8 @@
  },
  "full": {
   "entities": 307,
-  "reactions": 209,
-  "transports": 6,
+  "reactions": 208,
+  "transports": 7,
   "interactions": 4,
   "unresolved_refs": 0
  },
@@ -845,22 +845,6 @@
     "Sphinganine 1-phosphate"
    ],
    "note": "pathbank PW000148 reaction PW_R000519; source direction >; source compartment: Cytosol"
-  },
-  {
-   "hop": 2,
-   "name": "ABCC1,ABCG2 transport C18-S1P to extracellular region",
-   "in": [
-    "C18-S1P",
-    "ATP",
-    "H2O"
-   ],
-   "out": [
-    "C18-S1P",
-    "ADP",
-    "H+",
-    "phosphate"
-   ],
-   "note": "reactome R-HSA-1660661 reaction R-HSA-9843721; catalyst set ABCC1,ABCG2: members listed as alternatives; compartments ['cytosol', 'plasma membrane', 'extracellular region']: none chosen; source compartment: not given"
   },
   {
    "hop": 2,
@@ -2587,6 +2571,13 @@
    "in": null,
    "out": null,
    "note": "pathbank PW569256 transport PW_T098661; source direction >"
+  },
+  {
+   "hop": 2,
+   "name": "ABCC1,ABCG2 transport C18-S1P to extracellular region",
+   "in": null,
+   "out": null,
+   "note": "reactome R-HSA-1660661 transport R-HSA-9843721; catalyst set ABCC1,ABCG2: members listed as alternatives; coupled currency not carried: ATP, H2O, ADP, H+, Pi"
   }
  ]
 }

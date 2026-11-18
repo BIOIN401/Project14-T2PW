@@ -1,6 +1,6 @@
 {
  "run": "runs_papers/ORCH-759p/legs/enterobactin-strict/2026-10-22_2101/papers/PMC12096016/strict",
- "seconds": 29.4,
+ "seconds": 29.1,
  "report": {
   "budget_s": 120.0,
   "max_pathways": 3,
@@ -51,7 +51,8 @@
      "complex_joined_by_members": 11,
      "synonyms_dropped_collision": 9,
      "no_compartment": 3,
-     "steps_transport": 5
+     "steps_transport": 5,
+     "synonyms_dropped_batch_collision": 1
     },
     "budget_s": 60.0
    },
@@ -62,7 +63,7 @@
      "13 ids probed; candidates: "
     ],
     "counts": {},
-    "budget_s": 45.3
+    "budget_s": 45.5
    },
    "wikipathways": {
     "status": "no_candidates",
@@ -71,7 +72,7 @@
      "species ['escherichia coli']; candidates: "
     ],
     "counts": {},
-    "budget_s": 90.6
+    "budget_s": 91.0
    }
   },
   "species": [
@@ -82,22 +83,22 @@
   ],
   "failed": [],
   "placement": {
+   "pathbank:PW000751": {
+    "merged_into_base": 2,
+    "hop_1": 2
+   },
    "pathbank:PW000760": {
     "merged_into_base": 2,
     "hop_2_plus": 3,
     "hop_1": 8,
     "hop_none": 1
    },
-   "pathbank:PW000751": {
-    "merged_into_base": 2,
-    "hop_1": 2
-   },
    "pathbank:PW002048": {
     "merged_into_base": 2,
     "hop_1": 2
    }
   },
-  "overlay_entities_hop_none": 18,
+  "overlay_entities_hop_none": 17,
   "currency_only_twins": {
    "count": 1,
    "pairs": [
@@ -197,7 +198,7 @@
     "Ferrichrome minus Fe(III)"
    ],
    "out": [
-    "Ferrichrome minus Fe(III)"
+    "Ferrichrome"
    ],
    "note": "pathbank PW000760 reaction PW_R1970817; source direction >; source compartment: Cytosol"
   },
