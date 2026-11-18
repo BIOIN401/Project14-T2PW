@@ -1,0 +1,45 @@
+{
+  "lane": "V6",
+  "branch": "vision/generate",
+  "status": "blocked",
+  "built": [
+    "generate(big, scope, fmt, *, cache_dir=None, export=None, meta=None) -> bytes for pwml, sbml, sbgn, kgml, svg, html, json",
+    "PWML = service.postpipeline.run_pwml_export exactly as the replay harness calls it (temp project root, reference PWML, 3200x1400, layout v2 default); DB variables blanked and T2PW_OFFLINE_CURATOR=1 for the call, so no MySQL, network or LLM",
+    "the PWML IR returned by that export (res['pwml_ir']) feeds render_svg/render_html and the SBGN coordinates; the export runs once per (view hash, export controls) and is memoised",
+    "disk cache keyed by sha256 of the canonical view JSON + sha8 of (export controls, meta) + fmt",
+    "export_options_from_run(run_dir): strict_db, export_mode and Stage-0 key_compounds from the stored quarantine_report, as dump_replay.py reads them",
+    "CLI: python -m t2pw.vision.generate <run_dir|big_payload.json> --scope paper|default|full|hops:N --fmt <fmt> --out <file> [--cache dir]",
+    "bundled DejaVu Sans 2.37 + licence + README (source URL and sha256) under diagram/fonts; _font order T2PW_DIAGRAM_FONT, Segoe UI, bundled DejaVu, PIL default (VD-9); Windows output unchanged, Linux output will use DejaVu",
+    "pyproject package-data: t2pw.vision prompts/*, t2pw.vision.diagram diagram.css + fonts/* (prompts/ does not exist at this base; the glob is inert until a lane adds it)"
+  ],
+  "files": [
+    "src/t2pw/vision/generate.py",
+    "src/t2pw/vision/diagram/render.py (_font only)",
+    "src/t2pw/vision/diagram/fonts/DejaVuSans.ttf, LICENSE-DejaVu.txt, README.txt",
+    "pyproject.toml (package-data only)",
+    "tests/test_vision_generate.py",
+    "tests/data/vision/generate/run56_final_mapped.json (60 KB stored 1-reaction run payload used as the offline fixture; outside the listed boundary, test data only)"
+  ],
+  "tests": [
+    {"label": "tests/test_vision_generate.py (focused)", "counts": "NOT RUN: GATE_BLOCKED twice (heavy lock held by llm-ab, a live LLM leg, from 19:48 through both 30-minute gate waits)",
+     "log": "C:/t/vis-runs/logs/V6-tests-1.log and C:/t/vis-runs/logs/V6-all.log"}
+  ],
+  "proofs": {
+    "done": "none executed. A scratch probe (try_fix.py, not through the wrapper, one process, tiny payload) showed run idx 56 exports pwml/sbml/sbgn/kgml/svg in default scope; this is not a gate result.",
+    "not_done": [
+      "tests/test_vision_generate.py (8 tests) and tests/test_vision_diagram.py (font change)",
+      "SBML choice: production json_to_sbml.build_sbml vs clean_model sbml_text on 10 stored payloads (script ready: C:/t/vis-runs/scratch/generate/sbml_compare.py, writes docs/vision/evidence/V6/sbml_compare_10.json). Until it runs, generate uses clean_model sbml_text, which is the offline, DB-free path; build_sbml takes file paths and emits PathWhiz ids only with a DB",
+      "97/97 byte-identity of generate(big_from_run(dir), DEFAULT, 'pwml') against the replay at base (adapted replay C:/t/vis-runs/scratch/generate/replay_base.py, proof C:/t/vis-runs/scratch/generate/proof_generate.py; the 97 indices are the stored baseline runs with ok=true, ok_idx.json)",
+      "format x scope matrix on 10 runs"
+    ],
+    "commands_still_to_run": "PYTHONPATH=C:/t/vis-generate/src T2PW_OFFLINE_CURATOR=1 bash C:/t/vis-runs/bw.sh vis-generate gen-all 7200 C:/t/vis-runs/json/V6-all.json 4 -- bash C:/t/vis-runs/scratch/generate/run_all.sh > C:/t/vis-runs/logs/V6-all.log 2>&1   (run_in_background; runs focused tests, SBML compare, baseline replay of the 97, generate proof and the matrix in one lock hold)"
+  },
+  "dead_ends": [
+    "synthetic tiny payload (tests/test_vision_payload.payload()) is refused by PWML export Stage 3 revalidation, so the offline fixture is a real stored run payload",
+    "run idx 149 (54 KB) is refused by the required-field gate with strict_db and no DB; run idx 56 exports"
+  ],
+  "open_questions": [
+    "Export controls: the replay takes export mode from tidy_runs.csv, generate takes it from the run's quarantine_report.json (export_options_from_run). If the 97/97 proof shows a mode mismatch for any run, the CSV mode must be passed through export=; confirm when the proof runs.",
+    "generate() cannot be byte-identical to the replay without those export controls (strict_db, mode, key_compounds); with export=None it uses the exporter defaults (strict_db True, default mode, no Stage-0 context)."
+  ]
+}
