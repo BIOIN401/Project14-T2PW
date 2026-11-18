@@ -15,10 +15,11 @@ from PIL import ImageFont
 
 def _font(size):
     """Text-width measuring font. The prototype used Segoe UI; layout widths depend on it, so output is only
-    byte-identical to the prototype where that font exists. T2PW_DIAGRAM_FONT overrides the path."""
+    byte-identical to the prototype where that font exists. Order: T2PW_DIAGRAM_FONT, Segoe UI if present, the bundled
+    DejaVu Sans (VD-9, so Linux output is fixed), PIL's default."""
     import os
     for p in (os.environ.get("T2PW_DIAGRAM_FONT"), "C:/Windows/Fonts/segoeui.ttf",
-              "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"):
+              os.path.join(os.path.dirname(__file__), "fonts", "DejaVuSans.ttf")):
         if p and os.path.exists(p):
             try:
                 return ImageFont.truetype(p, size)
