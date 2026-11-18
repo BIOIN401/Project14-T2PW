@@ -5,7 +5,7 @@
  "scorer": {
   "module": "src/t2pw/vision/bench.py",
   "score_view": "score_view(big, scope, gold_case) -> dict (pure; view(big, scope) scored against one gold case)",
-  "run_benchmark": "run_benchmark(cases, {case id: {run label: big payload}}, scope) -> report (legs + micro aggregate per case kind)",
+  "run_benchmark": "run_benchmark(cases, {case id: {run label: big payload}}, scope) -> report (legs; per case kind: per_case, macro (headline), micro)",
   "gold_builders": {
    "gold_from_supplement": "paper-kind gold from one case of a gold-supplement file (gold_v2_supported_reactions.json or paper_gold output)",
    "gold_from_pathbank": "full-kind gold from a pathbank_gold.extract payload (no I/O)",
@@ -65,27 +65,29 @@
    "recall": "recalled / gold; None when the case has no gold of that type (not zero)",
    "predicted": "deduplicated elements of the type in the scored view (reactions by the eval_v2 row key, transports and interactions by payload signature, enzymes by strict name key, compartments by row)",
    "correct": "predicted elements matching at least one gold element",
-   "precision": "correct / predicted, reported only when the case declares the type complete; None otherwise"
+   "precision": "paper set: correct / predicted, reported only when the case declares the type complete; None otherwise",
+   "match_rate": "full set (the key replaces precision): correct / predicted against the curated record. An unmatched prediction is 'not in the curated pathway', not 'wrong', so this is a lower bound on correctness and is never called precision",
+   "recalled_weak": "interactions only: gold interactions matched weakly (see matching.interactions) and not exactly; never added to recall"
   },
   "matching": {
    "reactions": "eval_v2 match_reaction: every defining participant of one gold side on one predicted side, currency and cofactors excluded; reversible gold may match backwards. Identifier bridge: a predicted participant whose grounded ids (chebi, kegg, hmdb, pubchem, drugbank, uniprot; HMDB zero-padding folded) meet a gold term's ids is credited as that term.",
-   "enzymes": "gold enzyme term (name, aliases, complex members' gene names, member UniProt ids) against enzyme names of predicted reactions and transporters of predicted transports, with complex components expanded (eval_v2 enzyme_keys) or an id match",
-   "transports": "predicted cargo hits any gold cargo term; compartments agree unless both sides are known and differ (small spelling table: cytosol = cytoplasm, extracellular space = extracellular region ...)",
-   "interactions": "unordered entity pair, each side hitting a gold term; relationship canonicalised to activation / inhibition / binding; the pair is rejected only when one is activation and the other inhibition (a paper's 'binds' is compatible with a curated 'activation')",
-   "compartments": "folded name through the same spelling table"
+   "enzymes": "gold enzyme term (name, aliases, complex members' gene names, member UniProt ids; every catalyst of a curated reaction and every transporter, not only the first) against the enzyme names of a predicted reaction or transport. Credited ONLY through a predicted reaction / transport that itself matches a gold reaction / transport carrying that enzyme (eval_v2 reactions.py, enzyme verdicts); an enzyme named on an unrelated row gets no credit. Complex components expanded (eval_v2 enzyme_keys) or an id match for the name",
+   "transports": "predicted cargo hits any gold cargo term; the from and to compartments are compared by folded name whenever both are known and a mismatch rejects the pair. The spelling table (cytosol = cytoplasm, extracellular space = extracellular region ...) only aliases spellings, it does not decide what is known",
+   "interactions": "entity pair, each side hitting a gold term; gold a acts on b (curated: the left element acts on the right one; a '<' direction swaps). Tiers: exact = same canonical relation (activation / inhibition / binding), order respected when directional: the only tier that counts toward recall, correct and precision. weak = binding or an unknown relation against a directional one, a directional prediction against gold binding, or two unknown relations: reported as recalled_weak, never in recall. contradiction = activation against inhibition or a swapped directional pair: always rejected",
+   "compartments": "folded name through the same spelling table, as aliases only"
   },
   "paper_stated_off_scope": "reactions only: predicted rows matching an off_pathway or summary statement the paper makes. They are not true positives and stay in the precision denominator (eval_v2 table 1); the count shows how much of the precision loss is paper-stated chemistry outside the case scope.",
   "full_view_only": {
    "recalled_base_only": "gold elements recalled by rows of the paper payload alone",
    "recovered_by_extension": "gold elements recalled only because of extension rows (recalled minus recalled_base_only)",
-   "extension": "per type and overall: extension rows in the view, how many match a curated element, precision = matched / rows. An unmatched extension row is 'not in this curated pathway', not 'wrong': the metric is a lower bound on correctness.",
+   "extension": "per type: extension rows in the view, how many match a curated element, match_rate = matched / rows. There is no cross-type total (enzymes are derived from reaction rows and would double count). An unmatched extension row is 'not in this curated pathway', not 'wrong': the metric is a lower bound on correctness.",
    "provenance": "per type, predicted elements and how many are correct, by provenance kind (paper, other_paper, database, inferred, curation, unclassified). 'primary' puts each element in its highest-ranked kind in that order and so partitions the predicted elements (sums equal predicted and correct); 'any' counts an element under every kind it carries."
   }
  },
  "denominators": {
   "recall": "gold elements of the case (and run-independent)",
   "precision": "deduplicated predicted elements in the scored view, complete types only",
-  "aggregate": "micro-average over legs (sum of numerators over sum of denominators), as eval_v2; precision pools only legs whose case declares the type complete; paper and full kinds are never pooled, and cases that share a paper (PW495535, PW488575) are not counted as independent evidence"
+  "aggregate": "HEADLINE = macro over cases: each case's runs are micro-averaged first (sum of numerators over sum of denominators, as eval_v2), then the cases are averaged unweighted, so enterobactin's 29 runs do not outweigh the other papers; a case with no gold of a type, or no complete gold for the rate, is left out of that type's mean and the case count is reported. SECONDARY = micro over all legs, run-weighted (29 of the 34 stored paper-set runs are enterobactin). Precision / match rate pools only legs whose case declares the type complete. Paper and full kinds are never pooled, and cases that share a paper (PW495535, PW488575) are not counted as independent evidence"
  },
  "rules": [
   "The paper set is scored only on view(big, PAPER_ONLY); the full set on view(big, FULL). DEFAULT is reported as a third column for both sets so that a change at the default scope shows up (with no extension DEFAULT == FULL == base).",
@@ -94,7 +96,8 @@
   "PathBank pathways are mutable (status NULL or unlocked): record content_sha256 of the extract with every score and re-extract before comparing across dates.",
   "Reactions of the full set are matched against the whole curated pathway; a curated step the paper does not state is a miss of the paper payload that an extension row may recover, never a miss of the paper set.",
   "The product contract outranks every number here; a benchmark gain bought with a contract violation is a regression.",
-  "Before the extension lands (V4, V8) every full-view number is the paper-payload baseline; the recovered_by_extension and extension-precision columns are 0 / None by construction."
+  "Before the extension lands (V4, V8) every full-view number is the paper-payload baseline; the recovered_by_extension and extension match-rate columns are 0 / None by construction.",
+  "Scoring a full-gold case on PAPER_ONLY is not part of the benchmark (it would measure the paper's coverage of the curated record, not extraction quality)."
  ],
  "open_questions": [
   "PathBank ids for the enterobactin (PMC12096016) and menaquinone (PMC12421875, PMC12312563, PMC12657337) pathways are not recorded in the repository; with them the full set would share papers with the certified paper set.",

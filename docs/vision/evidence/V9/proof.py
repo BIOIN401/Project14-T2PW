@@ -37,14 +37,16 @@ def stored_runs(paper):
     out = {}
     for r in json.loads(RUNLIST.read_text(encoding="utf-8")):
         d = r["dir"].replace("\\", "/")
-        if f"/papers/{paper}/" in d + "/" and (Path(r["dir"]) / "final_mapped.json").is_file():
+        # also run dirs named papers/<PMCID>__<slug>/ (older batch runs)
+        if re.search(rf"/papers/{paper}(__[^/]*)?/", d + "/") and (Path(r["dir"]) / "final_mapped.json").is_file():
             out[short(d)] = r["dir"]
     return out
 
 
 def compact(s):
     t = s["types"]
-    return {k: {x: t[k][x] for x in ("gold", "recalled", "predicted", "correct", "recall", "precision")} for k in TYPES}
+    rate = "precision" if "precision" in t["reactions"] else "match_rate"  # paper gold: precision; full gold: match rate
+    return {k: {x: t[k].get(x) for x in ("gold", "recalled", "recalled_weak", "predicted", "correct", "recall", rate)} for k in TYPES}
 
 
 def main(out_dir):
@@ -87,7 +89,7 @@ def main(out_dir):
         "legs_tp_equals_sample_report": sum(bool(v["tp_equals_sample_report"]) for p in report["paper"].values() for v in p.values())}
     for name, scope in (("paper_only", PAPER_ONLY), ("default", DEFAULT)):
         agg = run_benchmark([c for c in cases if runs_by_case[c["id"]]], runs_by_case, scope)
-        report["paper_aggregate_" + name] = agg["aggregate"]["paper"]["types"]
+        report["paper_aggregate_" + name] = agg["aggregate"]["paper"]  # headline macro, micro, per_case
 
     # ---- full set --------------------------------------------------------------------------
     gold_cases = {"PW701720": gold_from_pathbank(
@@ -98,19 +100,20 @@ def main(out_dir):
                 gold_cases[pw] = build_full_gold(pw)
                 (out / f"gold_{pw}.json").write_text(json.dumps(gold_cases[pw], indent=1, ensure_ascii=False), encoding="utf-8")
             except Exception as exc:  # noqa: BLE001 - recorded, not hidden
-                report["full"][pw] = {"gold": f"not built: {type(exc).__name__}: {str(exc)[:200]}"}
+                # the exception class only: a driver message can carry the database host or user
+                report["full"][pw] = {"gold": f"not built: {type(exc).__name__}"}
     for pw, g in gold_cases.items():
         runs = {label: big_from_run(d) for label, d in stored_runs(FULL_CASES[pw]).items()}
         report["full"][pw] = {"paper": FULL_CASES[pw], "gold_counts": {t: len(g[t]) for t in TYPES}, "runs": {
             label: {"full": compact(score_view(big, FULL, g)), "default": compact(score_view(big, DEFAULT, g)),
-                    "paper_only_coverage": compact(score_view(big, PAPER_ONLY, g)),
-                    "extension": score_view(big, FULL, g)["extension"]["all"],
+                    "extension": score_view(big, FULL, g)["extension"],
                     "provenance_reactions": score_view(big, FULL, g)["provenance"]["reactions"]["primary"]}
             for label, big in runs.items()}}
     (out / "proof.json").write_text(json.dumps(report, indent=1, ensure_ascii=False), encoding="utf-8")
     print(json.dumps(report["paper_summary"], indent=1))
-    print(json.dumps({"paper_only": report["paper_aggregate_paper_only"]["reactions"],
-                      "default": report["paper_aggregate_default"]["reactions"]}, indent=1))
+    print(json.dumps({v: {"macro": report[f"paper_aggregate_{v}"]["macro"]["types"]["reactions"],
+                          "micro": report[f"paper_aggregate_{v}"]["micro"]["types"]["reactions"]}
+                      for v in ("paper_only", "default")}, indent=1))
     print({pw: (v.get("gold") if "runs" not in v else f"{len(v['runs'])} runs") for pw, v in report["full"].items()})
 
 

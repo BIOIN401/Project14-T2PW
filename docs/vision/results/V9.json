@@ -32,6 +32,25 @@
   "full_set": "PW701720 (committed extract, no database) against the stored Ara run PMC11983282: reactions 0/1 (curated step is araC gene -> AraC protein, the run extracts transcription and binding), interactions 1/7 recalled of 24 predicted, compartments 1/1. FULL == DEFAULT == PAPER_ONLY because there is no extension: this is the paper-payload baseline; recovered_by_extension is 0 and extension precision None by construction.",
   "survivors": 0
  },
+ "fix_round_1": {
+  "status": "code, tests and docs edited and committed; NOTHING WAS RUN after the edits (host short of memory, restart pending, PathBank DB unreachable from this PC, per the sub-orchestrator). The tests below are unexecuted; proof.json is the pre-fix output (old key names: precision on full gold, extension.all, no macro).",
+  "F1": "run_benchmark aggregate per kind = {headline: 'macro', macro, micro, per_case}; macro = unweighted mean over cases of each case's run-micro ratio (cases without the type's gold or complete flag are left out, counts reported); micro kept as secondary",
+  "F2": "enzymes are credited only through a predicted reaction / transport that matches the gold reaction / transport carrying them (gold enzyme elements carry 'for' = owner ids; predicted enzyme items carry refs to the predicted rows that name them)",
+  "F3": "interaction tiers exact / weak / contradiction (bench._interaction_tier); only exact counts toward recall, correct and precision; recalled_weak reported separately; gold direction: left element acts on right ('<' swaps), supplement source -> target",
+  "F4": "transport compartments are compared by folded name whenever both sides are known; the spelling table only aliases",
+  "F5": "proof.py no longer scores full gold on PAPER_ONLY (paper_only_coverage column removed); BENCHMARK.json rules say why",
+  "F7": "full gold keeps every catalyst of a curated reaction and every transporter (catalysts / transporters lists, enzyme elements deduplicated by name with their owners)",
+  "F8": "run selector fixed in proof.py: also matches papers/<PMCID>__<slug>/ run directories, so PMC12312563 will have 3 stored runs (34 in the paper set) when proof.py is rerun",
+  "F9": "full-kind per-type rate is named match_rate (no 'precision' key); the extension block is match_rate per type and the cross-type extension 'all' total is dropped; paper kind keeps 'precision'",
+  "F6_tests_added": ["enzyme credit needs the matching reaction", "interaction tiers (parametrized, 10 cases)", "transport compartment unknown to the table", "PAPER_ONLY with extension rows carrying a paper record", "macro vs micro headline, many-run case", "match_rate key on full gold"],
+  "proof_py_also": "build_full_gold errors are recorded by exception class only, so no driver message can carry a DB host or user into the evidence",
+  "commands_still_to_run": [
+   "1. unit: PYTHONPATH=C:/t/vis-bench/src T2PW_OFFLINE_CURATOR=1 bash C:/t/vis-runs/queue.sh vis-bench bench-unit-5 600 C:/t/vis-runs/logs/bench-unit-5.json 2 C:/t/vis-runs/logs/bench-unit-5.log -- <venv python> C:/t/vis-bench/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/vis-bench -q --basetemp=C:/t/vis-runs/bt/bench/run-5 tests/test_vision_bench.py   (expect 13 + 10 parametrized + 4 new tests; fix any failure: the new tests were written without running them)",
+   "2. proof, paper set only (no DB): same wrapper, label bench-proof-4, command <venv python> C:/t/vis-bench/docs/vision/evidence/V9/proof.py C:/t/vis-bench/docs/vision/evidence/V9 (the four full-view gold builds will record 'not built: PathBankExtractError' without a DB)",
+   "3. proof with the full-view gold, when the PathBank DB is reachable: <venv python> C:/t/corr-assess/scripts/live_launch.py --script C:/t/vis-bench/docs/vision/evidence/V9/proof.py C:/t/vis-bench/docs/vision/evidence/V9, under queue.sh holder vis-bench, min free GB 2; then grep the log and docs/vision/evidence/V9 for 'sk-or-' and for the DB host and user names (none may appear); commit proof.json (and gold_PW*.json) docs-only",
+   "4. refresh this record's proofs block from the new proof.json (macro headline; 34 paper runs)"
+  ]
+ },
  "dead_ends": [
   "Hard relationship check on interactions (activation vs binding rejected) scored the Ara run 0/7 on interactions; relaxed to reject only activation vs inhibition",
   "Full-view gold for PW739181, PW495535, PW488575, PW766996 could not be built: the worktree has no PathBank DB configuration (PATHBANK_DB_HOST / _USER not configured), so proof.py recorded it and moved on. No .env was read"
@@ -44,6 +63,6 @@
   "PathBank ids for the enterobactin and menaquinone papers are not recorded in the repository; the ten lab pathway ids named in the brief are not listed in any committed eval or pinned doc (only five of the ORCH-751 cohort are).",
   "Certified gold exists for reactions only. Interactions, transports and compartments of the paper set are recall-only or not evaluable until a human certifies more (candidate: the PMC319880 supplement's 15 interactions).",
   "Compartment and relationship spelling tables in bench.py are small (ponytail); a case that needs another spelling extends them.",
-  "PMC12312563 has 2 runs with a /papers/ path in the run list; a third, under runs/PMC12312563__..., has no papers/ segment and was not matched by the run selector."
+  "(resolved in code, not rerun) PMC12312563 has a third run under papers/PMC12312563__<slug>/ that the first selector skipped; the fixed selector matches it."
  ]
 }
