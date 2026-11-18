@@ -1,4 +1,9 @@
 {
+ "tree": {
+  "path": "C:\\t\\vis-checks",
+  "head": "9c2921fbd8af1007d630a3307b8cb24932d04a77",
+  "dirty": false
+ },
  "scopes": [
   "paper",
   "default"
@@ -21,110 +26,42 @@
     "sbml_valid": 96,
     "sbgn_valid": 96,
     "pwml_ok": 96,
-    "cross_ok": 38,
+    "cross_ok": 70,
     "validation_failure_kinds": {},
     "cross_format_failure_classes": {
      "compartment_grouping_differs:pwml_vs_sbgn": {
-      "runs": 6,
-      "total": 6,
+      "runs": 1,
+      "total": 1,
       "examples": [
        {
-        "run": "59p/legs/sour_taste_v2-strict/2026-10-22_2233/papers/PMC7059786/strict",
-        "example": "sbgn 'saliva' (4 entities) is not inside one PWML compartment: ['5-HT', 'Ca++', 'Hydrogen Ion', 'OTOP1']"
+        "run": "N/Project14-T2PW/runs_verify/2026-08-24_1203/papers/PMC12096016/strict",
+        "example": "sbgn 'extracellular' (2 entities) is not inside one PWML compartment: ['Fe3', 'TonB']"
+       }
+      ]
+     },
+     "compartment_placement_differs:sbml_vs_sbgn": {
+      "runs": 15,
+      "total": 39,
+      "examples": [
+       {
+        "run": "-759p/legs/chlorophyll-strict/2026-10-22_2301/papers/PMC5130987/strict",
+        "example": "CHLH: sbml=plastid sbgn=thylakoid membrane"
        },
        {
-        "run": "N/Project14-T2PW/runs_verify/2026-08-21_2057/papers/PMC12452463/strict",
-        "example": "sbgn 'extracellular space' (3 entities) is not inside one PWML compartment: ['FepA', 'enterobactin', 'ferric-enterobactin']"
+        "run": "-759p/legs/chlorophyll-strict/2026-10-22_2301/papers/PMC5130987/strict",
+        "example": "PORA: sbgn only plastid"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-21_1822/papers/PMC12782028/strict",
+        "example": "CYP51A1: sbml=Endoplasmic Reticulum Membrane sbgn=endoplasmic reticulum"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-21_1822/papers/PMC12782028/strict",
+        "example": "DHCR24: sbml=Endoplasmic Reticulum Membrane sbgn=endoplasmic reticulum"
        },
        {
         "run": "N/Project14-T2PW/runs_verify/2026-08-21_2239/papers/PMC12452463/strict",
-        "example": "sbgn 'extracellular' (4 entities) is not inside one PWML compartment: ['Fe3', 'FepA', 'enterobactin', 'ferric-enterobactin']"
-       },
-       {
-        "run": "N/Project14-T2PW/runs_verify/2026-08-24_1203/papers/PMC12096016/strict",
-        "example": "sbgn 'extracellular' (4 entities) is not inside one PWML compartment: ['Fe3', 'TonB', 'enterobactin', 'ferric-enterobactin complex']"
-       },
-       {
-        "run": "N/Project14-T2PW/runs_verify/2026-08-25_1216/papers/PMC12444477/strict",
-        "example": "sbgn 'cytoplasmic leaflet of the IM' (14 entities) is not inside one PWML compartment: ['KDO transferase', 'Kdo-lipid A', 'Kdo-lipid IV_A', 'LpxB']"
-       }
-      ]
-     },
-     "compartment_grouping_differs:pwml_vs_sbml": {
-      "runs": 7,
-      "total": 8,
-      "examples": [
-       {
-        "run": "-759/legs/menaquinone-strict/2026-10-22_1148/papers/PMC12421875/strict",
-        "example": "sbml 'intracellular' (18 entities) is not inside one PWML compartment: ['1,4-dihydroxy-2-naphthoic acid', '2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate', 'DHNA-CoA', 'Dimethylallylpyrophosphate']"
-       },
-       {
-        "run": "-759p/legs/chlorophyll-strict/2026-10-22_2301/papers/PMC5130987/strict",
-        "example": "sbml 'thylakoid membrane' (11 entities) is not inside one PWML compartment: ['3,8-divinyl-protochlorophyllide', 'GUN4', 'GluTR1', 'Mg-Proto IX']"
-       },
-       {
-        "run": "14-T2PW/runs_validation/c120/2026-09-08_1240/papers/PMC10031235/strict",
-        "example": "sbml 'cytosol' (11 entities) is not inside one PWML compartment: ['3-phosphoglycerate', '3PHP', 'D-3-phosphoglycerate dehydrogenase', 'L-Glutamic acid']"
-       },
-       {
-        "run": "N/Project14-T2PW/runs_verify/2026-08-21_2014/papers/PMC12312563/strict",
-        "example": "sbml 'cell' (6 entities) is not inside one PWML compartment: ['1,4-dihydroxy-2-naphthoic acid (DHNA)', 'Magnesium', 'Oxoglutaric acid', 'SEPHCHC']"
-       },
-       {
-        "run": "N/Project14-T2PW/runs_verify/2026-08-25_1216/papers/PMC12444477/strict",
-        "example": "sbml 'inner membrane (IM)' (9 entities) is not inside one PWML compartment: ['Kdo-lipid A', 'LPS', 'LpxK', 'MsbA']"
-       }
-      ]
-     },
-     "compartment_grouping_differs:sbml_vs_sbgn": {
-      "runs": 48,
-      "total": 48,
-      "examples": [
-       {
-        "run": "-759/legs/menaquinone-strict/2026-10-22_1148/papers/PMC12421875/strict",
-        "example": "sbml [1, 9, 18] vs sbgn [1, 9, 16]"
-       },
-       {
-        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
-        "example": "sbml [1, 1, 1, 1, 2] vs sbgn [1, 3]"
-       },
-       {
-        "run": "-759p/legs/chlorophyll-strict/2026-10-22_2301/papers/PMC5130987/strict",
-        "example": "sbml [6, 11, 54] vs sbgn [6, 9, 54]"
-       },
-       {
-        "run": "59p/legs/enterobactin-strict/2026-10-22_2101/papers/PMC12096016/strict",
-        "example": "sbml [1, 1, 17] vs sbgn [1, 18]"
-       },
-       {
-        "run": "59p/legs/sour_taste_v2-strict/2026-10-22_2233/papers/PMC7059786/strict",
-        "example": "sbml [1, 1, 1, 2, 2, 2, 3] vs sbgn [1, 1, 2, 3, 4]"
-       }
-      ]
-     },
-     "compartment_name_differs_between_payload_formats": {
-      "runs": 6,
-      "total": 9,
-      "examples": [
-       {
-        "run": "CH-755/legs/sour_taste-strict/2026-10-21_0139/papers/PMC7059786/strict",
-        "example": "sbml=cytoplasm sbgn=apical membrane"
-       },
-       {
-        "run": "CH-755/legs/sour_taste-strict/2026-10-21_0139/papers/PMC7059786/strict",
-        "example": "sbml=synaptic vesicles sbgn=synapse"
-       },
-       {
-        "run": "CH-755/legs/sour_taste-strict/2026-10-21_0139/papers/PMC7059786/strict",
-        "example": "sbml=synaptic vesicles sbgn=nerve fiber"
-       },
-       {
-        "run": "759p/legs/menaquinone-strict/2026-10-22_2154/papers/PMC12421875/strict",
-        "example": "sbml=intracellular sbgn=cell"
-       },
-       {
-        "run": "N/Project14-T2PW/runs_verify/2026-08-24_1428/papers/PMC12444477/strict",
-        "example": "sbml=periplasmic leaflet of the IM sbgn=outer membrane"
+        "example": "FepA: sbml=outer membrane sbgn=extracellular"
        }
       ]
      },
@@ -339,41 +276,24 @@
      "b_sbgn_interactions_not_compared": 192,
      "b_sbgn_omitted_regulatory_arcs": 0,
      "f_unplaced_entities": 280,
-     "a_compartment_names": 67,
-     "h_pwml_extra_placements": 105,
+     "j_sbgn_assumed_placements": 44,
+     "k_sbml_only_placements": 186,
+     "a_compartment_names": 22,
+     "h_pwml_extra_placements": 184,
      "c_kgml_has_no_compartments_or_catalysts": 96
     },
     "compartment_renames": {
-     "pwml=cytoplasm sbml=extracellular": 8,
-     "pwml=cytoplasm sbgn=extracellular": 8,
-     "pwml=Extracellular Space sbml=extracellular": 7,
-     "pwml=endoplasmic reticulum sbml=cell": 5,
-     "pwml=cytoplasm sbml=cell": 4,
-     "pwml=cell sbml=apical membrane": 3,
-     "pwml=cell sbgn=extracellular": 3,
+     "pwml=Extracellular Space sbml=extracellular": 5,
      "pwml=Mitochondrion sbml=mitochondria": 3,
      "pwml=Mitochondrion sbgn=mitochondria": 3,
-     "pwml=cell sbml=extracellular": 2,
-     "pwml=Extracellular Space sbgn=extracellular": 2,
-     "pwml=cell sbgn=apical membrane": 1,
-     "pwml=Cell Membrane sbml=ER": 1,
+     "pwml=Extracellular Space sbgn=extracellular": 3,
+     "pwml=endoplasmic reticulum sbml=cell": 2,
      "pwml=Cell Membrane sbml=plasma membrane": 1,
      "pwml=Cell Membrane sbgn=plasma membrane": 1,
-     "pwml=mitochondrial matrix sbml=cell": 1,
+     "pwml=cytoplasm sbgn=extracellular": 1,
+     "pwml=Inner Membrane sbml=inner membrane (IM)": 1,
      "pwml=Inner Membrane sbgn=inner membrane (IM)": 1,
-     "pwml=Inner Membrane sbgn=outer membrane (OM)": 1,
-     "pwml=cytosol sbgn=extracellular": 1,
-     "pwml=cytoplasm sbml=extracellular space": 1,
-     "pwml=endoplasmic reticulum sbml=plasma_membrane": 1,
-     "pwml=Endoplasmic Reticulum sbml=cell": 1,
-     "pwml=cytosol sbml=cell": 1,
-     "pwml=cytoplasm sbml=plasma membrane": 1,
-     "pwml=nucleus sbml=Golgi": 1,
-     "pwml=nucleus sbgn=Golgi": 1,
-     "pwml=cell sbml=mitochondria": 1,
-     "pwml=Extracellular Space sbml=cell": 1,
-     "pwml=Apical cell membrane sbml=apical membrane": 1,
-     "pwml=cell sbgn=saliva": 1
+     "pwml=Extracellular Space sbml=cell": 1
     },
     "unknown_sentinel_per_format": {
      "pwml": 41,
@@ -389,110 +309,42 @@
     "sbml_valid": 97,
     "sbgn_valid": 97,
     "pwml_ok": 97,
-    "cross_ok": 38,
+    "cross_ok": 71,
     "validation_failure_kinds": {},
     "cross_format_failure_classes": {
      "compartment_grouping_differs:pwml_vs_sbgn": {
-      "runs": 6,
-      "total": 6,
+      "runs": 1,
+      "total": 1,
       "examples": [
        {
-        "run": "59p/legs/sour_taste_v2-strict/2026-10-22_2233/papers/PMC7059786/strict",
-        "example": "sbgn 'saliva' (4 entities) is not inside one PWML compartment: ['5-HT', 'Ca++', 'Hydrogen Ion', 'OTOP1']"
+        "run": "N/Project14-T2PW/runs_verify/2026-08-24_1203/papers/PMC12096016/strict",
+        "example": "sbgn 'extracellular' (2 entities) is not inside one PWML compartment: ['Fe3', 'TonB']"
+       }
+      ]
+     },
+     "compartment_placement_differs:sbml_vs_sbgn": {
+      "runs": 15,
+      "total": 39,
+      "examples": [
+       {
+        "run": "-759p/legs/chlorophyll-strict/2026-10-22_2301/papers/PMC5130987/strict",
+        "example": "CHLH: sbml=plastid sbgn=thylakoid membrane"
        },
        {
-        "run": "N/Project14-T2PW/runs_verify/2026-08-21_2057/papers/PMC12452463/strict",
-        "example": "sbgn 'extracellular space' (3 entities) is not inside one PWML compartment: ['FepA', 'enterobactin', 'ferric-enterobactin']"
+        "run": "-759p/legs/chlorophyll-strict/2026-10-22_2301/papers/PMC5130987/strict",
+        "example": "PORA: sbgn only plastid"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-21_1822/papers/PMC12782028/strict",
+        "example": "CYP51A1: sbml=Endoplasmic Reticulum Membrane sbgn=endoplasmic reticulum"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-21_1822/papers/PMC12782028/strict",
+        "example": "DHCR24: sbml=Endoplasmic Reticulum Membrane sbgn=endoplasmic reticulum"
        },
        {
         "run": "N/Project14-T2PW/runs_verify/2026-08-21_2239/papers/PMC12452463/strict",
-        "example": "sbgn 'extracellular' (4 entities) is not inside one PWML compartment: ['Fe3', 'FepA', 'enterobactin', 'ferric-enterobactin']"
-       },
-       {
-        "run": "N/Project14-T2PW/runs_verify/2026-08-24_1203/papers/PMC12096016/strict",
-        "example": "sbgn 'extracellular' (4 entities) is not inside one PWML compartment: ['Fe3', 'TonB', 'enterobactin', 'ferric-enterobactin complex']"
-       },
-       {
-        "run": "N/Project14-T2PW/runs_verify/2026-08-25_1216/papers/PMC12444477/strict",
-        "example": "sbgn 'cytoplasmic leaflet of the IM' (14 entities) is not inside one PWML compartment: ['KDO transferase', 'Kdo-lipid A', 'Kdo-lipid IV_A', 'LpxB']"
-       }
-      ]
-     },
-     "compartment_grouping_differs:pwml_vs_sbml": {
-      "runs": 7,
-      "total": 8,
-      "examples": [
-       {
-        "run": "-759/legs/menaquinone-strict/2026-10-22_1148/papers/PMC12421875/strict",
-        "example": "sbml 'intracellular' (18 entities) is not inside one PWML compartment: ['1,4-dihydroxy-2-naphthoic acid', '2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate', 'DHNA-CoA', 'Dimethylallylpyrophosphate']"
-       },
-       {
-        "run": "-759p/legs/chlorophyll-strict/2026-10-22_2301/papers/PMC5130987/strict",
-        "example": "sbml 'thylakoid membrane' (11 entities) is not inside one PWML compartment: ['3,8-divinyl-protochlorophyllide', 'GUN4', 'GluTR1', 'Mg-Proto IX']"
-       },
-       {
-        "run": "14-T2PW/runs_validation/c120/2026-09-08_1240/papers/PMC10031235/strict",
-        "example": "sbml 'cytosol' (11 entities) is not inside one PWML compartment: ['3-phosphoglycerate', '3PHP', 'D-3-phosphoglycerate dehydrogenase', 'L-Glutamic acid']"
-       },
-       {
-        "run": "N/Project14-T2PW/runs_verify/2026-08-21_2014/papers/PMC12312563/strict",
-        "example": "sbml 'cell' (6 entities) is not inside one PWML compartment: ['1,4-dihydroxy-2-naphthoic acid (DHNA)', 'Magnesium', 'Oxoglutaric acid', 'SEPHCHC']"
-       },
-       {
-        "run": "N/Project14-T2PW/runs_verify/2026-08-25_1216/papers/PMC12444477/strict",
-        "example": "sbml 'inner membrane (IM)' (9 entities) is not inside one PWML compartment: ['Kdo-lipid A', 'LPS', 'LpxK', 'MsbA']"
-       }
-      ]
-     },
-     "compartment_grouping_differs:sbml_vs_sbgn": {
-      "runs": 49,
-      "total": 49,
-      "examples": [
-       {
-        "run": "-759/legs/menaquinone-strict/2026-10-22_1148/papers/PMC12421875/strict",
-        "example": "sbml [1, 9, 18] vs sbgn [1, 9, 16]"
-       },
-       {
-        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
-        "example": "sbml [1, 1, 1, 1, 2] vs sbgn [1, 3]"
-       },
-       {
-        "run": "-759p/legs/chlorophyll-strict/2026-10-22_2301/papers/PMC5130987/strict",
-        "example": "sbml [6, 11, 54] vs sbgn [6, 9, 54]"
-       },
-       {
-        "run": "59p/legs/enterobactin-strict/2026-10-22_2101/papers/PMC12096016/strict",
-        "example": "sbml [1, 1, 17] vs sbgn [1, 18]"
-       },
-       {
-        "run": "59p/legs/sour_taste_v2-strict/2026-10-22_2233/papers/PMC7059786/strict",
-        "example": "sbml [1, 1, 1, 2, 2, 2, 3] vs sbgn [1, 1, 2, 3, 4]"
-       }
-      ]
-     },
-     "compartment_name_differs_between_payload_formats": {
-      "runs": 6,
-      "total": 9,
-      "examples": [
-       {
-        "run": "CH-755/legs/sour_taste-strict/2026-10-21_0139/papers/PMC7059786/strict",
-        "example": "sbml=cytoplasm sbgn=apical membrane"
-       },
-       {
-        "run": "CH-755/legs/sour_taste-strict/2026-10-21_0139/papers/PMC7059786/strict",
-        "example": "sbml=synaptic vesicles sbgn=synapse"
-       },
-       {
-        "run": "CH-755/legs/sour_taste-strict/2026-10-21_0139/papers/PMC7059786/strict",
-        "example": "sbml=synaptic vesicles sbgn=nerve fiber"
-       },
-       {
-        "run": "759p/legs/menaquinone-strict/2026-10-22_2154/papers/PMC12421875/strict",
-        "example": "sbml=intracellular sbgn=cell"
-       },
-       {
-        "run": "N/Project14-T2PW/runs_verify/2026-08-24_1428/papers/PMC12444477/strict",
-        "example": "sbml=periplasmic leaflet of the IM sbgn=outer membrane"
+        "example": "FepA: sbml=outer membrane sbgn=extracellular"
        }
       ]
      },
@@ -707,41 +559,24 @@
      "b_sbgn_interactions_not_compared": 192,
      "b_sbgn_omitted_regulatory_arcs": 0,
      "f_unplaced_entities": 286,
-     "a_compartment_names": 68,
-     "h_pwml_extra_placements": 102,
+     "j_sbgn_assumed_placements": 46,
+     "k_sbml_only_placements": 191,
+     "a_compartment_names": 23,
+     "h_pwml_extra_placements": 183,
      "c_kgml_has_no_compartments_or_catalysts": 97
     },
     "compartment_renames": {
-     "pwml=cytoplasm sbml=extracellular": 8,
-     "pwml=cytoplasm sbgn=extracellular": 8,
-     "pwml=Extracellular Space sbml=extracellular": 7,
-     "pwml=endoplasmic reticulum sbml=cell": 6,
-     "pwml=cytoplasm sbml=cell": 4,
-     "pwml=cell sbml=apical membrane": 3,
-     "pwml=cell sbgn=extracellular": 3,
+     "pwml=Extracellular Space sbml=extracellular": 5,
      "pwml=Mitochondrion sbml=mitochondria": 3,
      "pwml=Mitochondrion sbgn=mitochondria": 3,
-     "pwml=cell sbml=extracellular": 2,
-     "pwml=Extracellular Space sbgn=extracellular": 2,
-     "pwml=cell sbgn=apical membrane": 1,
-     "pwml=Cell Membrane sbml=ER": 1,
+     "pwml=Extracellular Space sbgn=extracellular": 3,
+     "pwml=endoplasmic reticulum sbml=cell": 3,
      "pwml=Cell Membrane sbml=plasma membrane": 1,
      "pwml=Cell Membrane sbgn=plasma membrane": 1,
-     "pwml=mitochondrial matrix sbml=cell": 1,
+     "pwml=cytoplasm sbgn=extracellular": 1,
+     "pwml=Inner Membrane sbml=inner membrane (IM)": 1,
      "pwml=Inner Membrane sbgn=inner membrane (IM)": 1,
-     "pwml=Inner Membrane sbgn=outer membrane (OM)": 1,
-     "pwml=cytosol sbgn=extracellular": 1,
-     "pwml=cytoplasm sbml=extracellular space": 1,
-     "pwml=endoplasmic reticulum sbml=plasma_membrane": 1,
-     "pwml=Endoplasmic Reticulum sbml=cell": 1,
-     "pwml=cytosol sbml=cell": 1,
-     "pwml=cytoplasm sbml=plasma membrane": 1,
-     "pwml=nucleus sbml=Golgi": 1,
-     "pwml=nucleus sbgn=Golgi": 1,
-     "pwml=cell sbml=mitochondria": 1,
-     "pwml=Extracellular Space sbml=cell": 1,
-     "pwml=Apical cell membrane sbml=apical membrane": 1,
-     "pwml=cell sbgn=saliva": 1
+     "pwml=Extracellular Space sbml=cell": 1
     },
     "unknown_sentinel_per_format": {
      "pwml": 41,
@@ -752,27 +587,24 @@
    }
   },
   "faithfulness": {
+   "found_rate_before_fold": 0.6541,
+   "found_rate_after_fold": 0.6836,
    "paper_quotes": {
     "runs": 97,
     "runs_no_text": 2,
     "n": 1821,
-    "verbatim": 1099,
+    "verbatim": 1149,
     "fragments": 11,
-    "not_found": 587,
+    "not_found": 537,
     "no_text": 60,
-    "short": 64
+    "short": 64,
+    "before_fold_verbatim": 1099,
+    "before_fold_fragments": 11,
+    "before_fold_not_found": 587
    },
-   "found_rate_of_judged": 0.6541,
-   "verbatim_rate_of_judged": 0.6476,
+   "found_rate_of_judged": 0.6836,
+   "verbatim_rate_of_judged": 0.6771,
    "not_found_examples": [
-    {
-     "key": "entities.subcellular_locations:apicalmembrane",
-     "quote": "permeation of H+ through an apical ion channel"
-    },
-    {
-     "key": "entities.subcellular_locations:cytoplasm",
-     "quote": "The entering H+ ions"
-    },
     {
      "key": "processes.transports:h+:apicalsidestate>typeiiicellcytoplasmstate",
      "quote": "transduction of sour involves permeation of H+ through an apical ion channel subsequently identified as OTOP1"
@@ -784,6 +616,14 @@
     {
      "key": "processes.transports:h+:typeiiicellapicalstate>typeiiicellcytosolicstate",
      "quote": "transduction of sour involves permeation of H + through an apical ion channel subsequently identified as OTOP1"
+    },
+    {
+     "key": "processes.transports:h+:>typeiiicellstate",
+     "quote": "transduction of sour involves permeation of H+ through an apical ion channel subsequently identified as OTOP1"
+    },
+    {
+     "key": "processes.transports:5ht:typeiiicellstate>",
+     "quote": "contribution of 5-HT acting on neural 5-HT 3 receptors has been elucidated in terms of transmission of sour taste"
     }
    ],
    "audit_modified_only_totals": {
@@ -795,7 +635,8 @@
     "quote_not_found": 27,
     "no_text": 3,
     "short_quotes": 1,
-    "promotion_candidates": 22
+    "promotion_candidates": 22,
+    "promotion_candidates_before_fold": 22
    },
    "extended": {
     "no_extension_runs": 97,

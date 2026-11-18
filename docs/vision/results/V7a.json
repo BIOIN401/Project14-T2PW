@@ -2,7 +2,50 @@
   "lane": "V7a",
   "branch": "vision/checks",
   "base": "04596e6c",
-  "status": "done: checks built, 19/19 tests pass, 97-run proof run; the compartment checks over-report (see proofs.finding_compartment) and need a redesign decision",
+  "status": "round 3 proof done (cross-format ok 71/97 default, up from 38); round-3 unit tests (21 in test_vision_checks.py plus test_vision_sbgn.py) still to run in the orchestrator's batch1b; 19/19 passed on the round-2 tree",
+  "round_3_proof": {
+    "run": "batch1 of the orchestrator chain, BW_EXIT 0, 0 survivors; log C:/t/vis-runs/logs/batch1-v7a-proof.log; totals docs/vision/evidence/V7a/totals97.json (round 3 replaces round 2); full report C:/t/vis-runs/scratch/checks/report97-r3.json",
+    "tree": {"path": "C:\\t\\vis-checks", "head": "9c2921fbd8af1007d630a3307b8cb24932d04a77", "dirty": false},
+    "validity": "unchanged: default SBML / SBGN / PWML 97/97 each; paper 96/97 each (one refused view, quarantine unaccounted_locked_reactions:1)",
+    "cross_format_ok": {"default": "38/97 before the compartment fix -> 71/97 after", "paper": "38/96 -> 70/96"},
+    "failing_default_runs": "26: 12 only on compartment_placement_differs:sbml_vs_sbgn, 3 on it plus other classes, 11 on other classes only",
+    "residual_classes_default (runs, items)": {
+      "compartment_placement_differs:sbml_vs_sbgn": "15 runs, 39 items",
+      "compartment_grouping_differs:pwml_vs_sbgn": "1 run (1)",
+      "compartment_placement_missing_in_pwml": "1 run (1, CHLI2)",
+      "interaction_missing_in_kgml": "7 runs (9)",
+      "interaction_extra_in_pwml": "3 runs (10)",
+      "process_missing_in_kgml": "3 runs (4)",
+      "entity_missing_in_kgml / _pwml": "2 runs each (2)",
+      "entity_missing_in_sbgn": "2 runs (4)",
+      "entity_missing_in_sbml": "1 run (1)",
+      "process_extra / missing in sbml, sbgn, kgml": "1 run (the Fe3 / Fe3+ run, 2026-08-28_1816)",
+      "unresolved_reference:sbml": "1 run",
+      "gone since round 2": "compartment_grouping_differs:sbml_vs_sbgn (49 runs), pwml_vs_sbml (7), compartment_name_differs_between_payload_formats (6)"
+    },
+    "known_classes_default (items summed over the 97 runs)": {
+      "a canonical names": "a_canonical_names 0; a_compartment_names 23 (11 distinct pairs, in totals97.json compartment_renames)",
+      "b SBGN": "entities only in interactions 130; interactions not compared 192; omitted regulatory arcs 0",
+      "c KGML": 97,
+      "d PathWhiz wrapper": 109,
+      "e PWML-withheld interactions": 145,
+      "f Unknown sentinel": "182 (pwml 41, sbgn 141, sbml 0, kgml 0); unplaced entities 286",
+      "g PWML modifier interactions": 7,
+      "h extra PWML placements": 183,
+      "j SBGN assumed placements (bounded by the exporter's compartment_assumed notes)": 46,
+      "k SBML-only placements": 191
+    },
+    "remaining_placement_failures": "The 39 items are enzyme or protein entities whose SBML state compartment differs from the compartment SBGN drew them in, e.g. 'EntB: sbml=Cytoplasm sbgn=cell', 'CYP51A1: sbml=Endoplasmic Reticulum Membrane sbgn=endoplasmic reticulum', 'FepA: sbml=outer membrane sbgn=extracellular', 'MsbA: sbgn only cytoplasmic leaflet of the IM'. export_sbgn places an enzyme or modifier in the compartment of its reaction (_mods uses the reaction's compartment) and writes no compartment_assumed note for it, so the exporter's own notes (transporter, interaction source, reaction state from IR) under-count the assumption and cannot bound these. A V2 exporter note for enzyme placement would let the check bound them; that is an exporter edit, outside this lane.",
+    "faithfulness_fold": {
+      "found_rate_before_fold": 0.6541,
+      "found_rate_after_fold": 0.6836,
+      "quotes": "1821 paper quotes; judged 1697; verbatim 1099 -> 1149, fragments 11 -> 11, not found 587 -> 537 (the fold finds 50 more); 64 short, 60 no text",
+      "audit_modified_only promotion candidates": "22 before and after",
+      "remaining not-found": "537 of 1697; the examples are paraphrases and rows quoting a source sentence the paper text does not contain verbatim ('5-HT 3 receptors' vs '5-HT3 receptors' is a spacing-inside-token case the fold does not cover)"
+    },
+    "interaction_missing_in_kgml_trace": "Confirmed in code for compound-to-compound pairs: clean_model/export/kgml.py lines 131-133 skip any interaction whose two endpoints are compounds ('compound-compound relation has no KGML relation type') and list it in the sidecar skipped_interactions. Of the 7 runs' examples, 6 are compound pairs (5-HT -> 5-HT, phthalylsulfacetamide -> Zn2+ in two runs, cardiolipin -> LPS, enterobactin -> ferric iron, threonine / tryptophan -> phosphoribosylamine), so the self-loop 5-HT -> 5-HT is a KGML limit as expected. Read from code, not re-run per example. One run is not explained by it: PvdA -> PvdI and PvdA -> PvdJ are protein-protein pairs, which kgml.py writes as PPrel unless an endpoint is not a declared entity.",
+    "interaction_extra_in_pwml_trace": "Root cause in code: pwml/ir.py (L4, lines ~2650-2700) draws a reaction's activator / inhibitor modifier as an interaction with the step's anchor element: the first other enzyme, else the first non-currency substrate, then product, else a currency compound (GTP, ATP). consistency.py explains only the enzyme anchor (modifier -> catalyst), so 'X -> GTP / ATP' (currency anchors) and 'FC1 -> Pchlide', 'ALAS2 -> heme' (substrate or product anchors) show as extras. Widening class g to modifier -> any participant of the reaction would explain them. Read from code, not re-run per example; kept as a named open item as ruled."
+  },
   "built": [
     "src/t2pw/vision/checks/validate.py: validate_sbml (libsbml L3V2 consistency, unit checks off), validate_sbgn (XSD + libSBGN schematron with the V2 in-memory edits, plus the pd10133 duplicate-arc check; one loader, sbgn_schemas, shared with tests/test_vision_sbgn.py), validate_pwml (well-formed + pwml/validate.py structure signature + optional pwml/ir.py validate_pwml_ir; pwc-id / short-name / pwbs-id absent offline are counted under db_identity_absent, not errors: writer.py leaves them out unless the PathBank DB supplied them)",
     "src/t2pw/vision/checks/consistency.py: cross_format(outputs, pwml_ir=None, sbgn_report=None): parses PWML, SBML, SBGN, KGML back; entities clustered across formats by shared database id (chebi, kegg, hmdb, pubchem, cas, drugbank, uniprot) or normalized name; processes compared as multisets of (input entities, output entities); catalysts (PWML, SBML, SBGN); interactions (PWML, SBML, KGML); SBGN regulatory arcs against SBML modifiers; compartments as groupings of entities. Known differences are reported under known{}, everything else under failures[]",
@@ -25,7 +68,8 @@
   "tests": [
     {"label": "unit1, unit2 tests/test_vision_checks.py", "counts": "not run: GATE_BLOCKED on free RAM", "log": "C:/t/vis-runs/logs/checks-unit1.log, checks-unit2.log"},
     {"label": "unit3 (run by the orchestrator chain)", "counts": "18 passed, 1 failed (test_short_quotes_are_counted_apart_and_ids_match_whole_tokens: 11 == 12)", "log": "C:/t/vis-runs/logs/checks-unit3.log"},
-    {"label": "unit4 tests/test_vision_checks.py after the test fix", "counts": "19 passed in 1.89 s, survivors 0", "log": "C:/t/vis-runs/logs/checks-unit4.log"}
+    {"label": "unit4 tests/test_vision_checks.py after the test fix (round-2 tree, 7dcfeb01)", "counts": "19 passed in 1.89 s, survivors 0", "log": "C:/t/vis-runs/logs/checks-unit4.log"},
+    {"label": "round 3 (9c2921fb): 21 tests in test_vision_checks.py + test_vision_sbgn.py", "counts": "NOT YET RUN: the orchestrator's batch1 wrote the unit logs to a bad path; re-queued as batch1b", "log": "C:/t/vis-runs/logs/batch1-v7a-unit.log"}
   ],
   "test_failure_root_cause": "The test was wrong, the code was right. It compared the not_found count of a payload whose first reaction quote is 'glycine' (short, so not judged) with the default payload on a text that contained neither quote: the default quote was not_found (12), the short one not judged (11). The text now holds the default quote, so the short quote is the only difference. Commit 7dcfeb01.",
   "proofs": {
@@ -82,9 +126,9 @@
     "The compartment grouping rules (equality SBML vs SBGN, block subset for PWML) were a dead end in the same way: see proofs.finding_compartment."
   ],
   "open_questions": [
-    "Redesign the compartment comparison as described in proofs.finding_compartment, then re-run the proof (about 70 s). Until then 46 of 97 runs fail only because of an over-strict check.",
-    "interaction_missing_in_kgml (7 runs): KGML relations lack interactions SBML lists, e.g. 'phthalylsulfacetamide -> Zn2+', '5-HT -> 5-HT' (a self-pair), 'cardiolipin -> LPS'. Not explained; may be a KGML exporter drop or a check limit (self-pairs, merged entries).",
-    "interaction_extra_in_pwml (3 runs, 10 items, e.g. 'Dvl-DAAM complex -> GTP'): PWML draws interactions no SBML interaction or modifier explains; the nucleotide endpoints suggest a PWML-side derivation. Not explained.",
+    "The compartment redesign of proofs.finding_compartment was done in round 3 (see round_3_proof). 15 runs (39 items) still fail on SBGN's enzyme placement, which the exporter's compartment_assumed notes do not cover: add a note in export_sbgn for an enzyme or modifier placed in its reaction's compartment (V2 edit), or accept them as a known class without a bound.",
+    "interaction_missing_in_kgml (7 runs): 6 are compound-to-compound pairs that kgml.py skips by design (see round_3_proof.interaction_missing_in_kgml_trace); the PvdA -> PvdI / PvdJ run (protein pairs) is unexplained. Kept as a named open item.",
+    "interaction_extra_in_pwml (3 runs, 10 items): PWML modifier interactions anchored on a participant rather than an enzyme (see round_3_proof.interaction_extra_in_pwml_trace). Kept as a named open item; widening class g would explain them.",
     "Name differences without a shared id (Fe3 / Fe3+; entD transferase) cannot be unified, so they show as entity and process failures in 2 runs; a synonym table would be needed to count them as class a.",
     "Faithfulness: 35% of judged paper quotes are not found verbatim; a spacing / punctuation fold would be the first thing to try, but the not-found rows were not examined.",
     "Extension cache format: V4 / V8 are not merged, so extended_view reads a dict or a directory of <source id with non-alphanumerics as _>.<txt|json|xml|html>. The V4 / V8 lanes must write that, or this reader changes.",
