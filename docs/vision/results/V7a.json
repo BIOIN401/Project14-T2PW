@@ -1,0 +1,44 @@
+{
+  "lane": "V7a",
+  "branch": "vision/checks",
+  "base": "04596e6c",
+  "status": "blocked",
+  "built": [
+    "src/t2pw/vision/checks/validate.py: validate_sbml (libsbml L3V2 consistency, unit checks off), validate_sbgn (XSD + libSBGN schematron with the V2 in-memory edits, plus the pd10133 duplicate-arc check), validate_pwml (well-formed + pwml/validate.py structure signature + optional pwml/ir.py validate_pwml_ir; pwc-id / short-name / pwbs-id absent offline are counted under db_identity_absent, not errors: writer.py leaves them out unless the PathBank DB supplied them)",
+    "src/t2pw/vision/checks/consistency.py: cross_format(outputs, pwml_ir=None, sbgn_report=None): parses PWML, SBML, SBGN, KGML back; entities clustered across formats by shared database id (chebi, kegg, hmdb, pubchem, cas, drugbank, uniprot) or normalized name; processes compared as multisets of (input entities, output entities); catalysts (PWML, SBML, SBGN); interactions (PWML, SBML, KGML); compartments as groupings of entities. Known differences are reported under known{}, everything else under failures[]",
+    "src/t2pw/vision/checks/faithfulness.py: find_paper_text, paper_view (paper quotes in the stored 01_source_text.txt, NFKC/case/whitespace normalised, ellipsis quotes by fragments; audit_modified-only elements whose own quote is verbatim = VD-10 promotion candidates), extended_view (database elements re-found in a cached record, other_paper quotes in the cached cited text; cache = dict or directory; nothing fetched; 'no extension' / 'no cache' reported)",
+    "src/t2pw/vision/checks/run_checks.py: CLI over run dirs or a runlist + idx file; per scope generate all four formats, validate, cross-format, faithfulness; --out full report, --totals-out totals only",
+    "tests/test_vision_checks.py: 13 offline tests on the run39 fixture"
+  ],
+  "files": [
+    "src/t2pw/vision/checks/__init__.py",
+    "src/t2pw/vision/checks/validate.py",
+    "src/t2pw/vision/checks/consistency.py",
+    "src/t2pw/vision/checks/faithfulness.py",
+    "src/t2pw/vision/checks/run_checks.py",
+    "tests/test_vision_checks.py",
+    "docs/vision/results/V7a.json",
+    "docs/vision/evidence/V7a/PENDING.md"
+  ],
+  "tests": [
+    {"label": "unit1 tests/test_vision_checks.py", "counts": "NOT RUN: GATE_BLOCKED (free RAM 0.4-1.0 GB under the 2 GB floor for 30 min)", "log": "C:/t/vis-runs/logs/checks-unit1.log"},
+    {"label": "unit2 tests/test_vision_checks.py (the one retry)", "counts": "NOT RUN: GATE_BLOCKED again (free RAM 0.39 GB at 00:05)", "log": "C:/t/vis-runs/logs/checks-unit2.log"}
+  ],
+  "proofs": {
+    "97-run proof (paper, default)": "NOT RUN (needs the 4 GB floor, which was not available)",
+    "probe runs that did happen (gated, floor 2 GB, early in the session, before the later edits)": "run39 and run56 fixtures and two stored runs (runlist q-index 4 and 5), default scope: validate_sbml 4/4 ok, validate_sbgn 4/4 ok, validate_pwml 4/4 ok after the db_identity rule. Cross-format on those four, first pass (before the PathWhiz-wrapper, Unknown-sentinel, unplaced-location, withheld-interaction and subset-placement rules were added; none re-run): see dead_ends and open_questions for the classes that showed up. Probe outputs are in C:/t/vis-runs/scratch/checks/probe/ (not committed)"
+  },
+  "commands_still_to_run": [
+    "PYTHONPATH=C:/t/vis-checks/src T2PW_OFFLINE_CURATOR=1 bash C:/t/vis-runs/bw.sh vis-checks unit3 600 C:/t/vis-runs/json/checks-unit3.json 2 -- C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe C:/t/vis-checks/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/vis-checks -q --basetemp=C:/t/vis-runs/bt/vis-checks/run-3 tests/test_vision_checks.py > C:/t/vis-runs/logs/checks-unit3.log 2>&1",
+    "PYTHONPATH=C:/t/vis-checks/src T2PW_OFFLINE_CURATOR=1 bash C:/t/vis-runs/queue.sh vis-checks v7a-proof 7200 C:/t/vis-runs/json/checks-proof.json 4 C:/t/vis-runs/logs/checks-proof.log -- C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe -m t2pw.vision.checks.run_checks --runlist C:/t/ev-cm/runlist.json --idx C:/t/vis-runs/scratch/generate/ok_idx.txt --scopes paper,default --out C:/t/vis-runs/scratch/checks/report97.json --totals-out C:/t/vis-checks/docs/vision/evidence/V7a/totals97.json   (run_in_background, no trailing &)"
+  ],
+  "dead_ends": [
+    "validate_pwml on the repo's structure signature alone fails every offline export (<pwc-id>, <short-name>, <pwbs-id> missing): writer.py leaves these out unless the PathBank DB supplied them, so they are counted, not errors.",
+    "A strict per-format entity and compartment equality fails on every run with a transport or interaction. First-pass probe classes, each traced to documented exporter behaviour and turned into a named 'known' class instead of a failure: PWML wraps a bare protein enzyme in '<protein> complex' (Stage 6, pipeline/entity_identity.py); the PathBank Unknown sentinel protein is not an entity in the clean model (SBML, KGML); PWML withholds interactions it cannot store (ir.processes.interactions[].withheld; the check reads that record, so without pwml_ir the same pairs are failures); a reaction's regulator is a modifier in SBML but an interaction with the enzyme complex in PWML; SBML puts an entity with no stated location in 'unspecified location' while PWML and SBGN place it; PWML merges compartments under canonical names and places the ends of the interactions and transports it draws."
+  ],
+  "open_questions": [
+    "Known classes d (PathWhiz wrapper), e (PWML-withheld interactions), f (Unknown sentinel, unplaced entities), g (modifier interactions) and h (extra PWML placements) go beyond the a/b/c classes in the brief. Each rests on code (pipeline/entity_identity.py, pwml/ir.py withheld record, clean_model/builder.py, writer.py), but the 97-run proof was not run, so how many failures remain after them is unknown.",
+    "Extension cache format: V4 / V8 are not merged, so extended_view reads a dict or a directory of <source id with non-alphanumerics as _>.<txt|json|xml|html>. The V4 / V8 lanes must write that, or this reader changes.",
+    "SBGN exporter report is not available from generate() (bytes only); cross_format accepts it as an optional argument but run_checks does not pass it."
+  ]
+}
