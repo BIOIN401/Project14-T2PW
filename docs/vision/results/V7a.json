@@ -2,7 +2,7 @@
   "lane": "V7a",
   "branch": "vision/checks",
   "base": "04596e6c",
-  "status": "round 3 proof done (cross-format ok 71/97 default, up from 38); round-3 unit tests (21 in test_vision_checks.py plus test_vision_sbgn.py) still to run in the orchestrator's batch1b; 19/19 passed on the round-2 tree",
+  "status": "done: round-3 proof run (cross-format ok 71/97 default, up from 38) and 60 tests pass across test_vision_checks.py (21) and test_vision_sbgn.py at e3886c78",
   "round_3_proof": {
     "run": "batch1 of the orchestrator chain, BW_EXIT 0, 0 survivors; log C:/t/vis-runs/logs/batch1-v7a-proof.log; totals docs/vision/evidence/V7a/totals97.json (round 3 replaces round 2); full report C:/t/vis-runs/scratch/checks/report97-r3.json",
     "tree": {"path": "C:\\t\\vis-checks", "head": "9c2921fbd8af1007d630a3307b8cb24932d04a77", "dirty": false},
@@ -69,7 +69,8 @@
     {"label": "unit1, unit2 tests/test_vision_checks.py", "counts": "not run: GATE_BLOCKED on free RAM", "log": "C:/t/vis-runs/logs/checks-unit1.log, checks-unit2.log"},
     {"label": "unit3 (run by the orchestrator chain)", "counts": "18 passed, 1 failed (test_short_quotes_are_counted_apart_and_ids_match_whole_tokens: 11 == 12)", "log": "C:/t/vis-runs/logs/checks-unit3.log"},
     {"label": "unit4 tests/test_vision_checks.py after the test fix (round-2 tree, 7dcfeb01)", "counts": "19 passed in 1.89 s, survivors 0", "log": "C:/t/vis-runs/logs/checks-unit4.log"},
-    {"label": "round 3 (9c2921fb): 21 tests in test_vision_checks.py + test_vision_sbgn.py", "counts": "NOT YET RUN: the orchestrator's batch1 wrote the unit logs to a bad path; re-queued as batch1b", "log": "C:/t/vis-runs/logs/batch1-v7a-unit.log"}
+    {"label": "batch1b, round 3 tree 44e2def6, test_vision_checks.py + test_vision_sbgn.py", "counts": "58 passed, 2 failed (test_payload_formats_that_disagree_on_a_name_fail, test_sbgn_regulatory_arcs_are_compared_with_sbml). Root cause: xml.etree's namespace registry is process-wide; test_vision_sbgn imports export_sbgn at collection, the PWML export then imports t2pw.sbml modules that register the default namespace for SBML, so the SBGN bytes carry an ns0: prefix and the tests' text surgery missed. Run alone, 21 passed. Test fixed (reads the prefix from the file), commit e3886c78; the exporter's import-order dependence is being fixed in a V2 follow-up", "log": "C:/t/vis-runs/logs/batch1-v7a-unit.log"},
+    {"label": "batch2, tree e3886c78, test_vision_checks.py + test_vision_sbgn.py together", "counts": "60 passed, 0 failed, survivors 0", "log": "C:/t/vis-runs/logs/batch2-v7a-unit.log"}
   ],
   "test_failure_root_cause": "The test was wrong, the code was right. It compared the not_found count of a payload whose first reaction quote is 'glycine' (short, so not judged) with the default payload on a text that contained neither quote: the default quote was not_found (12), the short one not judged (11). The text now holds the default quote, so the short quote is the only difference. Commit 7dcfeb01.",
   "proofs": {
@@ -134,6 +135,7 @@
     "Extension cache format: V4 / V8 are not merged, so extended_view reads a dict or a directory of <source id with non-alphanumerics as _>.<txt|json|xml|html>. The V4 / V8 lanes must write that, or this reader changes.",
     "compartment_ontology_differs cannot fire for SBML today: SBML compartments carry no GO ids (only PWML ontology-id does).",
     "tests/test_vision_sbgn.py is now coupled to validate.sbgn_schemas.",
+    "V2 finding (export_sbgn): the SBGN bytes depend on import order. export_sbgn registers the default namespace with xml.etree's process-wide registry at import (ET.register_namespace('', NS)), and t2pw/sbml/add_pathwhiz_layout.py and strip_unmapped.py register the default namespace for SBML at import. If export_sbgn is imported first and an sbml module second, the SBGN is written with ns0: prefixes (still valid, different bytes, found when test_vision_sbgn.py and test_vision_checks.py ran in one pytest process). A server that imports export_sbgn early would emit ns0:. Fix in the exporter (register at call time, or serialise without the global registry); outside V7a, so the checks tests now read the prefix from the file.",
     "V7b item (reviewer note 3, reverse direction): a regulatory SBML or PWML interaction should appear as an SBGN arc on each process its target catalyses, bounded by report.omitted.interactions minus relationship_not_regulatory. Not added.",
     "cofactor_of stays a regulatory (modulation) relationship for explaining SBGN arcs, matching export_sbgn's VD-8 list (accepted by the orchestrator)."
   ],
