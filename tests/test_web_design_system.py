@@ -81,15 +81,17 @@ def test_base_renders_with_defaults():
     assert '<main id="main"' in html and 'href="#main"' in html
     assert 'href="/static/css/tokens.css"' in html and 'href="/static/css/site.css"' in html
     nav = re.search(r'<nav class="site-nav" aria-label="Main">(.*?)</nav>', html, re.S).group(1)
-    assert re.findall(r">([^<]+)</a>", nav) == ["Submit", "Examples", "Help", "About / Cite"]
+    assert ">Tutorial</a>" in nav and ">Submissions</a>" in nav
+    assert "<summary>About</summary>" in nav
+    assert 'href="/about"' in nav and 'href="/examples"' in nav
     assert "aria-current" not in nav
     assert "Citation placeholder" in html and "Lab credit placeholder" in html
 
 
 def test_base_theme_override_and_active_nav():
-    html = _render("base.html", theme="dark", active_nav="help", static_url="rel/static")
+    html = _render("base.html", theme="dark", active_nav="tutorial", static_url="rel/static")
     assert '<html lang="en" data-theme="dark">' in html
-    assert '<a href="/help" aria-current="page">Help</a>' in html
+    assert '<a href="/help" aria-current="page">Tutorial</a>' in html
     assert 'href="rel/static/css/site.css"' in html
     # an unknown theme value is ignored, never echoed into the attribute
     assert "data-theme" not in _render("base.html", theme="purple")

@@ -195,6 +195,62 @@ svg {
   background: var(--color-primary-subtle);
 }
 
+.nav-dropdown {
+  position: relative;
+}
+
+.nav-dropdown details {
+  position: relative;
+}
+
+.nav-dropdown summary {
+  list-style: none;
+  cursor: pointer;
+  display: block;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+  font-weight: var(--weight-medium);
+}
+
+.nav-dropdown summary::-webkit-details-marker { display: none; }
+
+.nav-dropdown summary::after {
+  content: " ∨";
+  font-size: 0.85em;
+  opacity: 0.75;
+}
+
+.nav-dropdown summary:hover {
+  color: var(--color-text);
+  background: var(--color-surface-muted);
+}
+
+.nav-dropdown.is-active > details > summary {
+  color: var(--color-primary);
+  background: var(--color-primary-subtle);
+}
+
+.nav-dropdown__menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + var(--space-1));
+  min-width: 12rem;
+  margin: 0;
+  padding: var(--space-2);
+  list-style: none;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 20px rgba(24, 33, 43, 0.12);
+  z-index: 6;
+}
+
+.nav-dropdown__menu a {
+  display: block;
+  padding: var(--space-2) var(--space-3);
+}
+
 .site-main {
   flex: 1;
   padding-top: var(--space-6);

@@ -1,6 +1,7 @@
 {#- Public landing page. Marketing shell: hero → intro → sponsors.
     Primary CTA goes to the current submit form at /submit. -#}
 {% extends "layout.html" %}
+{% import "macros/components.html" as c %}
 {% block title %}Home{% endblock %}
 {% block body_class %}landing{% endblock %}
 {% block page_head %}
@@ -49,9 +50,7 @@
       [Placeholder: expand this introduction with the product story, scope, and
       what a typical run produces. Copy to be provided.]
     </p>
-    <p>
-      <a class="button" href="/submit">Go to submissions</a>
-    </p>
+    <p class="btn-row">{{ c.button("Go to submissions", href="/submit") }}</p>
   </div>
 </section>
 

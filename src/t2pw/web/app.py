@@ -409,6 +409,10 @@ def _cross_site(request: Request) -> bool:
 def _routes(app: FastAPI) -> None:
     @app.get("/", response_class=HTMLResponse)
     def home(request: Request):
+        return _page(request, "landing.html", active_nav="")
+
+    @app.get("/submit", response_class=HTMLResponse)
+    def submit_form(request: Request):
         return _page(request, "submit.html", **_submit_ctx())
 
     @app.post("/submit")
@@ -503,7 +507,7 @@ def _routes(app: FastAPI) -> None:
 
     @app.get("/help", response_class=HTMLResponse)
     def help_page(request: Request):
-        return _page(request, "help.html", active_nav="help", **_limit_ctx())
+        return _page(request, "help.html", active_nav="tutorial", **_limit_ctx())
 
     @app.get("/about", response_class=HTMLResponse)
     def about(request: Request):

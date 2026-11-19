@@ -100,7 +100,8 @@ def site(tmp_path):
 
 
 def test_each_public_page_renders(site):
-    for path, needle in (("/", "Build a pathway"), ("/examples", "Examples"), ("/help", "Help"),
+    for path, needle in (("/", "Text to PathWhiz"), ("/submit", "Build a pathway"),
+                         ("/examples", "Examples"), ("/help", "Help"),
                          ("/about", "How to cite")):
         r = site.client.get(path)
         assert r.status_code == 200 and needle in r.text, path
@@ -111,7 +112,7 @@ def test_each_public_page_renders(site):
 
 
 def test_submit_form_controls(site):
-    html = site.client.get("/").text
+    html = site.client.get("/submit").text
     assert html.count('name="mode"') == 3
     assert re.search(r'name="consent"[^>]*\schecked', html), "PathBank consent must be on by default"
     assert 'type="email"' in html and 'name="email"' in html
@@ -206,7 +207,7 @@ def test_pathway_name_is_required_in_every_mode(site, mode, extra):
     r = site.submit(site.form(mode=mode, name_1="", **extra), files=files)
     assert r.status_code == 400 and "Enter the pathway name these papers describe" in r.text
     assert site.store()._db.execute("SELECT COUNT(*) FROM submissions").fetchone()[0] == 0
-    html = site.client.get("/").text
+    html = site.client.get("/submit").text
     assert re.search(r'name="name_1"[^>]*\srequired', html), "row 1 name must be marked required"
     assert "Required for every option" in html
 

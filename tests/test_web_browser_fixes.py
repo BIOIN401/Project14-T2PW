@@ -154,6 +154,6 @@ def test_non_pdf_and_empty_uploads_cost_no_rate_slot(tmp_path):
 
 
 def test_name_and_organism_inputs_carry_the_server_limit(tmp_path):
-    html = Site(tmp_path).client.get("/").text
+    html = Site(tmp_path).client.get("/submit").text
     for field in ("name_1", "organism_1"):
         assert re.search(rf'<input[^>]*name="{field}"[^>]*maxlength="200"', html), field
