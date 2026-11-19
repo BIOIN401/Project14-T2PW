@@ -17,6 +17,12 @@ PO choice: "this PC first"; a real lab host comes later (W9 proper).
 
 Start (Git bash, stays attached; from Claude Code use a background Bash with NO `&`):
 `"C:/Program Files/Git/bin/bash.exe" C:/t/t2pw-server-data/start.sh`.
+**Who owns it:** the server lives exactly as long as the shell that ran `start.sh`. Started from
+a subagent's background Bash, it was killed when the subagent returned (14:20, about 2.5 h after
+start): both wrappers died without writing their reports, no process survived, port freed, no
+heavy lock left. Start it from a session that stays open: the PO in a Git bash window, or the
+orchestrator's own background Bash.
+
 Stop: `"C:/Program Files/Git/bin/bash.exe" C:/t/t2pw-server-data/stop.sh`. It kills only the two
 PIDs `start.sh` recorded (with their trees). If that kill caught a job mid-run, it clears the heavy
 lock only when the lock names `W9-local-job` and that holder's PID is gone.
