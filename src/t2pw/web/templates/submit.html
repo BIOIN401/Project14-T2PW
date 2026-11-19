@@ -25,7 +25,13 @@
   </div>
 {% endmacro %}
 
+{% block scripts %}
+  <script src="/static/js/htmx.min.js" defer></script>
+  <script src="/static/js/submit.js" defer></script>
+{% endblock %}
+
 {% block content %}
+{%- set visible_upto = visible_upto | default(1) -%}
 <h1>Build a pathway from the literature</h1>
 <p class="lead">Give a pathway name, PubMed IDs or PDF files. T2PW reads the papers and returns a
 PathWhiz pathway file (PWML) for you to review. A run takes <strong>20 to 60 minutes</strong> for most pathways and is stopped after 90; you
@@ -37,7 +43,8 @@ get a private link to come back to, and can leave an email address to be told wh
 {% endcall %}
 {% endif %}
 
-<form class="submit" method="post" action="/submit" enctype="multipart/form-data">
+<form class="submit" method="post" action="/submit" enctype="multipart/form-data"
+      data-max-pathways="{{ max_items }}">
   {{ c.radio_group("mode", "What are you starting from?", modes, selected=mode,
         hint="One choice for the whole submission.") }}
 
@@ -45,20 +52,27 @@ get a private link to come back to, and can leave an email address to be told wh
 
   <div class="rows">
     {% for r in rows %}
-    {% if r.n == 1 %}
-    {% call c.card("Pathway 1", heading_level=2) %}{{ row_fields(r) }}{% endcall %}
-    {% else %}
-    <details class="disclosure"{% if r.open %} open{% endif %}>
-      <summary>Pathway {{ r.n }} (optional)</summary>
-      <div class="disclosure__body">
+    <section class="pathway-row" data-pathway="{{ r.n }}"{% if r.n > visible_upto %} hidden{% endif %}>
+      {% call c.card("Pathway " ~ r.n ~ ("" if r.n == 1 else " (optional)"), heading_level=2) %}
         {{ row_fields(r) }}
-        <p class="muted">To remove this pathway, clear its fields.</p>
-      </div>
-    </details>
-    {% endif %}
+        {% if r.n > 1 %}
+        <p class="pathway-row__actions">
+          <button type="button" class="btn btn--ghost btn--sm" data-remove-pathway>
+            Remove pathway {{ r.n }}
+          </button>
+        </p>
+        {% endif %}
+      {% endcall %}
+    </section>
     {% endfor %}
   </div>
-  <p class="muted">Up to {{ max_items }} pathways per submission. Rows left empty are ignored.</p>
+
+  <p class="btn-row pathway-add">
+    <button type="button" class="btn btn--secondary" data-add-pathway{% if visible_upto >= max_items %} hidden disabled{% endif %}>
+      Add another pathway
+    </button>
+  </p>
+  <p class="muted">Up to {{ max_items }} pathways per submission. Extra rows stay hidden until you add them; empty rows are ignored.</p>
 
   {{ c.checkbox_field("consent", "OK to add this pathway to PathBank", checked=consent,
         hint="If ticked, a finished and release-ready result may be passed to PathBank curators for review. Nothing is added to PathBank automatically.") }}

@@ -213,10 +213,20 @@ def _blank_rows(n: int = MAX_ITEMS_PER_SUBMISSION) -> List[Dict[str, Any]]:
     return [dict(n=i, name="", organism="", pmids="", errors={}, open=i == 1) for i in range(1, n + 1)]
 
 
+def _visible_upto(rows: List[Dict[str, Any]]) -> int:
+    """Highest pathway slot to show: 1, plus any later row that has data or errors."""
+    n = 1
+    for r in rows:
+        if r.get("open") or r.get("errors"):
+            n = max(n, int(r["n"]))
+    return n
+
+
 def _submit_ctx(**kw: Any) -> Dict[str, Any]:
     ctx = dict(mode="name", rows=_blank_rows(), consent=True, email="", email_error="",
                problems=[], modes=MODES, active_nav="submit", **_limit_ctx())
     ctx.update(kw)
+    ctx["visible_upto"] = _visible_upto(ctx["rows"])
     return ctx
 
 

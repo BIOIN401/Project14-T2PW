@@ -311,6 +311,10 @@ def test_no_script_no_external_urls():
         if name == "layout.html":
             # W6 carve-out: the page layout carries exactly one script, the vendored htmx tag.
             assert text.count("<script") == 1 and text.count(HTMX_TAG) == 1, name
+        elif name == "submit.html":
+            # Submit overrides scripts: vendored htmx plus the pathway-add helper.
+            assert text.count("<script") == 2
+            assert HTMX_TAG in text and 'src="/static/js/submit.js"' in text
         else:
             assert not re.search(r"<script", text, re.I), name
         if name == "landing.html":

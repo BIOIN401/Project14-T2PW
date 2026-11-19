@@ -120,7 +120,10 @@ def test_submit_form_controls(site):
     assert 'hx-get="/organisms"' in html
     assert html.count('name="pdfs_') == 5 and 'enctype="multipart/form-data"' in html
     assert "20 to 60 minutes" in html
-    assert html.count('<script') == 1 and 'src="/static/js/htmx.min.js"' in html
+    assert html.count('<script') == 2
+    assert 'src="/static/js/htmx.min.js"' in html and 'src="/static/js/submit.js"' in html
+    assert 'data-add-pathway' in html and html.count('data-pathway="1"') == 1
+    assert 'hidden' in html  # pathways 2–5 start collapsed
     assert "<datalist" in html and len(html) < 40_000, "the organism list must not be inlined"
 
 
@@ -436,7 +439,7 @@ def test_hostile_input_is_escaped_everywhere(site):
         assert html.count("<script") == (1 if "<html" in html else 0)
     redisplayed = site.submit(site.form(name_1=HOSTILE, organism_1=HOSTILE)).text
     assert "<script>alert" not in redisplayed and "<img src=x" not in redisplayed
-    assert redisplayed.count("<script") == 1
+    assert redisplayed.count("<script") == 2  # htmx + submit.js on the form page
     assert '"><img' not in redisplayed
     site.run_to(sid, dict(status="error", failure_kind="llm", message=HOSTILE, warnings=[HOSTILE]))
     result = site.client.get(f"/job/{sid}/0").text
@@ -482,13 +485,16 @@ def test_create_app_has_no_side_effects(tmp_path):
     assert not (tmp_path / "x").exists(), "create_app must not create the DB or work root"
 
 
-def test_vendored_htmx_is_the_only_script(site):
+def test_vendored_scripts_are_self_hosted(site):
     js = Path(__file__).resolve().parents[1] / "src" / "t2pw" / "web" / "static" / "js"
-    assert [p.name for p in js.iterdir()] == ["htmx.min.js"]
+    assert sorted(p.name for p in js.iterdir()) == ["htmx.min.js", "submit.js"]
     head = (js / "htmx.min.js").read_text(encoding="utf-8")[:600]
     assert "htmx 2.0.4" in head and "Zero-Clause BSD" in head
-    r = site.client.get("/static/js/htmx.min.js")
-    assert r.status_code == 200 and "javascript" in r.headers["content-type"]
+    for name in ("htmx.min.js", "submit.js"):
+        r = site.client.get(f"/static/js/{name}")
+        assert r.status_code == 200 and "javascript" in r.headers["content-type"], name
+    submit_js = (js / "submit.js").read_text(encoding="utf-8")
+    assert "data-add-pathway" in submit_js and "eval(" not in submit_js
 
 
 def test_templates_and_static_ship_as_package_data():

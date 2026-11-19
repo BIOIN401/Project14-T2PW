@@ -12,6 +12,11 @@
 .submit .choices { margin-bottom: var(--space-5); }
 .rows > * { margin-bottom: var(--space-4); }
 
+.pathway-row[hidden] { display: none; }
+.pathway-row__actions { margin: var(--space-4) 0 0; }
+.pathway-add { margin: 0 0 var(--space-4); }
+.pathway-add [data-add-pathway][hidden] { display: none; }
+
 /* Native disclosure (<details>) */
 .disclosure {
   border: 1px solid var(--color-border);

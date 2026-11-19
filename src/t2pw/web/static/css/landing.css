@@ -226,8 +226,9 @@ body.landing .nav-dropdown__menu a[aria-current="page"] {
 
 /* ── Intro ────────────────────────────────────────────────────────────── */
 .intro {
-  background: #ffffff;
+  background: var(--color-bg);
   padding: var(--space-8) 0;
+  color: var(--color-text);
 }
 
 .intro__inner {
@@ -236,14 +237,22 @@ body.landing .nav-dropdown__menu a[aria-current="page"] {
   background: var(--pb-cream);
   border: 1px solid var(--pb-cream-border);
   border-radius: var(--radius-md);
+  color: #1a1a1a;
 }
 
 .intro__inner h2 {
   color: var(--pb-magenta-deep);
 }
 
+.intro__inner p {
+  color: #1a1a1a;
+  max-width: 60ch;
+}
+
 .intro__lead {
   font-size: var(--text-lg);
+  line-height: 1.6;
+  color: #1a1a1a;
   max-width: 60ch;
 }
 
@@ -259,9 +268,9 @@ body.landing .intro .btn--primary:hover {
 
 /* ── Funders (PathBank-style footer) ──────────────────────────────────── */
 body.landing .site-footer {
-  background: #ffffff;
-  border-top: 1px solid #e5e5e5;
-  color: #555555;
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text);
   padding-top: var(--space-6);
   padding-bottom: var(--space-5);
 }
@@ -288,7 +297,7 @@ body.landing .site-footer .container {
   max-width: none;
   font-size: var(--text-sm);
   line-height: 1.55;
-  color: #555555;
+  color: var(--color-text);
 }
 
 .funders__copy a {
@@ -337,6 +346,68 @@ body.landing .site-footer .container {
 
 .funder-logo:hover {
   opacity: 0.88;
+}
+
+/* Dark theme: keep PathBank accents, swap panel/text onto site tokens.
+   Follows system preference or html[data-theme="dark"] (same as the rest of the site). */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) body.landing .intro__inner {
+    background: var(--color-surface-muted);
+    border-color: var(--color-border);
+    color: var(--color-text);
+  }
+
+  :root:not([data-theme="light"]) body.landing .intro__inner p,
+  :root:not([data-theme="light"]) body.landing .intro__lead {
+    color: var(--color-text);
+  }
+
+  :root:not([data-theme="light"]) body.landing .intro__inner h2 {
+    color: #e2a8d0;
+  }
+
+  :root:not([data-theme="light"]) body.landing .funders__copy a {
+    color: var(--color-primary);
+  }
+
+  :root:not([data-theme="light"]) body.landing .funders__copy a:hover {
+    color: var(--color-primary-hover);
+  }
+
+  :root:not([data-theme="light"]) body.landing .funder-logo img {
+    background: #ffffff;
+    border-radius: var(--radius-sm);
+    padding: var(--space-2);
+  }
+}
+
+[data-theme="dark"] body.landing .intro__inner {
+  background: var(--color-surface-muted);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+[data-theme="dark"] body.landing .intro__inner p,
+[data-theme="dark"] body.landing .intro__lead {
+  color: var(--color-text);
+}
+
+[data-theme="dark"] body.landing .intro__inner h2 {
+  color: #e2a8d0;
+}
+
+[data-theme="dark"] body.landing .funders__copy a {
+  color: var(--color-primary);
+}
+
+[data-theme="dark"] body.landing .funders__copy a:hover {
+  color: var(--color-primary-hover);
+}
+
+[data-theme="dark"] body.landing .funder-logo img {
+  background: #ffffff;
+  border-radius: var(--radius-sm);
+  padding: var(--space-2);
 }
 
 @media (prefers-reduced-motion: reduce) {
