@@ -191,7 +191,7 @@ def test_two_species_skips_the_lookup() -> None:
 
 def test_names_that_are_not_one_token_symbols_are_not_queried() -> None:
     fake = Fake(RYHB)
-    rows = [{"name": "PORA promoter"}, {"name": "ALAD1/HEMB1"}, {"name": "-35 box"}, {"name": "ab"}]
+    rows = [{"name": "PORA region"}, {"name": "ALAD1/HEMB1"}, {"name": "-35 box"}, {"name": "ab"}]
     p = P(*rows)
     run(p, fake, text="nothing")
     assert fake.calls == [] and [r["nucleotide_type_unknown_lookup"] for r in p["entities"]["nucleic_acids"]] == ["no_symbol_name"] * 4

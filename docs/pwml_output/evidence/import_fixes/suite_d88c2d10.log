@@ -1,0 +1,82 @@
+== smoke
+........................................................................ [ 84%]
+........................................................................ [ 98%]
+.......                                                                  [100%]
+511 passed in 44.49s
+EXIT_smoke=0
+== g-batch
+T2PW: C:\t\pwml-fix\src\t2pw\__init__.py
+..                                                                       [100%]
+2 passed in 5.96s
+EXIT_g-batch=0
+== g-c011
+T2PW: C:\t\pwml-fix\src\t2pw\__init__.py
+........                                                                 [100%]
+8 passed in 41.79s
+EXIT_g-c011=0
+== g-stage8
+T2PW: C:\t\pwml-fix\src\t2pw\__init__.py
+....                                                                     [100%]
+4 passed in 0.34s
+EXIT_g-stage8=0
+== g-quar
+T2PW: C:\t\pwml-fix\src\t2pw\__init__.py
+........................                                                 [100%]
+24 passed in 35.59s
+EXIT_g-quar=0
+== eq-run
+T2PW: C:\t\pwml-fix\src\t2pw\__init__.py
+........                                                                 [100%]
+8 passed in 60.15s (0:01:00)
+EXIT_eq-run=0
+== eq-app
+T2PW: C:\t\pwml-fix\src\t2pw\__init__.py
+..............                                                           [100%]
+14 passed in 56.59s
+EXIT_eq-app=0
+== eq-default
+T2PW: C:\t\pwml-fix\src\t2pw\__init__.py
+......                                                                   [100%]
+6 passed in 29.08s
+EXIT_eq-default=0
+== vision
+........................................................................ [ 60%]
+........................................................................ [ 80%]
+.....................................................................s   [100%]
+357 passed, 1 skipped in 10.41s
+EXIT_vision=0
+== web
+T2PW: C:\t\pwml-fix\src\t2pw\__init__.py
+........................................................................ [ 86%]
+...........                                                              [100%]
+83 passed in 5.09s
+EXIT_web=0
+SUITE_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 399da4c69eae957ac920cf25e8401e6bfbfe2de5  [git, worktree dirty=True]
+label                   : suite-d88c2d10
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/vis-runs/suite2.sh C:/t/pwml-fix pwmlfix-d88c2d10
+cwd                     : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 38224 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 5400 s
+duration                : 299.43 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 80  48876:bash.exe, 45500:python.exe, 48652:bash.exe, 49112:python.exe, 48788:python.exe, 49000:python.exe, 43136:python.exe, 48348:python.exe, 11288:python.exe, 48640:python.exe, 49204:python.exe, 49224:python.exe, 47860:bash.exe, 49560:python.exe, 49672:python.exe, 38096:python.exe, 42788:python.exe, 46240:bash.exe, 49156:git.exe, 48460:git.exe, 49416:git.exe, 47728:python.exe, 50048:python.exe, 1540:python.exe, 48440:python.exe, 50132:git.exe, 34576:python.exe, 49384:python.exe, 41860:python.exe, 49860:python.exe, 32676:python.exe, 49020:python.exe, 45224:python.exe, 45240:python.exe, 30648:python.exe, 48588:python.exe, 8884:python.exe, 49540:python.exe, 43140:python.exe, 45752:python.exe, 48752:bash.exe, 10064:python.exe, 42812:python.exe, 49568:bash.exe, 7860:python.exe, 49920:python.exe, 50192:bash.exe, 36088:python.exe, 43128:python.exe, 14680:bash.exe, 43268:tail.exe, 50384:python.exe, 51056:python.exe, 51308:bash.exe, 50876:tail.exe, 52572:bash.exe, 53064:bash.exe, 54448:python.exe, 54676:python.exe, 55692:bash.exe, 52080:bash.exe, 55868:bash.exe, 55940:python.exe, 55992:tail.exe, 55996:python.exe, 50424:python.exe, 51932:python.exe, 16360:python.exe, 55616:python.exe, 48000:python.exe, 56164:bash.exe, 56280:python.exe, 23636:python.exe, 51604:python.exe, 9144:python.exe, 54716:python.exe, 55392:python.exe, 55524:python.exe, 45928:python.exe, 56080:python.exe
+descendants terminated  : 80  1540, 7860, 8884, 9144, 10064, 11288, 14680, 16360, 23636, 30648, 32676, 34576, 36088, 38096, 41860, 42788, 42812, 43128, 43136, 43140, 43268, 45224, 45240, 45500, 45752, 45928, 46240, 47728, 47860, 48000, 48348, 48440, 48460, 48588, 48640, 48652, 48752, 48788, 48876, 49000, 49020, 49112, 49156, 49204, 49224, 49384, 49416, 49540, 49560, 49568, 49672, 49860, 49920, 50048, 50132, 50192, 50384, 50424, 50876, 51056, 51308, 51604, 51932, 52080, 52572, 53064, 54448, 54676, 54716, 55392, 55524, 55616, 55692, 55868, 55940, 55992, 55996, 56080, 56164, 56280
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/pwml-fix-work/logs/suite2.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=pwml-fix  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
+BW_EXIT=0

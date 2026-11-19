@@ -798,12 +798,26 @@ def _omissions(
         entries.append({**entry, "ki": COMPOUND_MERGE_KI, "merged_duplicate": True})
 
     processes = _dict(payload.get("processes"))
+    # pwml/import-fixes: transports the IR withheld from the PWML (a side naming no biological state), by payload index.
+    held = {int(h["payload_index"]): h for h in map(_dict, _list(_dict(ir).get("withheld_transports")))
+            if isinstance(h.get("payload_index"), int)} if isinstance(ir, dict) else {}
     for bucket, label in (("reactions", "Reaction"), ("transports", "Transport")):
         rows = [r for r in _list(processes.get(bucket)) if isinstance(r, dict)]
         if no_pwml:
             group, message = "no_pwml", f"no PWML written: {no_pwml}"
         elif _same_ir_rows(ir, bucket, rows, label):
             continue  # the writer draws every IR reaction and transport row
+        elif bucket == "transports" and held and _same_ir_rows(
+            ir, bucket, [r for i, r in enumerate(_list(processes.get(bucket))) if isinstance(r, dict) and i not in held], label
+        ):
+            for index, h in sorted(held.items()):
+                row = _dict(_list(processes.get(bucket))[index]) if index < len(_list(processes.get(bucket))) else {}
+                sides = "; ".join(f"{_show(f.get('side'))} {_show(f.get('biological_state'))}"
+                                  for f in map(_dict, _list(h.get("failed_sides"))))
+                entries.append(_entry("transport", row.get("name") or h.get("name"), f"final payload /processes/{bucket}/{index}",
+                                      _process_text("transport", row), ir_source, _text(h.get("reason")),
+                                      f"withheld -- a side names no biological state ({sides})", group="ir"))
+            continue
         elif not isinstance(ir, dict):
             group, message = "not_recorded", f"{NOT_RECORDED} (no {PWML_IR_FILENAME}: no PWML IR was built for this run)"
         else:
@@ -869,6 +883,13 @@ def _omissions(
         for e in map(_dict, _list(_dict(removed).get("removed_entities")))
         for a in map(_dict, _list(_dict(e.get("detail")).get("actor_removed_from")))
     ] if isinstance(removed, dict) else []
+    # pwml/import-fixes: a transporter the IR withheld (its state names nothing); the transport is drawn (D-114 AMENDMENT 1 s2).
+    actors += [
+        {"process": _show(h.get("transport")), "where": f"final payload {_text(h.get('pointer'))}", "kind": "transport",
+         "actor": _show(h.get("transporter")), "slots": "transporters", "reason": _show(h.get("reason")),
+         "ki": known_issue_id(h.get("reason")), "gate": "pwml_ir", "decision": "D-114 AMENDMENT 1 s2 (withheld by the PWML IR)", "kept": None}
+        for h in map(_dict, _list(_dict(ir).get("withheld_transporters")))
+    ] if isinstance(ir, dict) and not no_pwml else []
     # ORCH-795 follow-up (ORCH-792): Stage 6 records its protein removals in the payload's ``quarantined_proteins``
     # (KI-007 actor drop, wrapper fold, orphan cleanup). Each is listed once; one removed_entity_report already lists
     # (same name, same reason) is not repeated. Entities only: no coverage count moves.

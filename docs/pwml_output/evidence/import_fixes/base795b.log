@@ -1,0 +1,46 @@
+T2PW: C:\t\pwml-fix-work\base\src\t2pw\__init__.py
+F..                                                                      [100%]
+================================== FAILURES ===================================
+__ test_g9_an_unsigned_interaction_omitted_before_the_ir_leaves_the_headline __
+
+    def test_g9_an_unsigned_interaction_omitted_before_the_ir_leaves_the_headline():
+        report = build_report(_artifacts("binds"))
+        cov = report["pwml_coverage"]
+>       assert (cov["drawn"], cov["total"], cov["by_design_withheld"]) == (1, 2, 1)
+E       assert (1, 2, 0) == (1, 2, 1)
+E         
+E         At index 2 diff: 0 != 1
+E         Use -v to get more diff
+
+tests\test_orch795_headline_unsigned.py:29: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_orch795_headline_unsigned.py::test_g9_an_unsigned_interaction_omitted_before_the_ir_leaves_the_headline
+1 failed, 2 passed in 0.21s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 399da4c69eae957ac920cf25e8401e6bfbfe2de5  [git, worktree dirty=True]
+label                   : base-orch795b
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe C:/t/pwml-fix-work/base/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/pwml-fix-work/base -q --basetemp=C:/t/pwml-fix-work/bt/f7/bt tests/test_orch795_headline_unsigned.py
+cwd                     : C:\t\pwml-fix-work\base
+root PID / process group: 581416 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 0.89 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  591828:python.exe
+descendants terminated  : 1  591828
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/pwml-fix-work/logs/base795b.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=pwml-fix  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================
+BW_EXIT=1
