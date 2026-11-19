@@ -538,9 +538,9 @@ def layout_score(m: Dict[str, Any]) -> float:
     """One number for ranking candidate drawings of the SAME pathway (lower is better). Weights are judgement calls,
     tuned so that one crossing costs about as much as 1.5 extra long edges; never compare scores across pathways."""
     a = m.get("aspect_ratio") or 1.0
-    shape = 10 * max(0.0, a - 2.5) + 4 * max(0.0, 1 / a - 1.25)
+    shape = 10 * max(0.0, a - 2.5) + 20 * max(0.0, a - 3.5) + 4 * max(0.0, 1 / a - 1.25)  # wider than 4:1 is unreadable at page width
     return round(3 * m["crossings"] + 4 * m["node_edge_overlaps"] + 2 * m["label_collisions"] + m["edges_through_labels"]
-                 + 2 * m["long_edges"] + m["edge_length"] / 500 + 0.5 * m["non_straight"] + 6 * m["empty_bands"]
+                 + 4 * m["long_edges"] + m["edge_length"] / 500 + 0.5 * m["non_straight"] + 6 * m["empty_bands"]
                  + 1.5 * m["sparse_bands"] + 2 * m["duplicate_names"] + 0.25 * m["repeated_captions"]
                  + 10 * m["node_overlaps"] + shape, 2)
 

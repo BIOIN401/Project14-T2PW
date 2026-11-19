@@ -54,7 +54,7 @@ def test_reaction_transport_fixture_counts_and_pin():
     assert {g.get("data-ent").split(":")[0] for g in drawn} >= {"compound", "protein_complex"}
     assert dg.selfcheck(ir, svg)["failures"] == []
     if "segoeui" in Path(str(getattr(dg._R._FONT, "path", ""))).name.lower():  # layout depends on the measuring font
-        assert hashlib.sha256(svg.encode()).hexdigest() == "f4a4de0dbcbc9d8b14b1a77e1b09918a05318f9b0a265d113b0e55daa135805e"
+        assert hashlib.sha256(svg.encode()).hexdigest() == "e6d9bc348ea6ed7dfa955c546c65c95efe99a0cf0ab325f278367eed32568656"
 
 
 def test_bad_font_env_falls_through(tmp_path):
@@ -75,3 +75,32 @@ def test_html_is_self_contained():
     html = dg.render_html(ir, title="T <x>")
     assert html.startswith("<!doctype html>") and "<title>T &lt;x&gt;</title>" in html
     assert re.search(r"<svg [^>]*class=\"dg\"", html) and "src=" not in html and "http://" not in html.replace("http://www.w3.org/2000/svg", "")
+
+
+# --------------------------------------------------------------------------- DRAW-RENDERER
+@pytest.mark.parametrize("path", FIXTURES, ids=lambda p: p.stem)
+def test_every_style_order_and_wrap_draws_everything(path):
+    ir = _ir(path)
+    for style in ("bands", "cell", "spine"):
+        for tiers in (1, 2, 3):
+            for order in ("flow", "anat"):
+                svg = dg._R.render(ir, style, "b", tiers=tiers, order=order)[0]
+                assert dg.selfcheck(ir, svg)["failures"] == [], (style, tiers, order)
+
+
+def test_display_grouping_keeps_names_and_types_membranes():
+    R = dg._R
+    assert R.name_tokens("periplasmic leaflet of the inner membrane") == R.name_tokens("inner membrane periplasmic leaflet")
+    fam = R.display_family
+    assert fam("periplasmic leaflet of inner membrane", "membrane") == fam("inner membrane", "membrane") != fam("outer membrane", "membrane")
+    assert fam("intracellular", "organelle") == fam("cytoplasm", "cytosol") and fam("nucleus", "organelle") != fam("cytosol", "cytosol")
+    assert R.membrane_type("mitochondrial matrix") in R.DOUBLE and R.membrane_type("Golgi apparatus") == "mt-golgi"
+    assert R.membrane_type("thylakoid lumen") not in R.DOUBLE and R.membrane_type("cytosol") == ""
+    assert R.is_currency("Hydrogen Ion") and R.is_currency(" water ") and not R.is_currency("pyruvate")
+
+
+@pytest.mark.parametrize("path", FIXTURES, ids=lambda p: p.stem)
+def test_line_bridges_only_where_lines_cross(path):
+    from t2pw.vision.checks import layout_metrics as LM
+    m = LM.svg_layout_metrics(dg.render_svg(_ir(path)))
+    assert m["hops"] <= m["crossings"] and m["node_overlaps"] == 0

@@ -15,10 +15,30 @@ def _css():
     return resources.files(__package__).joinpath("diagram.css").read_text(encoding="utf-8")
 
 
+STYLES = ("bands", "cell", "spine")
+
+
 def _draw(ir, style=None, ident="b"):
-    style = style or _R.pick_style(_R.metrics(ir))[0]
-    svg, m, lay = _R.render(ir, style, ident)
-    return style, svg, m, lay
+    """Best of several (DRAW-RENDERER): every style (or the one asked for), unwrapped and wrapped into the tier counts
+    that bring the drawing near 2.5:1, scored by the readability gate; the lowest score wins (ties: the old auto-pick
+    first). Deterministic: same IR, same drawing."""
+    from t2pw.vision.checks.layout_metrics import layout_score, svg_layout_metrics
+    first = _R.pick_style(_R.metrics(ir))[0]
+    styles = [style] if style else [first] + [s for s in STYLES if s != first]
+    best = None
+    for s, order in [(s, o) for s in styles for o in (("flow", "anat") if s == "bands" else ("flow",))]:
+        tiers = [1]
+        while tiers:
+            t = tiers.pop(0)
+            svg, m, lay = _R.render(ir, s, ident, tiers=t, order=order)
+            q = svg_layout_metrics(svg)
+            sc = layout_score(q)
+            if best is None or sc < best[0]:
+                best = (sc, s, svg, m, lay)
+            if t == 1 and s != "cell" and (q["aspect_ratio"] or 0) > 2.5:
+                r = (q["aspect_ratio"] / 2.5) ** 0.5
+                tiers = sorted({min(6, max(2, int(r))), min(6, max(2, int(r) + 1))})
+    return best[1:]
 
 
 def render_svg(ir: dict, *, style: str | None = None, ident: str = "b") -> str:
