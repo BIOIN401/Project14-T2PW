@@ -317,6 +317,26 @@ def _bridged(row: Mapping[str, Any], g: Mapping[str, Any], ctx: _Ctx) -> Dict[st
     return out
 
 
+# Scorer-bridge aliases (PO ruling, 2026-11-18, chlorophyll PW766996). eval_v2's strict matcher refuses these four
+# locant/abbreviation variants on purpose; the PO accepted them for the full-gold bench only. Exact strict_key
+# pairs, both directions, nothing else (no fuzzy matching, no congener credit). Gold files are not edited.
+_ALIAS_PAIRS = (
+    ("Mg-Protoporphyrin IX 13-monomethyl ester", "Mg-protoporphyrin IX monomethyl ester"),
+    ("3,8-divinyl protochlorophyllide a", "3,8-divinyl-protochlorophyllide"),
+    ("Chlorophyllide a", "Chlide a"),
+    ("Mg-protoporphyrin IX", "Mg-Proto IX"),
+)
+_ALIAS: Dict[str, Tuple[str, ...]] = {}
+for _a, _b in _ALIAS_PAIRS:
+    _ALIAS.setdefault(M.strict_key(_a), []).append(_b)
+    _ALIAS.setdefault(M.strict_key(_b), []).append(_a)
+
+
+def _with_aliases(t: Mapping[str, Any]) -> List[str]:
+    extra = [x for n in (t["name"], *t["aliases"]) for x in _ALIAS.get(M.strict_key(n), ())]
+    return [*t["aliases"], *extra]
+
+
 def scoring_terms(terms: Sequence[Mapping[str, Any]], demote_currency: bool) -> Tuple[Term, ...]:
     """Gold terms of one reaction side as eval_v2 ``Term``s. With ``demote_currency`` (full gold), a
     term whose name or alias is a ubiquitous currency metabolite (payload.is_currency: water, H+, ATP,
@@ -329,7 +349,7 @@ def scoring_terms(terms: Sequence[Mapping[str, Any]], demote_currency: bool) -> 
              else "defining" for t in terms]
     if "defining" not in roles:
         roles = ["defining"] * len(terms)
-    return tuple(Term(t["name"], tuple(t["aliases"]), r) for t, r in zip(terms, roles))
+    return tuple(Term(t["name"], tuple(_with_aliases(t) if demote_currency else t["aliases"]), r) for t, r in zip(terms, roles))
 
 
 def _m_reaction(g, objs, row, ctx) -> bool:

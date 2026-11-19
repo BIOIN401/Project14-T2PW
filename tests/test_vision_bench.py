@@ -354,3 +354,26 @@ def test_benchmark_design_file_lists_existing_gold_and_runs_nothing_unlisted():
     full = d["sets"]["full"]["cases"]
     assert 3 <= len(full) <= 6 and all(c["pw_id"].startswith("PW") for c in full)
     assert d["metrics"]["types"] == list(TYPES)
+
+
+@pytest.mark.parametrize("curated,predicted,congener", [
+    ("Mg-Protoporphyrin IX 13-monomethyl ester", "Mg-protoporphyrin IX monomethyl ester", "Mg-protoporphyrin IX 17-monomethyl ester"),
+    ("3,8-divinyl protochlorophyllide a", "3,8-divinyl-protochlorophyllide", "3-vinyl protochlorophyllide"),
+    ("Chlorophyllide a", "Chlide a", "Chlide b"),
+    ("Mg-protoporphyrin IX", "Mg-Proto IX", "Mg-Proto X"),
+])
+def test_chlorophyll_scorer_bridge_aliases_match_their_partner_only(curated, predicted, congener):
+    """PO ruling 2026-11-18 (PW766996): four exact name pairs, full gold only; a congener still misses."""
+    def run(gold_name, pred_name, kind="full"):
+        gold = {"id": "PW9", "kind": kind, "complete": {}, "off_scope_reactions": [], "enzymes": [], "transports": [],
+                "interactions": [], "compartments": [],
+                "reactions": [{"id": "R1", "label": "", "reversible": False, "enzyme": None, "catalysts": [],
+                               "inputs": [{"name": gold_name, "aliases": [], "ids": [], "role": "defining"}],
+                               "outputs": [{"name": "Zed", "aliases": [], "ids": [], "role": "defining"}]}]}
+        b = {"entities": {"compounds": [], "proteins": []},
+             "processes": {"reactions": [rx("r", [pred_name], ["Zed"], [], evidence="x")], "transports": [], "interactions": []}}
+        return score_view(build_big_payload(b), FULL, gold)["types"]["reactions"]["recalled"]
+
+    assert run(curated, predicted) == 1 and run(predicted, curated) == 1   # both directions
+    assert run(curated, congener) == 0 and run(congener, predicted) == 0   # no congener credit
+    assert run(curated, predicted, kind="paper") == 0                      # paper gold is untouched

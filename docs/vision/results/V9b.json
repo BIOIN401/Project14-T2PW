@@ -1,0 +1,40 @@
+{
+ "lane": "V9b",
+ "built": "Four chlorophyll scorer-bridge aliases in src/t2pw/vision/bench.py (_ALIAS_PAIRS, _with_aliases), applied in scoring_terms for full gold only. Exact strict_key pairs, both directions: Mg-Protoporphyrin IX 13-monomethyl ester <-> Mg-protoporphyrin IX monomethyl ester; 3,8-divinyl protochlorophyllide a <-> 3,8-divinyl-protochlorophyllide; Chlorophyllide a <-> Chlide a; Mg-protoporphyrin IX <-> Mg-Proto IX. Source: PO ruling 2026-11-18, chlorophyll PW766996. Paper gold and all gold files untouched.",
+ "files": ["src/t2pw/vision/bench.py (+21/-1)", "tests/test_vision_bench.py (+23)"],
+ "tests": [["unit tests/test_vision_bench.py", "32 passed, survivors 0", "C:/t/vis-runs/logs/V9b-unit.log"]],
+ "proofs": {
+  "proof": "docs/vision/evidence/V9b/proof.json; log C:/t/vis-runs/logs/V9b-proof.log; BW_EXIT=0, 0 survivors; static review APPROVE (reported by the sub-orchestrator)",
+  "paper_set_parity": "DEFAULT equals eval_v2 score_leg on all legs: True",
+  "chlorophyll_reactions_default_scope": {
+   "2026-10-22_1231": "7/14 before, 7/14 after (unchanged)",
+   "2026-10-22_2301": "8/14 before, 9/14 after (+1: PW_R2146852)"},
+  "other_full_set_pathways": "unchanged",
+  "gold_copies_note": "The proof reads cached gold from its out dir. docs/vision/evidence/V9b/gold_PW*.json are copies of docs/vision/evidence/V9/gold_PW*.json, made only so the offline run could find them; they are not committed here.",
+  "per_run_trace": "A scratch script (C:/t/vis-runs/scratch/V9b/trace.py) re-scored both runs with the alias table emptied and filled, per curated reaction; output docs/vision/evidence/V9b/alias_trace.json (left uncommitted on instruction)."},
+ "alias_trace": {
+  "2026-10-22_2301": {
+   "matched_by_alias": "PW_R2146852 (Mg-Protoporphyrin IX 13-monomethyl ester + NADPH + O2 + H+ -> 3,8-divinyl protochlorophyllide a + NADP + H2O). The predicted row 'Mg-protoporphyrin IX monomethyl ester' -> '3,8-divinyl-protochlorophyllide' matches through alias pairs 1 (input) and 2 (output). Only this row gained; without aliases it missed on both names.",
+   "unmatched": {
+    "PW_R2146849 Protoporphyrin IX + Fe2+ -> Heme": "never predicted (no heme row); real extraction miss",
+    "PW_R2146851 Mg-protoporphyrin IX + SAM -> SAH + 13-monomethyl ester": "closest row is 'Mg-Proto IX' + 'S-adenosyl L-methionine' -> 'Mg-protoporphyrin IX monomethyl ester'. Alias 4 (Mg-Proto IX) and alias 1 (ester) would bridge those two names, but the SAM name 'S-adenosyl L-methionine' has a different strict key from 'S-Adenosylmethionine' (not in the 4 pairs) and the predicted row has no S-adenosylhomocysteine output",
+    "PW_R2146853 divinyl protochlorophyllide a + H+ + NADPH -> NADP + Chlorophyllide a": "predicted rows are 'divinyl-protochlorophyllide' -> '3,8-divinyl-chlorophyllide' (output has no 'a', not alias 3), 'Pchlide' -> 'Chlide a' (Pchlide is not in any pair) and 'Chlide a' -> 'Chlide b' (congener, correctly refused)",
+    "PW_R2146854 Chlorophyllide a + phytyl diphosphate + H+ -> chlorophyll a + PPi": "no row with these substrates. Nearest are '3-vinyl chlorophyllide a' + geranylgeraniol -> chlorophyll a (monovinyl congener and a different prenyl donor, not aliased) and 'geranylgeranyl pyrophosphate' -> 'phytyl pyrophosphate'",
+    "PW_R2146856 Chlorophyll a + H+ -> pheophytin a + Mg": "never predicted (no pheophytin); real extraction miss"},
+   "matched_without_alias": "PW_R2146839-44, 850 and 855 (chlorophyll a -> chlorophyll b)"},
+  "2026-10-22_1231": {
+   "matched_by_alias": "none",
+   "unmatched": {
+    "PW_R2146849": "closest row is 'protoporphyrin IX' + 'Fe2' -> 'protoheme'; 'protoheme' vs 'Heme' is not an aliased pair",
+    "PW_R2146851": "closest row is 'Mg-Proto IX' + SAM -> 'Mg-Proto IX monomethyl ester'; the abbreviated ester name is not in the table (the table holds only 'Mg-protoporphyrin IX monomethyl ester'), the SAM name differs, and there is no SAH output",
+    "PW_R2146852": "closest row is 'Mg-Proto IX monomethyl ester' -> '3,8-divinyl-protochlorophyllide'; the output bridges by alias 2 but the input uses the abbreviated ester name, which is not in the table",
+    "PW_R2146853": "rows 'divinyl-protochlorophyllide' -> '3,8-divinyl-chlorophyllide' (no 'a') and 'Chlide a' -> 'Chlide b' (congener)",
+    "PW_R2146854": "only 'Chlide a' -> 'Chlide b' (congener); the phytylation step was not predicted",
+    "PW_R2146855 chlorophyll a -> chlorophyll b": "no such row in this run",
+    "PW_R2146856": "never predicted (no pheophytin)"}},
+  "summary": "Of the four pairs, aliases 1 and 2 produced the one gain (run 2301, PW_R2146852); aliases 3 and 4 matched no reaction in either run, because the rows that carry 'Chlide a' / 'Mg-Proto IX' also differ in another participant or are congener steps. Remaining misses are other participant names the PO ruling did not cover (Pchlide, 'Mg-Proto IX monomethyl ester', SAM, protoheme, 'chlorophyllide' without 'a'), congeners, or steps never predicted."},
+ "dead_ends": ["'3-vinyl chlorophyllide a' is not aliased: it is the monovinyl congener, outside the 4 pairs the PO ruled."],
+ "open_questions": [
+  "Alias applies to reaction terms only (scoring_terms), not transports/interactions/enzymes (_hit); none of the 4 variants occur there in the examined run.",
+  "Further abbreviations seen in the runs (Pchlide, 'Mg-Proto IX monomethyl ester', 'S-adenosyl L-methionine', protoheme) would each be a new PO-ruled pair; not added."]
+}
