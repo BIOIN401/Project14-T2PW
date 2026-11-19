@@ -1,0 +1,502 @@
+{
+ "run": "runs_verify/2026-08-21_2014/papers/PMC12312563/strict",
+ "input_paper": "PMC12312563",
+ "seconds": 126.8,
+ "llm": {
+  "calls_counted": 6,
+  "token_stats": {
+   "prompt_tokens": 6115,
+   "completion_tokens": 985,
+   "total_tokens": 7100,
+   "api_calls": 6,
+   "estimated_cost_usd": 0.001029
+  }
+ },
+ "report": {
+  "budget_s": 300.0,
+  "max_papers": 5,
+  "max_llm_calls": 12,
+  "organism": "Listeria monocytogenes",
+  "frontier": {
+   "substrates": [
+    "Oxoglutaric acid",
+    "isochorismate"
+   ],
+   "products": [
+    "SEPHCHC"
+   ],
+   "enzymes": [
+    "MenD complex"
+   ]
+  },
+  "input_paper": {
+   "pmid": null,
+   "pmcid": "PMC12312563",
+   "doi": null,
+   "title": null
+  },
+  "queries": [
+   {
+    "query": "\"Oxoglutaric acid\" AND \"Listeria monocytogenes\"",
+    "status": "ok",
+    "hits": 8
+   },
+   {
+    "query": "\"SEPHCHC\" AND \"Listeria monocytogenes\"",
+    "status": "ok",
+    "hits": 6
+   },
+   {
+    "query": "\"isochorismate\" AND \"Listeria monocytogenes\"",
+    "status": "ok",
+    "hits": 10
+   }
+  ],
+  "candidates": [
+   {
+    "id": "PMC11822176",
+    "title": "Black pepper essential oil nanoemulsion inhibits &lt;i&gt;Colletotrichum gloeosporioides&lt;/i&gt; by regulating respiratory metabolism.",
+    "journal": "Food science and biotechnology",
+    "year": "2025",
+    "source": "MED",
+    "organisms": [],
+    "organism_match": "unknown",
+    "decision": "kept",
+    "reason": null
+   },
+   {
+    "id": "PMC12312563",
+    "title": "Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo captured intermediate I-bound forms.",
+    "journal": "Acta crystallographica. Section F, Structural biology communications",
+    "year": "2025",
+    "source": "MED",
+    "organisms": [],
+    "organism_match": null,
+    "decision": "dropped",
+    "reason": "input_paper"
+   },
+   {
+    "id": "PMC13082233",
+    "title": "Phylum-wide propionate degradation and its potential connection to poly-gamma-glutamate biosynthesis in Candidatus Cloacimonadota phylum.",
+    "journal": "The ISME journal",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [],
+    "organism_match": "unknown",
+    "decision": "kept",
+    "reason": null
+   },
+   {
+    "id": "PMC13218381",
+    "title": "Whole-genome prediction of bacterial pathogenic capacity on novel bacteria using protein language models with PathogenFinder2.",
+    "journal": "Bioinformatics (Oxford, England)",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [
+     "Homo sapiens"
+    ],
+    "organism_match": "mismatch",
+    "decision": "dropped",
+    "reason": "abstract_names_other_organism"
+   },
+   {
+    "id": "PMID:40203959",
+    "title": "Antilisterial activity of Thymus vulgaris essential oil: In vitro, in situ, and in silico investigations.",
+    "journal": "Microbial pathogenesis",
+    "year": "2025",
+    "source": "MED",
+    "organisms": [
+     "Listeria monocytogenes",
+     "Gallus gallus"
+    ],
+    "organism_match": "match",
+    "decision": "kept",
+    "reason": null
+   },
+   {
+    "id": "PMC13093933",
+    "title": "Proteomics and tracer metabolomics link GAPDH ISGylation to glycolytic control.",
+    "journal": "Genome biology",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [],
+    "organism_match": "unknown",
+    "decision": "kept",
+    "reason": null
+   },
+   {
+    "id": "PMC11619455",
+    "title": "Sirtuin-dependent reversible lysine acetylation of the &lt;i&gt;o&lt;/i&gt;-succinylbenzoyl-coenzyme A synthetase of &lt;i&gt;Bacillus subtilis&lt;/i&gt;.",
+    "journal": "Microbiology spectrum",
+    "year": "2024",
+    "source": "MED",
+    "organisms": [
+     "Escherichia coli",
+     "Bacillus subtilis"
+    ],
+    "organism_match": "mismatch",
+    "decision": "dropped",
+    "reason": "abstract_names_other_organism"
+   },
+   {
+    "id": null,
+    "title": "Antilisterial activity of Thymus vulgaris essential oil: In vitro, in situ, and in silico investigations",
+    "journal": "Microbial Pathogenesis",
+    "year": "2025",
+    "source": "AGR",
+    "organisms": [],
+    "organism_match": null,
+    "decision": "dropped",
+    "reason": "no_identifier"
+   },
+   {
+    "id": "PMC11051988",
+    "title": "An Untargeted Metabolomic Analysis of <i>Lacticaseibacillus</i> (<i>L</i>.) <i>rhamnosus</i>, <i>Lactobacillus</i> (<i>L</i>.) <i>acidophilus</i>, <i>Lactiplantibacillus</i> (<i>L</i>.) <i>plantarum</i> and <i>Limosilactobacillus</i> (<i>L</i>.) <i>reuteri</i> Reveals an Upregulated Production of Inosine from <i>L. rhamnosus</i>.",
+    "journal": "Microorganisms",
+    "year": "2024",
+    "source": "MED",
+    "organisms": [
+     "Lactobacillus",
+     "Candida pathogenic",
+     "Candida virulence"
+    ],
+    "organism_match": "mismatch",
+    "decision": "dropped",
+    "reason": "abstract_names_other_organism"
+   },
+   {
+    "id": "PMC8091085",
+    "title": "Listeria monocytogenes MenI Encodes a DHNA-CoA Thioesterase Necessary for Menaquinone Biosynthesis, Cytosolic Survival, and Virulence.",
+    "journal": "Infection and immunity",
+    "year": "2021",
+    "source": "MED",
+    "organisms": [
+     "Escherichia coli",
+     "Listeria monocytogenes"
+    ],
+    "organism_match": "match",
+    "decision": "kept",
+    "reason": null
+   },
+   {
+    "id": "PMC13298898",
+    "title": "Dietary Plant-Derived Phenolic Acids and Phenolamides as Natural Preservatives: Antibacterial, Antioxidant and Food Preservation Applications.",
+    "journal": "Foods (Basel, Switzerland)",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [],
+    "organism_match": "unknown",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC9989332",
+    "title": "Chryseochelins-structural characterization of novel citrate-based siderophores produced by plant protecting Chryseobacterium spp.",
+    "journal": "Metallomics : integrated biometal science",
+    "year": "2023",
+    "source": "MED",
+    "organisms": [],
+    "organism_match": "unknown",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC7086027",
+    "title": "Allosteric regulation of menaquinone (vitamin K&lt;sub&gt;2&lt;/sub&gt;) biosynthesis in the human pathogen &lt;i&gt;Mycobacterium tuberculosis&lt;/i&gt;.",
+    "journal": "The Journal of biological chemistry",
+    "year": "2020",
+    "source": "MED",
+    "organisms": [
+     "Mycobacterium tuberculosis",
+     "Homo sapiens"
+    ],
+    "organism_match": "mismatch",
+    "decision": "dropped",
+    "reason": "abstract_names_other_organism"
+   },
+   {
+    "id": "PMC13366989",
+    "title": "Modular integration of nanopore sequencing, alphafold modeling, and statistical design boosts 1-hydroxyphenazine yield in Pseudomonas aeruginosa strain KAEH25.",
+    "journal": "BMC microbiology",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [
+     "Escherichia coli",
+     "Listeria monocytogenes",
+     "Klebsiella pneumoniae",
+     "Pseudomonas aeruginosa",
+     "Salmonella enterica",
+     "Staphylococcus aureus",
+     "Enterococcus faecalis"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC8875926",
+    "title": "Simultaneous Quantification of Organic Acids in Tamarillo (<i>Solanum betaceum</i>) and Untargeted Chemotyping Using Methyl Chloroformate Derivatisation and GC-MS.",
+    "journal": "Molecules (Basel, Switzerland)",
+    "year": "2022",
+    "source": "MED",
+    "organisms": [],
+    "organism_match": "unknown",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC3524387",
+    "title": "Menaquinone biosynthesis potentiates haem toxicity in Staphylococcus aureus.",
+    "journal": "Molecular microbiology",
+    "year": "2012",
+    "source": "MED",
+    "organisms": [
+     "Staphylococcus aureus"
+    ],
+    "organism_match": "mismatch",
+    "decision": "dropped",
+    "reason": "abstract_names_other_organism"
+   },
+   {
+    "id": "PMID:36098931",
+    "title": "In silico and In vitro Analysis of Nigella sativa Bioactives Against Chorismate Synthase of Listeria monocytogenes: a Target Protein for Biofilm Inhibition.",
+    "journal": "Applied biochemistry and biotechnology",
+    "year": "2023",
+    "source": "MED",
+    "organisms": [
+     "Listeria monocytogenes",
+     "Homo sapiens"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC11355378",
+    "title": "Synergistic Biocontrol and Growth Promotion in Strawberries by Co-Cultured <i>Trichoderma harzianum</i> TW21990 and <i>Burkholderia vietnamiensis</i> B418.",
+    "journal": "Journal of fungi (Basel, Switzerland)",
+    "year": "2024",
+    "source": "MED",
+    "organisms": [
+     "Burkholderia vietnamiensis"
+    ],
+    "organism_match": "mismatch",
+    "decision": "dropped",
+    "reason": "abstract_names_other_organism"
+   },
+   {
+    "id": "PMC12751926",
+    "title": "Transcriptional responses of Listeria monocytogenes to low-temperature stress reveal distinct adaptive mechanisms in the absence of BKD and PrfA activation.",
+    "journal": "Microbial pathogenesis",
+    "year": "2025",
+    "source": "MED",
+    "organisms": [
+     "Listeria monocytogenes"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC7320173",
+    "title": "Large-scale metabolic interaction network\u00a0of the mouse and human gut microbiota.",
+    "journal": "Scientific data",
+    "year": "2020",
+    "source": "MED",
+    "organisms": [
+     "Homo sapiens",
+     "Mus musculus"
+    ],
+    "organism_match": "mismatch",
+    "decision": "dropped",
+    "reason": "abstract_names_other_organism"
+   },
+   {
+    "id": "PMC7617318",
+    "title": "&lt;i&gt;Bacillus safensis&lt;/i&gt; APC 4099 has broad-spectrum antimicrobial activity against both bacteria and fungi and produces several antimicrobial peptides, including the novel circular bacteriocin safencin E.",
+    "journal": "Applied and environmental microbiology",
+    "year": "2025",
+    "source": "MED",
+    "organisms": [
+     "Homo sapiens",
+     "Bacillus safensis"
+    ],
+    "organism_match": "mismatch",
+    "decision": "dropped",
+    "reason": "abstract_names_other_organism"
+   },
+   {
+    "id": "PMC10188961",
+    "title": "Catechol siderophores framed on 2,3-dihydroxybenzoyl-L-serine from <i>Streptomyces varsoviensis</i>.",
+    "journal": "Frontiers in microbiology",
+    "year": "2023",
+    "source": "MED",
+    "organisms": [
+     "Listeria monocytogenes"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC12735342",
+    "title": "&lt;i&gt;Lacticaseibacillus casei&lt;/i&gt; Combats Biofilm Formation and Exhibits Antibacterial Activity Against Clinical Isolates of &lt;i&gt;Staphylococcus aureus&lt;/i&gt;, &lt;i&gt;Salmonella enterica&lt;/i&gt;, and &lt;i&gt;Escherichia coli&lt;/i&gt;.",
+    "journal": "Microorganisms",
+    "year": "2025",
+    "source": "MED",
+    "organisms": [
+     "Escherichia coli",
+     "Salmonella enterica",
+     "Staphylococcus aureus",
+     "Homo sapiens"
+    ],
+    "organism_match": "mismatch",
+    "decision": "dropped",
+    "reason": "abstract_names_other_organism"
+   }
+  ],
+  "papers": [
+   {
+    "source_id": "PMC11822176",
+    "status": "ok",
+    "passages": 1,
+    "extracted": 0,
+    "accepted": 0,
+    "rejected": {},
+    "dropped_parts": {},
+    "rejected_samples": [],
+    "organism_match": "unknown",
+    "full_text_chars": 0,
+    "full_text_errors": [
+     "HTTPError"
+    ],
+    "counts": {}
+   },
+   {
+    "source_id": "PMC13082233",
+    "status": "ok",
+    "passages": 1,
+    "extracted": 0,
+    "accepted": 0,
+    "rejected": {},
+    "dropped_parts": {},
+    "rejected_samples": [],
+    "organism_match": "unknown",
+    "full_text_chars": 0,
+    "full_text_errors": [
+     "ReadTimeout"
+    ],
+    "counts": {}
+   },
+   {
+    "source_id": "PMID:40203959",
+    "status": "ok",
+    "passages": 1,
+    "extracted": 0,
+    "accepted": 0,
+    "rejected": {},
+    "dropped_parts": {},
+    "rejected_samples": [],
+    "organism_match": "match",
+    "counts": {}
+   },
+   {
+    "source_id": "PMC13093933",
+    "status": "ok",
+    "passages": 2,
+    "extracted": 1,
+    "accepted": 0,
+    "rejected": {
+     "not_connected": 1
+    },
+    "dropped_parts": {
+     "enzyme_not_in_quote": 2
+    },
+    "rejected_samples": [
+     {
+      "reason": "not_connected",
+      "quote": "the conversion of glyceraldehyde-3-phosphate to 3-phosphoglyceric acid, catalyzed by the glycolytic enzymes GAPDH and PGK1",
+      "inputs": [
+       {
+        "name": "glyceraldehyde-3-phosphate",
+        "stoichiometry": null
+       }
+      ],
+      "outputs": [
+       {
+        "name": "3-phosphoglyceric acid",
+        "stoichiometry": null
+       }
+      ]
+     }
+    ],
+    "organism_match": "unknown",
+    "full_text_chars": 120137,
+    "counts": {}
+   },
+   {
+    "source_id": "PMC8091085",
+    "status": "ok",
+    "passages": 1,
+    "extracted": 1,
+    "accepted": 0,
+    "rejected": {
+     "admission: evidence_relation_disagrees_with_claim": 1
+    },
+    "dropped_parts": {},
+    "rejected_samples": [
+     {
+      "reason": "admission: evidence_relation_disagrees_with_claim",
+      "quote": "converting DHNA-CoA to DHNA in the MK synthesis pathway",
+      "inputs": [
+       {
+        "name": "1,4-dihydroxy-2-naphthoyl-coenzyme A (DHNA-CoA)",
+        "stoichiometry": null
+       }
+      ],
+      "outputs": [
+       {
+        "name": "1,4-dihydroxy-2-naphthoate (DHNA)",
+        "stoichiometry": null
+       }
+      ]
+     }
+    ],
+    "organism_match": "match",
+    "full_text_chars": 0,
+    "full_text_errors": [
+     "ReadTimeout"
+    ],
+    "counts": {}
+   }
+  ],
+  "llm": {
+   "calls": 6,
+   "errors": {}
+  },
+  "status": "ok",
+  "placement": {}
+ },
+ "base": {
+  "entities": 11,
+  "reactions": 1,
+  "interactions": 4,
+  "transports": 0,
+  "unresolved_refs": 0
+ },
+ "default": {
+  "entities": 11,
+  "reactions": 1,
+  "interactions": 4,
+  "transports": 0,
+  "unresolved_refs": 0
+ },
+ "full": {
+  "entities": 11,
+  "reactions": 1,
+  "interactions": 4,
+  "transports": 0,
+  "unresolved_refs": 0
+ },
+ "steps": []
+}

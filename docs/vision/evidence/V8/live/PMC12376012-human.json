@@ -1,0 +1,569 @@
+{
+ "run": "runs_verify/2026-09-06_1425/papers/PMC12376012/research",
+ "input_paper": "PMC12376012",
+ "seconds": 223.6,
+ "llm": {
+  "calls_counted": 5,
+  "token_stats": {
+   "prompt_tokens": 4656,
+   "completion_tokens": 334,
+   "total_tokens": 4990,
+   "api_calls": 5,
+   "estimated_cost_usd": 0.000659
+  }
+ },
+ "report": {
+  "budget_s": 300.0,
+  "max_papers": 5,
+  "max_llm_calls": 12,
+  "organism": "Homo sapiens",
+  "frontier": {
+   "substrates": [
+    "L-serine",
+    "palmitoyl-CoA",
+    "fatty acyl-CoA",
+    "glycosphingolipids"
+   ],
+   "products": [
+    "galactosylceramide",
+    "ceramide-1-phosphate",
+    "ethanolamine phosphate",
+    "hexadecenal",
+    "fatty acid"
+   ],
+   "enzymes": [
+    "SPT/ORMDL complex",
+    "Nogo B",
+    "SPTLC1",
+    "SPTLC2",
+    "SPTssa",
+    "ORMDL3",
+    "galactosylceramide synthase",
+    "ceramide kinase",
+    "sphingosine-1-phosphate (S1P) lyase",
+    "sphingosine 1-phosphate lyase",
+    "ceramidases",
+    "ceramide synthase"
+   ]
+  },
+  "input_paper": {
+   "pmid": null,
+   "pmcid": "PMC12376012",
+   "doi": null,
+   "title": null
+  },
+  "queries": [
+   {
+    "query": "\"L-serine\" AND \"Homo sapiens\"",
+    "status": "ok",
+    "hits": 10
+   },
+   {
+    "query": "\"galactosylceramide\" AND \"Homo sapiens\"",
+    "status": "ok",
+    "hits": 10
+   },
+   {
+    "query": "\"palmitoyl-CoA\" AND \"Homo sapiens\"",
+    "status": "ok",
+    "hits": 10
+   }
+  ],
+  "candidates": [
+   {
+    "id": "PMC13257386",
+    "title": "Sulfur-Containing Amino Acids: The Conversion Process from Product to Substrate.",
+    "journal": "International journal of molecular sciences",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [
+     "Escherichia coli",
+     "Homo sapiens"
+    ],
+    "organism_match": "match",
+    "decision": "kept",
+    "reason": null
+   },
+   {
+    "id": "PMC12008523",
+    "title": "Purifying selection of the lysosomal enzymes arylsulfatase A and beta-galactocerebrosidase and their evolutionary impact on myelin integrity.",
+    "journal": "Journal of lipid research",
+    "year": "2025",
+    "source": "MED",
+    "organisms": [],
+    "organism_match": "unknown",
+    "decision": "kept",
+    "reason": null
+   },
+   {
+    "id": "PMC13411838",
+    "title": "ACSL5 programs fatty acid metabolism and mitochondrial fitness to sustain pathogenic T cells and exacerbate Sj\u00f6gren's syndrome.",
+    "journal": "International journal of biological sciences",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [
+     "Homo sapiens"
+    ],
+    "organism_match": "match",
+    "decision": "kept",
+    "reason": null
+   },
+   {
+    "id": "PMC13483632",
+    "title": "SLC25A12 mitigates mitochondrial dysfunction in myoblast senescence, and alleviates cuproptosis-related changes under copper stress.",
+    "journal": "Biology direct",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [
+     "Homo sapiens",
+     "Mus musculus"
+    ],
+    "organism_match": "match",
+    "decision": "kept",
+    "reason": null
+   },
+   {
+    "id": "PMC13313763",
+    "title": "Bioinformatics and network pharmacology to explore Huangqi Guizhi Wuwu Decoction in regulating mitophagy to ameliorate doxorubicin-induced cardiotoxicity the potential mechanism.",
+    "journal": "Medicine",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [],
+    "organism_match": "unknown",
+    "decision": "kept",
+    "reason": null
+   },
+   {
+    "id": "PMC13142944",
+    "title": "Glutamine metabolic enzymes: to filament or not to filament?",
+    "journal": "Biochemical Society transactions",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [
+     "Homo sapiens"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC13743760",
+    "title": "PTEN-L inhibits mitophagy and GSDME-dependent pyroptosis via Parkin dephosphorylation.",
+    "journal": "EMBO reports",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [],
+    "organism_match": "unknown",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC13520899",
+    "title": "Integrated Multi-Omics Analysis Uncovers Molecular Dysregulation in Glucosylceramide Synthase-Deficient Human Induced Pluripotent Stem Cells.",
+    "journal": "Molecular & cellular proteomics : MCP",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [
+     "Homo sapiens"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC13482624",
+    "title": "Integrated metabolomic, cytotoxic, and computational investigation of Caralluma tuberculata extract in breast cancer cells.",
+    "journal": "Scientific reports",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [],
+    "organism_match": "unknown",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC13571665",
+    "title": "Amphiregulin shapes mitochondrial delivery and immune modulation by microvescicles.",
+    "journal": "iScience",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [],
+    "organism_match": "unknown",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC12562390",
+    "title": "Suppression of Cornea Stromal Fibrosis by Vitamin D.",
+    "journal": "Cells",
+    "year": "2025",
+    "source": "MED",
+    "organisms": [
+     "Homo sapiens",
+     "Mus musculus"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC12975903",
+    "title": "Prognostic significance and regulatory role of ACOT7 in the tumor immune microenvironment of breast invasive ductal carcinoma: a multi-omics analysis.",
+    "journal": "Frontiers in immunology",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [
+     "Homo sapiens"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC12923832",
+    "title": "Untargeted &lt;sup&gt;1&lt;/sup&gt;H NMR-based metabolomics unveils distinct circulating biochemical signatures between treatment-resistant and non-treatment-resistant schizophrenia patients: a pilot study.",
+    "journal": "Translational psychiatry",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [
+     "Homo sapiens"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC13604347",
+    "title": "Hibiscus Suspension Culture Extract Modulates Skin Metabolism and Cellular Pathways in Human Keratinocyte/Fibroblast Co-Cultures: A Proteomic Approach.",
+    "journal": "Biomolecules",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [
+     "Homo sapiens"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC11569612",
+    "title": "Engineering of Saccharomyces cerevisiae as a platform strain for microbial production of sphingosine-1-phosphate.",
+    "journal": "Microbial cell factories",
+    "year": "2024",
+    "source": "MED",
+    "organisms": [
+     "Saccharomyces cerevisiae",
+     "Homo sapiens"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC12952686",
+    "title": "Aspartate availability drives differential engagement of the malate-aspartate shuttle.",
+    "journal": "Molecular cell",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [],
+    "organism_match": "unknown",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC12674653",
+    "title": "Fabry Disease Nephropathy: Compendium of \"in vitro\" and \"in vivo\" Renal Effects of Globotriaosylsphingosine.",
+    "journal": "Kidney & blood pressure research",
+    "year": "2025",
+    "source": "MED",
+    "organisms": [
+     "Homo sapiens"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC12065433",
+    "title": "Clostridium scindens: history and current outlook for a keystone species in the mammalian gut involved in bile acid and steroid metabolism.",
+    "journal": "FEMS microbiology reviews",
+    "year": "2025",
+    "source": "MED",
+    "organisms": [],
+    "organism_match": "unknown",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC12029741",
+    "title": "Pangenome Analysis of &lt;i&gt;Clostridium scindens&lt;/i&gt;: A Collection of Diverse Bile Acid- and Steroid-Metabolizing Commensal Gut Bacterial Strains.",
+    "journal": "Microorganisms",
+    "year": "2025",
+    "source": "MED",
+    "organisms": [
+     "Clostridioides difficile"
+    ],
+    "organism_match": "mismatch",
+    "decision": "dropped",
+    "reason": "abstract_names_other_organism"
+   },
+   {
+    "id": "PMC13714454",
+    "title": "Functional Characterization and Application of Yarrowia lipolytica YlYxc1 for Enhanced Production of Sphingoid Bases.",
+    "journal": "Microbial biotechnology",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [
+     "Saccharomyces cerevisiae"
+    ],
+    "organism_match": "mismatch",
+    "decision": "dropped",
+    "reason": "abstract_names_other_organism"
+   },
+   {
+    "id": "PMC13012123",
+    "title": "Catabolism of serine enantiomers represses enterohemorrhagic &lt;i&gt;Escherichia coli&lt;/i&gt; virulence factors via modulation of the nitrogen stress response.",
+    "journal": "Proceedings of the National Academy of Sciences of the United States of America",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [
+     "Escherichia coli"
+    ],
+    "organism_match": "mismatch",
+    "decision": "dropped",
+    "reason": "abstract_names_other_organism"
+   },
+   {
+    "id": "PMC12955709",
+    "title": "UPLC-qToF-MS/MS analysis and anti-inflammatory activities of the soft coral &lt;i&gt;Litophyton savignyi&lt;/i&gt; supported by bioactive molecular networking, network pharmacology, and molecular docking.",
+    "journal": "RSC advances",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [
+     "Homo sapiens"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC13521564",
+    "title": "Disruption of sphingolipid metabolism promotes tau seeding through endolysosomal membrane rigidification and rupture.",
+    "journal": "eLife",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [
+     "Homo sapiens"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC12283610",
+    "title": "Molecular characterization, comparative genome analysis and resistance determinants of three clinical &lt;i&gt;Elizabethkingia miricola&lt;/i&gt; strains isolated from Michigan.",
+    "journal": "Frontiers in microbiology",
+    "year": "2025",
+    "source": "MED",
+    "organisms": [
+     "Homo sapiens"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC13140601",
+    "title": "Altered Sphingolipid Metabolism is Associated with Osimertinib Resistance in Nonsmall-Cell Lung Cancer.",
+    "journal": "Journal of proteome research",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [],
+    "organism_match": "unknown",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC13424263",
+    "title": "Adipocyte-Derived Palmitic Acid Promotes Breast Cancer Malignancy via ZDHHC15-Mediated S-Palmitoylation of PPAR\u03b3.",
+    "journal": "Cancer science",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [],
+    "organism_match": "unknown",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC13223184",
+    "title": "SFXN3 Serves as a Predictive Biomarker for Cisplatin Response and Survival in Head and Neck Squamous Cell Carcinoma.",
+    "journal": "Oncology research",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [
+     "Homo sapiens"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC10918841",
+    "title": "In Silico Structural Modeling and Binding Site Analysis of Cerebroside Sulfotransferase (CST): A Therapeutic Target for Developing Substrate Reduction Therapy for Metachromatic Leukodystrophy.",
+    "journal": "ACS omega",
+    "year": "2024",
+    "source": "MED",
+    "organisms": [],
+    "organism_match": "unknown",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC12563001",
+    "title": "Characteristic Gene Alterations During Fatty Acid Metabolism in the Goose Liver.",
+    "journal": "Genes",
+    "year": "2025",
+    "source": "MED",
+    "organisms": [
+     "Homo sapiens"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   }
+  ],
+  "papers": [
+   {
+    "source_id": "PMC13257386",
+    "status": "ok",
+    "passages": 1,
+    "extracted": 1,
+    "accepted": 0,
+    "rejected": {
+     "admission: evidence_states_no_reaction_relation": 1
+    },
+    "dropped_parts": {},
+    "rejected_samples": [
+     {
+      "reason": "admission: evidence_states_no_reaction_relation",
+      "quote": "the transsulfuration pathway in mammals, which utilizes methionine as a precursor for cysteine biosynthesis",
+      "inputs": [
+       {
+        "name": "methionine",
+        "stoichiometry": null
+       }
+      ],
+      "outputs": [
+       {
+        "name": "cysteine",
+        "stoichiometry": null
+       }
+      ]
+     }
+    ],
+    "organism_match": "match",
+    "full_text_chars": 0,
+    "counts": {}
+   },
+   {
+    "source_id": "PMC12008523",
+    "status": "ok",
+    "passages": 1,
+    "extracted": 0,
+    "accepted": 0,
+    "rejected": {},
+    "dropped_parts": {},
+    "rejected_samples": [],
+    "organism_match": "unknown",
+    "full_text_chars": 0,
+    "counts": {}
+   },
+   {
+    "source_id": "PMC13411838",
+    "status": "ok",
+    "passages": 1,
+    "extracted": 1,
+    "accepted": 0,
+    "rejected": {
+     "admission: evidence_relation_roles_unassignable": 1
+    },
+    "dropped_parts": {},
+    "rejected_samples": [
+     {
+      "reason": "admission: evidence_relation_roles_unassignable",
+      "quote": "ACSL5 increased fatty acid uptake and utilization and promoted fatty acid oxidation (FAO) through peroxisome proliferator-activated receptor alpha (PPAR\u03b1) in T cells",
+      "inputs": [
+       {
+        "name": "fatty acids",
+        "stoichiometry": null
+       }
+      ],
+      "outputs": [
+       {
+        "name": "acetyl-CoA",
+        "stoichiometry": null
+       }
+      ]
+     }
+    ],
+    "organism_match": "match",
+    "full_text_chars": 0,
+    "counts": {}
+   },
+   {
+    "source_id": "PMC13483632",
+    "status": "ok",
+    "passages": 1,
+    "extracted": 0,
+    "accepted": 0,
+    "rejected": {},
+    "dropped_parts": {},
+    "rejected_samples": [],
+    "organism_match": "match",
+    "full_text_chars": 0,
+    "counts": {}
+   },
+   {
+    "source_id": "PMC13313763",
+    "status": "ok",
+    "passages": 1,
+    "extracted": 0,
+    "accepted": 0,
+    "rejected": {},
+    "dropped_parts": {},
+    "rejected_samples": [],
+    "organism_match": "unknown",
+    "full_text_chars": 0,
+    "counts": {}
+   }
+  ],
+  "llm": {
+   "calls": 5,
+   "errors": {}
+  },
+  "status": "ok",
+  "placement": {}
+ },
+ "base": {
+  "entities": 64,
+  "reactions": 19,
+  "transports": 2,
+  "interactions": 1,
+  "unresolved_refs": 2
+ },
+ "default": {
+  "entities": 64,
+  "reactions": 19,
+  "transports": 2,
+  "interactions": 1,
+  "unresolved_refs": 2
+ },
+ "full": {
+  "entities": 64,
+  "reactions": 19,
+  "transports": 2,
+  "interactions": 1,
+  "unresolved_refs": 2
+ },
+ "steps": []
+}

@@ -1,0 +1,584 @@
+{
+ "run": "runs_papers/ORCH-759p/legs/enterobactin-strict/2026-10-22_2101/papers/PMC12096016/strict",
+ "input_paper": "PMC12096016",
+ "seconds": 11.8,
+ "llm": {
+  "calls_counted": 5,
+  "token_stats": {
+   "prompt_tokens": 3972,
+   "completion_tokens": 475,
+   "total_tokens": 4447,
+   "api_calls": 5,
+   "estimated_cost_usd": 0.000619
+  }
+ },
+ "report": {
+  "budget_s": 300.0,
+  "max_papers": 5,
+  "max_llm_calls": 12,
+  "organism": "Escherichia coli",
+  "frontier": {
+   "substrates": [
+    "chorismate",
+    "Adenosine triphosphate",
+    "L-serine"
+   ],
+   "products": [
+    "pyruvate",
+    "enterobactin"
+   ],
+   "enzymes": [
+    "Isochorismate synthase",
+    "isochorismatase",
+    "EntE complex",
+    "EntF complex"
+   ]
+  },
+  "input_paper": {
+   "pmid": null,
+   "pmcid": "PMC12096016",
+   "doi": null,
+   "title": null
+  },
+  "queries": [
+   {
+    "query": "\"chorismate\" AND \"Escherichia coli\"",
+    "status": "ok",
+    "hits": 10
+   },
+   {
+    "query": "\"pyruvate\" AND \"Escherichia coli\"",
+    "status": "ok",
+    "hits": 10
+   },
+   {
+    "query": "\"Adenosine triphosphate\" AND \"Escherichia coli\"",
+    "status": "ok",
+    "hits": 10
+   }
+  ],
+  "candidates": [
+   {
+    "id": "PMC13709327",
+    "title": "Intermolecular Carbon-Carbon Bond Formation by a Chorismate-Converting Enzyme.",
+    "journal": "Journal of the American Chemical Society",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [],
+    "organism_match": "unknown",
+    "decision": "kept",
+    "reason": null
+   },
+   {
+    "id": "PMID:42961741",
+    "title": "Construction of an Enzyme-Constrained Model for Escherichia coli Using GECKO Toolbox 3.0.",
+    "journal": "Methods in molecular biology (Clifton, N.J.)",
+    "year": "2027",
+    "source": "MED",
+    "organisms": [
+     "Escherichia coli"
+    ],
+    "organism_match": "match",
+    "decision": "kept",
+    "reason": null
+   },
+   {
+    "id": "PMID:42933199",
+    "title": "Adenosine triphosphate (ATP) monitoring in Escherichia coli bacterial samples by an electrochemical aptasensor.",
+    "journal": "Bioelectrochemistry (Amsterdam, Netherlands)",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [
+     "Escherichia coli"
+    ],
+    "organism_match": "match",
+    "decision": "kept",
+    "reason": null
+   },
+   {
+    "id": "PMID:42035817",
+    "title": "Characterizing the role of assembly on the function of chorismate synthase in Neurospora crassa.",
+    "journal": "Biochimica et biophysica acta. Proteins and proteomics",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [
+     "Escherichia coli"
+    ],
+    "organism_match": "match",
+    "decision": "kept",
+    "reason": null
+   },
+   {
+    "id": "PMID:42852341",
+    "title": "18AA Reprograms the Pyruvate Cycle and Enhances Proton Motive Force to Potentiate Ceftazidime-Avibactam against Drug-Resistant &lt;i&gt;Escherichia coli&lt;/i&gt;.",
+    "journal": "ACS omega",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [
+     "Escherichia coli"
+    ],
+    "organism_match": "match",
+    "decision": "kept",
+    "reason": null
+   },
+   {
+    "id": "PMID:42961744",
+    "title": "Quantifying Turnover in Resource Economy of Synthetic Biology Applications via Stochastic Simulations.",
+    "journal": "Methods in molecular biology (Clifton, N.J.)",
+    "year": "2027",
+    "source": "MED",
+    "organisms": [
+     "Escherichia coli"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "DOI:10.20944/preprints202604.1832.v1",
+    "title": "Metabolic Modification of Escherichia coli BL21 (DE3) to Produce Shinorine",
+    "journal": null,
+    "year": "2026",
+    "source": "PPR",
+    "organisms": [],
+    "organism_match": null,
+    "decision": "dropped",
+    "reason": "preprint"
+   },
+   {
+    "id": "DOI:10.21203/rs.3.rs-11087520/v1",
+    "title": "Rewiring the PEP-pyruvate-oxaloacetate node through coordinated fine- tuning of gltA and pykF expression for L-threonine production in wild-type Escherichia coli",
+    "journal": null,
+    "year": "2026",
+    "source": "PPR",
+    "organisms": [],
+    "organism_match": null,
+    "decision": "dropped",
+    "reason": "preprint"
+   },
+   {
+    "id": "PMID:43021745",
+    "title": "RecA protein activates the E. coli topoisomerase III catenation function: essential role of the RecA ATPase.",
+    "journal": "Nucleic acids research",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [
+     "Escherichia coli"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMID:42377799",
+    "title": "A non\u2011natural shortcut biosynthetic route enables de novo\u00a0microbial production of 3\u2011hydroxyanthranilic and quinolinic acids.",
+    "journal": "World journal of microbiology & biotechnology",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [
+     "Escherichia coli",
+     "Pseudomonas fluorescens"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC13640956",
+    "title": "Erratum for Cheng et al., \"Metabolic activation of pyruvate cycle by protocatechualdehyde triggers oxidative killing of ampicillin-resistant &lt;i&gt;Escherichia coli\"&lt;/i&gt;.",
+    "journal": "Microbiology spectrum",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [
+     "Escherichia coli"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMID:42882438",
+    "title": "High Sensitivity of the &lt;i&gt;rpiAB Escherichia coli&lt;/i&gt; Mutants to Antibiotics Is Associated with the Participation of the &lt;i&gt;deo&lt;/i&gt;-Operon in a Hypothetical Ribose-5-Phosphate Futile Cycle.",
+    "journal": "Cells",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [
+     "Escherichia coli"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMID:41274425",
+    "title": "Biosynthesis of high-value chorismate derivatives in Escherichia coli: Recent advances and perspectives.",
+    "journal": "Biotechnology advances",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [
+     "Escherichia coli"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "DOI:10.21203/rs.3.rs-11212863/v1",
+    "title": "Understanding single nucleotide polymorphism (SNP) in pyruvate dehydrogenase E1 and E2 component in different bacterial species",
+    "journal": null,
+    "year": "2026",
+    "source": "PPR",
+    "organisms": [],
+    "organism_match": null,
+    "decision": "dropped",
+    "reason": "preprint"
+   },
+   {
+    "id": "PMID:42776757",
+    "title": "Adaptability of the GroEL/GroES chaperonin to proteostatic challenge revealed by directed evolution.",
+    "journal": "Proceedings of the National Academy of Sciences of the United States of America",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [
+     "Escherichia coli"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC13690941",
+    "title": "Complex post-translational regulation of the plant shikimate pathway",
+    "journal": "Frontiers in plant science",
+    "year": null,
+    "source": "PMC",
+    "organisms": [],
+    "organism_match": "unknown",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMID:42899589",
+    "title": "The Active Component of Dehydrophos Covalently Binds to Acetohydroxyacid Synthase and Inhibits the Growth of Uropathogenic Escherichia coli.",
+    "journal": "Biochemistry",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [
+     "Escherichia coli",
+     "Saccharomyces cerevisiae"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMID:42804142",
+    "title": "Key residues Tyr293, Val360, and Tyr399 regulate flavin stability in the plant cryptochrome from Chlamydomonas reinhardtii.",
+    "journal": "Photochemical & photobiological sciences : Official journal of the European Photochemistry Association and the European Society for Photobiology",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [
+     "Escherichia coli"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC13543061",
+    "title": "Strategy for enhanced production of A40926B0 in &lt;i&gt;Nonomuraea gerenzanensis&lt;/i&gt; using an efficient CRISPR/AsCas12f1 system.",
+    "journal": "Synthetic and systems biotechnology",
+    "year": "2027",
+    "source": "MED",
+    "organisms": [],
+    "organism_match": "unknown",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMID:42773663",
+    "title": "[Efficient production of l- lysine by &lt;i&gt;Escherichia coli&lt;/i&gt; through systems metabolic engineering].",
+    "journal": "Sheng wu gong cheng xue bao = Chinese journal of biotechnology",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [
+     "Escherichia coli",
+     "Bacillus subtilis"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC13719134",
+    "title": "Comparison between two methods of cleaning and disinfection of digital pulse oximeters in primary care.",
+    "journal": "Revista brasileira de enfermagem",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [
+     "Escherichia coli",
+     "Staphylococcus aureus",
+     "Salmonella typhimurium"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC13714653",
+    "title": "Transcriptomic insights into the effects of sublethal exposure to endolysin LNT113 on Escherichia coli.",
+    "journal": "Journal of microbiology (Seoul, Korea)",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [
+     "Escherichia coli"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC13614307",
+    "title": "Biosynthesis of 3-Hydroxy-3-methylbutyrate by Probiotic Escherichia coli Nissle 1917.",
+    "journal": "Journal of agricultural and food chemistry",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [
+     "Escherichia coli"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMID:42357438",
+    "title": "Engineered &lt;i&gt;Escherichia coli&lt;/i&gt; Modified with Carbon Quantum Dots as a High-Performance Cathode Catalyst for Microbial Fuel Cells.",
+    "journal": "Molecules (Basel, Switzerland)",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [
+     "Escherichia coli"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMID:42025600",
+    "title": "Metabolic engineering Corynebacterium glutamicum for efficient production of gastrodin.",
+    "journal": "Bioorganic chemistry",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [
+     "Escherichia coli",
+     "Corynebacterium glutamicum",
+     "Arabidopsis thaliana",
+     "Mycobacterium abscessus"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMID:42949116",
+    "title": "Marker-Free Chromosomal Integration of a Multigene Cassette in Escherichia coli for Heavy-Metal Bioremediation Development.",
+    "journal": "Journal of visualized experiments : JoVE",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [
+     "Escherichia coli"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMID:42456508",
+    "title": "Highly sensitive CMOS bioluminescent biosensor for quantitative, high dynamic range detection of total surface ATP and selective detection of E. coli.",
+    "journal": "Biosensors & bioelectronics",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [
+     "Escherichia coli",
+     "Staphylococcus epidermidis"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC13716998",
+    "title": "Interaction-driven chorismate metabolic reprogramming underlies &lt;i&gt;Bacillus&lt;/i&gt;-&lt;i&gt;Pediococcus&lt;/i&gt; synergistic thermogenesis in high-temperature &lt;i&gt;Daqu&lt;/i&gt;.",
+    "journal": "Food chemistry: X",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [
+     "Bacillus pediococcus",
+     "Bacillus chorismate"
+    ],
+    "organism_match": "mismatch",
+    "decision": "dropped",
+    "reason": "abstract_names_other_organism"
+   },
+   {
+    "id": "PMID:43039133",
+    "title": "Improving L-homoserine biosynthesis with engineered Escherichia coli via a dual-function quorum sensing regulation system.",
+    "journal": "Metabolic engineering",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [
+     "Escherichia coli"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMID:42883957",
+    "title": "Adjuvant Effect of Meldrum's Acid Derivatives on Antibiotic Activity Against Multidrug-Resistant Bacteria.",
+    "journal": "International journal of molecular sciences",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [
+     "Escherichia coli",
+     "Staphylococcus aureus"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   }
+  ],
+  "papers": [
+   {
+    "source_id": "PMC13709327",
+    "status": "ok",
+    "passages": 1,
+    "extracted": 1,
+    "accepted": 0,
+    "rejected": {
+     "admission: evidence_relation_roles_unassignable": 1
+    },
+    "dropped_parts": {},
+    "rejected_samples": [
+     {
+      "reason": "admission: evidence_relation_roles_unassignable",
+      "quote": "TunB, an enzyme that catalyzes an intermolecular carbon-carbon bond formation with chorismate in the absence of any cofactors.",
+      "inputs": [
+       {
+        "name": "chorismate",
+        "stoichiometry": null
+       }
+      ],
+      "outputs": [
+       {
+        "name": "product of intermolecular carbon-carbon bond formation with chorismate",
+        "stoichiometry": null
+       }
+      ]
+     }
+    ],
+    "organism_match": "unknown",
+    "full_text_chars": 0,
+    "full_text_errors": [
+     "HTTPError"
+    ],
+    "counts": {}
+   },
+   {
+    "source_id": "PMID:42961741",
+    "status": "ok",
+    "passages": 1,
+    "extracted": 0,
+    "accepted": 0,
+    "rejected": {},
+    "dropped_parts": {},
+    "rejected_samples": [],
+    "organism_match": "match",
+    "counts": {}
+   },
+   {
+    "source_id": "PMID:42933199",
+    "status": "ok",
+    "passages": 1,
+    "extracted": 0,
+    "accepted": 0,
+    "rejected": {},
+    "dropped_parts": {},
+    "rejected_samples": [],
+    "organism_match": "match",
+    "counts": {}
+   },
+   {
+    "source_id": "PMID:42035817",
+    "status": "ok",
+    "passages": 1,
+    "extracted": 1,
+    "accepted": 0,
+    "rejected": {
+     "admission: evidence_states_no_reaction_relation": 1
+    },
+    "dropped_parts": {},
+    "rejected_samples": [
+     {
+      "reason": "admission: evidence_states_no_reaction_relation",
+      "quote": "only the tetrameric construct has the flavin reductase capabilities associated with bifunctional chorismate synthases",
+      "inputs": [
+       {
+        "name": "flavin",
+        "stoichiometry": null
+       }
+      ],
+      "outputs": [
+       {
+        "name": "reduced flavin",
+        "stoichiometry": null
+       }
+      ]
+     }
+    ],
+    "organism_match": "match",
+    "counts": {}
+   },
+   {
+    "source_id": "PMID:42852341",
+    "status": "ok",
+    "passages": 1,
+    "extracted": 0,
+    "accepted": 0,
+    "rejected": {},
+    "dropped_parts": {},
+    "rejected_samples": [],
+    "organism_match": "match",
+    "counts": {}
+   }
+  ],
+  "llm": {
+   "calls": 5,
+   "errors": {}
+  },
+  "status": "ok",
+  "placement": {}
+ },
+ "base": {
+  "entities": 26,
+  "reactions": 5,
+  "transports": 1,
+  "interactions": 10,
+  "unresolved_refs": 0
+ },
+ "default": {
+  "entities": 26,
+  "reactions": 5,
+  "transports": 1,
+  "interactions": 10,
+  "unresolved_refs": 0
+ },
+ "full": {
+  "entities": 26,
+  "reactions": 5,
+  "transports": 1,
+  "interactions": 10,
+  "unresolved_refs": 0
+ },
+ "steps": []
+}

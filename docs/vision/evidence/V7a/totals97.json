@@ -1,0 +1,680 @@
+{
+ "tree": {
+  "path": "C:\\t\\vis-checks",
+  "head": "5c456f7f455b19a325797c5c36df5d32ea50b174",
+  "dirty": false
+ },
+ "scopes": [
+  "paper",
+  "default"
+ ],
+ "totals": {
+  "n_runs": 97,
+  "crashed": [],
+  "scopes": {
+   "paper": {
+    "n": 97,
+    "generated_all_formats": 96,
+    "refused": [
+     {
+      "run": "d/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-08-21_2239/papers/PMC12782028/strict",
+      "errors": {
+       "pwml": "GenerateError: PWML export stopped by the quarantine boundary: unaccounted_locked_reactions:1"
+      }
+     }
+    ],
+    "sbml_valid": 96,
+    "sbgn_valid": 96,
+    "pwml_ok": 96,
+    "cross_ok": 70,
+    "validation_failure_kinds": {},
+    "cross_format_failure_classes": {
+     "compartment_grouping_differs:pwml_vs_sbgn": {
+      "runs": 1,
+      "total": 1,
+      "examples": [
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-24_1203/papers/PMC12096016/strict",
+        "example": "sbgn 'extracellular' (2 entities) is not inside one PWML compartment: ['Fe3', 'TonB']"
+       }
+      ]
+     },
+     "compartment_placement_differs:sbml_vs_sbgn": {
+      "runs": 15,
+      "total": 39,
+      "examples": [
+       {
+        "run": "-759p/legs/chlorophyll-strict/2026-10-22_2301/papers/PMC5130987/strict",
+        "example": "CHLH: sbml=plastid sbgn=thylakoid membrane"
+       },
+       {
+        "run": "-759p/legs/chlorophyll-strict/2026-10-22_2301/papers/PMC5130987/strict",
+        "example": "PORA: sbgn only plastid"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-21_1822/papers/PMC12782028/strict",
+        "example": "CYP51A1: sbml=Endoplasmic Reticulum Membrane sbgn=endoplasmic reticulum"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-21_1822/papers/PMC12782028/strict",
+        "example": "DHCR24: sbml=Endoplasmic Reticulum Membrane sbgn=endoplasmic reticulum"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-21_2239/papers/PMC12452463/strict",
+        "example": "FepA: sbml=outer membrane sbgn=extracellular"
+       }
+      ]
+     },
+     "compartment_placement_missing_in_pwml": {
+      "runs": 1,
+      "total": 1,
+      "examples": [
+       {
+        "run": "-759p/legs/chlorophyll-strict/2026-10-22_2301/papers/PMC5130987/strict",
+        "example": "CHLI2 (placed in sbgn)"
+       }
+      ]
+     },
+     "entity_missing_in_kgml": {
+      "runs": 2,
+      "total": 2,
+      "examples": [
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-22_2147/papers/PMC12096016/strict",
+        "example": "4'-phosphopantetheinyl transferase entD"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "Fe3"
+       }
+      ]
+     },
+     "entity_missing_in_pwml": {
+      "runs": 2,
+      "total": 2,
+      "examples": [
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-22_2147/papers/PMC12096016/strict",
+        "example": "4'-phosphopantetheinyl transferase entD"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "Fe3"
+       }
+      ]
+     },
+     "entity_missing_in_sbgn": {
+      "runs": 2,
+      "total": 4,
+      "examples": [
+       {
+        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
+        "example": "Celsr1"
+       },
+       {
+        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
+        "example": "Vangl2"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "Fe3"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "Fe3+"
+       }
+      ]
+     },
+     "entity_missing_in_sbml": {
+      "runs": 1,
+      "total": 1,
+      "examples": [
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-22_2147/papers/PMC12096016/strict",
+        "example": "4'-phosphopantetheinyl transferase entD"
+       }
+      ]
+     },
+     "interaction_extra_in_pwml": {
+      "runs": 3,
+      "total": 10,
+      "examples": [
+       {
+        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
+        "example": "Dvl-DAAM complex -> GTP"
+       },
+       {
+        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
+        "example": "Dvl-DAAM complex -> Adenosine triphosphate"
+       },
+       {
+        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
+        "example": "DAAM complex -> GTP"
+       },
+       {
+        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
+        "example": "DAAM complex -> Adenosine triphosphate"
+       },
+       {
+        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
+        "example": "Ras-related C3 botulinum toxin substrate 1 -> GTP"
+       }
+      ]
+     },
+     "interaction_missing_in_kgml": {
+      "runs": 7,
+      "total": 9,
+      "examples": [
+       {
+        "run": "CH-755/legs/sour_taste-strict/2026-10-21_0139/papers/PMC7059786/strict",
+        "example": "5-HT -> 5-HT"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-22_2147/papers/PMC13231680/strict",
+        "example": "phthalylsulfacetamide -> Zn2+"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-24_1203/papers/PMC13231680/strict",
+        "example": "phthalylsulfacetamide -> Zn2+"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-25_1216/papers/PMC12444477/strict",
+        "example": "cardiolipin -> LPS"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-09-02_2052/papers/PMC12452463/strict",
+        "example": "enterobactin -> ferric iron (Fe3+)"
+       }
+      ]
+     },
+     "process_extra_in_kgml": {
+      "runs": 1,
+      "total": 1,
+      "examples": [
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "{enterobactin} -> {ferri-enterobactin}"
+       }
+      ]
+     },
+     "process_extra_in_sbgn": {
+      "runs": 1,
+      "total": 1,
+      "examples": [
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "{enterobactin} -> {ferri-enterobactin}"
+       }
+      ]
+     },
+     "process_extra_in_sbml": {
+      "runs": 1,
+      "total": 1,
+      "examples": [
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "{Fe3, enterobactin} -> {ferri-enterobactin}"
+       }
+      ]
+     },
+     "process_missing_in_kgml": {
+      "runs": 3,
+      "total": 4,
+      "examples": [
+       {
+        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
+        "example": "{Dishevelled} -> {Dishevelled}"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "{Fe3+, enterobactin} -> {ferri-enterobactin}"
+       },
+       {
+        "run": "IN/Project14-T2PW/runs_smoke/2026-09-10_1135/papers/PMC13405594/strict",
+        "example": "{SREBF2} -> {SREBF2}"
+       }
+      ]
+     },
+     "process_missing_in_sbgn": {
+      "runs": 1,
+      "total": 1,
+      "examples": [
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "{Fe3+, enterobactin} -> {ferri-enterobactin}"
+       }
+      ]
+     },
+     "process_missing_in_sbml": {
+      "runs": 1,
+      "total": 1,
+      "examples": [
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "{Fe3+, enterobactin} -> {ferri-enterobactin}"
+       }
+      ]
+     },
+     "unresolved_reference:sbml": {
+      "runs": 1,
+      "total": 1,
+      "examples": [
+       {
+        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
+        "example": "interaction endpoint unresolved: Dishevelled (Dvl) -> Invs"
+       }
+      ]
+     }
+    },
+    "known_difference_totals": {
+     "d_pathwhiz_complex_wrapper": 110,
+     "f_unknown_sentinel": 182,
+     "b_sbgn_entities_only_in_interactions": 130,
+     "a_canonical_names": 0,
+     "e_pwml_withheld_interactions": 145,
+     "g_pwml_modifier_interactions": 7,
+     "b_sbgn_interactions_not_compared": 192,
+     "b_sbgn_omitted_regulatory_arcs": 0,
+     "f_unplaced_entities": 280,
+     "j_sbgn_assumed_placements": 44,
+     "m_nonanchored_no_placement_overlap": 7,
+     "k_sbml_only_placements": 186,
+     "a_compartment_names": 22,
+     "h_pwml_extra_placements": 184,
+     "c_kgml_has_no_compartments_or_catalysts": 96
+    },
+    "compartment_renames": {
+     "pwml=Extracellular Space sbml=extracellular": 5,
+     "pwml=Mitochondrion sbml=mitochondria": 3,
+     "pwml=Mitochondrion sbgn=mitochondria": 3,
+     "pwml=Extracellular Space sbgn=extracellular": 3,
+     "pwml=endoplasmic reticulum sbml=cell": 2,
+     "pwml=Cell Membrane sbml=plasma membrane": 1,
+     "pwml=Cell Membrane sbgn=plasma membrane": 1,
+     "pwml=cytoplasm sbgn=extracellular": 1,
+     "pwml=Inner Membrane sbml=inner membrane (IM)": 1,
+     "pwml=Inner Membrane sbgn=inner membrane (IM)": 1,
+     "pwml=Extracellular Space sbml=cell": 1
+    },
+    "nonanchored_no_placement_overlap_examples": [
+     {
+      "run": "N/Project14-T2PW/runs_verify/2026-08-25_1216/papers/PMC12444477/strict",
+      "example": "PldA: pwml=['Outer Membrane', 'cytoplasm'] sbml=['outer membrane (OM)']"
+     },
+     {
+      "run": "IN/Project14-T2PW/runs_smoke/2026-09-07_2323/papers/PMC11487621/strict",
+      "example": "EcfT: pwml=['Cell Membrane', 'cell', 'cytoplasm'] sbml=['plasma membrane']"
+     },
+     {
+      "run": "IN/Project14-T2PW/runs_smoke/2026-09-07_2323/papers/PMC11487621/strict",
+      "example": "TcyJ: pwml=['Cell Membrane', 'cell', 'cytoplasm'] sbml=['plasma membrane']"
+     }
+    ],
+    "unknown_sentinel_per_format": {
+     "pwml": 41,
+     "sbml": 0,
+     "sbgn": 141,
+     "kgml": 0
+    }
+   },
+   "default": {
+    "n": 97,
+    "generated_all_formats": 97,
+    "refused": [],
+    "sbml_valid": 97,
+    "sbgn_valid": 97,
+    "pwml_ok": 97,
+    "cross_ok": 71,
+    "validation_failure_kinds": {},
+    "cross_format_failure_classes": {
+     "compartment_grouping_differs:pwml_vs_sbgn": {
+      "runs": 1,
+      "total": 1,
+      "examples": [
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-24_1203/papers/PMC12096016/strict",
+        "example": "sbgn 'extracellular' (2 entities) is not inside one PWML compartment: ['Fe3', 'TonB']"
+       }
+      ]
+     },
+     "compartment_placement_differs:sbml_vs_sbgn": {
+      "runs": 15,
+      "total": 39,
+      "examples": [
+       {
+        "run": "-759p/legs/chlorophyll-strict/2026-10-22_2301/papers/PMC5130987/strict",
+        "example": "CHLH: sbml=plastid sbgn=thylakoid membrane"
+       },
+       {
+        "run": "-759p/legs/chlorophyll-strict/2026-10-22_2301/papers/PMC5130987/strict",
+        "example": "PORA: sbgn only plastid"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-21_1822/papers/PMC12782028/strict",
+        "example": "CYP51A1: sbml=Endoplasmic Reticulum Membrane sbgn=endoplasmic reticulum"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-21_1822/papers/PMC12782028/strict",
+        "example": "DHCR24: sbml=Endoplasmic Reticulum Membrane sbgn=endoplasmic reticulum"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-21_2239/papers/PMC12452463/strict",
+        "example": "FepA: sbml=outer membrane sbgn=extracellular"
+       }
+      ]
+     },
+     "compartment_placement_missing_in_pwml": {
+      "runs": 1,
+      "total": 1,
+      "examples": [
+       {
+        "run": "-759p/legs/chlorophyll-strict/2026-10-22_2301/papers/PMC5130987/strict",
+        "example": "CHLI2 (placed in sbgn)"
+       }
+      ]
+     },
+     "entity_missing_in_kgml": {
+      "runs": 2,
+      "total": 2,
+      "examples": [
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-22_2147/papers/PMC12096016/strict",
+        "example": "4'-phosphopantetheinyl transferase entD"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "Fe3"
+       }
+      ]
+     },
+     "entity_missing_in_pwml": {
+      "runs": 2,
+      "total": 2,
+      "examples": [
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-22_2147/papers/PMC12096016/strict",
+        "example": "4'-phosphopantetheinyl transferase entD"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "Fe3"
+       }
+      ]
+     },
+     "entity_missing_in_sbgn": {
+      "runs": 2,
+      "total": 4,
+      "examples": [
+       {
+        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
+        "example": "Celsr1"
+       },
+       {
+        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
+        "example": "Vangl2"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "Fe3"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "Fe3+"
+       }
+      ]
+     },
+     "entity_missing_in_sbml": {
+      "runs": 1,
+      "total": 1,
+      "examples": [
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-22_2147/papers/PMC12096016/strict",
+        "example": "4'-phosphopantetheinyl transferase entD"
+       }
+      ]
+     },
+     "interaction_extra_in_pwml": {
+      "runs": 3,
+      "total": 10,
+      "examples": [
+       {
+        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
+        "example": "Dvl-DAAM complex -> GTP"
+       },
+       {
+        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
+        "example": "Dvl-DAAM complex -> Adenosine triphosphate"
+       },
+       {
+        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
+        "example": "DAAM complex -> GTP"
+       },
+       {
+        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
+        "example": "DAAM complex -> Adenosine triphosphate"
+       },
+       {
+        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
+        "example": "Ras-related C3 botulinum toxin substrate 1 -> GTP"
+       }
+      ]
+     },
+     "interaction_missing_in_kgml": {
+      "runs": 7,
+      "total": 9,
+      "examples": [
+       {
+        "run": "CH-755/legs/sour_taste-strict/2026-10-21_0139/papers/PMC7059786/strict",
+        "example": "5-HT -> 5-HT"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-22_2147/papers/PMC13231680/strict",
+        "example": "phthalylsulfacetamide -> Zn2+"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-24_1203/papers/PMC13231680/strict",
+        "example": "phthalylsulfacetamide -> Zn2+"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-25_1216/papers/PMC12444477/strict",
+        "example": "cardiolipin -> LPS"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-09-02_2052/papers/PMC12452463/strict",
+        "example": "enterobactin -> ferric iron (Fe3+)"
+       }
+      ]
+     },
+     "process_extra_in_kgml": {
+      "runs": 1,
+      "total": 1,
+      "examples": [
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "{enterobactin} -> {ferri-enterobactin}"
+       }
+      ]
+     },
+     "process_extra_in_sbgn": {
+      "runs": 1,
+      "total": 1,
+      "examples": [
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "{enterobactin} -> {ferri-enterobactin}"
+       }
+      ]
+     },
+     "process_extra_in_sbml": {
+      "runs": 1,
+      "total": 1,
+      "examples": [
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "{Fe3, enterobactin} -> {ferri-enterobactin}"
+       }
+      ]
+     },
+     "process_missing_in_kgml": {
+      "runs": 3,
+      "total": 4,
+      "examples": [
+       {
+        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
+        "example": "{Dishevelled} -> {Dishevelled}"
+       },
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "{Fe3+, enterobactin} -> {ferri-enterobactin}"
+       },
+       {
+        "run": "IN/Project14-T2PW/runs_smoke/2026-09-10_1135/papers/PMC13405594/strict",
+        "example": "{SREBF2} -> {SREBF2}"
+       }
+      ]
+     },
+     "process_missing_in_sbgn": {
+      "runs": 1,
+      "total": 1,
+      "examples": [
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "{Fe3+, enterobactin} -> {ferri-enterobactin}"
+       }
+      ]
+     },
+     "process_missing_in_sbml": {
+      "runs": 1,
+      "total": 1,
+      "examples": [
+       {
+        "run": "N/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12452463/strict",
+        "example": "{Fe3+, enterobactin} -> {ferri-enterobactin}"
+       }
+      ]
+     },
+     "unresolved_reference:sbml": {
+      "runs": 1,
+      "total": 1,
+      "examples": [
+       {
+        "run": "ORCH-759/legs/wnt_pcp-strict/2026-10-22_1432/papers/PMC10425814/strict",
+        "example": "interaction endpoint unresolved: Dishevelled (Dvl) -> Invs"
+       }
+      ]
+     }
+    },
+    "known_difference_totals": {
+     "d_pathwhiz_complex_wrapper": 109,
+     "f_unknown_sentinel": 182,
+     "b_sbgn_entities_only_in_interactions": 130,
+     "a_canonical_names": 0,
+     "e_pwml_withheld_interactions": 145,
+     "g_pwml_modifier_interactions": 7,
+     "b_sbgn_interactions_not_compared": 192,
+     "b_sbgn_omitted_regulatory_arcs": 0,
+     "f_unplaced_entities": 286,
+     "j_sbgn_assumed_placements": 46,
+     "m_nonanchored_no_placement_overlap": 7,
+     "k_sbml_only_placements": 191,
+     "a_compartment_names": 23,
+     "h_pwml_extra_placements": 183,
+     "c_kgml_has_no_compartments_or_catalysts": 97
+    },
+    "compartment_renames": {
+     "pwml=Extracellular Space sbml=extracellular": 5,
+     "pwml=Mitochondrion sbml=mitochondria": 3,
+     "pwml=Mitochondrion sbgn=mitochondria": 3,
+     "pwml=Extracellular Space sbgn=extracellular": 3,
+     "pwml=endoplasmic reticulum sbml=cell": 3,
+     "pwml=Cell Membrane sbml=plasma membrane": 1,
+     "pwml=Cell Membrane sbgn=plasma membrane": 1,
+     "pwml=cytoplasm sbgn=extracellular": 1,
+     "pwml=Inner Membrane sbml=inner membrane (IM)": 1,
+     "pwml=Inner Membrane sbgn=inner membrane (IM)": 1,
+     "pwml=Extracellular Space sbml=cell": 1
+    },
+    "nonanchored_no_placement_overlap_examples": [
+     {
+      "run": "N/Project14-T2PW/runs_verify/2026-08-25_1216/papers/PMC12444477/strict",
+      "example": "PldA: pwml=['Outer Membrane', 'cytoplasm'] sbml=['outer membrane (OM)']"
+     },
+     {
+      "run": "IN/Project14-T2PW/runs_smoke/2026-09-07_2323/papers/PMC11487621/strict",
+      "example": "EcfT: pwml=['Cell Membrane', 'cell', 'cytoplasm'] sbml=['plasma membrane']"
+     },
+     {
+      "run": "IN/Project14-T2PW/runs_smoke/2026-09-07_2323/papers/PMC11487621/strict",
+      "example": "TcyJ: pwml=['Cell Membrane', 'cell', 'cytoplasm'] sbml=['plasma membrane']"
+     }
+    ],
+    "unknown_sentinel_per_format": {
+     "pwml": 41,
+     "sbml": 0,
+     "sbgn": 141,
+     "kgml": 0
+    }
+   }
+  },
+  "faithfulness": {
+   "found_rate_before_fold": 0.6541,
+   "found_rate_after_fold": 0.6836,
+   "paper_quotes": {
+    "runs": 97,
+    "runs_no_text": 2,
+    "n": 1821,
+    "verbatim": 1149,
+    "fragments": 11,
+    "not_found": 537,
+    "no_text": 60,
+    "short": 64,
+    "before_fold_verbatim": 1099,
+    "before_fold_fragments": 11,
+    "before_fold_not_found": 587
+   },
+   "found_rate_of_judged": 0.6836,
+   "verbatim_rate_of_judged": 0.6771,
+   "not_found_examples": [
+    {
+     "key": "processes.transports:h+:apicalsidestate>typeiiicellcytoplasmstate",
+     "quote": "transduction of sour involves permeation of H+ through an apical ion channel subsequently identified as OTOP1"
+    },
+    {
+     "key": "processes.transports:5ht:synapticvesiclestate>synapsestate",
+     "quote": "Activity-dependent release of ATP from Type II cells and 5-HT from Type III cells"
+    },
+    {
+     "key": "processes.transports:h+:typeiiicellapicalstate>typeiiicellcytosolicstate",
+     "quote": "transduction of sour involves permeation of H + through an apical ion channel subsequently identified as OTOP1"
+    },
+    {
+     "key": "processes.transports:h+:>typeiiicellstate",
+     "quote": "transduction of sour involves permeation of H+ through an apical ion channel subsequently identified as OTOP1"
+    },
+    {
+     "key": "processes.transports:5ht:typeiiicellstate>",
+     "quote": "contribution of 5-HT acting on neural 5-HT 3 receptors has been elucidated in terms of transmission of sour taste"
+    }
+   ],
+   "audit_modified_only_totals": {
+    "elements": 84,
+    "without_quote": 31,
+    "with_quote": 53,
+    "quote_verbatim": 22,
+    "quote_fragments": 0,
+    "quote_not_found": 27,
+    "no_text": 3,
+    "short_quotes": 1,
+    "promotion_candidates": 22,
+    "promotion_candidates_before_fold": 22
+   },
+   "extended": {
+    "no_extension_runs": 97,
+    "database_elements": 1715,
+    "database_no_cache": 1715,
+    "other_paper_quotes": 5,
+    "other_paper_no_cache": 5
+   }
+  }
+ }
+}

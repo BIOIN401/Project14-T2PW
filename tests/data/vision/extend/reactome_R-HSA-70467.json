@@ -1,0 +1,167 @@
+{
+ "https://reactome.org/ContentService/data/query/R-HSA-70467": {
+  "stId": "R-HSA-70467",
+  "displayName": "PFK tetramer phosphorylates Fru(6)P",
+  "input": [
+   {
+    "dbId": 29512,
+    "displayName": "Fru(6)P [cytosol]"
+   },
+   {
+    "dbId": 113592,
+    "displayName": "ATP [cytosol]"
+   }
+  ],
+  "output": [
+   {
+    "dbId": 30014,
+    "displayName": "F1,6PP [cytosol]"
+   },
+   {
+    "dbId": 29370,
+    "displayName": "ADP [cytosol]"
+   },
+   {
+    "dbId": 70106,
+    "displayName": "H+ [cytosol]"
+   }
+  ],
+  "catalystActivity": [
+   {
+    "dbId": 70466,
+    "displayName": "6-phosphofructokinase activity of PFK tetramer [cytosol]"
+   }
+  ],
+  "compartment": [
+   {
+    "displayName": "cytosol"
+   }
+  ]
+ },
+ "https://reactome.org/ContentService/data/participants/R-HSA-70467": [
+  {
+   "peDbId": 179517,
+   "displayName": "PFK tetramer [cytosol]",
+   "schemaClass": "DefinedSet",
+   "refEntities": [
+    {
+     "identifier": "P17858",
+     "displayName": "UniProt:P17858 PFKL",
+     "schemaClass": "ReferenceGeneProduct"
+    },
+    {
+     "identifier": "P08237",
+     "displayName": "UniProt:P08237 PFKM",
+     "schemaClass": "ReferenceGeneProduct"
+    },
+    {
+     "identifier": "Q01813",
+     "displayName": "UniProt:Q01813 PFKP",
+     "schemaClass": "ReferenceGeneProduct"
+    }
+   ]
+  },
+  {
+   "peDbId": 29512,
+   "displayName": "Fru(6)P [cytosol]",
+   "schemaClass": "SimpleEntity",
+   "refEntities": [
+    {
+     "identifier": "57634",
+     "displayName": "beta-D-fructofuranose 6-phosphate(2-) [ChEBI:57634]",
+     "schemaClass": "ReferenceMolecule"
+    }
+   ]
+  },
+  {
+   "peDbId": 113592,
+   "displayName": "ATP [cytosol]",
+   "schemaClass": "SimpleEntity",
+   "refEntities": [
+    {
+     "identifier": "30616",
+     "displayName": "ATP(4-) [ChEBI:30616]",
+     "schemaClass": "ReferenceMolecule"
+    }
+   ]
+  },
+  {
+   "peDbId": 29370,
+   "displayName": "ADP [cytosol]",
+   "schemaClass": "SimpleEntity",
+   "refEntities": [
+    {
+     "identifier": "456216",
+     "displayName": "ADP(3-) [ChEBI:456216]",
+     "schemaClass": "ReferenceMolecule"
+    }
+   ]
+  },
+  {
+   "peDbId": 70106,
+   "displayName": "H+ [cytosol]",
+   "schemaClass": "SimpleEntity",
+   "refEntities": [
+    {
+     "identifier": "15378",
+     "displayName": "hydron [ChEBI:15378]",
+     "schemaClass": "ReferenceMolecule"
+    }
+   ]
+  },
+  {
+   "peDbId": 30014,
+   "displayName": "F1,6PP [cytosol]",
+   "schemaClass": "SimpleEntity",
+   "refEntities": [
+    {
+     "identifier": "32966",
+     "displayName": "beta-D-fructofuranose 1,6-bisphosphate(4-) [ChEBI:32966]",
+     "schemaClass": "ReferenceMolecule"
+    }
+   ]
+  },
+  {
+   "peDbId": 76577,
+   "displayName": "AMP [cytosol]",
+   "schemaClass": "SimpleEntity",
+   "refEntities": [
+    {
+     "identifier": "456215",
+     "displayName": "adenosine 5'-monophosphate(2-) [ChEBI:456215]",
+     "schemaClass": "ReferenceMolecule"
+    }
+   ]
+  },
+  {
+   "peDbId": 30533,
+   "displayName": "D-Fructose 2,6-bisphosphate [cytosol]",
+   "schemaClass": "SimpleEntity",
+   "refEntities": [
+    {
+     "identifier": "58579",
+     "displayName": "beta-D-fructofuranose 2,6-bisphosphate(4-) [ChEBI:58579]",
+     "schemaClass": "ReferenceMolecule"
+    }
+   ]
+  },
+  {
+   "peDbId": 76190,
+   "displayName": "CIT [cytosol]",
+   "schemaClass": "SimpleEntity",
+   "refEntities": [
+    {
+     "identifier": "16947",
+     "displayName": "citrate(3-) [ChEBI:16947]",
+     "schemaClass": "ReferenceMolecule"
+    }
+   ]
+  }
+ ],
+ "https://reactome.org/ContentService/data/query/70466": {
+  "dbId": 70466,
+  "physicalEntity": {
+   "dbId": 179517
+  }
+ }
+}

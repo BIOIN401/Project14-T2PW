@@ -1,0 +1,1085 @@
+{
+ "schema": "t2pw.vision.bench_gold/1",
+ "id": "PW495535",
+ "kind": "full",
+ "species": "Homo sapiens",
+ "curated_record": {
+  "accession": "PW495535",
+  "pathway_id": 496059,
+  "name": "Noncanonical WNT PCP signaling",
+  "content_sha256": "c3fb11974aef6c83b53a713d6b760fc5d5c1ce215ad83cbb2ed7c7296a3bc4f5"
+ },
+ "complete": {
+  "reactions": true,
+  "enzymes": true,
+  "transports": true,
+  "interactions": true,
+  "compartments": true
+ },
+ "reactions": [
+  {
+   "id": "PW_R1259210",
+   "label": "",
+   "inputs": [
+    {
+     "name": "Dishevelled",
+     "aliases": [
+      "INVS",
+      "Inversin",
+      "PARD6B",
+      "Partitioning defective 6 homolog beta",
+      "DVL1",
+      "Segment polarity protein dishevelled homolog DVL-1",
+      "SMURF1",
+      "E3 ubiquitin-protein ligase SMURF1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p335291"
+      ],
+      [
+       "uniprot",
+       "q9y283"
+      ],
+      [
+       "uniprot",
+       "q9byg5"
+      ],
+      [
+       "uniprot",
+       "o14640"
+      ],
+      [
+       "uniprot",
+       "q9hce7"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "outputs": [
+    {
+     "name": "Ubiquitinated Prickle",
+     "aliases": [
+      "UBE2D2",
+      "Ubiquitin-conjugating enzyme E2 D2",
+      "PRICKLE1",
+      "Prickle-like protein 1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p335292"
+      ],
+      [
+       "uniprot",
+       "p62837"
+      ],
+      [
+       "uniprot",
+       "q96mt3"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "enzyme": {
+    "name": "Ubiquitin-conjugating enzyme E2 E1",
+    "aliases": [
+     "UBE2E1"
+    ],
+    "ids": [
+     [
+      "pwp",
+      "pw_p007841"
+     ],
+     [
+      "uniprot",
+      "p51965"
+     ]
+    ],
+    "role": "defining"
+   },
+   "catalysts": [
+    {
+     "name": "Ubiquitin-conjugating enzyme E2 E1",
+     "aliases": [
+      "UBE2E1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p007841"
+      ],
+      [
+       "uniprot",
+       "p51965"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "reversible": false
+  }
+ ],
+ "off_scope_reactions": [],
+ "enzymes": [
+  {
+   "id": "E1",
+   "name": "Ubiquitin-conjugating enzyme E2 E1",
+   "aliases": [
+    "UBE2E1"
+   ],
+   "ids": [
+    [
+     "pwp",
+     "pw_p007841"
+    ],
+    [
+     "uniprot",
+     "p51965"
+    ]
+   ],
+   "role": "defining",
+   "for": [
+    "PW_R1259210"
+   ]
+  }
+ ],
+ "transports": [
+  {
+   "id": "PW_T090641",
+   "cargo": [
+    {
+     "name": "Jun with phosphate",
+     "aliases": [
+      "JUN",
+      "Transcription factor Jun"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p388544"
+      ],
+      [
+       "uniprot",
+       "p05412"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "from": "Cytosol",
+   "to": "Nucleus",
+   "transporters": []
+  }
+ ],
+ "interactions": [
+  {
+   "id": "PW_I015748",
+   "a": [
+    {
+     "name": "Proto-oncogene Wnt-1",
+     "aliases": [
+      "WNT1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p008044"
+      ],
+      [
+       "uniprot",
+       "p04628"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "b": [
+    {
+     "name": "Cadherin EGF LAG seven-pass G-type receptor 1",
+     "aliases": [
+      "CELSR1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p416459"
+      ],
+      [
+       "uniprot",
+       "q9nyq6"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "relationship": "activation"
+  },
+  {
+   "id": "PW_I015750",
+   "a": [
+    {
+     "name": "Cadherin EGF LAG seven-pass G-type receptor 1",
+     "aliases": [
+      "CELSR1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p416459"
+      ],
+      [
+       "uniprot",
+       "q9nyq6"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "b": [
+    {
+     "name": "Segment polarity protein dishevelled homolog DVL-1 (DVL1)",
+     "aliases": [
+      "DVL1",
+      "Segment polarity protein dishevelled homolog DVL-1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p008048"
+      ],
+      [
+       "uniprot",
+       "o14640"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "relationship": "activation"
+  },
+  {
+   "id": "PW_I015751",
+   "a": [
+    {
+     "name": "Proto-oncogene Wnt-1",
+     "aliases": [
+      "WNT1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p008044"
+      ],
+      [
+       "uniprot",
+       "p04628"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "b": [
+    {
+     "name": "Vang-like protein 2",
+     "aliases": [
+      "VANGL2"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p416460"
+      ],
+      [
+       "uniprot",
+       "q9ulk5"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "relationship": "activation"
+  },
+  {
+   "id": "PW_I015752",
+   "a": [
+    {
+     "name": "Vang-like protein 2",
+     "aliases": [
+      "VANGL2"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p416460"
+      ],
+      [
+       "uniprot",
+       "q9ulk5"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "b": [
+    {
+     "name": "Prickle - DVL1 - Inturned",
+     "aliases": [
+      "DVL1",
+      "Segment polarity protein dishevelled homolog DVL-1",
+      "PRICKLE1",
+      "Prickle-like protein 1",
+      "INTU",
+      "Protein inturned"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p416461"
+      ],
+      [
+       "uniprot",
+       "o14640"
+      ],
+      [
+       "uniprot",
+       "q96mt3"
+      ],
+      [
+       "uniprot",
+       "q9uld6"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "relationship": "activation"
+  },
+  {
+   "id": "PW_I015753",
+   "a": [
+    {
+     "name": "Prickle - DVL1 - Inturned",
+     "aliases": [
+      "DVL1",
+      "Segment polarity protein dishevelled homolog DVL-1",
+      "PRICKLE1",
+      "Prickle-like protein 1",
+      "INTU",
+      "Protein inturned"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p416461"
+      ],
+      [
+       "uniprot",
+       "o14640"
+      ],
+      [
+       "uniprot",
+       "q96mt3"
+      ],
+      [
+       "uniprot",
+       "q9uld6"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "b": [
+    {
+     "name": "Dvl1 - inversin",
+     "aliases": [
+      "INVS",
+      "Inversin",
+      "DVL1",
+      "Segment polarity protein dishevelled homolog DVL-1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p416462"
+      ],
+      [
+       "uniprot",
+       "q9y283"
+      ],
+      [
+       "uniprot",
+       "o14640"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "relationship": "activation"
+  },
+  {
+   "id": "PW_I003755",
+   "a": [
+    {
+     "name": "Transforming protein RhoA",
+     "aliases": [
+      "RHOA"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p007530"
+      ],
+      [
+       "uniprot",
+       "p61586"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "b": [
+    {
+     "name": "Rho-associated protein kinase 1",
+     "aliases": [
+      "ROCK1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p007533"
+      ],
+      [
+       "uniprot",
+       "q13464"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "relationship": "activation"
+  },
+  {
+   "id": "PW_I008548",
+   "a": [
+    {
+     "name": "Proto-oncogene Wnt-1",
+     "aliases": [
+      "WNT1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p008044"
+      ],
+      [
+       "uniprot",
+       "p04628"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "b": [
+    {
+     "name": "Frizzled receptor complex",
+     "aliases": [
+      "FZD10",
+      "Frizzled-10",
+      "FZD1",
+      "Frizzled-1",
+      "FZD2",
+      "Frizzled-2",
+      "FZD3",
+      "Frizzled-3",
+      "FZD4",
+      "Frizzled-4",
+      "FZD5",
+      "Frizzled-5",
+      "FZD6",
+      "Frizzled-6",
+      "FZD7",
+      "Frizzled-7"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p008047"
+      ],
+      [
+       "uniprot",
+       "q9ulw2"
+      ],
+      [
+       "uniprot",
+       "q9up38"
+      ],
+      [
+       "uniprot",
+       "q14332"
+      ],
+      [
+       "uniprot",
+       "q9npg1"
+      ],
+      [
+       "uniprot",
+       "q9ulv1"
+      ],
+      [
+       "uniprot",
+       "q13467"
+      ],
+      [
+       "uniprot",
+       "o60353"
+      ],
+      [
+       "uniprot",
+       "o75084"
+      ],
+      [
+       "uniprot",
+       "q9h461"
+      ],
+      [
+       "uniprot",
+       "o00144"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "relationship": "activation"
+  },
+  {
+   "id": "PW_I008568",
+   "a": [
+    {
+     "name": "Proto-oncogene Wnt-1",
+     "aliases": [
+      "WNT1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p008044"
+      ],
+      [
+       "uniprot",
+       "p04628"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "b": [
+    {
+     "name": "Inactive tyrosine-protein kinase transmembrane receptor ROR1",
+     "aliases": [
+      "ROR1",
+      "ROR1 protein"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p335290"
+      ],
+      [
+       "uniprot",
+       "q01973"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "relationship": "activation"
+  },
+  {
+   "id": "PW_I008569",
+   "a": [
+    {
+     "name": "Frizzled receptor complex",
+     "aliases": [
+      "FZD10",
+      "Frizzled-10",
+      "FZD1",
+      "Frizzled-1",
+      "FZD2",
+      "Frizzled-2",
+      "FZD3",
+      "Frizzled-3",
+      "FZD4",
+      "Frizzled-4",
+      "FZD5",
+      "Frizzled-5",
+      "FZD6",
+      "Frizzled-6",
+      "FZD7",
+      "Frizzled-7"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p008047"
+      ],
+      [
+       "uniprot",
+       "q9ulw2"
+      ],
+      [
+       "uniprot",
+       "q9up38"
+      ],
+      [
+       "uniprot",
+       "q14332"
+      ],
+      [
+       "uniprot",
+       "q9npg1"
+      ],
+      [
+       "uniprot",
+       "q9ulv1"
+      ],
+      [
+       "uniprot",
+       "q13467"
+      ],
+      [
+       "uniprot",
+       "o60353"
+      ],
+      [
+       "uniprot",
+       "o75084"
+      ],
+      [
+       "uniprot",
+       "q9h461"
+      ],
+      [
+       "uniprot",
+       "o00144"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "b": [
+    {
+     "name": "Dishevelled",
+     "aliases": [
+      "INVS",
+      "Inversin",
+      "PARD6B",
+      "Partitioning defective 6 homolog beta",
+      "DVL1",
+      "Segment polarity protein dishevelled homolog DVL-1",
+      "SMURF1",
+      "E3 ubiquitin-protein ligase SMURF1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p335291"
+      ],
+      [
+       "uniprot",
+       "q9y283"
+      ],
+      [
+       "uniprot",
+       "q9byg5"
+      ],
+      [
+       "uniprot",
+       "o14640"
+      ],
+      [
+       "uniprot",
+       "q9hce7"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "relationship": "activation"
+  },
+  {
+   "id": "PW_I008570",
+   "a": [
+    {
+     "name": "Segment polarity protein dishevelled homolog DVL-1 (DVL1)",
+     "aliases": [
+      "DVL1",
+      "Segment polarity protein dishevelled homolog DVL-1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p008048"
+      ],
+      [
+       "uniprot",
+       "o14640"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "b": [
+    {
+     "name": "Disheveled-associated activator of morphogenesis 1",
+     "aliases": [
+      "DAAM1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p335371"
+      ],
+      [
+       "uniprot",
+       "q9y4d1"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "relationship": "activation"
+  },
+  {
+   "id": "PW_I008572",
+   "a": [
+    {
+     "name": "Disheveled-associated activator of morphogenesis 1",
+     "aliases": [
+      "DAAM1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p335371"
+      ],
+      [
+       "uniprot",
+       "q9y4d1"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "b": [
+    {
+     "name": "Profilin-1",
+     "aliases": [
+      "PFN1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p335380"
+      ],
+      [
+       "uniprot",
+       "p07737"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "relationship": "activation"
+  },
+  {
+   "id": "PW_I008573",
+   "a": [
+    {
+     "name": "Disheveled-associated activator of morphogenesis 1",
+     "aliases": [
+      "DAAM1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p335371"
+      ],
+      [
+       "uniprot",
+       "q9y4d1"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "b": [
+    {
+     "name": "Transforming protein RhoA",
+     "aliases": [
+      "RHOA"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p007530"
+      ],
+      [
+       "uniprot",
+       "p61586"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "relationship": "activation"
+  },
+  {
+   "id": "PW_I008574",
+   "a": [
+    {
+     "name": "Disheveled-associated activator of morphogenesis 1",
+     "aliases": [
+      "DAAM1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p335371"
+      ],
+      [
+       "uniprot",
+       "q9y4d1"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "b": [
+    {
+     "name": "Ras-related C3 botulinum toxin substrate 1",
+     "aliases": [
+      "RAC1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p000903"
+      ],
+      [
+       "uniprot",
+       "p63000"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "relationship": "activation"
+  },
+  {
+   "id": "PW_I008575",
+   "a": [
+    {
+     "name": "Transforming protein RhoA",
+     "aliases": [
+      "RHOA"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p007530"
+      ],
+      [
+       "uniprot",
+       "p61586"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "b": [
+    {
+     "name": "Protein diaphanous homolog 1",
+     "aliases": [
+      "DIAPH1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p335389"
+      ],
+      [
+       "uniprot",
+       "o60610"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "relationship": "activation"
+  },
+  {
+   "id": "PW_I008597",
+   "a": [
+    {
+     "name": "Ras-related C3 botulinum toxin substrate 1",
+     "aliases": [
+      "RAC1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p000903"
+      ],
+      [
+       "uniprot",
+       "p63000"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "b": [
+    {
+     "name": "Mitogen-activated protein kinase 8 with Phosphate",
+     "aliases": [
+      "MAPK8",
+      "Mitogen-activated protein kinase 8"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p007925"
+      ],
+      [
+       "uniprot",
+       "p45983"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "relationship": "activation"
+  },
+  {
+   "id": "PW_I008658",
+   "a": [
+    {
+     "name": "Mitogen-activated protein kinase 8 with Phosphate",
+     "aliases": [
+      "MAPK8",
+      "Mitogen-activated protein kinase 8"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p007925"
+      ],
+      [
+       "uniprot",
+       "p45983"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "b": [
+    {
+     "name": "Jun with phosphate",
+     "aliases": [
+      "JUN",
+      "Transcription factor Jun"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p388544"
+      ],
+      [
+       "uniprot",
+       "p05412"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "relationship": "activation"
+  },
+  {
+   "id": "PW_I008659",
+   "a": [
+    {
+     "name": "Rho-associated protein kinase 1",
+     "aliases": [
+      "ROCK1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p007533"
+      ],
+      [
+       "uniprot",
+       "q13464"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "b": [
+    {
+     "name": "Myosin regulatory light chain 12B",
+     "aliases": [
+      "MYL12B"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p388558"
+      ],
+      [
+       "uniprot",
+       "o14950"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "relationship": "activation"
+  }
+ ],
+ "compartments": [
+  {
+   "id": "C1",
+   "name": "Membrane",
+   "aliases": [],
+   "ids": [],
+   "role": "defining"
+  },
+  {
+   "id": "C2",
+   "name": "Cytosol",
+   "aliases": [],
+   "ids": [],
+   "role": "defining"
+  },
+  {
+   "id": "C3",
+   "name": "Cell Membrane",
+   "aliases": [],
+   "ids": [],
+   "role": "defining"
+  },
+  {
+   "id": "C4",
+   "name": "Nucleus",
+   "aliases": [],
+   "ids": [],
+   "role": "defining"
+  }
+ ],
+ "skipped_processes": []
+}

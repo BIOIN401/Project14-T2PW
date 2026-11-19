@@ -1,0 +1,250 @@
+{
+ "lane": "V4",
+ "branch": "vision/extend-db",
+ "status": "done (pending static review): round 4 (73863779) unit-tested 33/33 and live-proved on 6 runs; fresh 10-step check: conversion fidelity 10/10 (merge gate >= 9/10 met), biology 9/10 (the miss is a PathBank source error, curator note). The 3 round-3 wrongs: ours fixed, 2 source errors unchanged and noted. T2PW_EXTEND stays default OFF; turning it on needs biology >= 9/10 as a standing gate (gates_ruling).",
+ "live_round_4": {
+  "tests": "batch2-v4-unit: 33 passed (C:/t/vis-runs/logs/batch2-v4-unit.log); v4-live-4: BW_EXIT=0, 0 survivors (C:/t/vis-runs/logs/v4-live-4.log, dump C:/t/vis-runs/scratch/vis-extend-db/dump4); evidence docs/vision/evidence/V4 (round 3 is in commit 12dbb847)",
+  "per_run": {
+   "menaquinone": "species now L. lactis only (S1b); no PathBank / Reactome / WikiPathways pathway shares >= 2 entities -> no extension; DEFAULT = FULL = base (19 reactions). Round 3 attached the Arabidopsis ubiquinone pathway.",
+   "enterobactin": "unchanged: 6 merged / 12 hop1 / 3 hop2+ / 1 none; 1 H+-only twin",
+   "lipid A": "unchanged: 0 / 9 / 73 / 3; WikiPathways WP2472 0 steps",
+   "human": "14 / 81 / 39 / 92; the C18-S1P step is now a transport cytosol -> extracellular region with ABCC1 and ABCG2 as transporters; reactions FULL 208",
+   "Arabidopsis": "0 / 37 / 33 / 4; PW_R213418 now reads coproporphyrinogen III + O2 -> Coproporphyrin III + H2O2 (S5b)",
+   "mouse": "unchanged: 1 / 42 / 44 / 36"
+  },
+  "recheck_round_3_wrongs": {
+   "R-HSA-9843721 (ours)": "fixed: transport, cargo C18-S1P, from 'cytosol (Homo sapiens)' to 'extracellular region (Homo sapiens)'",
+   "PW766996 PW_R2146855 CAO on chlorophyll a (source)": "unchanged, faithful to PathBank; curator note",
+   "PW000760 PW_R1998772 ferric citrate lumped (source)": "unchanged, faithful to PathBank; curator note",
+   "also": "PW_R213418 coproporphyrin self-loop fixed; menaquinone no longer extended with an Arabidopsis pathway"
+  },
+  "hand_check": {
+   "seed_reason": "the seed is the round number (round 3 used seed 3, round 4 seed 4), fixed before the draw and run once, so the sample is new and not chosen after looking; the 20 steps checked in rounds 2-3 are excluded by accession. Scripts committed: docs/vision/evidence/V4/sample.py and fidelity.py",
+   "sample": "sample.py seed 4 over the round-4 added reaction steps, excluding the 20 steps checked in rounds 2-3: 4 PathBank hop-1, 4 WikiPathways hop-1, 2 Reactome (any hop). Fidelity read back from the source: PathBank by a read-only SELECT per reaction (fidelity.py through launch.py), WikiPathways from the cached GPML line, Reactome from the cached ContentService record. Biology against UniProt / known enzymology.",
+   "steps": [
+    {"step": "human PathBank PW000148 PW_R001193 sphingosine-1-phosphate -> ethanolamine phosphate + palmitaldehyde (SGPL1)", "fidelity": "match (source: Sphingosine 1-phosphate > O-Phosphoethanolamine + Palmitaldehyde; our 'ethanolamine phosphate' is the paper's row joined by id)", "biology": "wrong (source): UniProt O95470: sphing-4-enine 1-phosphate = (2E)-hexadecenal + phosphoethanolamine; hexadecanal (palmitaldehyde) comes from sphinganine 1-phosphate"},
+    {"step": "human PathBank PW000148 PW_R001218 ceramide + UDP-glucose -> glucosylceramide + UDP (UGCG)", "fidelity": "match", "biology": "correct"},
+    {"step": "mouse PathBank PW064670 PW_R109721 testosterone + NAD+ <> androstenedione + NADH + H+ (HSD17B3)", "fidelity": "match (NAD -> NAD+, Hydrogen Ion -> H+ by the currency id table)", "biology": "correct (reversible 17beta-HSD step)"},
+    {"step": "Arabidopsis PathBank PW124167 PW_R213421 hydroxymethylbilane -> uroporphyrinogen III + H2O (UROS)", "fidelity": "match", "biology": "correct"},
+    {"step": "human WikiPathways WP1422 id3beb065f dihydroceramide -> DH-Cer-1-P", "fidelity": "match (GPML label 'DHCer1P'; joined by id to the WP4725 row 'DH-Cer-1-P')", "biology": "correct (ceramide kinase also phosphorylates dihydroceramide)"},
+    {"step": "mouse WikiPathways WP1264 da314 estradiol sulfate -> estradiol (STS)", "fidelity": "match", "biology": "correct"},
+    {"step": "mouse WikiPathways WP1264 b964e estrone -> 16alpha-hydroxyestrone", "fidelity": "match", "biology": "correct (CYP 16alpha-hydroxylation)"},
+    {"step": "mouse WikiPathways WP1264 b75f6 estradiol -> estradiol sulfate (SULT1E1)", "fidelity": "match", "biology": "correct"},
+    {"step": "mouse Reactome R-MMU-6786239 CYP4V2 omega-hydroxylates DHA to HDoHE", "fidelity": "match (no compartment chosen: ER membrane + cytosol)", "biology": "correct"},
+    {"step": "mouse Reactome R-MMU-193845 CYP8B1 12-hydroxylates 4CHOL7a,27DONE", "fidelity": "match", "biology": "correct"}
+   ],
+   "conversion_fidelity": "10/10 (merge gate >= 9/10: met)",
+   "biology": "9/10; the miss is a PathBank source error (S1P lyase product named palmitaldehyde instead of (2E)-hexadecenal), recorded as a curator note",
+   "note": "both bars hold on this sample; the standing biology gate for T2PW_EXTEND on is still open across rounds (rounds 2-3 found source errors KDSR, CAO, ferric citrate, now S1P lyase)"
+  }
+ },
+ "gates_ruling": {
+  "source": "main orchestrator, 2026-11-18",
+  "conversion_fidelity": "each checked step must match its source record; >= 9/10 on a fresh 10-step check is required to merge",
+  "biology": "whether each step is true; reported with every miss explained; source errors become curator notes on rows whose provenance names the source record; no merge minimum",
+  "standing_condition": "biology >= 9/10 is the gate for ever turning T2PW_EXTEND on by default",
+  "likely_route": "a later lane: cross-check database-sourced enzyme steps against UniProt catalytic activity / Rhea before admission (CAO on chlorophyll a, KDSR with NADPH on the wrong side and similar source errors would be caught that way)"
+ },
+ "round_4": {
+  "commit": "73863779",
+  "S1b": "used_species: the species of the states the paper's processes use; protein / complex species only when no state names one. Round 3 still chose Arabidopsis for menaquinone because the MenA / MenI wrapper complexes carry a borrowed 'Arabidopsis thaliana' species (and a protein 'Unknown' with an Arabidopsis PathBank identity). Test: test_s1_unused_species_row_never_chooses_the_organism (extended)",
+  "S5b": "to_rows drops an incoming synonym that names another incoming entity of the same pathway (counted synonyms_dropped_batch_collision). Round 3 still wrote PW_R213418 as coproporphyrinogen III -> coproporphyrinogen III: PathBank's coproporphyrinogen III row lists 'Coproporphyrin III' as a synonym; it joined the paper row by id, merge_extension aliased all its names to that row, and the separate incoming 'Coproporphyrin III' references were rewritten onto it. S5 (no name-only join) was not the mechanism. Test: test_s5b_incoming_synonym_naming_another_incoming_entity_is_dropped",
+  "reactome_transport": "one cargo that changes compartment with only currency beside it becomes a transport (note 'coupled currency not carried'). R-HSA-9843721 (ABCC1,ABCG2 transport C18-S1P) was written as C18-S1P + ATP + H2O -> C18-S1P + ADP + H+ + Pi with no compartment. Test: test_reactome_atp_coupled_transport_is_a_transport",
+  "self_loop_guard": "convert skips a reaction whose two sides are the same after currency (counted skipped_self_loop): such a row is a transport or a wrong join, never a reaction. Test: test_self_loop_reaction_is_skipped",
+  "to_run": ["unit: tests/test_vision_extend_merge.py (33 tests), PYTHONPATH=C:/t/vis-extend-db/src, min 2 GB", "live: same launcher and live_proof.py, min 4 GB, dump dir C:/t/vis-runs/scratch/vis-extend-db/dump4", "then: re-check the 3 round-3 wrongs, 10 fresh steps, secret scan"]
+ },
+ "live_round_3": {
+  "log": "C:/t/vis-runs/logs/v4-live-3.log (BW_EXIT=0, 0 survivors); dump C:/t/vis-runs/scratch/vis-extend-db/dump3; evidence docs/vision/evidence/V4 (overwrites round 2; round 2 is in commit 0373ba30)",
+  "per_run_vs_round_2": {
+   "menaquinone": "unchanged: PathBank PW123993 Ubiquinone Biosynthesis (Arabidopsis) 0 merged / 5 hop1 / 39 hop2+; Reactome no longer crashes (S3: 'Arabidopsis without a taxId: source skipped'); WikiPathways no candidates. S1 did not exclude Arabidopsis (see round_4.S1b).",
+   "enterobactin": "unchanged: PW000760, PW002048, PW000751; 6 merged / 12 / 3 / 1 none; 1 H+-only twin; Reactome and WikiPathways no candidates; 29 s (was 48 s).",
+   "lipid A": "PathBank unchanged (0 / 9 / 73 / 3); Reactome now no candidates (19 ids probed; was BudgetExceeded); WikiPathways WP2472 'E. coli K-12 peripherome' reached but 0 steps (414 lines not converted); PathBank overran its 60 s share (84.6 s total; the budget is not hard inside one extract).",
+   "human": "PathBank PW569256 + PW000148 (PW127250 not reached: 60 s share); Reactome R-HSA-1660661 + R-HSA-9845614 now read 1 step each (was 0); WikiPathways WP4725, WP1422, WP4726 now applied (was BudgetExceeded). Total 14 merged / 81 hop1 / 39 hop2+ / 92 none; kept apart 3, renamed 14, name join refused (S5) 1; reactions DEFAULT 86 (was 47), FULL 209 (was 55).",
+   "Arabidopsis": "unchanged: 0 / 37 / 33 / 4; kept apart 10; 6 twins; Reactome skipped (S3) instead of KeyError.",
+   "mouse": "S2 effective: both 'Generated Pathway' records skipped (noted not curated); PathBank now PW064569, PW132109 Progesterone Pathway, PW064670 Androstenedione Metabolism; Reactome 3, WikiPathways 2 as before. 1 merged (from PW132109; round 2's 4 merges all came from the generated records) / 42 / 44 / 36 none; reactions DEFAULT 38, FULL 88.",
+   "budget_shares": "pathbank 60 s, then reactome / wikipathways get their share of what is left (e.g. human 29 s / 54 s); no source failed on budget in round 3."
+  },
+  "hand_check": {
+   "sample": "seeded (random.Random(3)) from the round-3 added reaction steps, excluding the 10 checked in round 2: 4 PathBank hop-1, 4 WikiPathways hop-1, 2 Reactome (any hop; only 6 Reactome steps exist). Script C:/t/vis-runs/scratch/vis-extend-db/sample.py",
+   "steps": [
+    {"step": "human PathBank PW569256 PW_R1674708 ceramide <> sphingomyelin (plasma membrane)", "verdict": "correct", "note": "sphingomyelin synthase / sphingomyelinase axis; PC/DAG co-substrates not given by the source"},
+    {"step": "Arabidopsis PathBank PW766996 PW_R2146855 chlorophyll a + O2 -> chlorophyll b + H2O (CAO)", "verdict": "wrong (source)", "note": "UniProt Q9MBA1 (CAO): acts specifically on chlorophyllide a, not on chlorophyll a (chlorophyllide a + 2 NADPH + 2 O2 + 2 H+ = chlorophyllide b + ...). Converted faithfully from PathBank."},
+    {"step": "Arabidopsis PathBank PW766996 PW_R2146839 5-aminolevulinate -> porphobilinogen + H2O + H+ (HEMB)", "verdict": "correct", "note": "stoichiometry (2 ALA) not carried, as designed"},
+    {"step": "enterobactin PathBank PW000760 PW_R1998772 Fe(III)dicitrate + H2O + ATP -> phosphate + H+ + Fe3+ + citrate + ADP (cytosol)", "verdict": "wrong (source)", "note": "the record lumps the FecBCDE ABC transport of ferric citrate and the release of iron into one cytosolic hydrolysis; ferric citrate is transported intact. Converted faithfully."},
+    {"step": "human WikiPathways WP4725 idf29bfd2c ceramide -> Cer-1-P (CERK)", "verdict": "correct", "note": "ATP/ADP not drawn"},
+    {"step": "human WikiPathways WP1422 ca982 Ceramides -> Sphingomyelin [wikipathways] (SGMS)", "verdict": "correct", "note": "renamed row: the WP sphingomyelin's ids conflict with the paper's, so it shows as a second sphingomyelin (under-merge, not wrong biology)"},
+    {"step": "human WikiPathways WP1422 fe0df sphingosine-1-phosphate -> ethanolamine phosphate (SGPL1)", "verdict": "correct", "note": "the (2E)-hexadecenal co-product is not drawn on that line"},
+    {"step": "human WikiPathways WP1422 fa7c8 Ceramides -> Gal-Cer (UGT8)", "verdict": "correct", "note": "UDP-galactose not drawn"},
+    {"step": "human Reactome R-HSA-9843721 ABCC1,ABCG2 transport C18-S1P to extracellular region", "verdict": "wrong (ours)", "note": "written as the reaction C18-S1P + ATP + H2O -> C18-S1P + ADP + H+ + Pi with no compartment; the transport detector only took 1:1 steps. Fixed in round 4 (reactome_transport + self_loop_guard)."},
+    {"step": "mouse Reactome R-MMU-193068 CYP17A1 17-hydroxylates PREG: pregnenolone + O2 + NADPH + H+ -> 17alpha-hydroxypregnenolone + NADP+ + H2O", "verdict": "correct", "note": "no compartment chosen (cytosol + ER membrane listed)"}
+   ],
+   "biology_correct": 7, "biology_wrong": 3, "conversion_faithful": 9, "conversion_wrong": 1,
+   "bar": "9/10 not met for biology (7/10). The 2 source errors (CAO on chlorophyll a; lumped ferric citrate uptake) are curated-database content that V4 copies faithfully, like KDSR in round 2; only a curator fix or a per-step plausibility check would remove them. Our 1 error is fixed in round 4 but not yet re-run.",
+   "also_seen_outside_the_sample": "PW_R213418 (Arabidopsis) still reads coproporphyrinogen III -> coproporphyrinogen III in round 3: fixed by round_4.S5b (and the self-loop guard). Menaquinone still extended with the Arabidopsis ubiquinone pathway: fixed by round_4.S1b."
+  }
+ },
+ "curator_notes_round_4": [
+  "PathBank PW000148 (Sphingolipid Metabolism, human) PW_R001193: SGPL1 on sphingosine 1-phosphate gives (2E)-hexadecenal + phosphoethanolamine (UniProt O95470); the record names palmitaldehyde (hexadecanal), the product from sphinganine 1-phosphate. The overlay row's provenance names pathbank:PW000148 / PW_R001193."
+ ],
+ "curator_notes_round_3": [
+  "PathBank PW766996 (Chlorophyll biosynthesis, Arabidopsis) PW_R2146855: CAO is written on chlorophyll a; UniProt Q9MBA1 says it acts on chlorophyllide a only.",
+  "PathBank PW000760 (E. coli siderophore NRPS) PW_R1998772: ferric-citrate ABC transport and iron release lumped into one cytosolic ATP hydrolysis."
+ ],
+ "round_3": {
+  "commit": "0fc6f3d2",
+  "S1": "paper_context takes only species that the paper's proteins / complexes (species, organism) or the states its processes use name; a used species without a row is added by name. Test: test_s1_unused_species_row_never_chooses_the_organism",
+  "S2": "pathbank.candidates skips 'Generated Pathway <n>' records (noted 'not curated'). Test: test_s2_generated_pathway_records_are_excluded_and_s7_names_cleaned",
+  "S3": "reactome.fetch: a species listed without a taxId skips the source with a note. Test: test_s3_reactome_species_without_taxid_skips_the_source",
+  "S4": "extend_big_payload: SHARES pathbank 2, reactome 1, wikipathways 1; each source gets its share of the budget left, so unused time passes on (report.sources.<src>.budget_s). Test: test_s4_each_source_gets_its_share_of_what_is_left",
+  "S5": "convert.entity: a match is refused when both rows are grounded and share no agreeing id (counted name_join_refused_no_shared_id); the incoming row is then kept apart as 'name [db]'. Test: test_s5_grounded_rows_never_join_on_a_synonym_alone (Coproporphyrin III vs coproporphyrinogen III)",
+  "S7": "pathbank: names, synonyms, component and pathway names whitespace-cleaned. Tests: test_s7_pathbank_participant_names_are_stripped, test_s2_...",
+  "also": "currency_only_twins lists each pair once (round 2 listed ext-ext pairs from both sides)",
+  "provenance": "every database row's record names its source pathway and step (e.g. source 'pathbank:PW000148', note 'pathbank PW000148 reaction PW_R001169 ...'). Test: test_source_provenance_names_the_pathway_and_step"
+ },
+ "curator_notes": [
+  "PathBank PW000148 (Sphingolipid Metabolism, human) reaction PW_R001169 (KDSR): the record reads 'Sphinganine + NADPH -> 3-ketodihydrosphingosine + NADP+'. UniProt Q06136 states sphinganine + NADP+ = 3-oxosphinganine + NADPH + H+, so NADPH is on the wrong side in the source itself. V4 converts it faithfully; the overlay row's provenance names pathbank:PW000148 / PW_R001169 so the error can be traced and reported to the curators."
+ ],
+ "follow_ups": [
+  "S6: a paper row with a non-currency name but a currency synonym (enterobactin 'Adenosine triphosphate' with synonym ATP) still receives database ATP through merge_extension's synonym rename and can act as a hop edge (no hop-1 step depended on it in the 6 live runs). Fix belongs in payload.py (currency by id) or in convert (refuse a currency name that resolves to a non-currency row).",
+  "S8: disease copies of one pathway (PW127250 Gaucher Disease = PW000148 Sphingolipid Metabolism) both enter as candidates; dedupe candidates by step content (e.g. the set of PW_R accessions)."
+ ],
+ "review_round_2": {
+  "R1": "currency_row holds only existing compound rows whose name passes payload.is_currency; otherwise the bare family name (no join to a grounded non-currency row). Test: test_r1_currency_never_joins_a_grounded_non_currency_row",
+  "R2": "Reactome catalyst Set: alternatives only when /data/query/{peDbId} hasMember are all EntityWithAccessionedSequence (and as many UniProt refs); otherwise one name-only complex enzyme, noted. Test: test_r2_catalyst_set_of_complexes_is_one_name_only_enzyme (and the recorded-response test now records hasMember)",
+  "R3": "kept_apart_compartment counted only when the step does not merge. Test: test_r3_kept_apart_not_counted_when_a_stateless_row_merges",
+  "R4": "'intracellular' and GO:0005622 removed from the cytoplasm fold. Test: test_r4_intracellular_is_not_cytoplasm"
+ },
+ "review_round_1": {
+  "F1": "currency compound (by KEGG/ChEBI id table or a currency spelling) -> the existing compound row of its family (raw family: NADP+ is not NAD+), else the bare family name; written name-only (ids in the note), never suffixed. Test: test_f1_charged_currency_forms_join_the_family_row_never_a_hub",
+  "F2": "VD-13 in convert.fold/compatible/pick_reaction/set_state: merge only when one side has no compartment or both fold equal (GO id, else _PLACES table); all candidates tried in merge_extension's order with its VD-11 currency rule; the matched row's own state is emitted (a stateless match takes our state); else written apart with its own state, counted kept_apart_compartment. Interactions the same. Test: test_f2_compartment_fold_decides_the_merge_and_picks_the_right_row",
+  "F3": "Reactome complexes: components only when /data/complex/{id}/subunits has no DefinedSet/CandidateSet/OpenSet, else name only. Test: test_f3_reactome_complex_with_a_nested_set_has_no_components",
+  "F4": "_uniprots_of_complex returns empty when any component is ungrounded (no member-set join). Test: test_f4_member_join_refused_with_an_ungrounded_component",
+  "F5": "renamed_name_conflict is counted per source in report.sources.<src>.counts",
+  "F6": "incoming synonyms that name another existing row are dropped (counted synonyms_dropped_collision). Test: test_f6_incoming_synonym_naming_another_row_is_dropped",
+  "F7": "to_rows + merge_extension per pathway inside try; failure -> note + counts.pathways_failed; source status failed only when every pathway failed. Test: test_f7_one_bad_pathway_does_not_stop_the_source",
+  "F8": "PathBank connect(read_timeout = budget left, connect_timeout <= 10); bounds each query, not one extract's sum: recorded in notes and docstring (not hard)",
+  "F9": "GPML: only an arrowhead on the last point counts; otherwise the line is skipped and noted. Test: test_f9_gpml_arrowhead_not_on_last_point_is_skipped",
+  "F10": "report.overlay_entities_hop_none (asserted in test_currency_metabolites_do_not_create_hops)"
+ },
+ "built": [
+  "src/t2pw/vision/extend/__init__.py: extend_enabled() (T2PW_EXTEND, default off), run_if_enabled() (wiring entry: returns (big, None) when off), extend_big_payload(big, *, sources, budget_s=120, max_pathways=3, cache_dir=None, fetchers=None) -> (big2, report); fail-open per source and per pathway; placement(), currency_only_twins(), overlay_entities_hop_none",
+  "src/t2pw/vision/extend/convert.py: neutral pathway shape -> rows for payload.merge_extension with {kind: database, source, quote: null, stage: extension_db, note}; currency by id table; F4 rename; complex member-set join; VD-13 compartment rule",
+  "src/t2pw/vision/extend/pathbank.py: candidate search (species by taxonomy id / name, then binomial LIKE; overlap = distinct PathBank compounds in reactions + UniProt in reaction enzymes; >= 2 shared; public pw_id via super_pathway_visualizations; one per pathway name), content via pathbank_gold.extract",
+  "src/t2pw/vision/extend/reactome.py: ContentService species/all, mapping/{UniProt|ChEBI}/{id}/pathways?species=, containedEvents, per reaction query + participants + catalyst activity (+ complex subunits, set hasMember)",
+  "src/t2pw/vision/extend/wikipathways.py: findPathwaysByXref.json index (species + ChEBI/UniProt overlap), GPML parse",
+  "src/t2pw/vision/extend/http.py: cached, deadline-aware GET (User-Agent t2pw-vision/0.1)"
+ ],
+ "files": [
+  "src/t2pw/vision/extend/__init__.py", "src/t2pw/vision/extend/convert.py", "src/t2pw/vision/extend/http.py",
+  "src/t2pw/vision/extend/pathbank.py", "src/t2pw/vision/extend/reactome.py", "src/t2pw/vision/extend/wikipathways.py",
+  "tests/test_vision_extend_merge.py", "tests/data/vision/extend/reactome_R-HSA-70467.json",
+  "docs/vision/evidence/V4/<run>.json (6 files, 134 KB)"
+ ],
+ "cache_dir": "C:/t/vis-runs/cache/vis-extend-db (per source subdirectory; outside the repo, nothing added to .gitignore)",
+ "tests": [
+  {"label": "v4-unit-1", "counts": "not run (GATE_BLOCKED)", "log": "C:/t/vis-runs/logs/v4-unit-1.log"},
+  {"label": "v4-unit-2", "counts": "12 passed (round-0 code), BW_EXIT=0, 0 survivors", "log": "C:/t/vis-runs/logs/v4-unit-2.log"},
+  {"label": "v4-unit-3", "counts": "23 passed (round-2 code), 0 survivors (run by the sub-orchestrator's chain)", "log": "C:/t/vis-runs/logs/v4-unit-3.log"},
+  {"label": "v4-live-2", "counts": "BW_EXIT=0, 6/6 runs written, 0 survivors (sub-orchestrator's chain)", "log": "C:/t/vis-runs/logs/v4-live-2.log"},
+  {"label": "v4-secrets-1", "counts": "see secrets_scan", "log": "C:/t/vis-runs/logs/v4-secrets-1.log"}
+ ],
+ "proofs": {
+  "unit": "fake fetchers: shared steps -> one database record on the base row, no duplicates, new steps at chain hops; currency creates no hop; DEFAULT = base + hop<=1, reference-closed; fail-open per source and per pathway; flag off -> no fetcher runs; F1-F10 and R1-R4 each tested",
+  "no_regression": "No existing file changed (diff is new files only). Nothing in the pipeline imports t2pw.vision.extend; with T2PW_EXTEND off run_if_enabled returns the payload object untouched and no fetcher runs (tested). The base inside every big payload is unchanged (merge_extension only writes the overlay)."
+ },
+ "live_round_2": {
+  "command": "queue.sh vis-extend-db v4-live-2 ... launch.py live_proof.py docs/vision/evidence/V4 <dump> 120 (budget 120 s, max 3 pathways per source, defaults)",
+  "runs": {
+   "PMC12421875 menaquinone (L. lactis; ORCH-759p strict)": {"seconds": 33.7,
+     "candidates": ["pathbank:PW123993 Ubiquinone Biosynthesis (Arabidopsis thaliana)"],
+     "merged_into_base": 0, "hop_1": 5, "hop_2_plus": 39, "hop_none": 0, "kept_apart_compartment": 0, "renamed_name_conflict": 2, "currency_only_twin_pairs": 0,
+     "failed": {"reactome": "KeyError: the base species list holds an artefact 'Arabidopsis thaliana' row; Reactome's species/all entry for Arabidopsis has no taxId and fetch() reads sp['taxId']"},
+     "no_candidates": ["wikipathways"], "base_reactions": 19, "default_reactions": 23, "full_reactions": 55, "overlay_entities_hop_none": 27,
+     "verdict": "WRONG ORGANISM: the only candidate is an Arabidopsis pathway reached through the artefact species row (no L. lactis PathBank pathway shares >= 2 entities)"},
+   "PMC12096016 enterobactin (E. coli; ORCH-759p strict)": {"seconds": 47.8,
+     "candidates": ["pathbank:PW000760 Biosynthesis of Siderophore Group Nonribosomal Peptides", "pathbank:PW002048 Enterobactin Biosynthesis", "pathbank:PW000751 2,3-Dihydroxybenzoate Biosynthesis"],
+     "merged_into_base": 6, "hop_1": 12, "hop_2_plus": 3, "hop_none": 1, "kept_apart_compartment": 0, "renamed_name_conflict": 0, "currency_only_twin_pairs": 1,
+     "failed": {}, "no_candidates": ["reactome", "wikipathways"], "base_reactions": 5, "default_reactions": 12, "full_reactions": 14, "overlay_entities_hop_none": 18},
+   "PMC12444477 lipid A (E. coli; runs_verify/2026-09-01_1612 research)": {"seconds": 119.5,
+     "candidates": ["pathbank:PW000831 Lipopolysaccharide Biosynthesis", "pathbank:PW001905 Lipopolysaccharide Biosynthesis II", "pathbank:PW002059 Lipopolysaccharide Biosynthesis III"],
+     "merged_into_base": 0, "hop_1": 9, "hop_2_plus": 73, "hop_none": 3, "kept_apart_compartment": 0, "renamed_name_conflict": 4, "currency_only_twin_pairs": 0,
+     "failed": {"reactome": "BudgetExceeded during candidate search", "wikipathways": "BudgetExceeded before the GPML: PathBank's three extracts took ~119 of the 120 s"},
+     "base_reactions": 8, "default_reactions": 11, "full_reactions": 43, "overlay_entities_hop_none": 37, "note": "base already had 2 unresolved refs; views keep exactly those 2"},
+   "PMC12376012 human sphingolipid (runs_verify/2026-09-06_1425 research)": {"seconds": 119.6,
+     "candidates": ["pathbank:PW569256 Sphingolipid Signaling", "pathbank:PW000148 Sphingolipid Metabolism", "pathbank:PW127250 Gaucher Disease (same steps as PW000148)", "reactome:R-HSA-1660661 (0 steps read)", "reactome:R-HSA-9845614 (0 steps read)"],
+     "merged_into_base": 9, "hop_1": 52, "hop_2_plus": 16, "hop_none": 1, "kept_apart_compartment": 3, "renamed_name_conflict": 10, "currency_only_twin_pairs": 0,
+     "failed": {"wikipathways": "BudgetExceeded before the GPML (PathBank ~3 x 35 s + Reactome candidate search used the 120 s)", "reactome": "status ok but stopped early: BudgetExceeded inside both pathways, 0 steps"},
+     "base_reactions": 19, "default_reactions": 47, "full_reactions": 55, "overlay_entities_hop_none": 54},
+   "PMC5130987 Arabidopsis chlorophyll (ORCH-759p strict)": {"seconds": 43.8,
+     "candidates": ["pathbank:PW124167 Porphyrin and chlorophyll metabolism", "pathbank:PW766996 Chlorophyll biosynthesis", "pathbank:PW012899 Chlorophyll a Biosynthesis II", "wikipathways:WP3662 (0 steps)", "wikipathways:WP2230 Chlorophyll b degradation", "wikipathways:WP3661 Genetic interactions between sugar and hormone signaling"],
+     "merged_into_base": 0, "hop_1": 37, "hop_2_plus": 33, "hop_none": 4, "kept_apart_compartment": 10, "renamed_name_conflict": 2, "currency_only_twin_pairs": 6,
+     "failed": {"reactome": "KeyError: Arabidopsis has no taxId in Reactome species/all (same bug as menaquinone)"},
+     "base_reactions": 23, "default_reactions": 53, "full_reactions": 82, "overlay_entities_hop_none": 33},
+   "PMC12059215 mouse steroids (runs_verify/2026-09-16_2152 strict)": {"seconds": 80.6,
+     "candidates": ["pathbank:PW767504 'Generated Pathway 1790128106'", "pathbank:PW767505 'Generated Pathway 1790128948'", "pathbank:PW064569 Androgen and Estrogen Metabolism", "reactome:R-MMU-193144 Estrogen biosynthesis", "reactome:R-MMU-193048 Androgen biosynthesis", "reactome:R-MMU-211976 Endogenous sterols", "wikipathways:WP55 Steroid biosynthesis", "wikipathways:WP1264 Estrogen metabolism"],
+     "merged_into_base": 4, "hop_1": 30, "hop_2_plus": 28, "hop_none": 17, "kept_apart_compartment": 0, "renamed_name_conflict": 2, "currency_only_twin_pairs": 1,
+     "failed": {}, "base_reactions": 7, "default_reactions": 35, "full_reactions": 77, "overlay_entities_hop_none": 39,
+     "note": "all 4 base merges come from the two 'Generated Pathway' records (created 2026-09-23), not from curated pathways"}
+  },
+  "where_menaquinone_and_enterobactin_are": "They are the first two lines of v4-live-2.log (33.7 s and 47.8 s); all 6 evidence files exist.",
+  "hand_check": {
+   "method": "Reaction as converted vs the source and UniProt catalytic activity (rest.uniprot.org) / Reactome ContentService / WikiPathways GPML. PathBank web pages render client-side (WebFetch returned only the home page), so PathBank steps were checked against the DB record as read plus UniProt.",
+   "steps": [
+    {"run": "human", "step": "PW000148 PW_R001168 palmitoyl-CoA + L-serine -> 3-ketodihydrosphingosine + CO2 (SPT)", "verdict": "correct", "note": "UniProt O15269: L-serine + hexadecanoyl-CoA + H+ = 3-oxosphinganine + CO2 + CoA; the source omits CoA (depth, not an error)"},
+    {"run": "human", "step": "PW000148 PW_R001169 Sphinganine + NADPH -> 3-ketodihydrosphingosine + NADP+ (KDSR)", "verdict": "wrong (source)", "note": "UniProt Q06136: sphinganine + NADP+ = 3-oxosphinganine + NADPH; the PathBank record puts NADPH beside sphinganine. Converted faithfully; the source is wrong"},
+    {"run": "enterobactin", "step": "PW000760 PW_R002453 isochorismate + H2O -> pyruvate + 2,3-dihydro-2,3-dihydroxybenzoate (EntB)", "verdict": "correct", "note": "UniProt P0ADI4"},
+    {"run": "lipid A", "step": "PW000831 PW_R003029 lipid A disaccharide + ATP -> lipid IVA + ADP + H+ (LpxK)", "verdict": "correct", "note": "UniProt P27300"},
+    {"run": "mouse", "step": "PW064569 PW_R109709 estradiol + NADP+ <> estrone + NADPH", "verdict": "correct", "note": "17beta-HSD activity; Reactome R-MMU-5693390 states the same conversion"},
+    {"run": "mouse", "step": "reactome R-MMU-5693390 HSD17B11 dehydrogenates EST17b to E1: estradiol + NADP+ -> estrone + NADPH + H+", "verdict": "correct", "note": "ContentService record as read"},
+    {"run": "Arabidopsis", "step": "PW124167 PW_R213422 uroporphyrinogen III -> coproporphyrinogen III + CO2 (UROD)", "verdict": "correct", "note": "stoichiometry (4 CO2) not carried, as designed"},
+    {"run": "mouse", "step": "PW767504 PW_R050006 dihydrotestosterone -> L-Oxalylalbizziine", "verdict": "wrong (candidate selection)", "note": "no such reaction; the record is a 'Generated Pathway', not a curated pathway"},
+    {"run": "Arabidopsis", "step": "PW124167 PW_R213418 coproporphyrinogen III + O2 -> Coproporphyrin III + H2O2, written as ... -> coproporphyrinogen III + H2O2", "verdict": "wrong (our merge)", "note": "the incoming 'Coproporphyrin III' was joined by name to the paper's coproporphyrinogen III row, which carries 'Coproporphyrin III' as a synonym; the two rows' ids share no namespace, so no conflict blocked the name join"},
+    {"run": "menaquinone", "step": "PW123993 PW_R213127 chorismate <> isochorismate (Arabidopsis ICS)", "verdict": "wrong (candidate selection)", "note": "a real Arabidopsis reaction, attached to an L. lactis paper through the artefact species row"}
+   ],
+   "correct": 6, "wrong": 4
+  },
+  "currency_only_twins": {
+   "unique_pairs": {"menaquinone": 0, "enterobactin": 1, "lipid A": 0, "human": 0, "Arabidopsis": 6, "mouse": 1, "total": 8},
+   "note": "report.currency_only_twins lists each pair from both sides when both rows are extension rows; numbers here are unique unordered pairs",
+   "checked": "enterobactin: paper 'DHB + Adenosine triphosphate -> DHB-AMP + PPi' vs PathBank '... + H+' (EntE, same step); mouse: PathBank estradiol + NADP+ <> estrone + NADPH vs Reactome '... + H+' (same step, cytoplasm vs cytosol); Arabidopsis: ALA -> PBG vs ALA -> PBG + H2O and + H2O + H+ (same step). All spot-checked pairs are true duplicates.",
+   "proposal_check": "The payload.py proposal (ignore H+/H2O differences on a forward match) would join these 8 duplicates. Some Arabidopsis pairs also differ in compartment (chloroplast vs plastid), and VD-13 keeps those apart regardless."
+  },
+  "findings": [
+   "S1 [blocking] Species artefacts choose the organism: base species lists carry an 'Arabidopsis thaliana' row in many runs (menaquinone here), and candidate search takes every listed species. Proposal: search only the species of the paper's grounded proteins / reaction states (or the most frequent), never a species no process uses.",
+   "S2 [blocking] PathBank 'Generated Pathway <n>' records (created 2026) are not curated and produced a nonsense step and all 4 mouse base merges. Proposal: exclude by name pattern (or by a curated / export flag once it is known what marks curated content).",
+   "S3 Reactome species without taxId (Arabidopsis) -> KeyError. Proposal: pass the species dbId when taxId is missing, or skip that species.",
+   "S4 Budget: one PathBank extract takes ~35-40 s; with 3 pathways PathBank uses the whole 120 s and Reactome / WikiPathways fail on lipid A and human. Proposal: a per-source share of the budget (e.g. 50/25/25) or fewer PathBank pathways.",
+   "S5 Wrong name join: a grounded incoming row joins a grounded base row by name/synonym when their ids share no namespace (Coproporphyrin III -> coproporphyrinogen III). Proposal: in convert (or payload), do not join two grounded rows on a name or synonym alone; require an agreeing id.",
+   "S6 The paper's non-currency 'Adenosine triphosphate' row (with synonym ATP) still receives database ATP through merge_extension's synonym rename, so it can act as a hop edge. In these 6 runs no hop-1 step was linked to the core only through it (via.py check: 0).",
+   "S7 PathBank names carry tabs and padding ('lipid A disaccharide \\t', '\\t Chlorophyllide '); strip them in pathbank.to_neutral.",
+   "S8 Disease copies of one pathway (Gaucher Disease PW127250 = Sphingolipid Metabolism PW000148) both enter; the name dedupe misses them. Proposal: dedupe candidates by the steps' content."
+  ]
+ },
+ "dead_ends": [
+  "Reactome containedEvents is shallow (no inputs/outputs): one query + one participants call per reaction is needed, plus one per catalyst activity",
+  "The old WikiPathways webservice is retired; the static JSON index + GPML assets are used instead",
+  "PathBank / SMPDB web pages could not be read for the hand check (client-side rendering / timeout); UniProt catalytic activity was used instead"
+ ],
+ "merge_risks_seen": [
+  "State names never agree between a paper and a database: VD-13 folds compartments (GO id or a small synonym table) and keeps different places apart (live: 13 steps kept apart). Unlisted spellings of one place stay apart (under-merge)",
+  "Database currency spellings are not in payload.CURRENCY: handled by the id table (live: hundreds of renames, e.g. 120 in lipid A)",
+  "Name/synonym joins between grounded rows without a shared id namespace (S5): one wrong join seen live",
+  "A paper row with a non-currency name but a currency synonym attracts database currency through merge_extension's rename (S6)",
+  "VD-11: 8 duplicate step pairs that differ only by H+/H2O (live)"
+ ],
+ "secrets_scan": {
+  "how": "Light scripts run directly (no heavy lock): launch.py loads the primary .env inside the process; secret_scan.py and secret_scan2.py print per-file counts only, never a value. Files: the 6 evidence files, this record, every C:/t/vis-runs/logs/v4-* file, the analysis printout.",
+  "round_4": "v4-secrets-6 and v4-secrets-7 (direct, counts only) over the round-4 evidence, this record and every *v4* log (incl. v4-live-4.log, batch2-v4-unit.log): OpenRouter key prefix 0, DB host 0, DB port 0 (whole token, after a colon, after 'port'), DB password 0, credential-shaped patterns 0 in every file; DB user word count 555 (public database name, accepted).",
+  "round_3": "v4-secrets-4 and v4-secrets-5 (direct, counts only) over the round-3 evidence, this record, every *v4* log (incl. v4-live-3.log and batch1-v4-unit.log) and the analysis printout, excluding the scans' own output logs (which list the pattern labels): OpenRouter key prefix 0, DB host 0, DB port 0 (whole token, after a colon, after 'port'), DB password 0, credential-shaped patterns 0 in every file. DB user word count 582 (the public database name, accepted as before).",
+  "v4-secrets-2": {"openrouter_key_prefix": 0, "db_host": 0, "db_port_whole_token": 0, "note": "0 in every file"},
+  "v4-secrets-3": {"db_password": 0, "port_after_colon": 0, "port_after_port_keyword": 0, "user_equals": 0, "user_colon": 0, "pathbank_at_sign": 0, "double_slash_pathbank": 0, "pathbank_colon_token_other_than_PW_accession": 0, "note": "0 in every file"},
+  "db_user": "The DB user value equals the public database name 'pathbank' (boolean comparison inside the script, value never printed). That word is also the source-id prefix and a module name, so its raw count is meaningless: mouse 46, enterobactin 34, human 79, menaquinone 56, lipid A 44, Arabidopsis 64, this record 38 (before this entry), v4-live-2.log 16, v4-secrets-3.log 51, analysis printout 146, other logs 0. Accepted by the sub-orchestrator and the main orchestrator (decision a), given the credential-shaped checks above are all 0."
+ },
+ "open_questions": [
+  "N1 (standing condition for the wiring lane and default-on): a source-error registry: known curated-record errors (KDSR PW000148 PW_R001169, CAO PW766996 PW_R2146855, ferric citrate PW000760 PW_R1998772, S1P lyase PW000148 PW_R001193, ...) kept as data and applied at admission, so a known-wrong step is flagged or held back.",
+  "N5 (standing condition for the wiring lane and default-on): hand checks so far covered reaction steps only (hop 1, Reactome any hop); transports, interactions and hop >= 2 steps must be hand-checked too.",
+  "S1 and S2 (resolved in rounds 3-4: organism from the processes' states; 'Generated Pathway' records excluded).",
+  "Proposal for payload.py (outside this boundary): id-based currency identity and VD-11 ignoring H+/H2O on a forward match (8 duplicate pairs live), plus S5 (no name-only joins between grounded rows).",
+  "Not converted: PathBank ReactionCoupledTransport, Reactome regulation (regulatedBy), black-box events, WikiPathways protein->metabolite arrows, element_locations rows. Wanted?"
+ ]
+}

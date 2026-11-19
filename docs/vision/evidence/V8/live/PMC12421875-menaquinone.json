@@ -1,0 +1,657 @@
+{
+ "run": "runs_papers/ORCH-759p/legs/menaquinone-strict/2026-10-22_2154/papers/PMC12421875/strict",
+ "input_paper": "PMC12421875",
+ "seconds": 177.6,
+ "llm": {
+  "calls_counted": 8,
+  "token_stats": {
+   "prompt_tokens": 8575,
+   "completion_tokens": 5744,
+   "total_tokens": 14319,
+   "api_calls": 8,
+   "estimated_cost_usd": 0.002752
+  }
+ },
+ "report": {
+  "budget_s": 300.0,
+  "max_papers": 5,
+  "max_llm_calls": 12,
+  "organism": "Lactococcus lactis",
+  "frontier": {
+   "substrates": [
+    "prenyl diphosphate"
+   ],
+   "products": [
+    "MK"
+   ],
+   "enzymes": [
+    "MenA",
+    "MenG complex"
+   ]
+  },
+  "input_paper": {
+   "pmid": null,
+   "pmcid": "PMC12421875",
+   "doi": null,
+   "title": null
+  },
+  "queries": [
+   {
+    "query": "\"prenyl diphosphate\" AND \"Lactococcus lactis\"",
+    "status": "ok",
+    "hits": 10
+   },
+   {
+    "query": "\"MK\" AND \"Lactococcus lactis\"",
+    "status": "ok",
+    "hits": 10
+   }
+  ],
+  "candidates": [
+   {
+    "id": "PMC13586869",
+    "title": "Menaquinone biosynthesis in &lt;i&gt;Lactococcus lactis&lt;/i&gt;: Recent advances and future prospects.",
+    "journal": "Engineering microbiology",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [
+     "Escherichia coli",
+     "Bacillus subtilis",
+     "Lactococcus lactis"
+    ],
+    "organism_match": "match",
+    "decision": "kept",
+    "reason": null
+   },
+   {
+    "id": "PMC12421875",
+    "title": "The growth benefits and toxicity of quinone biosynthesis are balanced by a dual regulatory mechanism and substrate limitations.",
+    "journal": "mBio",
+    "year": "2025",
+    "source": "MED",
+    "organisms": [],
+    "organism_match": null,
+    "decision": "dropped",
+    "reason": "input_paper"
+   },
+   {
+    "id": "PMID:41711934",
+    "title": "Characterization of Phytopathogenic Colletotrichum spp., an Etiology of the Fruit Rot of Pomegranate and its Management by Lactic Acid Bacteria.",
+    "journal": "Current microbiology",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [],
+    "organism_match": "unknown",
+    "decision": "kept",
+    "reason": null
+   },
+   {
+    "id": "PMC13028806",
+    "title": "Enhanced Postbiotic Metabolite GABA Production in Skim Milk Using &lt;i&gt;Weissella cibaria&lt;/i&gt; UF-274 and Whole-Genome Analysis.",
+    "journal": "Metabolites",
+    "year": "2026",
+    "source": "MED",
+    "organisms": [],
+    "organism_match": "unknown",
+    "decision": "kept",
+    "reason": null
+   },
+   {
+    "id": "PMID:41288802",
+    "title": "Lactococcus lactis MSH-08 and Leuconostoc citreum MSH-09: A probiotic enhancing growth, immunity, and intestinal gene expression in broiler chickens.",
+    "journal": "Veterinary research communications",
+    "year": "2025",
+    "source": "MED",
+    "organisms": [
+     "Lactococcus lactis",
+     "Gallus gallus"
+    ],
+    "organism_match": "match",
+    "decision": "kept",
+    "reason": null
+   },
+   {
+    "id": "PMC7093718",
+    "title": "Engineering <i>Lactococcus lactis</i> for Increased Vitamin K2 Production.",
+    "journal": "Frontiers in bioengineering and biotechnology",
+    "year": "2020",
+    "source": "MED",
+    "organisms": [
+     "Lactococcus lactis"
+    ],
+    "organism_match": "match",
+    "decision": "kept",
+    "reason": null
+   },
+   {
+    "id": "PMID:41233225",
+    "title": "Corrigendum to \"Lactococcus lactis and Bifidobacterium longum attenuate Clostridioides difficile- or Clostridium symbiosum-induced colitis and depression/anxiety-like behavior in male mice\" [Microb Infect 27(7) (2025) 105560].",
+    "journal": "Microbes and infection",
+    "year": "2025",
+    "source": "MED",
+    "organisms": [
+     "Clostridioides difficile",
+     "Lactococcus lactis",
+     "Mus musculus"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC8633409",
+    "title": "Editorial: Lactic Acid Bacteria: Microbial Metabolism and Expanding Applications.",
+    "journal": "Frontiers in bioengineering and biotechnology",
+    "year": "2021",
+    "source": "MED",
+    "organisms": [],
+    "organism_match": "unknown",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMID:40885430",
+    "title": "Lactococcus lactis and Bifidobacterium longum attenuate Clostridioides difficile- or Clostridium symbiosum-induced colitis and depression/anxiety-like behavior in male mice.",
+    "journal": "Microbes and infection",
+    "year": "2025",
+    "source": "MED",
+    "organisms": [
+     "Clostridioides difficile",
+     "Lactococcus lactis",
+     "Homo sapiens",
+     "Mus musculus"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC8954062",
+    "title": "Production of Vitamin K by Wild-Type and Engineered Microorganisms.",
+    "journal": "Microorganisms",
+    "year": "2022",
+    "source": "MED",
+    "organisms": [
+     "Homo sapiens"
+    ],
+    "organism_match": "mismatch",
+    "decision": "dropped",
+    "reason": "abstract_names_other_organism"
+   },
+   {
+    "id": "PMC12348090",
+    "title": "Lipid-Modulating Effects of &lt;i&gt;Sargassum fulvellum&lt;/i&gt; Fermented by &lt;i&gt;Lactococcus lactis&lt;/i&gt; KCCM12759P and &lt;i&gt;Leuconostoc mesenteroides&lt;/i&gt; KCCM12756P in Ovariectomized Mice.",
+    "journal": "Nutrients",
+    "year": "2025",
+    "source": "MED",
+    "organisms": [
+     "Lactococcus lactis",
+     "Mus musculus"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC8965153",
+    "title": "Physiological Roles of Short-Chain and Long-Chain Menaquinones (Vitamin K2) in <i>Lactococcus cremoris</i>.",
+    "journal": "Frontiers in microbiology",
+    "year": "2022",
+    "source": "MED",
+    "organisms": [
+     "Lactococcus lactis",
+     "Lactococcus cremoris"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMID:40662265",
+    "title": "Recombinant hyaluronic acid-incorporated self-healing injectable hydrogels for cartilage tissue engineering: a case study on effects of molecular weight.",
+    "journal": "Journal of materials chemistry. B",
+    "year": "2025",
+    "source": "MED",
+    "organisms": [
+     "Lactococcus lactis"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC6100370",
+    "title": "Functional Characterisation of New Sesquiterpene Synthase from the Malaysian Herbal Plant, <i>Polygonum Minus</i>.",
+    "journal": "Molecules (Basel, Switzerland)",
+    "year": "2018",
+    "source": "MED",
+    "organisms": [
+     "Escherichia coli"
+    ],
+    "organism_match": "mismatch",
+    "decision": "dropped",
+    "reason": "abstract_names_other_organism"
+   },
+   {
+    "id": "PMC5597089",
+    "title": "Converting Sugars to Biofuels: Ethanol and Beyond.",
+    "journal": "Bioengineering (Basel, Switzerland)",
+    "year": "2015",
+    "source": "MED",
+    "organisms": [],
+    "organism_match": "unknown",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC12388978",
+    "title": "Postbiotics Derived from &lt;i&gt;Lactococcus lactis&lt;/i&gt; and &lt;i&gt;Streptococcus thermophilus&lt;/i&gt; Attenuate Experimental Periodontitis by Modulating Macrophage Polarization and Osteoclastogenesis.",
+    "journal": "Nutrients",
+    "year": "2025",
+    "source": "MED",
+    "organisms": [
+     "Lactococcus lactis",
+     "Mus musculus",
+     "Streptococcus thermophilus"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC2935196",
+    "title": "Synthetic biology guides biofuel production.",
+    "journal": "Journal of biomedicine & biotechnology",
+    "year": "2010",
+    "source": "MED",
+    "organisms": [],
+    "organism_match": "unknown",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   },
+   {
+    "id": "PMC12246349",
+    "title": "Comparative Analysis of Faecal Bacteria in Captive Asian Elephants of Various Age Groups and Musth.",
+    "journal": "Indian journal of microbiology",
+    "year": "2025",
+    "source": "MED",
+    "organisms": [
+     "Lactococcus lactis",
+     "Homo sapiens",
+     "Staphylococcus arlettae"
+    ],
+    "organism_match": "match",
+    "decision": "dropped",
+    "reason": "over_max_papers"
+   }
+  ],
+  "papers": [
+   {
+    "source_id": "PMC13586869",
+    "status": "ok",
+    "passages": 3,
+    "extracted": 12,
+    "accepted": 1,
+    "rejected": {
+     "not_connected": 1,
+     "admission: evidence_relation_roles_unassignable": 7,
+     "quote_not_verbatim": 2,
+     "admission: evidence_states_no_reaction_relation": 1
+    },
+    "dropped_parts": {},
+    "rejected_samples": [
+     {
+      "reason": "not_connected",
+      "quote": "Pyruvate is converted into acetyl-CoA by the pyruvate dehydrogenase complex",
+      "inputs": [
+       {
+        "name": "Pyruvate",
+        "stoichiometry": null
+       }
+      ],
+      "outputs": [
+       {
+        "name": "acetyl-CoA",
+        "stoichiometry": null
+       }
+      ]
+     },
+     {
+      "reason": "admission: evidence_relation_roles_unassignable",
+      "quote": "acetyl-CoA is first converted into acetyl-Pi by phosphotransacetylase under aerobic conditions",
+      "inputs": [
+       {
+        "name": "acetyl-CoA",
+        "stoichiometry": null
+       }
+      ],
+      "outputs": [
+       {
+        "name": "acetyl-Pi",
+        "stoichiometry": null
+       }
+      ]
+     },
+     {
+      "reason": "admission: evidence_relation_roles_unassignable",
+      "quote": "acetyl-Pi is further converted into acetate, catalyzed by acetate kinase, along with the production of ATP",
+      "inputs": [
+       {
+        "name": "acetyl-Pi",
+        "stoichiometry": null
+       }
+      ],
+      "outputs": [
+       {
+        "name": "acetate",
+        "stoichiometry": null
+       },
+       {
+        "name": "ATP",
+        "stoichiometry": null
+       }
+      ]
+     },
+     {
+      "reason": "admission: evidence_relation_roles_unassignable",
+      "quote": "NADH generated from glycolysis acts as the electron donor and is oxidized to NAD\u207a by NADH dehydrogenase",
+      "inputs": [
+       {
+        "name": "NADH",
+        "stoichiometry": null
+       }
+      ],
+      "outputs": [
+       {
+        "name": "NAD\u207a",
+        "stoichiometry": null
+       }
+      ]
+     },
+     {
+      "reason": "quote_not_verbatim",
+      "quote": "isochorismate is converted into 2-succinyl-5-enolpyruvyl-6\u2011hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC), a key intermediate for DHNA, under the catalysis of the SEPHCHC synthase MenD",
+      "inputs": [
+       {
+        "name": "isochorismate",
+        "stoichiometry": null
+       }
+      ],
+      "outputs": [
+       {
+        "name": "2-succinyl-5-enolpyruvyl-6\u2011hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC)",
+        "stoichiometry": null
+       }
+      ]
+     },
+     {
+      "reason": "admission: evidence_relation_roles_unassignable",
+      "quote": "Acetyl-CoA is condensed and reduced to MVA by the consumption of NADPH.",
+      "inputs": [
+       {
+        "name": "acetyl-CoA",
+        "stoichiometry": null
+       },
+       {
+        "name": "NADPH",
+        "stoichiometry": null
+       }
+      ],
+      "outputs": [
+       {
+        "name": "MVA",
+        "stoichiometry": null
+       }
+      ]
+     },
+     {
+      "reason": "admission: evidence_relation_roles_unassignable",
+      "quote": "MVA is then converted to isopentenyl diphosphate (IPP, C5) and dimethylallyl diphosphate (DMAPP, C5).",
+      "inputs": [
+       {
+        "name": "MVA",
+        "stoichiometry": null
+       }
+      ],
+      "outputs": [
+       {
+        "name": "isopentenyl diphosphate",
+        "stoichiometry": null
+       },
+       {
+        "name": "dimethylallyl diphosphate",
+        "stoichiometry": null
+       }
+      ]
+     },
+     {
+      "reason": "admission: evidence_relation_roles_unassignable",
+      "quote": "Two molecules of IPP and one molecule of DMAPP are then condensed into farnesyl diphosphate (FPP, C15), which is catalyzed by geranylgeranyl diphosphate synthase (IspA).",
+      "inputs": [
+       {
+        "name": "IPP",
+        "stoichiometry": 2.0
+       },
+       {
+        "name": "DMAPP",
+        "stoichiometry": 1.0
+       }
+      ],
+      "outputs": [
+       {
+        "name": "farnesyl diphosphate",
+        "stoichiometry": null
+       }
+      ]
+     },
+     {
+      "reason": "quote_not_verbatim",
+      "quote": "one molecule of FPP condenses with four IPP molecules to generate heptaprenyl diphosphate (HPP, C35); this process is catalyzed by heptaprenyl diphosphate synthase, which is encoded by hepT / hepS in B. subtilis.",
+      "inputs": [
+       {
+        "name": "FPP",
+        "stoichiometry": 1.0
+       },
+       {
+        "name": "IPP",
+        "stoichiometry": 4.0
+       }
+      ],
+      "outputs": [
+       {
+        "name": "heptaprenyl diphosphate",
+        "stoichiometry": null
+       }
+      ]
+     },
+     {
+      "reason": "admission: evidence_relation_roles_unassignable",
+      "quote": "nonaprenyl pyrophosphate (NPP, C45) could be produced using five IPP molecules and one FPP molecule by a potential prenyl diphosphate synthase in L. lactis",
+      "inputs": [
+       {
+        "name": "IPP",
+        "stoichiometry": 5.0
+       },
+       {
+        "name": "FPP",
+        "stoichiometry": 1.0
+       }
+      ],
+      "outputs": [
+       {
+        "name": "nonaprenyl pyrophosphate",
+        "stoichiometry": null
+       }
+      ]
+     }
+    ],
+    "organism_match": "match",
+    "full_text_chars": 70214,
+    "counts": {
+     "steps_reaction": 1
+    }
+   },
+   {
+    "source_id": "PMID:41711934",
+    "status": "ok",
+    "passages": 1,
+    "extracted": 0,
+    "accepted": 0,
+    "rejected": {},
+    "dropped_parts": {},
+    "rejected_samples": [],
+    "organism_match": "unknown",
+    "counts": {}
+   },
+   {
+    "source_id": "PMC13028806",
+    "status": "ok",
+    "passages": 2,
+    "extracted": 1,
+    "accepted": 0,
+    "rejected": {
+     "admission: evidence_states_no_reaction_relation": 1
+    },
+    "dropped_parts": {},
+    "rejected_samples": [
+     {
+      "reason": "admission: evidence_states_no_reaction_relation",
+      "quote": "a glutamine amidotransferase (puuD-like) as an alternative route linked to the GABA pathway",
+      "inputs": [
+       {
+        "name": "glutamine",
+        "stoichiometry": null
+       }
+      ],
+      "outputs": [
+       {
+        "name": "GABA",
+        "stoichiometry": null
+       }
+      ]
+     }
+    ],
+    "organism_match": "unknown",
+    "full_text_chars": 62542,
+    "counts": {}
+   },
+   {
+    "source_id": "PMID:41288802",
+    "status": "ok",
+    "passages": 1,
+    "extracted": 0,
+    "accepted": 0,
+    "rejected": {},
+    "dropped_parts": {},
+    "rejected_samples": [],
+    "organism_match": "match",
+    "counts": {}
+   },
+   {
+    "source_id": "PMC7093718",
+    "status": "ok",
+    "passages": 1,
+    "extracted": 2,
+    "accepted": 0,
+    "rejected": {
+     "admission: evidence_relation_roles_unassignable": 2
+    },
+    "dropped_parts": {},
+    "rejected_samples": [
+     {
+      "reason": "admission: evidence_relation_roles_unassignable",
+      "quote": "Overexpression of genes causing increased ring formation ( menF and menA ) led to overproduction of short chained MK-3",
+      "inputs": [
+       {
+        "name": "1,4-dihydroxy-2-naphtoic acid",
+        "stoichiometry": null
+       }
+      ],
+      "outputs": [
+       {
+        "name": "short chained MK-3",
+        "stoichiometry": null
+       }
+      ]
+     },
+     {
+      "reason": "admission: evidence_relation_roles_unassignable",
+      "quote": "overexpression of other key genes ( mvk and llmg_0196 ) resulted in enhanced full-length MK-9 production",
+      "inputs": [
+       {
+        "name": "1,4-dihydroxy-2-naphtoic acid",
+        "stoichiometry": null
+       }
+      ],
+      "outputs": [
+       {
+        "name": "full-length MK-9",
+        "stoichiometry": null
+       }
+      ]
+     }
+    ],
+    "organism_match": "match",
+    "full_text_chars": 0,
+    "counts": {}
+   }
+  ],
+  "llm": {
+   "calls": 8,
+   "errors": {}
+  },
+  "status": "ok",
+  "placement": {
+   "PMC13586869": {
+    "merged_into_base": 1
+   }
+  }
+ },
+ "base": {
+  "entities": 36,
+  "reactions": 19,
+  "transports": 2,
+  "interactions": 1,
+  "unresolved_refs": 0
+ },
+ "default": {
+  "entities": 36,
+  "reactions": 19,
+  "transports": 2,
+  "interactions": 1,
+  "unresolved_refs": 0
+ },
+ "full": {
+  "entities": 36,
+  "reactions": 19,
+  "transports": 2,
+  "interactions": 1,
+  "unresolved_refs": 0
+ },
+ "steps": [
+  {
+   "label": "PMC12421875-menaquinone",
+   "key": "processes.reactions:chorismate>isochorismate@llactiskf147state",
+   "merged_into_base": true,
+   "hop": 0,
+   "name": "MenF-catalyzed conversion of chorismate to isochorismate",
+   "inputs": [
+    "chorismate"
+   ],
+   "outputs": [
+    "isochorismate"
+   ],
+   "enzymes": [
+    "MenF complex"
+   ],
+   "state": "L. lactis KF147 state",
+   "quote": "chorismate is converted into isochorismate by the isochorismate synthase MenF",
+   "note": "full text passage 1; requested organism Lactococcus lactis: match; literature PMC13586869 reaction s1; source compartment: not given; matched row state: L. lactis KF147 state",
+   "source": "PMC13586869",
+   "title": "Menaquinone biosynthesis in <i>Lactococcus lactis</i>: Recent advances and future prospects.",
+   "journal": "Engineering microbiology",
+   "year": "2026",
+   "records": 1
+  }
+ ]
+}

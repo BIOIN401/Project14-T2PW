@@ -1,0 +1,320 @@
+"""Big payload: build, keys, provenance mapping, save/load, merge, hops (synthetic payloads only)."""
+
+import copy
+import json
+
+from t2pw.vision.payload import (big_from_run, build_big_payload, element_keys, is_currency,
+                                 load_big_payload, merge_extension, save_big_payload)
+
+
+def lin(origin, stage="paper_extraction", sources=(), reason="r"):
+    return {"stage": stage, "origin": origin, "support": "direct", "paper_explicit": "explicit",
+            "reason": reason, "review_required": False, "uncertainty": "", "sources": list(sources)}
+
+
+def payload():
+    return {
+        "entities": {
+            "species": [{"name": "Escherichia coli", "provenance_lineage": [lin("paper_stated")]}],
+            "subcellular_locations": [{"name": "cytoplasm"}],
+            "compounds": [
+                {"name": "A", "synonyms": ["alpha-A"], "mapped_ids": {"chebi": "CHEBI:1"},
+                 "provenance_lineage": [lin("paper_stated"), lin("database_grounded", "identifier_mapping",
+                                                                 [{"source_id": "CHEBI:1", "source_type": "chebi"}])]},
+                {"name": "B", "provenance_lineage": [lin("inferred", "gap_resolution")]},
+                {"name": "C", "provenance_lineage": [lin("unresolved", "identifier_mapping", reason="novel")]},
+                {"name": "D", "evidence": "D is made"},
+                {"name": "E"},
+            ],
+            "proteins": [{"name": "EnzA", "uniprot": "P1", "provenance_lineage": [lin("audit_modified", "audit_repair")]}],
+            "protein_complexes": [],
+        },
+        "biological_states": [{"name": "E. coli cytoplasm", "species": "Escherichia coli",
+                               "subcellular_location": "cytoplasm"}],
+        "element_locations": {"compound_locations": [{"compound": "A", "biological_state": "E. coli cytoplasm"}]},
+        "processes": {
+            "reactions": [
+                {"name": "r1", "inputs": ["A"], "outputs": ["B"], "enzymes": [{"entity": "EnzA"}],
+                 "evidence": "A to B", "biological_state": "E. coli cytoplasm",
+                 "provenance_lineage": [lin("paper_stated")]},
+                {"name": "r1 again", "inputs": ["A"], "outputs": ["B"], "enzymes": [],
+                 "evidence": "A to B again", "biological_state": "E. coli cytoplasm"},
+                {"name": "rag", "inputs": ["B"], "outputs": ["C"], "enzymes": [], "evidence": "passage",
+                 "rag_provenance": {"source_id": "seed_paper", "source_type": "paper"},
+                 "provenance_lineage": [lin("rag_literature", "rag_admission", [
+                     {"source_id": "seed_paper", "source_type": "paper"},
+                     {"source_id": "PMC9", "source_type": "paper", "uri": "https://doi.org/10.1/x"}])]},
+                {"name": "other", "inputs": ["C"], "outputs": ["D"], "enzymes": [], "evidence": "x",
+                 "rag_provenance": {"source_id": "PMC7", "source_type": "paper", "source_title": "T"}},
+            ],
+            "transports": [],
+            "interactions": [],
+        },
+        "reaction_order": ["r1"],
+    }
+
+
+def by_name(big, section, name):
+    rows = big["base"]
+    for part in section.split("."):
+        rows = rows[part]
+    keys = [k for k in element_keys(big) if k.startswith(section + ":")]
+    for row, key in zip(rows, keys):
+        if row.get("name") == name:
+            return key
+    raise KeyError(name)
+
+
+def kinds(big, section, name):
+    return [r["kind"] for r in big["provenance"][by_name(big, section, name)]]
+
+
+def test_base_is_same_content_and_input_untouched():
+    p = payload()
+    before = copy.deepcopy(p)
+    big = build_big_payload(p)
+    assert p == before
+    assert big["base"] == p and big["base"] is not p
+    assert json.dumps(big["base"]) == json.dumps(p)
+    assert big["schema"] == "t2pw.big_payload/1" and big["extension"] == {}
+    assert set(big["hops"].values()) == {0}
+    big["base"]["entities"]["compounds"].append({"name": "Z"})
+    assert p == before
+
+
+def test_keys_are_unique_deterministic_and_suffix_duplicates():
+    big = build_big_payload(payload())
+    keys = element_keys(big)
+    assert len(keys) == len(set(keys)) == len(big["provenance"])
+    assert "entities.compounds:a" in keys
+    rx = [k for k in keys if k.startswith("processes.reactions:")]
+    assert rx[0] == "processes.reactions:a>b@ecolicytoplasm" and rx[1] == rx[0] + "#2"
+    assert element_keys(build_big_payload(payload())) == keys
+
+
+def test_keys_stable_across_save_load(tmp_path):
+    big = build_big_payload(payload(), paper_meta={"pmcid": "PMC1"})
+    save_big_payload(big, tmp_path / "big.json")
+    again = load_big_payload(tmp_path / "big.json")
+    assert again == big
+    assert element_keys(again) == element_keys(big)
+    assert sorted(again["provenance"]) == sorted(element_keys(again))
+
+
+def test_big_from_run(tmp_path):
+    (tmp_path / "final_mapped.json").write_text(json.dumps(payload()), encoding="utf-8")
+    assert big_from_run(tmp_path)["base"] == payload()
+
+
+def test_provenance_mapping_per_origin():
+    big = build_big_payload(payload(), paper_meta={"pmcid": "PMC1"})
+    assert kinds(big, "entities.compounds", "A") == ["paper", "database"]
+    db = big["provenance"][by_name(big, "entities.compounds", "A")][1]
+    assert db["source"] == "CHEBI:1" and big["sources"]["CHEBI:1"]["db"] == "chebi"
+    assert kinds(big, "entities.compounds", "B") == ["inferred"]
+    c = big["provenance"][by_name(big, "entities.compounds", "C")]
+    assert [r["kind"] for r in c] == ["unclassified"] and c[0]["note"].startswith("unresolved")
+    d = big["provenance"][by_name(big, "entities.compounds", "D")]
+    assert d == [{"kind": "paper", "source": "paper", "quote": "D is made", "stage": None,
+                  "note": "no lineage; evidence quote"}]
+    assert kinds(big, "entities.compounds", "E") == ["unclassified"]
+    assert kinds(big, "entities.proteins", "EnzA") == ["curation"]
+    r1 = big["provenance"][by_name(big, "processes.reactions", "r1")][0]
+    assert r1["kind"] == "paper" and r1["quote"] == "A to B" and r1["source"] == "paper"
+
+
+def test_rag_seed_tag_is_never_paper():
+    big = build_big_payload(payload())
+    rag = big["provenance"][by_name(big, "processes.reactions", "rag")]
+    assert [r["kind"] for r in rag] == ["other_paper"]  # seed-tagged rag_provenance adds nothing
+    assert rag[0]["source"] == "seed_paper" and "PMC9" in rag[0]["note"] and rag[0]["quote"] == "passage"
+    assert big["sources"]["PMC9"]["doi"] == "10.1/x" and big["sources"]["PMC9"]["pmcid"] == "PMC9"
+    other = big["provenance"][by_name(big, "processes.reactions", "other")]
+    assert [r["kind"] for r in other] == ["other_paper"] and other[0]["source"] == "PMC7"
+    assert big["sources"]["PMC7"]["title"] == "T"
+
+
+def test_merge_duplicate_adds_provenance_not_row():
+    big = build_big_payload(payload())
+    rec = {"kind": "database", "source": "pathbank:PW1", "quote": None, "stage": "extend_db", "note": ""}
+    rows = {"entities.compounds": [{"name": "alpha A", "mapped_ids": {"chebi": "1"}}],
+            "processes.reactions": [{"name": "same", "inputs": ["alpha-A"], "outputs": ["B"]}]}
+    merged = merge_extension(big, rows, {"entities.compounds": [[rec]], "processes.reactions": [[rec]]},
+                             {"pathbank:PW1": {"kind": "database"}})
+    assert merged["extension"] == {}
+    assert kinds(merged, "entities.compounds", "A")[-1] == "database"
+    assert merged["provenance"][by_name(merged, "processes.reactions", "r1")][-1] == rec
+    assert "pathbank:PW1" in merged["sources"]
+    assert big["extension"] == {} and kinds(big, "entities.compounds", "A") == ["paper", "database"]
+
+
+def test_bare_reversed_reaction_stays_separate():
+    # VD-11: a row listing no currency never reverse-merges (orientation unknown -> under-merge)
+    big = build_big_payload(payload())
+    merged = merge_extension(big, {"processes.reactions": [{"name": "rev", "inputs": ["B"], "outputs": ["A"]}]})
+    assert ext_names(merged) == ["rev"]
+
+
+def test_merge_by_synonym_renames_reference():
+    big = build_big_payload(payload())
+    merged = merge_extension(big, {"processes.reactions": [{"name": "n", "inputs": ["alpha-A"], "outputs": ["Q"]}],
+                                   "entities.compounds": [{"name": "Q"}]})
+    rx = merged["extension"]["processes"]["reactions"][0]
+    assert rx["inputs"] == ["A"]  # synonym of base A rewritten to the base name
+
+
+def test_hops_on_a_chain():
+    big = build_big_payload(payload())
+    rows = {"entities.compounds": [{"name": "F", "chebi_id": "10"}, {"name": "G", "chebi_id": "11"},
+                                   {"name": "lonely"}],
+            "processes.reactions": [{"name": "far", "inputs": ["F"], "outputs": ["G"]},
+                                    {"name": "near", "inputs": ["A"], "outputs": ["F"]}],
+            "biological_states": [{"name": "periplasm state"}],
+            "element_locations.compound_locations": [{"compound": "G", "biological_state": "periplasm state"}]}
+    merged = merge_extension(big, rows)
+    hops = merged["hops"]
+    ext_keys = [k for k in element_keys(merged) if k not in big["hops"]]
+    # extension order: entities, processes, element_locations, then states
+    named = dict(zip(["F", "G", "lonely", "far", "near", "G@periplasm", "periplasm state"], ext_keys))
+    assert named["near"].startswith("processes.reactions:a>f")
+    assert hops[named["near"]] == 1
+    assert hops[named["far"]] == 2
+    assert hops[named["F"]] == 1 and hops[named["G"]] == 2
+    assert hops[named["lonely"]] is None
+    assert hops[named["G@periplasm"]] == 2 and hops[named["periplasm state"]] == 2
+    assert all(hops[k] == 0 for k in big["hops"])
+
+
+# ---- review round 1 (each fails on 626fe8e9) ----
+
+def ext_names(big, section="processes.reactions"):
+    container, name = section.split(".")
+    return [r.get("name") for r in big["extension"].get(container, {}).get(name, [])]
+
+
+def test_f1_reaction_identity_respects_state():
+    big = build_big_payload(payload())
+    merged = merge_extension(big, {"processes.reactions": [
+        {"name": "mito", "inputs": ["A"], "outputs": ["B"], "biological_state": "mitochondrion"},
+        {"name": "stateless", "inputs": ["A"], "outputs": ["B"]}]})
+    assert ext_names(merged) == ["mito"]  # stateless one still merges into r1
+
+
+def with_currency():
+    p = payload()
+    p["entities"]["compounds"] += [{"name": "ATP", "chebi_id": "15422"}, {"name": "ADP", "chebi_id": "16761"}]
+    p["processes"]["reactions"][0]["inputs"].append("ATP")
+    p["processes"]["reactions"][0]["outputs"].append("ADP")
+    return p
+
+
+def test_f2_hops_skip_currency_and_ungrounded_entities():
+    big = build_big_payload(with_currency())
+    merged = merge_extension(big, {
+        "entities.compounds": [{"name": "Y", "chebi_id": "20"}, {"name": "Z", "chebi_id": "21"},
+                               {"name": "W", "chebi_id": "22"}],
+        "processes.reactions": [{"name": "via ATP", "inputs": ["ATP"], "outputs": ["Y"]},
+                                {"name": "via E", "inputs": ["E"], "outputs": ["Z"]},
+                                {"name": "via A", "inputs": ["A", "H2O"], "outputs": ["W"]}]})
+    hop = {r: merged["hops"][k] for r, k in zip(["Y", "Z", "W", "via ATP", "via E", "via A"],
+                                                 [k for k in element_keys(merged) if k not in big["hops"]])}
+    assert hop["via ATP"] is None and hop["Y"] is None  # ATP is currency
+    assert hop["via E"] is None and hop["Z"] is None    # E has no grounded id
+    assert hop["via A"] == 1 and hop["W"] == 1
+
+
+def test_f3_currency_ignored_in_reaction_identity():
+    big = build_big_payload(payload())
+    merged = merge_extension(big, {"processes.reactions": [
+        {"name": "db", "inputs": ["A", "ATP"], "outputs": ["B", "ADP", "H+"]},
+        {"name": "db rev", "inputs": ["B", "NADH"], "outputs": ["A", "NAD+"]}]})
+    # forward: r1 lists no currency, so "db" merges; reversed: r1 lists none, so "db rev" stays (VD-11)
+    assert ext_names(merged) == ["db rev"]
+    assert merged["provenance"][by_name(merged, "processes.reactions", "r1")] == \
+        big["provenance"][by_name(big, "processes.reactions", "r1")]  # no records were given
+
+
+def test_r1_opposing_irreversible_steps_do_not_merge():
+    p = payload()
+    p["processes"]["reactions"].append({"name": "hexokinase", "inputs": ["glucose", "ATP"],
+                                        "outputs": ["G6P", "ADP"], "evidence": "x"})
+    big = build_big_payload(p)
+    rec = {"kind": "database", "source": None, "quote": None, "stage": "extend_db", "note": ""}
+    # G6Pase first: since VD-11 the forward match no longer takes G6P + ADP -> glucose + ATP as G6Pase
+    merged = merge_extension(big, {"processes.reactions": [
+        {"name": "G6Pase", "inputs": ["G6P", "H2O"], "outputs": ["glucose", "Phosphate"]},
+        {"name": "hexokinase reversed", "inputs": ["G6P", "ADP"], "outputs": ["glucose", "ATP"]}]},
+        {"processes.reactions": [[rec], [rec]]})
+    assert ext_names(merged) == ["G6Pase"]  # currency does not mirror: a different step
+    last = merged["provenance"][by_name(merged, "processes.reactions", "hexokinase")][-1]
+    assert last["note"] == "orientation reversed"  # currency mirrors: the same step written backwards
+
+
+def one_reaction(rx):
+    p = payload()
+    p["processes"]["reactions"] = [dict(rx, evidence="x")]
+    return build_big_payload(p)
+
+
+def test_vd11_forward_needs_same_currency():
+    big = one_reaction({"name": "G6Pase", "inputs": ["G6P", "H2O"], "outputs": ["glucose", "Phosphate"]})
+    merged = merge_extension(big, {"processes.reactions": [
+        {"name": "hk backwards", "inputs": ["G6P", "ADP"], "outputs": ["glucose", "ATP"]},
+        {"name": "G6Pase again", "inputs": ["G6P", "water"], "outputs": ["glucose", "orthophosphate"]},
+        {"name": "G6Pase bare", "inputs": ["G6P"], "outputs": ["glucose"]}]})
+    assert ext_names(merged) == ["hk backwards"]  # ATP/ADP vs H2O/Pi; same currency and bare both merge
+
+
+def test_vd11_bare_reaction_does_not_absorb_reversed_step():
+    big = one_reaction({"name": "hk", "inputs": ["glucose"], "outputs": ["G6P"]})
+    merged = merge_extension(big, {"processes.reactions": [
+        {"name": "G6Pase", "inputs": ["G6P", "H2O"], "outputs": ["glucose", "Phosphate"]}]})
+    assert ext_names(merged) == ["G6Pase"]
+
+
+def test_vd11_nad_variants_merge_forward_and_mirrored_reverse():
+    big = one_reaction({"name": "dh", "inputs": ["X", "NAD+"], "outputs": ["Y", "NADH"]})
+    rec = {"kind": "database", "source": None, "quote": None, "stage": "extend_db", "note": ""}
+    merged = merge_extension(big, {"processes.reactions": [
+        {"name": "nadp fwd", "inputs": ["X", "NADP+"], "outputs": ["Y", "NADPH"]},
+        {"name": "mirrored", "inputs": ["Y", "NADH"], "outputs": ["X", "NAD+"]},
+        {"name": "mirrored nadp", "inputs": ["Y", "NADPH"], "outputs": ["X", "NADP+"]},
+        {"name": "not mirrored", "inputs": ["Y", "NAD+"], "outputs": ["X", "NADH"]}]},
+        {"processes.reactions": [[dict(rec)], [dict(rec)], [dict(rec)], [dict(rec)]]})
+    assert ext_names(merged) == ["not mirrored"]
+    notes = [r["note"] for r in merged["provenance"][by_name(merged, "processes.reactions", "dh")][-3:]]
+    assert notes == ["", "orientation reversed", "orientation reversed"]
+
+
+def test_r4_bare_pi_is_not_currency():
+    assert not is_currency("pi") and not is_currency("PI")  # phosphatidylinositol
+    assert is_currency("Phosphate") and is_currency("NAD+") and is_currency("water")
+
+
+def test_f4_no_name_merge_when_same_namespace_ids_differ():
+    big = build_big_payload(payload())
+    merged = merge_extension(big, {"entities.compounds": [{"name": "A", "chebi_id": "999"},
+                                                          {"name": "alpha-A", "kegg_id": "C1"}]})
+    assert ext_names(merged, "entities.compounds") == ["A"]  # chebi 1 != 999; kegg is another namespace
+
+
+def test_f5_rename_rewrites_complex_components():
+    p = payload()
+    p["entities"]["proteins"][0]["synonyms"] = ["enzyme alpha"]
+    merged = merge_extension(build_big_payload(p), {"entities.protein_complexes": [
+        {"name": "Cx", "components": [{"name": "enzyme alpha"}, "Enzyme Alpha"]}]})
+    assert merged["extension"]["entities"]["protein_complexes"][0]["components"] == [{"name": "EnzA"}, "EnzA"]
+
+
+def test_f8_seed_source_kind_is_other_paper():
+    big = build_big_payload(payload())
+    assert big["sources"]["seed_paper"]["kind"] == "other_paper" and big["sources"]["seed_paper"]["note"]
+
+
+def test_f9_seed_tag_without_lineage_is_not_paper():
+    p = payload()
+    p["entities"]["compounds"].append({"name": "S", "evidence": "a passage",
+                                       "rag_provenance": {"source_id": "seed_paper", "source_type": "paper"}})
+    big = build_big_payload(p)
+    recs = big["provenance"][by_name(big, "entities.compounds", "S")]
+    assert [r["kind"] for r in recs] == ["other_paper"] and recs[0]["source"] == "seed_paper"
