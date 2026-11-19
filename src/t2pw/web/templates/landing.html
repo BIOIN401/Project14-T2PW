@@ -1,0 +1,72 @@
+{#- Public landing page. Marketing shell: hero → intro → sponsors.
+    Primary CTA goes to the current submit form at /submit. -#}
+{% extends "layout.html" %}
+{% block title %}Home{% endblock %}
+{% block body_class %}landing{% endblock %}
+{% block page_head %}
+  <link rel="stylesheet" href="{{ static_url }}/css/landing.css">
+{% endblock %}
+
+{% block main %}
+<section class="hero" aria-label="T2PW">
+  <div class="hero__backdrop" aria-hidden="true"></div>
+  <div class="hero__inner container">
+    <div class="hero__copy">
+      <p class="hero__eyebrow">Text to PathWhiz</p>
+      <h1 class="hero__title">
+        <span class="hero__brand">T2PW</span>
+        <span class="hero__expand" aria-hidden="true">
+          <span class="hero__letter hero__letter--t">T</span>ext to
+          <span class="hero__letter hero__letter--p">P</span>ath
+          <span class="hero__letter hero__letter--w">W</span>hiz
+        </span>
+      </h1>
+      <p class="hero__lead">
+        Turn pathway descriptions from the literature into draft PathWhiz PWML —
+        ready for a person to review.
+      </p>
+    </div>
+    <div class="hero__actions" aria-label="Get started">
+      <a class="hero-cta hero-cta--primary" href="/submit">Submit a pathway →</a>
+      <a class="hero-cta hero-cta--tutorial" href="/help">Read the tutorial →</a>
+      <a class="hero-cta hero-cta--examples" href="/examples">Browse examples →</a>
+      <a class="hero-cta hero-cta--about" href="/about">About &amp; cite →</a>
+    </div>
+  </div>
+  <a class="hero__scroll" href="#intro">Introduction</a>
+</section>
+
+<section id="intro" class="intro">
+  <div class="container intro__inner">
+    <h2>About Text to Pathways</h2>
+    <p class="intro__lead">
+      T2PW (Text to PathWhiz) reads scientific papers and drafts a metabolic or
+      signalling pathway in PWML, the file format PathWhiz uses. Give a pathway
+      name, PubMed IDs, or PDF files; the server returns a draft for a curator
+      to review.
+    </p>
+    <p>
+      [Placeholder: expand this introduction with the product story, scope, and
+      what a typical run produces. Copy to be provided.]
+    </p>
+    <p>
+      <a class="button" href="/submit">Go to submissions</a>
+    </p>
+  </div>
+</section>
+
+<section id="sponsors" class="sponsors" aria-labelledby="sponsors-heading">
+  <div class="container">
+    <h2 id="sponsors-heading">Sponsors</h2>
+    <p class="sponsors__note muted">
+      [Placeholder: sponsor logos and names, laid out similarly to Synced.]
+    </p>
+    <ul class="sponsors__grid">
+      <li class="sponsor-slot"><span>Sponsor 1</span></li>
+      <li class="sponsor-slot"><span>Sponsor 2</span></li>
+      <li class="sponsor-slot"><span>Sponsor 3</span></li>
+      <li class="sponsor-slot"><span>Sponsor 4</span></li>
+    </ul>
+  </div>
+</section>
+{% endblock %}
