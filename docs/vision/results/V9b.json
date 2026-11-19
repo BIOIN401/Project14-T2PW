@@ -1,0 +1,9 @@
+{
+ "lane": "V9b",
+ "built": "Four chlorophyll scorer-bridge aliases in src/t2pw/vision/bench.py (_ALIAS_PAIRS, _with_aliases), applied in scoring_terms for full gold only. Exact strict_key pairs, both directions: Mg-Protoporphyrin IX 13-monomethyl ester <-> Mg-protoporphyrin IX monomethyl ester; 3,8-divinyl protochlorophyllide a <-> 3,8-divinyl-protochlorophyllide; Chlorophyllide a <-> Chlide a; Mg-protoporphyrin IX <-> Mg-Proto IX. Source: PO ruling 2026-11-18, chlorophyll PW766996. Paper gold and all gold files untouched; paper-set parity is structural (paper kind never takes aliases) and still to be confirmed by the proof.",
+ "files": ["src/t2pw/vision/bench.py (+21/-1 net 22 lines)", "tests/test_vision_bench.py (+23)"],
+ "tests": [["unit tests/test_vision_bench.py", "32 passed, survivors 0", "C:/t/vis-runs/logs/V9b-unit.log"]],
+ "proofs": "NOT RUN yet: V9 full-view proof to docs/vision/evidence/V9b/ (command in report). Chlorophyll before: 7/14 and 8/14 reactions.",
+ "dead_ends": ["'3-vinyl chlorophyllide a' (also listed under the Chlorophyllide a miss in V9.json) is not aliased: it is the monovinyl congener, outside the 4 pairs the PO ruled."],
+ "open_questions": ["Alias applies to reaction terms only (scoring_terms), not transports/interactions/enzymes (_hit); none of the 4 variants occur there in the examined run."]
+}
