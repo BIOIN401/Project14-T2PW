@@ -212,3 +212,6 @@ def test_svg_readability_counts_hand_made():
     assert m["hops"] == 1 and m["duplicate_names"] == 0 and m["score"] > LM.svg_layout_metrics(SVG)["score"]
     twice = svg.replace(block, block + block.replace('x="40" y="40"', 'x="200" y="40"').replace('x="50" y="54"', 'x="210" y="54"'))
     assert LM.svg_layout_metrics(twice)["duplicate_names"] == 1
+    assert m["edge_overlaps"] == 0
+    on_top = SVG.replace('<path class="e prod" d="M50,0 L50,100"/>', '<path class="e prod" d="M50,0 L50,100"/><path class="e prod" d="M30,50 L90,50"/>')
+    assert LM.svg_layout_metrics(on_top)["edge_overlaps"] == 1  # 60 px on top of the first line, no end node in common

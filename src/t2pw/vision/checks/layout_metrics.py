@@ -462,6 +462,7 @@ def _quality(view, edges, nodes) -> Dict[str, Any]:
     duplicate_names       extra drawings of one non-currency compound (same data-ent) beyond the first
     repeated_captions     compartment captions under nodes that repeat a caption already shown
     hops                  line bridges drawn where two lines still cross
+    edge_overlaps         pairs of edges without a common end node that run on top of each other for 10 px or more
     """
     boxes = [(n[2], n[1].get("data-ent") or n[1].get("data-p") or "") for n in nodes]
     shrink = lambda r, k: (r[0] + k, r[1] + k, r[2] - k, r[3] - k)  # noqa: E731
@@ -503,6 +504,20 @@ def _quality(view, edges, nodes) -> Dict[str, Any]:
                 continue
             if any(_seg_hits_rect(p, q, shrink(r, 1)) for p, q in zip(e.pts, e.pts[1:])):
                 elt += 1
+    # overlapping lines: two edges (with no end node in common) running on the same line for 10 px or more
+    runs = defaultdict(list)
+    for k, e in enumerate(edges):
+        for p, q in zip(e.pts, e.pts[1:]):
+            if abs(p[1] - q[1]) < 0.5 and abs(p[0] - q[0]) > 0.5:
+                runs[("h", round(p[1]))].append((min(p[0], q[0]), max(p[0], q[0]), k))
+            elif abs(p[0] - q[0]) < 0.5 and abs(p[1] - q[1]) > 0.5:
+                runs[("v", round(p[0]))].append((min(p[1], q[1]), max(p[1], q[1]), k))
+    shared = defaultdict(float)
+    for segs in runs.values():
+        for (a0, a1, i), (b0, b1, j) in combinations(segs, 2):
+            if i != j and not (ends_of[i] & ends_of[j]):
+                shared[(min(i, j), max(i, j))] += max(0.0, min(a1, b1) - max(a0, b0))
+    edge_overlaps = sum(1 for v in shared.values() if v >= 10)
     bands = []
     for g in view.iter():
         cl = _classes(g)
@@ -531,7 +546,7 @@ def _quality(view, edges, nodes) -> Dict[str, Any]:
                 bands=len(counted), empty_bands=sum(1 for k in counted if inside[k] == 0),
                 sparse_bands=sum(1 for k in counted if inside[k] == 1),
                 duplicate_names=sum(n - 1 for n in per_ent.values() if n > 1),
-                repeated_captions=sum(n - 1 for n in chips.values()), hops=hops)
+                repeated_captions=sum(n - 1 for n in chips.values()), hops=hops, edge_overlaps=edge_overlaps)
 
 
 def layout_score(m: Dict[str, Any]) -> float:
@@ -539,7 +554,7 @@ def layout_score(m: Dict[str, Any]) -> float:
     tuned so that one crossing costs about as much as 1.5 extra long edges; never compare scores across pathways."""
     a = m.get("aspect_ratio") or 1.0
     shape = 10 * max(0.0, a - 2.5) + 20 * max(0.0, a - 3.5) + 4 * max(0.0, 1 / a - 1.25)  # wider than 4:1 is unreadable at page width
-    return round(3 * m["crossings"] + 4 * m["node_edge_overlaps"] + 2 * m["label_collisions"] + m["edges_through_labels"]
+    return round(3 * m["crossings"] + 3 * m["edge_overlaps"] + 4 * m["node_edge_overlaps"] + 2 * m["label_collisions"] + m["edges_through_labels"]
                  + 4 * m["long_edges"] + m["edge_length"] / 500 + 0.5 * m["non_straight"] + 6 * m["empty_bands"]
                  + 1.5 * m["sparse_bands"] + 2 * m["duplicate_names"] + 0.25 * m["repeated_captions"]
                  + 10 * m["node_overlaps"] + shape, 2)
