@@ -199,3 +199,44 @@ Code: `src/t2pw/vision/diagram/render.py`, `src/t2pw/vision/diagram/__init__.py`
 Evidence: `docs/vision/evidence/DRAW-RENDERER/` (baseline and final metrics, scripts, judge output).
 Outside the repo: before/after PNGs and the side-by-side page `C:/t/lane-draw-work/compare/index.html`; logs
 `C:/t/vis-runs/logs/draw-*.log`; dumped IRs `C:/t/lane-draw-work/ir97/`.
+
+## 12. Review round 1 (APPROVE WITH NOTES; F1-F6 fixed, F7 waits for the PO)
+
+Code commits: `9bea6d7c` (F1 + render_svg docstring), `4c06454e` (F5), `eb4a820e` (F2, F3, F4 + tests). Gates on
+`eb4a820e`, a clean committed tree (suite2 log opens with `HEAD eb4a820e...` and an empty status block).
+
+| finding | fix | check |
+|---|---|---|
+| F1 cost: up to 10 candidates, O(texts^2) scoring | above `BIG = 150` molecule drawings only the auto-picked style and its wraps are rendered (one band order) | timings below |
+| F2 "nucle" matched nucleoid and nucleolus | double membrane only for nucleus / nuclear / nucleoplasm | `test_double_membrane_only_for_real_envelopes` (nucleus yes; nucleoid, nucleolus no) |
+| F3 local copies cut a transport's link | a currency molecule that is transport cargo in a compartment keeps one drawing there | `test_transported_currency_keeps_its_link_to_the_reactions_that_use_it` (pumped H+: 1 drawing in the matrix; not pumped: 2 local copies) |
+| F4 spreading edges could close a cycle | when the later transport already leads to the one seen first, the edge is laid in flow order instead (this both avoids the cycle and still keeps the two transports in separate columns; a plain skip would leave them stacked) | `test_chained_transports_in_one_membrane_keep_flow_order` (tr_2 -> tr_10 through one membrane) |
+| F5 two currency lists; stale docstring | one list, `src/t2pw/vision/currency.py` (stdlib only, the union of both), imported by render.py and layout_metrics.py; render_svg docstring describes the best-of-several default | 97-run metrics re-run |
+| F6 gate evidence | `C:/t/vis-runs/suite2.sh` prints `git rev-parse HEAD` and `git status --porcelain` first | `draw-gates3.log` |
+
+All three new tests fail on the previous HEAD (`703e079d`) and pass on `eb4a820e` (dev check
+`failfirst.py`, outside the gate).
+
+**F1 timings** (`render_svg` wall time, this machine, `timing.py`):
+
+| IR | molecule drawings | before F1 | after F1 |
+|---|---:|---:|---:|
+| largest stored IR (run 7, 122 nodes) | 102 | 1.61 s | 1.81 s (below the cap: same work; run-to-run noise) |
+| chlorophyll showcase | under 150 | 1.59 s | 1.85 s (same) |
+| lipid A showcase | 83 | 2.23 s | 2.34 s (same) |
+| synthetic: run 7 + lipid A + chlorophyll side by side (`make_big.py`) | 287 | 7.11 s | 1.68 s |
+
+No stored IR reaches the cap (largest 102 molecule drawings), so the cap changes no stored drawing.
+
+**Metric deltas** (97 runs, round 1 vs the previous final `8867c7a5`): identical on every key (crossings 165, long
+edges 33, edge length 191,660, bent 362, wider than 4:1 0, label collisions 2, edge overlaps 1, duplicate names 109,
+repeated captions 41); PWML-side reading order unchanged (17 of 264 pairs); `svg_model_mismatch` empty, 0 crashes.
+Showcases identical too (crossings 64, long edges 35). No stored pathway has a nucleoid/nucleolus, pumped currency used
+twice, or a cycling transport chain, and the currency union adds only spellings none of the runs use.
+
+**Gates on `eb4a820e`**: SMOKE 511 passed; golden batch 2, c011 8, stage8 4, quarantine 24; equivalence run 8, app 14,
+default 6; vision 370 passed 1 skipped (365 + the 5 new); web 83 passed; 0 surviving processes, BW_EXIT=0
+(`C:/t/vis-runs/logs/draw-gates3.log`). PWML: branch vs base tree `C:/t/lane-draw-base` 97/97 sha-identical (both 88/97
+against the stale replay, as before). Selfcheck: 0 failures on the 97 chosen drawings and the 8 showcases.
+
+F7 (synonym band grouping) unchanged; it waits for the PO ruling (open question 4).
