@@ -3,7 +3,7 @@
     Context, all optional:
       theme       "light" | "dark" | "" (default: follow the system setting)
       static_url  prefix for static files (default "/static")
-      active_nav  key of the current nav item: submit | tutorial | about | ""
+      active_nav  key of the current nav item: submit | history | tutorial | about | ""
       site_name   wordmark text (default "T2PW")
     Blocks: title, head, body_class, site_header, header_extra, main, content,
     footer, scripts.
@@ -34,10 +34,13 @@
       <nav class="site-nav" aria-label="Main">
         <ul>
           <li>
-            <a href="/help"{% if active_nav == "tutorial" %} aria-current="page"{% endif %}>Tutorial</a>
+            <a href="/submit"{% if active_nav == "submit" %} aria-current="page"{% endif %}>Submit</a>
           </li>
           <li>
-            <a href="/submit"{% if active_nav == "submit" %} aria-current="page"{% endif %}>Submissions</a>
+            <a href="/history"{% if active_nav == "history" %} aria-current="page"{% endif %}>History</a>
+          </li>
+          <li>
+            <a href="/help"{% if active_nav == "tutorial" %} aria-current="page"{% endif %}>Tutorial</a>
           </li>
           <li class="nav-dropdown{% if active_nav == "about" %} is-active{% endif %}">
             <details{% if active_nav == "about" %} open{% endif %}>

@@ -37,6 +37,12 @@ from t2pw.web.retry import MAX_RETRIES
 MAX_ATTEMPTS = MAX_RETRIES + 1
 SID_RE = re.compile(r"[0-9a-f]{32}")  # always .fullmatch: "$" would accept a trailing newline
 
+#: Browser cookie that remembers job ids created on this device (no login). The job URL
+#: remains the credential; the cookie only lists ids this browser already received.
+HISTORY_COOKIE = "t2pw_history"
+HISTORY_MAX = 25
+
+
 def job_url(base_url: str, submission_id: str) -> str:
     """THE canonical link to a job page; use it for every job link (pages, emails).
 
@@ -68,6 +74,63 @@ def fmt_time(epoch: Optional[float]) -> str:
     if not epoch:
         return ""
     return time.strftime("%Y-%m-%d %H:%M UTC", time.gmtime(epoch))
+
+
+def parse_history_cookie(raw: Optional[str]) -> List[str]:
+    """Ordered, de-duplicated submission ids from the history cookie (newest first)."""
+    if not raw:
+        return []
+    out: List[str] = []
+    seen = set()
+    for tok in raw.split(","):
+        sid = tok.strip().lower()
+        if not SID_RE.fullmatch(sid) or sid in seen:
+            continue
+        seen.add(sid)
+        out.append(sid)
+        if len(out) >= HISTORY_MAX:
+            break
+    return out
+
+
+def remember_history(existing: Optional[str], sid: str) -> str:
+    """Prepend ``sid`` to the cookie value; keep at most :data:`HISTORY_MAX` ids."""
+    if not SID_RE.fullmatch(str(sid)):
+        raise ValueError("not a submission id")
+    rest = [s for s in parse_history_cookie(existing) if s != sid]
+    return ",".join([sid] + rest[: HISTORY_MAX - 1])
+
+
+def history_entry(sub: Dict[str, Any], sid: str) -> Dict[str, Any]:
+    """One row for the History page from a ``JobStore.submission`` dict."""
+    items = sub.get("items") or []
+    titles = []
+    for it in items:
+        req = it.get("request")
+        name = ""
+        if req is not None and getattr(req, "scope", None) is not None:
+            name = (req.scope.requested_pathway or "").strip()
+        titles.append(name or f"Pathway {it.get('position', 0) + 1}")
+    states = [it.get("state") for it in items]
+    if not items:
+        badge, summary = "queued", "No pathways"
+    elif any(s == "running" for s in states):
+        badge, summary = "running", "Running"
+    elif any(s == "queued" for s in states):
+        badge, summary = "queued", "Queued"
+    elif all(s == "finished" for s in states):
+        badge, summary = "done", "Finished"
+    else:
+        badge, summary = "running", "In progress"
+    return {
+        "sid": sid,
+        "href": job_url("", sid),
+        "submitted": fmt_time(sub.get("created_at")),
+        "titles": titles,
+        "count": len(items),
+        "summary": summary,
+        "badge": badge,
+    }
 
 
 # -- form helpers --------------------------------------------------------------------

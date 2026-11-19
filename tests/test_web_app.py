@@ -101,14 +101,30 @@ def site(tmp_path):
 
 def test_each_public_page_renders(site):
     for path, needle in (("/", "Text to PathWhiz"), ("/submit", "Build a pathway"),
-                         ("/examples", "Examples"), ("/help", "Help"),
-                         ("/about", "How to cite")):
+                         ("/history", "Submission history"), ("/examples", "Examples"),
+                         ("/help", "Help"), ("/about", "How to cite")):
         r = site.client.get(path)
         assert r.status_code == 200 and needle in r.text, path
         assert r.headers["content-type"].startswith("text/html")
     assert 'aria-current="page"' in site.client.get("/help").text
+    assert ">Submit</a>" in site.client.get("/").text and ">History</a>" in site.client.get("/").text
     missing = site.client.get("/no-such-page")
     assert missing.status_code == 404 and "Page not found" in missing.text
+
+
+def test_history_lists_jobs_from_this_browser_cookie(site):
+    empty = site.client.get("/history")
+    assert empty.status_code == 200 and "No submissions yet" in empty.text
+    r = site.submit()
+    assert r.status_code == 303
+    sid = SID_RX.search(r.headers["location"]).group(1)
+    assert views.HISTORY_COOKIE in r.cookies
+    assert sid in r.cookies[views.HISTORY_COOKIE]
+    # TestClient keeps cookies across requests on the same client
+    page = site.client.get("/history")
+    assert page.status_code == 200 and sid in page.text and "glycolysis" in page.text
+    assert 'aria-current="page"' in page.text
+    assert views.parse_history_cookie("not-an-id," + sid + "," + sid) == [sid]
 
 
 def test_submit_form_controls(site):

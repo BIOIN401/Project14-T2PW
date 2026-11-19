@@ -22,55 +22,6 @@ body.landing .site-main {
   padding: 0;
 }
 
-body.landing .site-header {
-  position: sticky;
-  top: 0;
-  z-index: 5;
-  background: var(--pb-magenta);
-  border-bottom: 1px solid var(--pb-magenta-deep);
-}
-
-body.landing .brand__name,
-body.landing .site-nav a,
-body.landing .nav-dropdown summary {
-  color: #ffffff;
-}
-
-body.landing .brand__tagline {
-  color: rgba(255, 255, 255, 0.82);
-}
-
-body.landing .site-nav a:hover,
-body.landing .nav-dropdown summary:hover {
-  background: rgba(255, 255, 255, 0.16);
-  color: #ffffff;
-}
-
-body.landing .site-nav a[aria-current="page"],
-body.landing .nav-dropdown.is-active > details > summary {
-  background: rgba(255, 255, 255, 0.22);
-  color: #ffffff;
-}
-
-body.landing .nav-dropdown__menu {
-  background: #ffffff;
-  border-color: var(--pb-cream-border);
-}
-
-body.landing .nav-dropdown__menu a {
-  color: #333333;
-}
-
-body.landing .nav-dropdown__menu a:hover {
-  background: var(--pb-cream);
-  color: var(--pb-magenta-deep);
-}
-
-body.landing .nav-dropdown__menu a[aria-current="page"] {
-  color: var(--pb-magenta);
-  background: var(--pb-cream);
-}
-
 /* ── Hero ─────────────────────────────────────────────────────────────── */
 .hero {
   position: relative;

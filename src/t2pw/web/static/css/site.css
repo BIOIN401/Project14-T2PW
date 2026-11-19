@@ -131,9 +131,15 @@ svg {
 
 .skip-link:focus { top: var(--space-2); color: var(--color-on-primary); }
 
+/* PathBank magenta chrome — same on every page (landing and app). */
 .site-header {
-  background: var(--color-surface);
-  border-bottom: 1px solid var(--color-border);
+  --nav-magenta: #9d4485;
+  --nav-magenta-deep: #7a3368;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--nav-magenta);
+  border-bottom: 1px solid var(--nav-magenta-deep);
 }
 
 .site-header .container {
@@ -150,21 +156,22 @@ svg {
   display: inline-flex;
   align-items: baseline;
   gap: var(--space-2);
-  color: var(--color-text);
+  color: #ffffff;
   text-decoration: none;
 }
 
-.brand:hover { color: var(--color-text); }
+.brand:hover { color: #ffffff; }
 
 .brand__name {
   font-size: var(--text-xl);
   font-weight: var(--weight-bold);
   letter-spacing: 0.02em;
+  color: #ffffff;
 }
 
 .brand__tagline {
   font-size: var(--text-sm);
-  color: var(--color-text-muted);
+  color: rgba(255, 255, 255, 0.82);
 }
 
 .site-nav ul {
@@ -180,19 +187,19 @@ svg {
   display: block;
   padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-md);
-  color: var(--color-text-muted);
+  color: #ffffff;
   font-weight: var(--weight-medium);
   text-decoration: none;
 }
 
 .site-nav a:hover {
-  color: var(--color-text);
-  background: var(--color-surface-muted);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.16);
 }
 
 .site-nav a[aria-current="page"] {
-  color: var(--color-primary);
-  background: var(--color-primary-subtle);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.22);
 }
 
 .nav-dropdown {
@@ -209,7 +216,7 @@ svg {
   display: block;
   padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-md);
-  color: var(--color-text-muted);
+  color: #ffffff;
   font-weight: var(--weight-medium);
 }
 
@@ -222,13 +229,13 @@ svg {
 }
 
 .nav-dropdown summary:hover {
-  color: var(--color-text);
-  background: var(--color-surface-muted);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.16);
 }
 
 .nav-dropdown.is-active > details > summary {
-  color: var(--color-primary);
-  background: var(--color-primary-subtle);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.22);
 }
 
 .nav-dropdown__menu {
@@ -239,8 +246,8 @@ svg {
   margin: 0;
   padding: var(--space-2);
   list-style: none;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  background: #ffffff;
+  border: 1px solid #e0c48a;
   border-radius: var(--radius-md);
   box-shadow: 0 8px 20px rgba(24, 33, 43, 0.12);
   z-index: 6;
@@ -249,6 +256,17 @@ svg {
 .nav-dropdown__menu a {
   display: block;
   padding: var(--space-2) var(--space-3);
+  color: #333333;
+}
+
+.nav-dropdown__menu a:hover {
+  background: #fff9e5;
+  color: #7a3368;
+}
+
+.nav-dropdown__menu a[aria-current="page"] {
+  color: #9d4485;
+  background: #fff9e5;
 }
 
 .site-main {

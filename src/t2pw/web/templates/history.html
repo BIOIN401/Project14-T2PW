@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% import "macros/components.html" as c %}
+{% block title %}History{% endblock %}
+{% block content %}
+<h1>Submission history</h1>
+<p class="lead">Jobs started in this browser. There is no account: this list lives in a cookie on
+your device. Keep each job’s private link if you need it from another computer.</p>
+
+{% if not entries %}
+{% call c.alert("info", title="No submissions yet") %}
+<p>When you submit a pathway, it will show up here. <a href="/submit">Go to Submit</a>.</p>
+{% endcall %}
+{% else %}
+<ul class="history-list plain">
+  {% for e in entries %}
+  <li class="history-item">
+    <div class="history-item__head">
+      {{ c.status_badge(e.badge, label=e.summary) }}
+      <a class="history-item__link" href="{{ e.href }}">Open job</a>
+    </div>
+    <p class="history-item__titles">
+      {% for t in e.titles %}{% if not loop.first %}; {% endif %}{{ t }}{% endfor %}
+      <span class="muted">({{ e.count }} pathway{% if e.count != 1 %}s{% endif %})</span>
+    </p>
+    {% if e.submitted %}<p class="muted history-item__when">Submitted {{ e.submitted }}</p>{% endif %}
+  </li>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endblock %}

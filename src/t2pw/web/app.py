@@ -438,7 +438,17 @@ def _routes(app: FastAPI) -> None:
         finally:
             await form.close()
         if out[0] == "ok":
-            return RedirectResponse(views.job_url("", out[1]), status_code=303)
+            sid = out[1]
+            resp = RedirectResponse(views.job_url("", sid), status_code=303)
+            resp.set_cookie(
+                views.HISTORY_COOKIE,
+                views.remember_history(request.cookies.get(views.HISTORY_COOKIE), sid),
+                max_age=60 * 60 * 24 * 400,  # ~13 months; browser history of jobs
+                httponly=True,
+                samesite="lax",
+                path="/",
+            )
+            return resp
         _, status, ctx, headers = out
         return _page(request, "submit.html", status=status, headers=headers, **ctx)
 
@@ -513,7 +523,7 @@ def _routes(app: FastAPI) -> None:
 
     @app.get("/examples", response_class=HTMLResponse)
     def examples(request: Request):
-        return _page(request, "examples.html", active_nav="examples")
+        return _page(request, "examples.html", active_nav="about")
 
     @app.get("/help", response_class=HTMLResponse)
     def help_page(request: Request):
@@ -522,3 +532,15 @@ def _routes(app: FastAPI) -> None:
     @app.get("/about", response_class=HTMLResponse)
     def about(request: Request):
         return _page(request, "about.html", active_nav="about")
+
+    @app.get("/history", response_class=HTMLResponse)
+    def history(request: Request):
+        sids = views.parse_history_cookie(request.cookies.get(views.HISTORY_COOKIE))
+        entries = []
+        with _open_store(request.app) as store:
+            for sid in sids:
+                sub = store.submission(sid)
+                if sub is None:
+                    continue
+                entries.append(views.history_entry(sub, sid))
+        return _page(request, "history.html", active_nav="history", entries=entries)
