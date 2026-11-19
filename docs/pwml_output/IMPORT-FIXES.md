@@ -158,10 +158,19 @@ to equal the `b0d47b68` after arm byte for byte; if it does, the PathWhiz A/B ca
   `focused5.log`; streamlit "Forms cannot be nested" state leaking between files in one process). The 13th,
   `test_orch795_headline_unsigned.py::test_g9_an_unsigned_interaction_omitted_before_the_ir_leaves_the_headline`,
   fails identically on main `a751f8f2` (`base795b.log`): pre-existing, not this branch.
-- **Not yet run (blocked):** the round-2 97-run replay and `suite2.sh` were queued at 03:00-03:30 and never got a
-  slot: free RAM stayed at 1-2 GB (floor 4 GB; committed memory 44.5 GB of 32 GB, non-paged pool 2.2 GB, i.e. the
-  machine's known kernel-memory state that needs a restart). Queued jobs were stopped by PID; re-run commands are in
-  the lane report.
+- First attempt blocked (03:00-04:10): free RAM 1-2 GB under the 4 GB floor (committed 44.5 GB of 32 GB); queued
+  jobs stopped by PID. Re-run after the machine restart, one job at a time, holder `pwml-fix`, MINGB 4:
+- **Replay, round 2** (`replays_after2.log`, BW_EXIT 0, 0 survivors): 97 exports. `b0d47b68` after arm -> `d88c2d10`:
+  **97/97 byte-identical** (`replay97_ab_after_vs_after2.json`); the 8 showcase PWMLs 8/8 identical; B2 identical.
+  Base `a751f8f2` -> `d88c2d10` (`replay97_ab_base_vs_after2.json`): 95 identical, 2 changed (idx 7: four promoter rows
+  typed DNA; idx 128: the duplicate TcyJKLMN transporter written once, transporters 34 -> 33), 0 names, 0 reaction
+  signatures and 0 transport signatures lost; every other count equal (reactions 381, compounds 691, transports 74,
+  interactions 49, states 234). Nucleic acids with a type 6 -> 10.
+- **PathWhiz A/B: not re-run** (rule: only if a replay file differs from `b0d47b68`; none does). The `b0d47b68`
+  table above holds for `d88c2d10`.
+- **Suites on `d88c2d10`** (`suite_d88c2d10.log`, one hold, BW_EXIT 0, 0 survivors): SMOKE 511 passed; golden seam
+  2 / 8 / 4 / 24 passed (unedited, no expectation changed); equivalence run_pathway 8, app_vs_service 14,
+  default_path 6; vision 357 passed + 1 skipped; web 83 passed.
 
 **Suites on `b0d47b68`** (`C:/t/vis-runs/suite2.sh` in one hold; log `evidence/import_fixes/suite.log`): SMOKE 511
 passed; golden seam 2 / 8 / 4 / 24 passed (unedited); equivalence run_pathway 8, app_vs_service 14, default_path 6;
