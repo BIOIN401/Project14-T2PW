@@ -54,18 +54,50 @@
   </div>
 </section>
 
-<section id="sponsors" class="sponsors" aria-labelledby="sponsors-heading">
-  <div class="container">
-    <h2 id="sponsors-heading">Sponsors</h2>
-    <p class="sponsors__note muted">
-      [Placeholder: sponsor logos and names, laid out similarly to Synced.]
+{% endblock %}
+
+{% block footer %}
+<section class="funders" aria-labelledby="funders-heading">
+  <h2 id="funders-heading" class="visually-hidden">Funders</h2>
+  <div class="funders__layout">
+    <p class="funders__copy">
+      This project is supported by the
+      <a href="https://cihr-irsc.gc.ca/" rel="noopener noreferrer" target="_blank">Canadian Institutes of Health Research</a>,
+      <a href="https://www.innovation.ca/" rel="noopener noreferrer" target="_blank">Canada Foundation for Innovation</a>,
+      and by
+      <a href="https://www.metabolomicscentre.ca/" rel="noopener noreferrer" target="_blank">The Metabolomics Innovation Centre (TMIC)</a>,
+      a nationally-funded research and core facility that supports a wide range of cutting-edge metabolomic studies.
+      TMIC is funded by
+      <a href="https://www.genomecanada.ca/" rel="noopener noreferrer" target="_blank">Genome Canada</a>,
+      <a href="https://www.genomealberta.ca/" rel="noopener noreferrer" target="_blank">Genome Alberta</a>,
+      and
+      <a href="https://www.genomebc.ca/" rel="noopener noreferrer" target="_blank">Genome British Columbia</a>,
+      a not-for-profit organization that is leading Canada’s national genomics strategy with $900 million in funding from the federal government.
     </p>
-    <ul class="sponsors__grid">
-      <li class="sponsor-slot"><span>Sponsor 1</span></li>
-      <li class="sponsor-slot"><span>Sponsor 2</span></li>
-      <li class="sponsor-slot"><span>Sponsor 3</span></li>
-      <li class="sponsor-slot"><span>Sponsor 4</span></li>
-    </ul>
+    <div class="funders__logos">
+      <div class="funders__row funders__row--top">
+        <a class="funder-logo" href="https://www.metabolomicscentre.ca/" rel="noopener noreferrer" target="_blank">
+          <img src="{{ static_url }}/img/funders/tmic.png" alt="The Metabolomics Innovation Centre (TMIC)" width="366" height="101">
+        </a>
+        <a class="funder-logo" href="https://www.innovation.ca/" rel="noopener noreferrer" target="_blank">
+          <img src="{{ static_url }}/img/funders/cfi.png" alt="Canada Foundation for Innovation" width="301" height="101">
+        </a>
+      </div>
+      <div class="funders__row funders__row--bottom">
+        <a class="funder-logo" href="https://www.genomecanada.ca/" rel="noopener noreferrer" target="_blank">
+          <img src="{{ static_url }}/img/funders/genome-canada.png" alt="Genome Canada" width="216" height="130">
+        </a>
+        <a class="funder-logo" href="https://www.genomealberta.ca/" rel="noopener noreferrer" target="_blank">
+          <img src="{{ static_url }}/img/funders/genome-alberta.png" alt="Genome Alberta" width="287" height="178">
+        </a>
+        <a class="funder-logo" href="https://www.genomebc.ca/" rel="noopener noreferrer" target="_blank">
+          <img src="{{ static_url }}/img/funders/genome-bc.png" alt="Genome British Columbia" width="311" height="130">
+        </a>
+        <a class="funder-logo" href="https://cihr-irsc.gc.ca/" rel="noopener noreferrer" target="_blank">
+          <img src="{{ static_url }}/img/funders/cihr.png" alt="Canadian Institutes of Health Research (CIHR IRSC)" width="275" height="168">
+        </a>
+      </div>
+    </div>
   </div>
 </section>
 {% endblock %}

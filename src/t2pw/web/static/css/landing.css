@@ -257,40 +257,86 @@ body.landing .intro .btn--primary:hover {
   color: #ffffff;
 }
 
-/* ── Sponsors ─────────────────────────────────────────────────────────── */
-.sponsors {
+/* ── Funders (PathBank-style footer) ──────────────────────────────────── */
+body.landing .site-footer {
   background: #ffffff;
   border-top: 1px solid #e5e5e5;
-  padding: var(--space-8) 0;
+  color: #555555;
+  padding-top: var(--space-6);
+  padding-bottom: var(--space-5);
 }
 
-.sponsors__note {
-  margin-bottom: var(--space-5);
+body.landing .site-footer .container {
+  max-width: var(--container-max);
 }
 
-.sponsors__grid {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+.funders__layout {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
-  gap: var(--space-4);
+  gap: var(--space-6);
+  align-items: start;
 }
 
-.sponsor-slot {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 5.5rem;
-  padding: var(--space-4);
-  border: 1px solid var(--pb-cream-border);
-  border-radius: var(--radius-md);
-  background: var(--pb-cream);
-  color: var(--pb-magenta-deep);
+@media (min-width: 56rem) {
+  .funders__layout {
+    grid-template-columns: minmax(16rem, 0.9fr) minmax(0, 1.4fr);
+    gap: var(--space-7);
+  }
+}
+
+.funders__copy {
+  margin: 0;
+  max-width: none;
   font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  line-height: 1.55;
+  color: #555555;
+}
+
+.funders__copy a {
+  color: var(--pb-link);
+  text-decoration: none;
+}
+
+.funders__copy a:hover {
+  text-decoration: underline;
+  color: var(--pb-magenta);
+}
+
+.funders__logos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.funders__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-5) var(--space-6);
+}
+
+.funder-logo {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.funder-logo img {
+  display: block;
+  width: auto;
+  max-height: 3.25rem;
+  height: auto;
+}
+
+.funders__row--top .funder-logo img {
+  max-height: 3.5rem;
+}
+
+.funders__row--bottom .funder-logo img {
+  max-height: 3rem;
+}
+
+.funder-logo:hover {
+  opacity: 0.88;
 }
 
 @media (prefers-reduced-motion: reduce) {

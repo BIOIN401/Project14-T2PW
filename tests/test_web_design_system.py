@@ -313,7 +313,12 @@ def test_no_script_no_external_urls():
             assert text.count("<script") == 1 and text.count(HTMX_TAG) == 1, name
         else:
             assert not re.search(r"<script", text, re.I), name
-        assert not re.search(r"https?:", text, re.I), name
+        if name == "landing.html":
+            # Landing funder footer: external https links only; images stay on /static.
+            assert not re.search(r"""(?:src)\s*=\s*["']https?:""", text, re.I), name
+            assert all("https://" in m for m in re.findall(r'href="(https?://[^"]+)"', text))
+        else:
+            assert not re.search(r"https?:", text, re.I), name
         assert not re.search(r"""(?:src|href)\s*=\s*["']//""", text, re.I), name
         assert not re.search(r"@import|url\(", text, re.I), name
 
