@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbgn xmlns="http://sbgn.org/libsbgn/0.3" xmlns:t2pw="urn:t2pw:sbgn-ext">
+  <map language="process description" version="http://identifiers.org/combine.specifications/sbgn.pd.level-1.version-1.3" id="map1">
+    <glyph class="compartment" id="c1">
+      <label text="saliva" />
+      <bbox x="0" y="350" w="3200" h="459" />
+    </glyph>
+    <glyph class="compartment" id="c2">
+      <label text="cell" />
+      <bbox x="0" y="0" w="3200" h="1400" />
+    </glyph>
+    <glyph class="compartment" id="c3">
+      <label text="cytosol" />
+      <bbox x="0" y="429" w="3200" h="621" />
+    </glyph>
+    <glyph class="compartment" id="c4">
+      <label text="synaptic vesicles" />
+      <bbox x="0" y="429" w="3200" h="360" />
+    </glyph>
+    <glyph class="compartment" id="c5">
+      <label text="synapse" />
+      <bbox x="0" y="429" w="3200" h="796" />
+    </glyph>
+    <glyph class="macromolecule" id="g1" compartmentRef="c1">
+      <extension>
+        <t2pw:ids uniprot="Q80VM9" />
+      </extension>
+      <label text="OTOP1" />
+      <bbox x="40" y="420" w="80" h="40" />
+    </glyph>
+    <glyph class="simple chemical" id="g2" compartmentRef="c1">
+      <extension>
+        <t2pw:ids chebi="15378" chemspider="1010" hmdb="HMDB0059597" kegg="C00080" pathbank_compound_id="40034" pubchem="1038" />
+      </extension>
+      <label text="Hydrogen Ion" />
+      <bbox x="235" y="489" w="40" h="40" />
+    </glyph>
+    <glyph class="simple chemical" id="g3" compartmentRef="c2">
+      <extension>
+        <t2pw:ids chebi="15378" chemspider="1010" hmdb="HMDB0059597" kegg="C00080" pathbank_compound_id="40034" pubchem="1038" />
+      </extension>
+      <label text="Hydrogen Ion" />
+      <bbox x="525" y="489" w="40" h="40" />
+    </glyph>
+    <glyph class="simple chemical" id="g4" compartmentRef="c2">
+      <extension>
+        <t2pw:ids cas="50-67-9" chebi="28790" chemspider="5013" hmdb="HMDB0000259" kegg="C00780" pathbank_compound_id="178" pubchem="5202" />
+      </extension>
+      <label text="5-HT" />
+      <bbox x="775" y="489" w="40" h="40" />
+    </glyph>
+    <glyph class="simple chemical" id="g5" compartmentRef="c1">
+      <extension>
+        <t2pw:ids cas="50-67-9" chebi="28790" chemspider="5013" hmdb="HMDB0000259" kegg="C00780" pathbank_compound_id="178" pubchem="5202" />
+      </extension>
+      <label text="5-HT" />
+      <bbox x="1065" y="489" w="40" h="40" />
+    </glyph>
+    <glyph class="macromolecule" id="g6" compartmentRef="c2">
+      <extension>
+        <t2pw:ids uniprot="Q80VM9" />
+      </extension>
+      <label text="OTOP1" />
+      <bbox x="380" y="399" w="80" h="40" />
+    </glyph>
+    <glyph class="simple chemical" id="g7" compartmentRef="c3">
+      <extension>
+        <t2pw:ids chebi="15378" chemspider="1010" hmdb="HMDB0059597" kegg="C00080" pathbank_compound_id="40034" pubchem="1038" />
+      </extension>
+      <label text="Hydrogen Ion" />
+      <bbox x="1605" y="489" w="40" h="40" />
+    </glyph>
+    <glyph class="simple chemical" id="g8" compartmentRef="c4">
+      <extension>
+        <t2pw:ids cas="50-67-9" chebi="28790" chemspider="5013" hmdb="HMDB0000259" kegg="C00780" pathbank_compound_id="178" pubchem="5202" />
+      </extension>
+      <label text="5-HT" />
+      <bbox x="1855" y="489" w="40" h="40" />
+    </glyph>
+    <glyph class="simple chemical" id="g9" compartmentRef="c5">
+      <extension>
+        <t2pw:ids cas="50-67-9" chebi="28790" chemspider="5013" hmdb="HMDB0000259" kegg="C00780" pathbank_compound_id="178" pubchem="5202" />
+      </extension>
+      <label text="5-HT" />
+      <bbox x="2145" y="489" w="40" h="40" />
+    </glyph>
+    <glyph class="simple chemical" id="g10" compartmentRef="c1">
+      <label text="Ca++" />
+      <bbox x="1315" y="729" w="40" h="40" />
+    </glyph>
+    <glyph class="simple chemical" id="g11" compartmentRef="c3">
+      <label text="Ca++" />
+      <bbox x="1605" y="729" w="40" h="40" />
+    </glyph>
+    <glyph class="process" id="p1" compartmentRef="c1">
+      <extension>
+        <t2pw:process kind="transport" name="H+ influx through OTOP1" />
+      </extension>
+      <bbox x="380" y="489" w="20" h="20" />
+      <port id="p1_in" x="370" y="499" />
+      <port id="p1_out" x="410" y="499" />
+    </glyph>
+    <glyph class="process" id="p2" compartmentRef="c2">
+      <extension>
+        <t2pw:process kind="transport" name="5-HT release from Type III cells" />
+      </extension>
+      <bbox x="920" y="489" w="20" h="20" />
+      <port id="p2_in" x="910" y="499" />
+      <port id="p2_out" x="950" y="499" />
+    </glyph>
+    <glyph class="process" id="p3" compartmentRef="c2">
+      <extension>
+        <t2pw:process kind="transport" name="OTOP1-mediated H+ permeation" />
+      </extension>
+      <bbox x="1460" y="489" w="20" h="20" />
+      <port id="p3_in" x="1450" y="499" />
+      <port id="p3_out" x="1490" y="499" />
+    </glyph>
+    <glyph class="process" id="p4" compartmentRef="c4">
+      <extension>
+        <t2pw:process kind="transport" name="5-HT release from Type III cells" />
+      </extension>
+      <bbox x="2000" y="489" w="20" h="20" />
+      <port id="p4_in" x="1990" y="499" />
+      <port id="p4_out" x="2030" y="499" />
+    </glyph>
+    <glyph class="process" id="p5" compartmentRef="c2">
+      <extension>
+        <t2pw:process kind="transport" name="OTOP1-mediated H+ permeation" />
+      </extension>
+      <bbox x="380" y="729" w="20" h="20" />
+      <port id="p5_in" x="370" y="739" />
+      <port id="p5_out" x="410" y="739" />
+    </glyph>
+    <glyph class="process" id="p6" compartmentRef="c4">
+      <extension>
+        <t2pw:process kind="transport" name="5-HT release from Type III cells" />
+      </extension>
+      <bbox x="920" y="729" w="20" h="20" />
+      <port id="p6_in" x="910" y="739" />
+      <port id="p6_out" x="950" y="739" />
+    </glyph>
+    <glyph class="process" id="p7" compartmentRef="c1">
+      <extension>
+        <t2pw:process kind="transport" name="Ca++ influx through voltage-gated Ca++ channels" />
+      </extension>
+      <bbox x="1460" y="729" w="20" h="20" />
+      <port id="p7_in" x="1450" y="739" />
+      <port id="p7_out" x="1490" y="739" />
+    </glyph>
+    <arc class="consumption" id="a1" source="g2" target="p1_in">
+      <start x="255" y="509" />
+      <end x="370" y="499" />
+    </arc>
+    <arc class="production" id="a2" source="p1_out" target="g3">
+      <start x="410" y="499" />
+      <end x="545" y="509" />
+    </arc>
+    <arc class="catalysis" id="a3" source="g1" target="p1">
+      <start x="80" y="440" />
+      <end x="390" y="489" />
+    </arc>
+    <arc class="consumption" id="a4" source="g4" target="p2_in">
+      <start x="795" y="509" />
+      <end x="910" y="499" />
+    </arc>
+    <arc class="production" id="a5" source="p2_out" target="g5">
+      <start x="950" y="499" />
+      <end x="1085" y="509" />
+    </arc>
+    <arc class="consumption" id="a6" source="g3" target="p3_in">
+      <start x="545" y="509" />
+      <end x="1450" y="499" />
+    </arc>
+    <arc class="production" id="a7" source="p3_out" target="g7">
+      <start x="1490" y="499" />
+      <end x="1625" y="509" />
+    </arc>
+    <arc class="catalysis" id="a8" source="g6" target="p3">
+      <start x="420" y="419" />
+      <end x="1470" y="489" />
+    </arc>
+    <arc class="consumption" id="a9" source="g8" target="p4_in">
+      <start x="1875" y="509" />
+      <end x="1990" y="499" />
+    </arc>
+    <arc class="production" id="a10" source="p4_out" target="g9">
+      <start x="2030" y="499" />
+      <end x="2165" y="509" />
+    </arc>
+    <arc class="consumption" id="a11" source="g3" target="p5_in">
+      <start x="545" y="509" />
+      <end x="370" y="739" />
+    </arc>
+    <arc class="production" id="a12" source="p5_out" target="g3">
+      <start x="410" y="739" />
+      <end x="545" y="509" />
+    </arc>
+    <arc class="catalysis" id="a13" source="g6" target="p5">
+      <start x="420" y="419" />
+      <end x="390" y="729" />
+    </arc>
+    <arc class="consumption" id="a14" source="g8" target="p6_in">
+      <start x="1875" y="509" />
+      <end x="910" y="739" />
+    </arc>
+    <arc class="production" id="a15" source="p6_out" target="g4">
+      <start x="950" y="739" />
+      <end x="795" y="509" />
+    </arc>
+    <arc class="consumption" id="a16" source="g10" target="p7_in">
+      <start x="1335" y="749" />
+      <end x="1450" y="739" />
+    </arc>
+    <arc class="production" id="a17" source="p7_out" target="g11">
+      <start x="1490" y="739" />
+      <end x="1625" y="749" />
+    </arc>
+  </map>
+</sbgn>

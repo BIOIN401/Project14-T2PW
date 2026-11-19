@@ -42,6 +42,7 @@
 <h2>Download</h2>
 <p>{{ c.download_link(it.downloads.pwml.href, "Download PWML", filename=it.downloads.pwml.name, meta="PathWhiz pathway file") }}</p>
 {% endif %}
+{% if it.finished and it.downloads.pwml %}{% include "_vision_panel.html" %}{% endif %}
 {% if it.downloads.image %}
 <h2>Pathway diagram</h2>
 {{ c.figure(it.downloads.image.href, "Rendered diagram of " ~ it.title, caption="Rendered from the PWML above.") }}

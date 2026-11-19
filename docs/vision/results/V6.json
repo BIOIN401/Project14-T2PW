@@ -1,0 +1,69 @@
+{
+  "lane": "V6",
+  "branch": "vision/generate",
+  "status": "done",
+  "built": [
+    "generate(big, scope, fmt, *, cache_dir=None, export=None, meta=None) -> bytes for pwml, sbml, sbgn, kgml, svg, html, json",
+    "PWML = service.postpipeline.run_pwml_export exactly as the replay harness calls it (temp project root, reference PWML, 3200x1400, layout v2 default); DB variables blanked and T2PW_OFFLINE_CURATOR=1 for the call, so no MySQL, network or LLM",
+    "the PWML IR returned by that export (res['pwml_ir']) feeds render_svg/render_html and the SBGN coordinates; the export runs once per (view hash, export controls, env switches) and is memoised",
+    "SBML, KGML and SBGN are built from the graph the PWML export keeps: strict_quarantine.quarantine_and_close with the same controls (strict_db, export mode, Stage-0 context), memoised. json is the view itself, before that decision",
+    "disk cache keyed by sha256 of the canonical view JSON + sha8 of (export controls, meta, final_payload_enabled(), layout_version()) + fmt; atomic write (temp file + os.replace)",
+    "export_options_from_run(run_dir): strict_db, export_mode and Stage-0 key_compounds from the stored quarantine_report, as dump_replay.py reads them",
+    "CLI: python -m t2pw.vision.generate <run_dir|big_payload.json> --scope paper|default|full|hops:N --fmt <fmt> --out <file> [--cache dir]",
+    "bundled DejaVu Sans 2.37 + licence + README (source URL and sha256) under diagram/fonts; _font order T2PW_DIAGRAM_FONT, Segoe UI, bundled DejaVu, PIL default (VD-9). Windows output unchanged (97/97 equivalence stays valid there); Linux output will use DejaVu",
+    "pyproject package-data: t2pw.vision prompts/*, t2pw.vision.diagram diagram.css + fonts/* (prompts/ does not exist at this base; the glob is inert until a lane adds it)",
+    "fix round 3: every format but json calls the PWML step first and raises its error, so a refused PWML export produces no format at all (sbml, kgml, sbgn no longer fall back); success outputs unchanged"
+  ],
+  "files": [
+    "src/t2pw/vision/generate.py",
+    "src/t2pw/vision/diagram/render.py (_font only)",
+    "src/t2pw/vision/diagram/fonts/DejaVuSans.ttf, LICENSE-DejaVu.txt, README.txt",
+    "pyproject.toml (package-data only)",
+    "tests/test_vision_generate.py",
+    "tests/data/vision/generate/run39_final_mapped.json, run56_final_mapped.json (stored run payloads, 96 KB and 60 KB, offline fixtures; outside the listed boundary, test data only)",
+    "docs/vision/evidence/V6/ (no_regression_pwml_on.json, no_regression_pwml_off.json, format_matrix.json, sbml_compare_10.json, diff_outside_vision.txt)"
+  ],
+  "tests": [
+    {
+      "label": "gen-all job (first full job, before fix round 2)",
+      "counts": "tests/test_vision_generate.py + test_vision_diagram.py: 2 failed, 16 passed. Both failures were test/design issues found in fix round 2 (below)",
+      "survivors": 0,
+      "log": "C:/t/vis-runs/logs/V6-all.log (BW_EXIT=0)"
+    },
+    {
+      "label": "gen-tests-4 (after fix round 2, focused)",
+      "counts": "tests/test_vision_generate.py (10 tests) + tests/test_vision_diagram.py: 19 passed, 0 failed",
+      "survivors": 0,
+      "log": "C:/t/vis-runs/logs/V6-tests-4.log, report C:/t/vis-runs/json/V6-tests-4.json"
+    },
+    {
+      "label": "gen-tests-5 (after fix round 3, focused)",
+      "counts": "tests/test_vision_generate.py (10 tests) + tests/test_vision_diagram.py: 19 passed, 0 failed (new test: a refused PWML export raises its own error for pwml, sbml, sbgn, kgml, svg and html)",
+      "survivors": 0,
+      "log": "C:/t/vis-runs/logs/V6-tests-5.log"
+    }
+  ],
+  "proofs": {
+    "no_regression_97": "generate(big_from_run(dir), DEFAULT, 'pwml', export=export_options_from_run(dir)) vs the replay's PWML, sha256 per file: arm (a) production default (T2PW_FINAL_PAYLOAD unset = ON, layout v2, baseline replay_base.py --flag 0 --final-env unset, no fill step) 97/97 identical; arm (b) T2PW_FINAL_PAYLOAD=0, 97/97 identical. Export mode from quarantine_report.json equals the replay's CSV mode on 97/97 (F5 closed). Evidence: evidence/V6/no_regression_pwml_on.json and _off.json. The proof asserts the denominator is 97; a missing baseline file or a timeout would count as a failure. Arm (a) was re-run at 163a9279 (after fix round 2) by the sub-orchestrator: 97/97 identical again, mode agrees 97/97 (evidence/V6/no_regression_pwml_on.json replaced, log C:/t/vis-runs/logs/v6-matrix2.log). Arm (b) is from the first job; the pwml path has not changed since.",
+    "baseline_source_F3": "Baseline replays run from the vision/generate worktree src (branch HEAD). `git diff --stat 4260ea80 -- src ':!src/t2pw/vision'` is empty (evidence/V6/diff_outside_vision.txt, 0 bytes), so everything the export touches equals base 4260ea80.",
+    "server_setting_F2": "Cache and memo key include final_payload_enabled() and layout_version(). Production default is T2PW_FINAL_PAYLOAD unset (ON) and layout v2 = arm (a); arm (b) shows the flag-0 path is also byte-identical.",
+    "format_matrix": "10 runs x scope paper/default/full x 7 formats = 210 generate calls, 210/210 ok, 0 failures. Re-run at 163a9279 (after fix round 2) by the sub-orchestrator: evidence/V6/format_matrix.json (replaces the first job's), log C:/t/vis-runs/logs/v6-matrix2.log. Mean sizes (bytes): pwml 39517, sbml 27188, sbgn 5773, kgml 4004, svg 21748, html 22178, json 117321. Fix round 3 does not change any success output.",
+    "root_cause_scope_disagreement": "test_scope_reaches_every_format failed with ('paper', 0, 1, 1, 1): PWML had 0 reactions, SBML/SBGN/KGML 1. Cause (b), the exporter dropping on purpose: the strict quarantine boundary (strict_quarantine.quarantine_and_close, run first inside run_pwml_export) quarantines the fixture's reaction as quarantined_broken_reference / no_defensible_reaction_support, because its input has no external identifier offline (no PathBank DB), and removes the then-unreferenced product. view() and generate's view-to-PWML path lose nothing: view(DEFAULT) equals the stored payload, and the view is passed to the export unchanged. The structural formats had been built from the unquarantined view. Fix: they are built from quarantine_and_close(view, same controls).payload, so no format shows a reaction PWML drops. pwml/ and view.py were not touched. Test fixtures: run39 (2 reactions survive; extension reaction one hop out; paper 2 / default 3 reactions in PWML, SBML, SBGN and KGML) and run56 (reaction dropped by quarantine; 0 in all four formats, json keeps 1). test_vision_generate.py:101 is stricter now, not relaxed.",
+    "sbml_choice": "clean_model sbml_text (chosen). Production json_to_sbml.build_sbml runs offline (no DB code; mysql_connected is always false) and parses clean, but loses content on stored payloads (evidence/V6/sbml_compare_10.json, 10 payloads, species/reactions/compartments): idx 3 clean 11/6/7 vs prod 12/6/11; idx 14 5/1/2 vs 6/1/2; idx 29 19/6/4 vs 19/6/5; idx 50 20/6/4 vs 19/6/5; idx 70 12/3/6 vs 13/3/5; idx 88 10/1/4 vs 11/1/2; idx 109 9/1/2 vs 9/1/3; idx 123 7/2/2 vs 8/2/2; idx 133 13/5/2 vs 14/4/2; idx 143 9/3/1 vs 10/3/2. Difference classes, from a species/reaction listing of idx 14, 88, 133, 3 (scratch sbml_diff.py): (1) prod adds a placeholder species named 'Unknown' in compartment c_cell whenever an enzyme-catalysed reaction needs a modifier slot (+1 species on 6 of 10 payloads); not paper content. (2) prod puts enzymes, complexes and unscoped proteins in the default 'cell' compartment (idx 14 HMGR, idx 88 ALAS2 complex, idx 133 the three complexes); clean keeps them in the reaction's own compartment. (3) prod renames every reaction to an 'A + B -> C' equation and drops the paper's reaction name; clean keeps the names. (4) prod splits a location into several compartments with numeric suffixes (idx 3: apical membrane x3, cytoplasm x2, synaptic vesicles x2, 11 vs 7) and omits parent compartments (idx 88: no cytoplasm or mitochondrion); clean emits one compartment per location with its parents. (5) REACTION LOSS: idx 133 prod emits 4 reactions for 5 payload reactions (HldE bifunctional step 1 is missing); clean 5/5. With no loss as the criterion, clean_model is the only candidate. The 97-run proof covers PWML only, not SBML.",
+    "export_controls_note": "generate cannot be byte-identical to a replay without the stored run's export controls (strict_db, mode, key_compounds); with export=None it uses the exporter defaults (strict_db True, default mode, no Stage-0 context), and the strict quarantine then drops more offline. The CLI on a run directory reads them from quarantine_report.json."
+  },
+  "dead_ends": [
+    "synthetic tiny payload (tests/test_vision_payload.payload()) is refused by PWML export Stage 3 revalidation, so the offline fixtures are real stored run payloads",
+    "run idx 149 (54 KB) is refused by the required-field gate with strict_db and no DB",
+    "run56 as the scope-test fixture: its only reaction is quarantined offline, so scope could not be seen in any format; it is now the quarantine-agreement fixture, run39 carries the scope test",
+    "bare `bash` inside bw.sh is WSL bash; the queue script now calls C:/Program Files/Git/bin/bash.exe"
+  ],
+  "open_questions": [
+    "Offline (no PathBank DB) the strict quarantine drops reactions whose participants carry no external id, so an offline generate() of a view can show fewer reactions than the stored run once had with the DB. The web server's generate must run with the DB resolution it has in production, or the product owner must accept this. Not a bug in generate.",
+    "For the web lane (V10), F7: generate() swaps process-wide environment variables (blank PATHBANK_DB_*, T2PW_OFFLINE_CURATOR=1) for the length of a PWML export and of the quarantine step, and restores them afterwards. That swap must not leak into job subprocesses (a subprocess started during an export inherits blank DB variables) and is not thread-safe; V10 must serialise generate() calls or run it in its own process. Not fixed here.",
+    "Arm (a) uses a baseline replay without the final-payload fill step. A replay with the fill (--flag 1, live public lookups via the fill cache) is a different input (a filled payload) and is not compared; generate does not fill, the web server fills upstream when it builds the big payload.",
+    "SBGN/KGML/SBML run quarantine_and_close once more per (view, controls) besides the PWML export (memoised, about one extra pass); an export-side hook returning the kept payload would avoid it but needs a change under pwml/service, which this track must not make.",
+    "F1(b), for V7/V10: PWML carries canonical names (after the pre-freeze canonicalizers and DB resolution) while SBML, KGML and SBGN built from the quarantine-kept payload carry the stored names; the same entity can be spelled differently across formats.",
+    "F2, for V7/V10: the quarantine decision and the PWML export must see the same DB availability. generate() blanks the DB variables for both steps; a server that resolves against a DB must do so for both together, or the kept graph and the PWML can differ."
+  ]
+}

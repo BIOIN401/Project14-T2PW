@@ -1,0 +1,28 @@
+{#- Scoped-view panel (V10). Included by result.html. Without `vp` it is only the HTMX loader that fetches
+    <it.href>/vision; with `vp` (the /vision and /view routes) it is the panel itself. -#}
+{% import "macros/components.html" as c %}
+{% if vp is defined %}
+<section id="vision-panel" aria-labelledby="vision-h">
+  <h2 id="vision-h">View and other formats</h2>
+  <p>Showing: <strong>{{ vp.label }}</strong>. Scope:
+    {% for slug, name in vp.scopes %}{% if slug == vp.scope %}{{ name }}{% else %}<a href="{{ it.href }}/view?scope={{ slug }}">{{ name }}</a>{% endif %}{% if not loop.last %} · {% endif %}{% endfor %}</p>
+  <form method="post" action="{{ it.href }}/rescope">
+    <input type="hidden" name="scope" value="{{ vp.scope }}">
+    {{ c.text_field("message", "Adjust the view", hint='For example "make this more detailed" or "only what the paper says".', attrs={"maxlength": vp.maxlen}) }}
+    <p>{{ c.button("Update the view", type="submit", variant="secondary") }}</p>
+  </form>
+  {% if vp.message %}
+  {% call c.alert("error", title="No file for this view") %}<p>{{ vp.message | scrub }}</p>{% endcall %}
+  {% else %}
+  {% if vp.preview %}{{ c.figure(vp.preview, "Diagram of " ~ it.title ~ ", " ~ vp.label, caption="The view as drawn from its PWML.") }}
+  {% else %}<p><a href="{{ vp.view_href }}">Show the diagram of this view</a></p>{% endif %}
+  <ul class="plain">
+    {% for f in vp.files %}<li>{{ c.download_link(f.href, "Download " ~ f.label, filename=f.name) }}</li>{% endfor %}
+  </ul>
+  <p class="muted">The first request for a view can take a minute: the files are made once and then kept.</p>
+  {% endif %}
+</section>
+{% else %}
+<div id="vision-panel" hx-get="{{ it.href }}/vision" hx-trigger="load" hx-swap="outerHTML"></div>
+<noscript><p><a href="{{ it.href }}/view">Adjust the view and download SBML, SBGN, KGML, SVG or HTML</a></p></noscript>
+{% endif %}

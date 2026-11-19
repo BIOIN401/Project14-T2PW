@@ -1,0 +1,89 @@
+{
+ "run": "runs_verify/2026-08-21_2014/papers/PMC12312563/strict",
+ "input_paper": "PMC12312563",
+ "seconds": 92.0,
+ "llm": {
+  "calls_counted": 0,
+  "token_stats": {
+   "prompt_tokens": 0,
+   "completion_tokens": 0,
+   "total_tokens": 0,
+   "api_calls": 0,
+   "estimated_cost_usd": 0.0
+  }
+ },
+ "report": {
+  "budget_s": 300.0,
+  "max_papers": 5,
+  "max_llm_calls": 12,
+  "organism": "Listeria monocytogenes",
+  "frontier": {
+   "substrates": [
+    "Oxoglutaric acid",
+    "isochorismate"
+   ],
+   "products": [
+    "SEPHCHC"
+   ],
+   "enzymes": [
+    "MenD complex"
+   ]
+  },
+  "input_paper": {
+   "pmid": null,
+   "pmcid": "PMC12312563",
+   "doi": null,
+   "title": null
+  },
+  "queries": [
+   {
+    "query": "\"Oxoglutaric acid\" AND \"Listeria monocytogenes\"",
+    "status": "failed",
+    "hits": 0,
+    "error": "ReadTimeout"
+   },
+   {
+    "query": "\"SEPHCHC\" AND \"Listeria monocytogenes\"",
+    "status": "failed",
+    "hits": 0,
+    "error": "ReadTimeout"
+   },
+   {
+    "query": "\"isochorismate\" AND \"Listeria monocytogenes\"",
+    "status": "failed",
+    "hits": 0,
+    "error": "ReadTimeout"
+   }
+  ],
+  "candidates": [],
+  "papers": [],
+  "llm": {
+   "calls": 0,
+   "errors": {}
+  },
+  "status": "no_candidates",
+  "placement": {}
+ },
+ "base": {
+  "entities": 11,
+  "reactions": 1,
+  "interactions": 4,
+  "transports": 0,
+  "unresolved_refs": 0
+ },
+ "default": {
+  "entities": 11,
+  "reactions": 1,
+  "interactions": 4,
+  "transports": 0,
+  "unresolved_refs": 0
+ },
+ "full": {
+  "entities": 11,
+  "reactions": 1,
+  "interactions": 4,
+  "transports": 0,
+  "unresolved_refs": 0
+ },
+ "steps": []
+}

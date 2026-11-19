@@ -1,0 +1,1363 @@
+{
+ "schema": "t2pw.vision.bench_gold/1",
+ "id": "PW488575",
+ "kind": "full",
+ "species": "Homo sapiens",
+ "curated_record": {
+  "accession": "PW488575",
+  "pathway_id": 489095,
+  "name": "Noncanonical Wnt/Ca2+ signaling",
+  "content_sha256": "fcd556b3599fa2c3bef17cb1962870259133d7387a6b132e8d6f4506350bbf33"
+ },
+ "complete": {
+  "reactions": true,
+  "enzymes": true,
+  "transports": true,
+  "interactions": true,
+  "compartments": true
+ },
+ "reactions": [
+  {
+   "id": "PW_R1228398",
+   "label": "",
+   "inputs": [
+    {
+     "name": "Phosphatidylinositol 4,5-bisphosphate 5-phosphatase A",
+     "aliases": [
+      "INPP5J"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p000538"
+      ],
+      [
+       "uniprot",
+       "q15735"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "outputs": [
+    {
+     "name": "Inositol 1,4,5-trisphosphate",
+     "aliases": [
+      "Inotp",
+      "1d-myo-inositol 1,4,5-trisphosphate",
+      "D-myo-inositol 1,4,5-trisphosphate",
+      "1,4,5-insp3",
+      "D-myo-inositol-1,4,5-triphosphate",
+      "Ins(1,4,5)p3",
+      "Insp3",
+      "Ip3",
+      "1d-myo-inositol 1,4,5-trisphosphoric acid",
+      "D-myo-inositol 1,4,5-trisphosphoric acid",
+      "D-myo-inositol-1,4,5-triphosphoric acid",
+      "Inositol 1,4,5-trisphosphoric acid"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "inositol_1,4,5-trisphosphate"
+      ],
+      [
+       "cas",
+       "85166-31-0"
+      ],
+      [
+       "chebi",
+       "16595"
+      ],
+      [
+       "hmdb",
+       "1498"
+      ],
+      [
+       "kegg",
+       "c01245"
+      ],
+      [
+       "pubchem",
+       "439456"
+      ],
+      [
+       "pwc",
+       "pw_c001155"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "DG(18:2(9Z,12Z)/18:2(9Z,12Z)/0:0)",
+     "aliases": [
+      "DG36:4",
+      "1,2-dilinoleoyl-rac-glycerol",
+      "Dag(18:2/18:2)",
+      "Dag(18:2n6/18:2n6)",
+      "Dag(18:2w6/18:2w6)",
+      "Dag(36:4)",
+      "Dg(18:2/18:2)",
+      "Dg(18:2n6/18:2n6)",
+      "Dg(18:2w6/18:2w6)",
+      "Dg(36:4)",
+      "Diacylglycerol",
+      "Diacylglycerol(18:2/18:2)",
+      "Diacylglycerol(18:2n6/18:2n6)",
+      "Diacylglycerol(18:2w6/18:2w6)",
+      "Diacylglycerol(36:4)",
+      "Diglyceride"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "diacylglycerol"
+      ],
+      [
+       "cas",
+       "24529-89-3"
+      ],
+      [
+       "chebi",
+       "77127"
+      ],
+      [
+       "hmdb",
+       "7248"
+      ],
+      [
+       "kegg",
+       "c00165"
+      ],
+      [
+       "pubchem",
+       "9543729"
+      ],
+      [
+       "pwc",
+       "pw_c003299"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "enzyme": {
+    "name": "1-phosphatidylinositol 4,5-bisphosphate phosphodiesterase beta-2",
+    "aliases": [],
+    "ids": [
+     [
+      "pwp",
+      "pw_p014537"
+     ]
+    ],
+    "role": "defining"
+   },
+   "catalysts": [
+    {
+     "name": "1-phosphatidylinositol 4,5-bisphosphate phosphodiesterase beta-2",
+     "aliases": [],
+     "ids": [
+      [
+       "pwp",
+       "pw_p014537"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "reversible": false
+  },
+  {
+   "id": "PW_R1249254",
+   "label": "",
+   "inputs": [
+    {
+     "name": "DG(18:2(9Z,12Z)/18:2(9Z,12Z)/0:0)",
+     "aliases": [
+      "DG36:4",
+      "1,2-dilinoleoyl-rac-glycerol",
+      "Dag(18:2/18:2)",
+      "Dag(18:2n6/18:2n6)",
+      "Dag(18:2w6/18:2w6)",
+      "Dag(36:4)",
+      "Dg(18:2/18:2)",
+      "Dg(18:2n6/18:2n6)",
+      "Dg(18:2w6/18:2w6)",
+      "Dg(36:4)",
+      "Diacylglycerol",
+      "Diacylglycerol(18:2/18:2)",
+      "Diacylglycerol(18:2n6/18:2n6)",
+      "Diacylglycerol(18:2w6/18:2w6)",
+      "Diacylglycerol(36:4)",
+      "Diglyceride"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "diacylglycerol"
+      ],
+      [
+       "cas",
+       "24529-89-3"
+      ],
+      [
+       "chebi",
+       "77127"
+      ],
+      [
+       "hmdb",
+       "7248"
+      ],
+      [
+       "kegg",
+       "c00165"
+      ],
+      [
+       "pubchem",
+       "9543729"
+      ],
+      [
+       "pwc",
+       "pw_c003299"
+      ]
+     ],
+     "role": "defining"
+    },
+    {
+     "name": "Calcium",
+     "aliases": [
+      "Ca2+",
+      "Ca",
+      "Calcium element",
+      "Ca(2+)",
+      "Calcium ion",
+      "Calcium, doubly charged positive ion"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "ca%2b2"
+      ],
+      [
+       "cas",
+       "14127-61-8"
+      ],
+      [
+       "chebi",
+       "29108"
+      ],
+      [
+       "drugbank",
+       "db01373"
+      ],
+      [
+       "hmdb",
+       "464"
+      ],
+      [
+       "kegg",
+       "c00076"
+      ],
+      [
+       "pubchem",
+       "271"
+      ],
+      [
+       "pwc",
+       "pw_c000353"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "outputs": [
+    {
+     "name": "Protein kinase C complex",
+     "aliases": [
+      "PRKCB",
+      "Protein kinase C beta type",
+      "PRKCA",
+      "Protein kinase C alpha type"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p007711"
+      ],
+      [
+       "uniprot",
+       "p05771"
+      ],
+      [
+       "uniprot",
+       "p17252"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "enzyme": null,
+   "catalysts": [],
+   "reversible": false
+  }
+ ],
+ "off_scope_reactions": [],
+ "enzymes": [
+  {
+   "id": "E1",
+   "name": "1-phosphatidylinositol 4,5-bisphosphate phosphodiesterase beta-2",
+   "aliases": [],
+   "ids": [
+    [
+     "pwp",
+     "pw_p014537"
+    ]
+   ],
+   "role": "defining",
+   "for": [
+    "PW_R1228398"
+   ]
+  },
+  {
+   "id": "E2",
+   "name": "Calcium release-activated calcium channel protein 1",
+   "aliases": [
+    "ORAI1"
+   ],
+   "ids": [
+    [
+     "pwp",
+     "pw_p007997"
+    ],
+    [
+     "uniprot",
+     "q96d31"
+    ]
+   ],
+   "role": "defining",
+   "for": [
+    "PW_T003328"
+   ]
+  }
+ ],
+ "transports": [
+  {
+   "id": "PW_T013710",
+   "cargo": [
+    {
+     "name": "Nuclear factor of activated T-cells",
+     "aliases": [
+      "NFATC2",
+      "Nuclear factor of activated T-cells, cytoplasmic 2",
+      "NFATC1",
+      "Nuclear factor of activated T-cells, cytoplasmic 1",
+      "NFATC3",
+      "Nuclear factor of activated T-cells, cytoplasmic 3",
+      "NFATC4",
+      "Nuclear factor of activated T-cells, cytoplasmic 4"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p007932"
+      ],
+      [
+       "uniprot",
+       "q13469"
+      ],
+      [
+       "uniprot",
+       "o95644"
+      ],
+      [
+       "uniprot",
+       "q12968"
+      ],
+      [
+       "uniprot",
+       "q14934"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "from": "Cytosol",
+   "to": "Nucleus",
+   "transporters": []
+  },
+  {
+   "id": "PW_T003328",
+   "cargo": [
+    {
+     "name": "Calcium",
+     "aliases": [
+      "Ca2+",
+      "Ca",
+      "Calcium element",
+      "Ca(2+)",
+      "Calcium ion",
+      "Calcium, doubly charged positive ion"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "ca%2b2"
+      ],
+      [
+       "cas",
+       "14127-61-8"
+      ],
+      [
+       "chebi",
+       "29108"
+      ],
+      [
+       "drugbank",
+       "db01373"
+      ],
+      [
+       "hmdb",
+       "464"
+      ],
+      [
+       "kegg",
+       "c00076"
+      ],
+      [
+       "pubchem",
+       "271"
+      ],
+      [
+       "pwc",
+       "pw_c000353"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "from": "Extracellular Space",
+   "to": "Cytoplasm",
+   "transporters": [
+    {
+     "name": "Calcium release-activated calcium channel protein 1",
+     "aliases": [
+      "ORAI1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p007997"
+      ],
+      [
+       "uniprot",
+       "q96d31"
+      ]
+     ],
+     "role": "defining"
+    }
+   ]
+  }
+ ],
+ "interactions": [
+  {
+   "id": "PW_I002871",
+   "a": [
+    {
+     "name": "inositol 1,4,5-trisphosphate receptor type 3",
+     "aliases": [
+      "ITPR3",
+      "Inositol 1,4,5-trisphosphate receptor type 3"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p013039"
+      ],
+      [
+       "uniprot",
+       "q14573"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "b": [
+    {
+     "name": "Calcium",
+     "aliases": [
+      "Ca2+",
+      "Ca",
+      "Calcium element",
+      "Ca(2+)",
+      "Calcium ion",
+      "Calcium, doubly charged positive ion"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "ca%2b2"
+      ],
+      [
+       "cas",
+       "14127-61-8"
+      ],
+      [
+       "chebi",
+       "29108"
+      ],
+      [
+       "drugbank",
+       "db01373"
+      ],
+      [
+       "hmdb",
+       "464"
+      ],
+      [
+       "kegg",
+       "c00076"
+      ],
+      [
+       "pubchem",
+       "271"
+      ],
+      [
+       "pwc",
+       "pw_c000353"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "relationship": "activation"
+  },
+  {
+   "id": "PW_I002872",
+   "a": [
+    {
+     "name": "Calcium",
+     "aliases": [
+      "Ca2+",
+      "Ca",
+      "Calcium element",
+      "Ca(2+)",
+      "Calcium ion",
+      "Calcium, doubly charged positive ion"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "ca%2b2"
+      ],
+      [
+       "cas",
+       "14127-61-8"
+      ],
+      [
+       "chebi",
+       "29108"
+      ],
+      [
+       "drugbank",
+       "db01373"
+      ],
+      [
+       "hmdb",
+       "464"
+      ],
+      [
+       "kegg",
+       "c00076"
+      ],
+      [
+       "pubchem",
+       "271"
+      ],
+      [
+       "pwc",
+       "pw_c000353"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "b": [
+    {
+     "name": "Calcium/calmodulin-dependent protein kinase type II subunit alpha",
+     "aliases": [
+      "CAMKK1",
+      "Calcium/calmodulin-dependent protein kinase kinase 1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p013042"
+      ],
+      [
+       "uniprot",
+       "q8n5s9"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "relationship": "activation"
+  },
+  {
+   "id": "PW_I003748",
+   "a": [
+    {
+     "name": "Inositol 1,4,5-trisphosphate",
+     "aliases": [
+      "Inotp",
+      "1d-myo-inositol 1,4,5-trisphosphate",
+      "D-myo-inositol 1,4,5-trisphosphate",
+      "1,4,5-insp3",
+      "D-myo-inositol-1,4,5-triphosphate",
+      "Ins(1,4,5)p3",
+      "Insp3",
+      "Ip3",
+      "1d-myo-inositol 1,4,5-trisphosphoric acid",
+      "D-myo-inositol 1,4,5-trisphosphoric acid",
+      "D-myo-inositol-1,4,5-triphosphoric acid",
+      "Inositol 1,4,5-trisphosphoric acid"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "inositol_1,4,5-trisphosphate"
+      ],
+      [
+       "cas",
+       "85166-31-0"
+      ],
+      [
+       "chebi",
+       "16595"
+      ],
+      [
+       "hmdb",
+       "1498"
+      ],
+      [
+       "kegg",
+       "c01245"
+      ],
+      [
+       "pubchem",
+       "439456"
+      ],
+      [
+       "pwc",
+       "pw_c001155"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "b": [
+    {
+     "name": "inositol 1,4,5-trisphosphate receptor type 3",
+     "aliases": [
+      "ITPR3",
+      "Inositol 1,4,5-trisphosphate receptor type 3"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p013039"
+      ],
+      [
+       "uniprot",
+       "q14573"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "relationship": "activation"
+  },
+  {
+   "id": "PW_I008548",
+   "a": [
+    {
+     "name": "Proto-oncogene Wnt-1",
+     "aliases": [
+      "WNT1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p008044"
+      ],
+      [
+       "uniprot",
+       "p04628"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "b": [
+    {
+     "name": "Frizzled receptor complex",
+     "aliases": [
+      "FZD10",
+      "Frizzled-10",
+      "FZD1",
+      "Frizzled-1",
+      "FZD2",
+      "Frizzled-2",
+      "FZD3",
+      "Frizzled-3",
+      "FZD4",
+      "Frizzled-4",
+      "FZD5",
+      "Frizzled-5",
+      "FZD6",
+      "Frizzled-6",
+      "FZD7",
+      "Frizzled-7"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p008047"
+      ],
+      [
+       "uniprot",
+       "q9ulw2"
+      ],
+      [
+       "uniprot",
+       "q9up38"
+      ],
+      [
+       "uniprot",
+       "q14332"
+      ],
+      [
+       "uniprot",
+       "q9npg1"
+      ],
+      [
+       "uniprot",
+       "q9ulv1"
+      ],
+      [
+       "uniprot",
+       "q13467"
+      ],
+      [
+       "uniprot",
+       "o60353"
+      ],
+      [
+       "uniprot",
+       "o75084"
+      ],
+      [
+       "uniprot",
+       "q9h461"
+      ],
+      [
+       "uniprot",
+       "o00144"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "relationship": "activation"
+  },
+  {
+   "id": "PW_I008553",
+   "a": [
+    {
+     "name": "Frizzled receptor complex",
+     "aliases": [
+      "FZD10",
+      "Frizzled-10",
+      "FZD1",
+      "Frizzled-1",
+      "FZD2",
+      "Frizzled-2",
+      "FZD3",
+      "Frizzled-3",
+      "FZD4",
+      "Frizzled-4",
+      "FZD5",
+      "Frizzled-5",
+      "FZD6",
+      "Frizzled-6",
+      "FZD7",
+      "Frizzled-7"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p008047"
+      ],
+      [
+       "uniprot",
+       "q9ulw2"
+      ],
+      [
+       "uniprot",
+       "q9up38"
+      ],
+      [
+       "uniprot",
+       "q14332"
+      ],
+      [
+       "uniprot",
+       "q9npg1"
+      ],
+      [
+       "uniprot",
+       "q9ulv1"
+      ],
+      [
+       "uniprot",
+       "q13467"
+      ],
+      [
+       "uniprot",
+       "o60353"
+      ],
+      [
+       "uniprot",
+       "o75084"
+      ],
+      [
+       "uniprot",
+       "q9h461"
+      ],
+      [
+       "uniprot",
+       "o00144"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "b": [
+    {
+     "name": "1-phosphatidylinositol 4,5-bisphosphate phosphodiesterase delta-1",
+     "aliases": [
+      "PLCD1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p320741"
+      ],
+      [
+       "uniprot",
+       "p51178"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "relationship": "activation"
+  },
+  {
+   "id": "PW_I008554",
+   "a": [
+    {
+     "name": "1-phosphatidylinositol 4,5-bisphosphate phosphodiesterase delta-1",
+     "aliases": [
+      "PLCD1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p320741"
+      ],
+      [
+       "uniprot",
+       "p51178"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "b": [
+    {
+     "name": "Phosphatidylinositol 4,5-bisphosphate 5-phosphatase A",
+     "aliases": [
+      "INPP5J"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p000538"
+      ],
+      [
+       "uniprot",
+       "q15735"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "relationship": "activation"
+  },
+  {
+   "id": "PW_I008555",
+   "a": [
+    {
+     "name": "Stromal interaction molecule 1",
+     "aliases": [
+      "STIM1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p320826"
+      ],
+      [
+       "uniprot",
+       "q13586"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "b": [
+    {
+     "name": "Calcium release-activated calcium channel protein 1",
+     "aliases": [
+      "ORAI1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p007997"
+      ],
+      [
+       "uniprot",
+       "q96d31"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "relationship": "activation"
+  },
+  {
+   "id": "PW_I008559",
+   "a": [
+    {
+     "name": "Protein kinase C complex",
+     "aliases": [
+      "PRKCB",
+      "Protein kinase C beta type",
+      "PRKCA",
+      "Protein kinase C alpha type"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p007711"
+      ],
+      [
+       "uniprot",
+       "p05771"
+      ],
+      [
+       "uniprot",
+       "p17252"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "b": [
+    {
+     "name": "Cell division control protein 42 homolog with GTP",
+     "aliases": [
+      "CDC42",
+      "Cell division control protein 42 homolog"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p000960"
+      ],
+      [
+       "uniprot",
+       "p60953"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "relationship": "activation"
+  },
+  {
+   "id": "PW_I008560",
+   "a": [
+    {
+     "name": "Calcium",
+     "aliases": [
+      "Ca2+",
+      "Ca",
+      "Calcium element",
+      "Ca(2+)",
+      "Calcium ion",
+      "Calcium, doubly charged positive ion"
+     ],
+     "ids": [
+      [
+       "biocyc",
+       "ca%2b2"
+      ],
+      [
+       "cas",
+       "14127-61-8"
+      ],
+      [
+       "chebi",
+       "29108"
+      ],
+      [
+       "drugbank",
+       "db01373"
+      ],
+      [
+       "hmdb",
+       "464"
+      ],
+      [
+       "kegg",
+       "c00076"
+      ],
+      [
+       "pubchem",
+       "271"
+      ],
+      [
+       "pwc",
+       "pw_c000353"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "b": [
+    {
+     "name": "Calcineurin",
+     "aliases": [
+      "PPP3R1",
+      "Calcineurin subunit B type 1",
+      "PPP3CA",
+      "Serine/threonine-protein phosphatase 2B catalytic subunit alpha isoform"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p001885"
+      ],
+      [
+       "uniprot",
+       "p63098"
+      ],
+      [
+       "uniprot",
+       "q08209"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "relationship": "activation"
+  },
+  {
+   "id": "PW_I008561",
+   "a": [
+    {
+     "name": "Calcineurin",
+     "aliases": [
+      "PPP3R1",
+      "Calcineurin subunit B type 1",
+      "PPP3CA",
+      "Serine/threonine-protein phosphatase 2B catalytic subunit alpha isoform"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p001885"
+      ],
+      [
+       "uniprot",
+       "p63098"
+      ],
+      [
+       "uniprot",
+       "q08209"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "b": [
+    {
+     "name": "Nuclear factor of activated T-cells",
+     "aliases": [
+      "NFATC2",
+      "Nuclear factor of activated T-cells, cytoplasmic 2",
+      "NFATC1",
+      "Nuclear factor of activated T-cells, cytoplasmic 1",
+      "NFATC3",
+      "Nuclear factor of activated T-cells, cytoplasmic 3",
+      "NFATC4",
+      "Nuclear factor of activated T-cells, cytoplasmic 4"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p007932"
+      ],
+      [
+       "uniprot",
+       "q13469"
+      ],
+      [
+       "uniprot",
+       "o95644"
+      ],
+      [
+       "uniprot",
+       "q12968"
+      ],
+      [
+       "uniprot",
+       "q14934"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "relationship": "activation"
+  },
+  {
+   "id": "PW_I008562",
+   "a": [
+    {
+     "name": "Calcium/calmodulin-dependent protein kinase type II subunit alpha",
+     "aliases": [
+      "CAMKK1",
+      "Calcium/calmodulin-dependent protein kinase kinase 1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p013042"
+      ],
+      [
+       "uniprot",
+       "q8n5s9"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "b": [
+    {
+     "name": "TGF-beta activated kinase 1/MAP3K7 binding protein 1",
+     "aliases": [
+      "TAB1",
+      "TGF-beta-activated kinase 1 and MAP3K7-binding protein 1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p007839"
+      ],
+      [
+       "uniprot",
+       "q15750"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "relationship": "activation"
+  },
+  {
+   "id": "PW_I008563",
+   "a": [
+    {
+     "name": "TGF-beta activated kinase 1/MAP3K7 binding protein 1",
+     "aliases": [
+      "TAB1",
+      "TGF-beta-activated kinase 1 and MAP3K7-binding protein 1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p007839"
+      ],
+      [
+       "uniprot",
+       "q15750"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "b": [
+    {
+     "name": "Serine/threonine-protein kinase NLK",
+     "aliases": [
+      "NLK"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p008109"
+      ],
+      [
+       "uniprot",
+       "q9ube8"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "relationship": "activation"
+  },
+  {
+   "id": "PW_I008564",
+   "a": [
+    {
+     "name": "Serine/threonine-protein kinase NLK",
+     "aliases": [
+      "NLK"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p008109"
+      ],
+      [
+       "uniprot",
+       "q9ube8"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "b": [
+    {
+     "name": "Catenin (alpha) - catenin (beta) complex",
+     "aliases": [
+      "CTNNB1",
+      "Catenin beta-1",
+      "CTNNA1",
+      "Catenin alpha-1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p001905"
+      ],
+      [
+       "uniprot",
+       "p35222"
+      ],
+      [
+       "uniprot",
+       "p35221"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "relationship": "inhibition"
+  },
+  {
+   "id": "PW_I008565",
+   "a": [
+    {
+     "name": "Catenin (alpha) - catenin (beta) complex",
+     "aliases": [
+      "CTNNB1",
+      "Catenin beta-1",
+      "CTNNA1",
+      "Catenin alpha-1"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p001905"
+      ],
+      [
+       "uniprot",
+       "p35222"
+      ],
+      [
+       "uniprot",
+       "p35221"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "b": [
+    {
+     "name": "Transcription factor 7",
+     "aliases": [
+      "TCF7"
+     ],
+     "ids": [
+      [
+       "pwp",
+       "pw_p335289"
+      ],
+      [
+       "uniprot",
+       "p36402"
+      ]
+     ],
+     "role": "defining"
+    }
+   ],
+   "relationship": "activation"
+  }
+ ],
+ "compartments": [
+  {
+   "id": "C1",
+   "name": "Membrane",
+   "aliases": [],
+   "ids": [],
+   "role": "defining"
+  },
+  {
+   "id": "C2",
+   "name": "Cytoplasm",
+   "aliases": [],
+   "ids": [],
+   "role": "defining"
+  },
+  {
+   "id": "C3",
+   "name": "Nucleus",
+   "aliases": [],
+   "ids": [],
+   "role": "defining"
+  },
+  {
+   "id": "C4",
+   "name": "Extracellular Space",
+   "aliases": [],
+   "ids": [],
+   "role": "defining"
+  }
+ ],
+ "skipped_processes": []
+}

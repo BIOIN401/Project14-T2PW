@@ -1,0 +1,139 @@
+{
+ "lane": "V9",
+ "branch": "vision/bench",
+ "base": "4260ea80",
+ "code_commit": "fb26fbe7 (round 0 final); round 1 code 45ae5983, tests 609e5027; round 2 (swapped counter, cases beside the macro headline): see git log, the commits titled 'vision V9 fix round 2'. Earlier: 7ac69589, 01e45bf3, b357e258",
+ "built": "Benchmark design (docs/vision/BENCHMARK.json) and a pure scorer over scoped views. score_view(big, scope, gold_case) scores view(big, scope) per element type (reactions, enzymes, transports, interactions, compartments): recall always, precision only for types the case declares complete, extension-row precision, recovered_by_extension, and a provenance-kind breakdown ('primary' partitions the predicted elements, 'any' counts every kind an element carries). run_benchmark(cases, {case: {run: big}}, scope) gives legs plus a micro aggregate per case kind (paper and full never pooled). Gold builders: gold_from_supplement (paper kind, from gold_v2 / paper_gold supplements), gold_from_pathbank (full kind, from a pathbank_gold.extract payload, no I/O), build_full_gold (accession -> extract through an injectable extractor; the only DB read). Matching reuses eval_v2: match_reaction, _row_key, matcher.strict/candidate/enzyme keys, plus an identifier bridge over payload.grounded_ids.",
+ "files": [
+  "src/t2pw/vision/bench.py (new, ~420 lines)",
+  "tests/test_vision_bench.py (new, 13 tests)",
+  "docs/vision/BENCHMARK.json (design)",
+  "docs/vision/evidence/V9/proof.py, proof.json",
+  "docs/vision/results/V9.json"
+ ],
+ "paper_set_decision": {
+  "gold_used": "src/t2pw/bench/eval_v2/gold_v2_supported_reactions.json: already paper-scoped (scope field, verbatim quote per reaction, human-certified supported_reactions_complete)",
+  "qualify_for_recall_and_precision": [
+   "PMC12096016 (5 reactions)",
+   "PMC12421875 (9)",
+   "PMC12312563 (1, one step: a partial-coverage paper)"
+  ],
+  "recall_only": [
+   "PMC12657337 (3; not certified complete, no stored run)"
+  ],
+  "not_used": [
+   "pinned_v1.json: relevance/anchor set, not paper-stated gold",
+   "PMC319880 paper gold (PW701720): uncertified, no run of that paper exists; its 15 interactions are the only paper-scoped interaction gold"
+  ]
+ },
+ "tests": [
+  {
+   "label": "bench-unit-1",
+   "counts": "GATE_BLOCKED (heavy lock held by llm-ab)",
+   "log": "C:/t/vis-runs/logs/bench-unit-1.log"
+  },
+  {
+   "label": "bench-unit-2",
+   "counts": "12 passed, 1 failed (case-order assertion in the design-file check, fixed), survivors 0",
+   "log": "C:/t/vis-runs/logs/bench-unit-2.log"
+  },
+  {
+   "label": "bench-unit-3",
+   "counts": "13 passed, 0 failed, survivors 0",
+   "log": "C:/t/vis-runs/logs/bench-unit-3.log"
+  },
+  {
+   "label": "bench-unit-4",
+   "counts": "13 passed, 0 failed, 0 errors, survivors 0 (after the interaction relationship fix)",
+   "log": "C:/t/vis-runs/logs/bench-unit-4.log"
+  },
+  {
+   "label": "bench-unit-5",
+   "counts": "27 passed, 0 failed, survivors 0 (fix rounds 1 and 2; run by the sub-orchestrator chain)",
+   "log": "C:/t/vis-runs/logs/bench-unit-5.log"
+  },
+  {
+   "label": "bench-unit-6",
+   "counts": "28 passed, 0 failed, survivors 0 (adds the currency-demotion test); a batch1b rerun of the unit file is queued by the sub-orchestrator",
+   "log": "C:/t/vis-runs/logs/bench-unit-6.log"
+  }
+ ],
+ "proofs": {
+  "label": "bench-proof-4 (paper set, no DB) and bench-proof-5 (full-view gold through live_launch.py, DB reachable); survivors 0 on both",
+  "log": "C:/t/vis-runs/logs/bench-proof-5.log",
+  "evidence": "docs/vision/evidence/V9/proof.json, docs/vision/evidence/V9/gold_PW{739181,495535,488575,766996}.json (gold_PW701720 is built from the committed extract)",
+  "default_view_equals_eval_v2": "On all 34 stored runs of the gold papers (PMC12096016 29, PMC12312563 3, PMC12421875 2; PMC12657337 has none) the DEFAULT-view reaction numbers (recalled, gold, correct, predicted) equal eval_v2 reactions.score_leg table 1 on the same payload. With no extension DEFAULT == base, so these are today's numbers. 26 of those legs are in the committed docs/evaluation_v2/sample_report.json; recall and true-positive count equal it on all 26 (precision denominators differ by design where that report excludes external-lineage rows).",
+  "paper_set_reactions": {
+   "headline": "MACRO over 3 cases (N=3). PAPER_ONLY: recall 0.9446, precision 0.7151. DEFAULT: recall 0.9446, precision 0.7015.",
+   "micro_secondary": "PAPER_ONLY recall 156/166 = 0.9398, precision 162/182 = 0.8901. DEFAULT recall 156/166, precision 162/189 = 0.8571. The paper-only view drops 7 non-paper rows and no true positive.",
+   "per_case": {
+    "PMC12096016 enterobactin (29 runs)": "recall 137/145, precision 142/153 (DEFAULT 142/160)",
+    "PMC12312563 MenD only (3 runs)": "recall 3/3, precision 3/11 (the runs extract 11 reactions for a paper whose certified gold is one step; the rest is stated chemistry outside that scope, counted against precision as eval_v2 does)",
+    "PMC12421875 menaquinone L. lactis (2 runs)": "recall 16/18, precision 17/18 (DEFAULT same)"
+   },
+   "why_macro": "29 of the 34 runs are enterobactin: the micro precision (0.89) hides the 3/11 of the one-step paper that the macro (0.72) shows.",
+   "other_types": "enzymes recall equals reactions recall (credited only through matching reactions); the certified paper gold has no transports, interactions or compartments, so those are not evaluable (None), not zero"
+  },
+  "full_set": {
+   "note": "FULL == DEFAULT here: the stored runs have no extension, so recovered_by_extension is 0 and extension rows are 0 for every pathway. These are the paper-payload baselines. Numbers are recalled/gold with the match rate (matched predicted / predicted, against the curated record, not a precision) in parentheses.",
+   "PW701720 Ara operon (PMC11983282, 1 run)": "reactions 0/1 (3 predicted, 0.0), interactions 0/7 (24 predicted, 0.0), compartments 1/1 (0.5)",
+   "PW739181 sour taste (PMC7059786, 3 runs)": "research run: enzymes 1/2 (0.5), transports 1/3 (0.5), interactions 0/1, compartments 2/3 (0.33); the two strict runs: enzymes 0/2, transports 0/3, interactions 0/1 or none predicted, compartments 1/3. No curated reactions",
+   "PW495535 WNT PCP (PMC10425814, 1 run)": "reactions 0/1, enzymes 0/1, transports 0/1, interactions 1/17 (11 predicted, 0.18), compartments 2/4 (0.33)",
+   "PW488575 Wnt/Ca2+ (same paper and run as PW495535, not independent)": "reactions 0/2, enzymes 0/2, transports 0/2, interactions 0/14, compartments 2/4",
+   "survivors": 0,
+   "PW766996 chlorophyll (PMC5130987, 2 runs) AFTER the currency fix": "reactions 7/14 and 8/14 recalled (22 and 19 predicted; 8 and 8 predicted rows match a curated reaction: match rate 0.36 and 0.42), enzymes 3/14 and 5/14, interactions none curated (31 and 65 predicted), compartments 1/1. Before the fix 0/14 and 0/14.",
+   "effect_of_the_fix_on_the_other_pathways": "none: PW701720, PW739181, PW495535, PW488575 are identical before and after (their curated reactions list no unflagged currency that a predicted row omitted); the paper set is untouched (the demotion applies to full gold only, and the DEFAULT numbers still equal eval_v2 on all 34 runs)"
+  },
+  "credential_scan": "see credential_scan"
+ },
+ "fix_round_1": {
+  "status": "executed afterwards by the sub-orchestrator chain: bench-unit-5 27 passed, bench-proof-4 and bench-proof-5 exit 0, survivors 0. Round 2 (swapped counter, cases beside the headline) is in the same runs",
+  "F1": "run_benchmark aggregate per kind = {headline: 'macro', cases: N (round 2: the case count sits beside the headline), macro, micro, per_case}; macro = unweighted mean over cases of each case's run-micro ratio (cases without the type's gold or complete flag are left out, counts reported); micro kept as secondary",
+  "F2": "enzymes are credited only through a predicted reaction / transport that matches the gold reaction / transport carrying them (gold enzyme elements carry 'for' = owner ids; predicted enzyme items carry refs to the predicted rows that name them)",
+  "F3": "interaction tiers exact / weak / contradiction / swapped (bench._interaction_tier; round 2 split 'swapped' out of contradiction and counts predicted interactions with a swapped direction and no exact match as types.interactions.swapped, also summed in the micro aggregate); only exact counts toward recall, correct and precision; recalled_weak reported separately; gold direction: left element acts on right ('<' swaps), supplement source -> target",
+  "F4": "transport compartments are compared by folded name whenever both sides are known; the spelling table only aliases",
+  "F5": "proof.py no longer scores full gold on PAPER_ONLY (paper_only_coverage column removed); BENCHMARK.json rules say why",
+  "F7": "full gold keeps every catalyst of a curated reaction and every transporter (catalysts / transporters lists, enzyme elements deduplicated by name with their owners)",
+  "F8": "run selector fixed in proof.py: also matches papers/<PMCID>__<slug>/ run directories, so PMC12312563 gains the run under papers/PMC12312563__<slug>/ when proof.py is rerun (done: PMC12312563 has 3 stored runs, 34 in the paper set)",
+  "F9": "full-kind per-type rate is named match_rate (no 'precision' key); the extension block is match_rate per type and the cross-type extension 'all' total is dropped; paper kind keeps 'precision'",
+  "F6_tests_added": [
+   "enzyme credit needs the matching reaction",
+   "interaction tiers (parametrized, 10 cases)",
+   "transport compartment unknown to the table",
+   "PAPER_ONLY with extension rows carrying a paper record",
+   "macro vs micro headline, many-run case",
+   "match_rate key on full gold"
+  ],
+  "proof_py_also": "build_full_gold errors are recorded by exception class only, so no driver message can carry a DB host or user into the evidence",
+  "commands_still_to_run": [
+   "none for this lane: command 4 (refresh from proof.json) is done in 'proofs'"
+  ]
+ },
+ "dead_ends": [
+  "Hard relationship check on interactions (activation vs binding rejected) scored the Ara run 0/7 on interactions; relaxed to reject only activation vs inhibition",
+  "Full-view gold for PW739181, PW495535, PW488575, PW766996 could not be built: the worktree has no PathBank DB configuration (PATHBANK_DB_HOST / _USER not configured), so proof.py recorded it and moved on. No .env was read"
+ ],
+ "not_done": [
+  "Full-view proof for the four cohort pathways other than PW701720. Command: set the PATHBANK_DB_* environment (server read-only user) and rerun: PYTHONPATH=C:/t/vis-bench/src bash C:/t/vis-runs/queue.sh vis-bench bench-proof-3 900 C:/t/vis-runs/logs/bench-proof-3.json 2 C:/t/vis-runs/logs/bench-proof-3.log -- <venv python> C:/t/vis-bench/docs/vision/evidence/V9/proof.py C:/t/vis-bench/docs/vision/evidence/V9 (writes gold_<PW>.json beside proof.json)",
+  "SMOKE, golden and equivalence suites (the sub-orchestrator schedules them; this lane adds only new files under src/t2pw/vision, tests, docs)"
+ ],
+ "open_questions": [
+  "PathBank ids for the enterobactin and menaquinone papers are not recorded in the repository; the ten lab pathway ids named in the brief are not listed in any committed eval or pinned doc (only five of the ORCH-751 cohort are).",
+  "Certified gold exists for reactions only. Interactions, transports and compartments of the paper set are recall-only or not evaluable until a human certifies more (candidate: the PMC319880 supplement's 15 interactions).",
+  "Compartment and relationship spelling tables in bench.py are small (ponytail); a case that needs another spelling extends them.",
+  "(resolved in code, not rerun) PMC12312563 has a third run under papers/PMC12312563__<slug>/ that the first selector skipped; the fixed selector matches it.",
+  "Run-count drift: PMC12312563 has 3 stored runs with the fixed selector (paper set 34 runs).",
+  "Chlorophyll: 4 of the 6 remaining unmatched curated reactions are name variants (locants, abbreviations) the strict eval_v2 matcher refuses by design; whether to add curated aliases to the full case is a gold decision for the PO, not a scorer change. 2 are genuine misses (heme, pheophytin)."
+ ],
+ "credential_scan": {
+  "method": "a light script loads the primary .env through live_launch.py without printing it, counts the OpenRouter key prefix and the PATHBANK_DB host, port and user values in every V9 evidence file, the proof logs and this record, and prints counts only (C:/t/vis-runs/scratch/bench/credscan.py, not committed)",
+  "first_pass": "host 0, port 0, key prefix 0 in every evidence file. user value: 1 whole-token hit in each of the 4 gold_PW*.json, all on the JSON key I had named for the curated-record block (a schema field name equal to the database user, not a credential leak). Fixed by renaming that key to curated_record in bench.gold_from_pathbank and in the four files (the same key rename a rerun would produce). This record had 2 hits of the key prefix, both my own command text; reworded",
+  "second_pass": "run directly (no queue, no lock) after the key rename and again after the proof refresh: 12 files (V9 evidence incl. gold_PW*.json and the chlorophyll comparisons, proof logs 4 and 5, V9.json, BENCHMARK.json), total hits 0 for the OpenRouter key prefix and the PATHBANK_DB host, port and user values"
+ },
+ "chlorophyll_investigation": {
+  "finding": "0/14 was a scorer gap: PathBank leaves currency unset on this record (all 66 participants are 'defining'), so Water and Hydrogen Ion were required on every predicted reaction listing them, and the pipeline keeps currency out of reaction identity. Evidence: docs/vision/evidence/V9/chlorophyll_compare_before.json (3 gold reactions side by side with the predicted rows, names and ids).",
+  "fix": "bench.scoring_terms: for full gold, a term whose name or alias is a currency metabolite (payload.is_currency) is scored as a cofactor unless that empties the side. Gold untouched; test test_full_gold_with_unflagged_currency_still_matches_a_row_that_omits_it.",
+  "result": "reactions 0/14 -> 7/14 (run 2026-10-22_1231) and 0/14 -> 8/14 (run 2026-10-22_2301)",
+  "remaining_misses": "6 curated reactions are still unmatched in the run examined (docs/vision/evidence/V9/chlorophyll_unmatched_after.json). Two are real extraction misses: protoporphyrin IX + Fe2+ -> heme (no heme in the run) and chlorophyll a -> pheophytin a + Mg (no pheophytin). Four are naming differences that eval_v2's strict matcher refuses on purpose (no locant or abbreviation folding, no congener credit) and that carry no ids to bridge: 'Mg-Protoporphyrin IX 13-monomethyl ester' vs the run's 'Mg-protoporphyrin IX monomethyl ester', '3,8-divinyl protochlorophyllide a' vs '3,8-divinyl-protochlorophyllide', 'Chlorophyllide a' vs 'Chlide a' / '3-vinyl chlorophyllide a', 'Mg-protoporphyrin IX' vs 'Mg-Proto IX'. Not loosened here: a looser matcher would credit congeners, which the product contract and eval_v2 rule out; if wanted, add curated aliases to the case (a gold decision for the PO), not a scorer change."
+ }
+}

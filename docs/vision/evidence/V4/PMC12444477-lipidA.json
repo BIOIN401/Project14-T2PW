@@ -1,0 +1,624 @@
+{
+ "run": "runs_verify/2026-09-01_1612/papers/PMC12444477/research",
+ "seconds": 81.4,
+ "report": {
+  "budget_s": 120.0,
+  "max_pathways": 3,
+  "sources": {
+   "pathbank": {
+    "status": "ok",
+    "pathways": [
+     {
+      "source_id": "pathbank:PW000831",
+      "accession": "PW000831",
+      "name": "Lipopolysaccharide Biosynthesis",
+      "overlap": {
+       "compounds": 2,
+       "proteins": 7
+      },
+      "steps": 35
+     },
+     {
+      "source_id": "pathbank:PW001905",
+      "accession": "PW001905",
+      "name": "Lipopolysaccharide Biosynthesis II",
+      "overlap": {
+       "compounds": 2,
+       "proteins": 7
+      },
+      "steps": 26
+     },
+     {
+      "source_id": "pathbank:PW002059",
+      "accession": "PW002059",
+      "name": "Lipopolysaccharide Biosynthesis III",
+      "overlap": {
+       "compounds": 2,
+       "proteins": 7
+      },
+      "steps": 24
+     }
+    ],
+    "notes": [
+     "species: Escherichia coli (exact), Escherichia coli (strain K12) (binomial), Escherichia coli (strain ATCC 8739 / DSM 1576 / Crooks) (binomial), Escherichia coli (strain SMS-3-5 / SECEC) (binomial), Escherichia coli (strain UTI89 / UPEC) (binomial), Escherichia coli (strain 55989 / EAEC) (binomial), Escherichia coli (strain SE11) (binomial), Escherichia coli (strain K12 / MC4100 / BW2952) (binomial), Escherichia coli (strain ATCC 55124 / KO11) (binomial), Escherichia coli (strain B / REL606) (binomial), Escherichia coli (strain B / BL21-DE3) (binomial), Escherichia coli (strain MS 21-1) (binomial), Escherichia coli DORA_B_14 (binomial), Escherichia coli O6:H1 (strain CFT073 / ATCC 700928 / UPEC) (binomial), Escherichia coli str. K-12 substr. MG1655 (binomial), Escherichia coli O157:H7 (binomial), Escherichia coli K-12 (binomial), Escherichia coli SE15 (binomial), Escherichia coli O157:H7 str. Sakai (binomial), Escherichia coli 536 (binomial), Escherichia coli APEC O1 (binomial), Escherichia coli E24377A (binomial), Escherichia coli HS (binomial), Escherichia coli str. K-12 substr. DH10B (binomial), Escherichia coli O157:H7 str. EC4115 (binomial), Escherichia coli O127:H6 str. E2348/69 (binomial), Escherichia coli UMN026 (binomial), Escherichia coli IAI1 (binomial), Escherichia coli S88 (binomial), Escherichia coli ED1a (binomial), Escherichia coli IAI39 (binomial), Escherichia coli O157:H7 str. TW14359 (binomial), Escherichia coli O103:H2 str. 12009 (binomial), Escherichia coli O26:H11 str. 11368 (binomial), Escherichia coli O111:H- str. 11128 (binomial), Escherichia coli O55:H7 str. CB9615 (binomial), Escherichia coli 042 (binomial), Escherichia coli W (binomial), Escherichia coli IHE3034 (binomial), Escherichia coli DH1 (binomial), Escherichia coli O113:H21 (binomial), Escherichia coli (strain K12 / W3110 / ATCC 27325 / DSM 5911) (binomial), Escherichia coli 1-250-04_S3_C1 (binomial), Escherichia coli MP021552.12 (binomial), Escherichia coli O8 (binomial), Escherichia coli TA447 (binomial), Escherichia coli H605 (binomial), Escherichia coli O157:H7 (strain EC869) (binomial), Escherichia coli 4.0967 (binomial), Escherichia coli HVH 36 (binomial), Escherichia coli EC1870 (binomial), Escherichia coli ISC7 (binomial), Escherichia coli O104:H4 (strain 2011C-3493) (binomial), Escherichia coli 3.4880 (binomial), Escherichia coli O25b:H4-ST131 (binomial), Escherichia coli 2-460-02_S1_C1 (binomial), Escherichia coli O131:H25 (binomial), Escherichia coli DORA_A_5_14_21 (binomial), Escherichia coli O141:H4 (binomial), Escherichia coli O121 (binomial), Escherichia coli O26 str. RM8426 (binomial), Escherichia coli M605 (binomial), Escherichia coli O103 (binomial), Escherichia coli 1303 (binomial), Escherichia coli LF82 (binomial), Escherichia coli O104:H4 str. 2009EL-2050 (binomial), Escherichia coli P12b (binomial), Escherichia coli UMNK88 (binomial), Escherichia coli O157:H7 str. EDL933 (binomial), Escherichia coli 'BL21-Gold(DE3)pLysS AG' (binomial), Escherichia coli O111:H- (binomial), Escherichia coli KTE182 (binomial), Escherichia coli O6 (binomial), Escherichia coli O111 (binomial), Escherichia coli 97.0246 (binomial)",
+     "query ids: 10 PathBank compounds, 14 UniProt",
+     "read timeout per query 59 s; the budget is not hard inside one extract",
+     "candidates: PW000831 Lipopolysaccharide Biosynthesis {'compounds': 2, 'proteins': 7}; PW001905 Lipopolysaccharide Biosynthesis II {'compounds': 2, 'proteins': 7}; PW002059 Lipopolysaccharide Biosynthesis III {'compounds': 2, 'proteins': 7}; PW122354 Lipopolysaccharide Biosynthesis III 1551308193 Xuan {'compounds': 2, 'proteins': 7}; PW691385 Lipopolysaccharide Biosynthesis (1-Octadecanoyl-rac-glycerol) {'compounds': 2, 'proteins': 7}; PW691395 Lipopolysaccharide Biosynthesis (1,2-Diacyl-sn-glycerol (ditetradec-7-enoyl, n-C14:1)) {'compounds': 2, 'proteins': 7}; PW691455 Lipopolysaccharide Biosynthesis (1,2-Diacyl-sn-glycerol (dihexadec-9-enoyl, n-C16:1)) {'compounds': 2, 'proteins': 7}; PW691461 Lipopolysaccharide Biosynthesis (1,2-Diacyl-sn-glycerol (dioctadec-11-enoyl, n-C18:1)) {'compounds': 2, 'proteins': 7}; PW691464 Lipopolysaccharide Biosynthesis (1,2-Diacyl-sn-glycerol (ditetradecanoyl, n-C14:0)) {'compounds': 2, 'proteins': 7}; PW691468 Lipopolysaccharide Biosynthesis (1,2-Dioctadecanoyl-sn-glycerol) {'compounds': 2, 'proteins': 7}"
+    ],
+    "counts": {
+     "currency_renamed": 120,
+     "steps_reaction": 83,
+     "renamed_name_conflict": 4,
+     "no_compartment": 23,
+     "steps_transport": 2,
+     "complex_joined_by_members": 48
+    },
+    "budget_s": 60.0
+   },
+   "reactome": {
+    "status": "no_candidates",
+    "pathways": [],
+    "notes": [
+     "19 ids probed; candidates: "
+    ],
+    "counts": {},
+    "budget_s": 19.4
+   },
+   "wikipathways": {
+    "status": "ok",
+    "pathways": [
+     {
+      "source_id": "wikipathways:WP2472",
+      "accession": "WP2472",
+      "name": "Escherichia coli K-12 peripherome",
+      "overlap": [
+       "P0A6Q6",
+       "P0AC75",
+       "P10441",
+       "P60752"
+      ],
+      "steps": 0
+     }
+    ],
+    "notes": [
+     "species ['escherichia coli']; candidates: WP2472 Escherichia coli K-12 peripherome 4",
+     "WP2472: 0 steps, 414 lines not converted"
+    ],
+    "counts": {},
+    "budget_s": 38.8
+   }
+  },
+  "species": [
+   {
+    "name": "Escherichia coli",
+    "taxonomy_id": "562"
+   }
+  ],
+  "failed": [],
+  "placement": {
+   "pathbank:PW000831": {
+    "hop_2_plus": 31,
+    "hop_none": 1,
+    "hop_1": 3
+   },
+   "pathbank:PW001905": {
+    "hop_none": 1,
+    "hop_2_plus": 22,
+    "hop_1": 3
+   },
+   "pathbank:PW002059": {
+    "hop_none": 1,
+    "hop_2_plus": 20,
+    "hop_1": 3
+   }
+  },
+  "overlay_entities_hop_none": 37,
+  "currency_only_twins": {
+   "count": 0,
+   "pairs": []
+  }
+ },
+ "base": {
+  "entities": 55,
+  "reactions": 8,
+  "transports": 4,
+  "interactions": 16,
+  "unresolved_refs": 2
+ },
+ "default": {
+  "entities": 70,
+  "reactions": 11,
+  "transports": 4,
+  "interactions": 16,
+  "unresolved_refs": 2
+ },
+ "full": {
+  "entities": 181,
+  "reactions": 43,
+  "transports": 5,
+  "interactions": 16,
+  "unresolved_refs": 2
+ },
+ "merged_into_base": [],
+ "added_steps": [
+  {
+   "hop": 2,
+   "name": "Cytidine monophosphate + phosphate -> H2O + Cytidine 2'-phosphate",
+   "in": [
+    "Cytidine monophosphate",
+    "phosphate"
+   ],
+   "out": [
+    "H2O",
+    "Cytidine 2'-phosphate"
+   ],
+   "note": "pathbank PW000831 reaction PW_R1960605; source direction <>; source compartment: Cytosol"
+  },
+  {
+   "hop": 3,
+   "name": "Cytidine 2'-phosphate + H+ -> H2O + Cytidine 2',3'-cyclic phosphate",
+   "in": [
+    "Cytidine 2'-phosphate",
+    "H+"
+   ],
+   "out": [
+    "H2O",
+    "Cytidine 2',3'-cyclic phosphate"
+   ],
+   "note": "pathbank PW000831 reaction PW_R1960606; source direction >; source compartment: Cytosol"
+  },
+  {
+   "hop": 6,
+   "name": "(heptosyl)2-Kdo2-lipid A + ATP -> ADP + H+ + Phospho-heptosyl-heptosyl-kdo2-lipidA",
+   "in": [
+    "(heptosyl)2-Kdo2-lipid A",
+    "ATP"
+   ],
+   "out": [
+    "ADP",
+    "H+",
+    "Phospho-heptosyl-heptosyl-kdo2-lipidA"
+   ],
+   "note": "pathbank PW000831 reaction PW_R1979354; source direction >; source compartment: Cytoplasm"
+  },
+  {
+   "hop": 7,
+   "name": "ADP-L-Glycero-D-manno-heptose + Phospho-heptosyl-heptosyl-kdo2-lipidA -> ADP + Heptosyl-phospho-heptosyl-heptosyl-kdo2-lipidA + H+",
+   "in": [
+    "ADP-L-Glycero-D-manno-heptose",
+    "Phospho-heptosyl-heptosyl-kdo2-lipidA"
+   ],
+   "out": [
+    "ADP",
+    "Heptosyl-phospho-heptosyl-heptosyl-kdo2-lipidA",
+    "H+"
+   ],
+   "note": "pathbank PW000831 reaction PW_R1979435; source direction >; source compartment: Cytosol"
+  },
+  {
+   "hop": 8,
+   "name": "Heptosyl-phospho-heptosyl-heptosyl-kdo2-lipidA + ATP -> ADP + Phospho-heptosyl-phospho-heptosyl-heptosyl-kdo2-lipidA + H+",
+   "in": [
+    "Heptosyl-phospho-heptosyl-heptosyl-kdo2-lipidA",
+    "ATP"
+   ],
+   "out": [
+    "ADP",
+    "Phospho-heptosyl-phospho-heptosyl-heptosyl-kdo2-lipidA",
+    "H+"
+   ],
+   "note": "pathbank PW000831 reaction PW_R1979451; source direction >; source compartment: Cytosol"
+  },
+  {
+   "hop": 5,
+   "name": "UDP-D-Galacto-1,4-furanose + Glucosyl-O-acetyl-rhamanosyl-N-acetylglucosamyl-undecaprenyl diphosphate -> Galactofuranosyl-glucosyl-O-acetyl-rhamanosyl-N-acetylglucosamyl-undecaprenyl diphosphate + UDP + H+",
+   "in": [
+    "UDP-D-Galacto-1,4-furanose",
+    "Glucosyl-O-acetyl-rhamanosyl-N-acetylglucosamyl-undecaprenyl diphosphate"
+   ],
+   "out": [
+    "Galactofuranosyl-glucosyl-O-acetyl-rhamanosyl-N-acetylglucosamyl-undecaprenyl diphosphate",
+    "UDP",
+    "H+"
+   ],
+   "note": "pathbank PW000831 reaction PW_R1998811; source direction >; source compartment: Cytosol"
+  },
+  {
+   "hop": 4,
+   "name": "O-acetyl-rhamanosyl-N-acetylglucosamyl-undecaprenyl diphosphate + Uridine diphosphate glucose -> H+ + Glucosyl-O-acetyl-rhamanosyl-N-acetylglucosamyl-undecaprenyl diphosphate + UDP",
+   "in": [
+    "O-acetyl-rhamanosyl-N-acetylglucosamyl-undecaprenyl diphosphate",
+    "Uridine diphosphate glucose"
+   ],
+   "out": [
+    "H+",
+    "Glucosyl-O-acetyl-rhamanosyl-N-acetylglucosamyl-undecaprenyl diphosphate",
+    "UDP"
+   ],
+   "note": "pathbank PW000831 reaction PW_R2002485; source direction >; source compartment: Cytoplasm"
+  },
+  {
+   "hop": 3,
+   "name": "Rhamanosyl-N-acetylglucosamyl-undecaprenyl diphosphate + Acetyl-CoA -> O-acetyl-rhamanosyl-N-acetylglucosamyl-undecaprenyl diphosphate + Coenzyme A",
+   "in": [
+    "Rhamanosyl-N-acetylglucosamyl-undecaprenyl diphosphate",
+    "Acetyl-CoA"
+   ],
+   "out": [
+    "O-acetyl-rhamanosyl-N-acetylglucosamyl-undecaprenyl diphosphate",
+    "Coenzyme A"
+   ],
+   "note": "pathbank PW000831 reaction PW_R2002531; source direction >; source compartment: Cytoplasm"
+  },
+  {
+   "hop": null,
+   "name": "UDP-3-O-[(3R)-3-hydroxymyristoyl]-N-acetyl-\u03b1-D-glucosamine + H2O -> Acetic acid + UDP-3-O-(3-hydroxymyristoyl)-\u03b1-D-glucosamine",
+   "in": [
+    "UDP-3-O-[(3R)-3-hydroxymyristoyl]-N-acetyl-\u03b1-D-glucosamine",
+    "H2O"
+   ],
+   "out": [
+    "Acetic acid",
+    "UDP-3-O-(3-hydroxymyristoyl)-\u03b1-D-glucosamine"
+   ],
+   "note": "pathbank PW000831 reaction PW_R003025; source direction >; source compartment: not given"
+  },
+  {
+   "hop": 3,
+   "name": "UDP-2-N,3-O-bis[(3R)-3-hydroxytetradecanoyl]-\u03b1-D-glucosamine + H2O -> Uridine 5'-monophosphate + H+ + 2,3-bis[(3R)-3-hydroxymyristoyl]-\u03b1-D-glucosaminyl 1-phosphate",
+   "in": [
+    "UDP-2-N,3-O-bis[(3R)-3-hydroxytetradecanoyl]-\u03b1-D-glucosamine",
+    "H2O"
+   ],
+   "out": [
+    "Uridine 5'-monophosphate",
+    "H+",
+    "2,3-bis[(3R)-3-hydroxymyristoyl]-\u03b1-D-glucosaminyl 1-phosphate"
+   ],
+   "note": "pathbank PW000831 reaction PW_R003027; source direction >; source compartment: Cytosol"
+  },
+  {
+   "hop": 2,
+   "name": "2,3-bis[(3R)-3-hydroxymyristoyl]-\u03b1-D-glucosaminyl 1-phosphate + UDP-2-N,3-O-bis[(3R)-3-hydroxytetradecanoyl]-\u03b1-D-glucosamine -> UDP + H+ + lipid A disaccharide",
+   "in": [
+    "2,3-bis[(3R)-3-hydroxymyristoyl]-\u03b1-D-glucosaminyl 1-phosphate",
+    "UDP-2-N,3-O-bis[(3R)-3-hydroxytetradecanoyl]-\u03b1-D-glucosamine"
+   ],
+   "out": [
+    "UDP",
+    "H+",
+    "lipid A disaccharide"
+   ],
+   "note": "pathbank PW000831 reaction PW_R003028; source direction >; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "lipid A disaccharide + ATP -> ADP + H+ + lipid IV_A",
+   "in": [
+    "lipid A disaccharide",
+    "ATP"
+   ],
+   "out": [
+    "ADP",
+    "H+",
+    "lipid IV_A"
+   ],
+   "note": "pathbank PW000831 reaction PW_R003029; source direction >; source compartment: Cytosol"
+  },
+  {
+   "hop": 5,
+   "name": "D-Ribulose 5-phosphate -> D-Arabinose 5-phosphate",
+   "in": [
+    "D-Ribulose 5-phosphate"
+   ],
+   "out": [
+    "D-Arabinose 5-phosphate"
+   ],
+   "note": "pathbank PW000831 reaction PW_R003030; source direction >; source compartment: not given"
+  },
+  {
+   "hop": 4,
+   "name": "D-Arabinose 5-phosphate + Phosphoenolpyruvic acid + H2O -> phosphate + 3-deoxy-D-manno-octulosonate 8-phosphate",
+   "in": [
+    "D-Arabinose 5-phosphate",
+    "Phosphoenolpyruvic acid",
+    "H2O"
+   ],
+   "out": [
+    "phosphate",
+    "3-deoxy-D-manno-octulosonate 8-phosphate"
+   ],
+   "note": "pathbank PW000831 reaction PW_R003031; source direction >; source compartment: not given"
+  },
+  {
+   "hop": 3,
+   "name": "3-deoxy-D-manno-octulosonate 8-phosphate + H2O -> phosphate + 3-deoxy-D-manno-octulosonate",
+   "in": [
+    "3-deoxy-D-manno-octulosonate 8-phosphate",
+    "H2O"
+   ],
+   "out": [
+    "phosphate",
+    "3-deoxy-D-manno-octulosonate"
+   ],
+   "note": "pathbank PW000831 reaction PW_R003032; source direction >; source compartment: not given"
+  },
+  {
+   "hop": 2,
+   "name": "3-deoxy-D-manno-octulosonate + CTP -> PPi + CMP-3-deoxy-\u03b1-D-manno-octulosonate",
+   "in": [
+    "3-deoxy-D-manno-octulosonate",
+    "CTP"
+   ],
+   "out": [
+    "PPi",
+    "CMP-3-deoxy-\u03b1-D-manno-octulosonate"
+   ],
+   "note": "pathbank PW000831 reaction PW_R003033; source direction >; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "CMP-3-deoxy-\u03b1-D-manno-octulosonate + lipid IV_A -> Cytidine monophosphate + H+ + \u03b1-Kdo-(2\u21926)-lipid IVA",
+   "in": [
+    "CMP-3-deoxy-\u03b1-D-manno-octulosonate",
+    "lipid IV_A"
+   ],
+   "out": [
+    "Cytidine monophosphate",
+    "H+",
+    "\u03b1-Kdo-(2\u21926)-lipid IVA"
+   ],
+   "note": "pathbank PW000831 reaction PW_R003034; source direction >; source compartment: not given"
+  },
+  {
+   "hop": 2,
+   "name": "\u03b1-Kdo-(2\u21926)-lipid IVA + CMP-3-deoxy-\u03b1-D-manno-octulosonate -> Cytidine monophosphate + H+ + a-Kdo-(2->4)-a-Kdo-(2->6)-lipid IVA",
+   "in": [
+    "\u03b1-Kdo-(2\u21926)-lipid IVA",
+    "CMP-3-deoxy-\u03b1-D-manno-octulosonate"
+   ],
+   "out": [
+    "Cytidine monophosphate",
+    "H+",
+    "a-Kdo-(2->4)-a-Kdo-(2->6)-lipid IVA"
+   ],
+   "note": "pathbank PW000831 reaction PW_R003035; source direction >; source compartment: Cytosol"
+  },
+  {
+   "hop": 7,
+   "name": "(KDO)2-lipid A + ADP-L-glycero-\u03b2-D-manno-heptose -> H+ + ADP + heptosyl-Kdo2-lipid A",
+   "in": [
+    "(KDO)2-lipid A",
+    "ADP-L-glycero-\u03b2-D-manno-heptose"
+   ],
+   "out": [
+    "H+",
+    "ADP",
+    "heptosyl-Kdo2-lipid A"
+   ],
+   "note": "pathbank PW000831 reaction PW_R003038; source direction >; source compartment: not given"
+  },
+  {
+   "hop": 6,
+   "name": "heptosyl-Kdo2-lipid A + ADP-L-glycero-\u03b2-D-manno-heptose -> ADP + H+ + (heptosyl)2-Kdo2-lipid A",
+   "in": [
+    "heptosyl-Kdo2-lipid A",
+    "ADP-L-glycero-\u03b2-D-manno-heptose"
+   ],
+   "out": [
+    "ADP",
+    "H+",
+    "(heptosyl)2-Kdo2-lipid A"
+   ],
+   "note": "pathbank PW000831 reaction PW_R003039; source direction >; source compartment: not given"
+  },
+  {
+   "hop": 5,
+   "name": "(heptosyl)2-Kdo2-lipid A + Uridine diphosphate glucose -> UDP + H+ + glucosyl-(heptosyl)2-Kdo2-lipid A",
+   "in": [
+    "(heptosyl)2-Kdo2-lipid A",
+    "Uridine diphosphate glucose"
+   ],
+   "out": [
+    "UDP",
+    "H+",
+    "glucosyl-(heptosyl)2-Kdo2-lipid A"
+   ],
+   "note": "pathbank PW000831 reaction PW_R003040; source direction >; source compartment: not given"
+  },
+  {
+   "hop": 6,
+   "name": "glucosyl-(heptosyl)2-Kdo2-lipid A + ATP -> ADP + H+ + glucosyl-(heptosyl)2-Kdo2-lipid A-phosphate",
+   "in": [
+    "glucosyl-(heptosyl)2-Kdo2-lipid A",
+    "ATP"
+   ],
+   "out": [
+    "ADP",
+    "H+",
+    "glucosyl-(heptosyl)2-Kdo2-lipid A-phosphate"
+   ],
+   "note": "pathbank PW000831 reaction PW_R003041; source direction >; source compartment: not given"
+  },
+  {
+   "hop": 7,
+   "name": "glucosyl-(heptosyl)2-Kdo2-lipid A-phosphate + ADP-L-glycero-\u03b2-D-manno-heptose -> ADP + H+ + glucosyl-(heptosyl)3-Kdo2-lipid A-phosphate",
+   "in": [
+    "glucosyl-(heptosyl)2-Kdo2-lipid A-phosphate",
+    "ADP-L-glycero-\u03b2-D-manno-heptose"
+   ],
+   "out": [
+    "ADP",
+    "H+",
+    "glucosyl-(heptosyl)3-Kdo2-lipid A-phosphate"
+   ],
+   "note": "pathbank PW000831 reaction PW_R003042; source direction >; source compartment: not given"
+  },
+  {
+   "hop": 7,
+   "name": "glucosyl-(heptosyl)3-Kdo2-lipid A-phosphate + ATP -> ADP + H+ + glucosyl-(heptosyl)3-Kdo2-lipid A-bisphosphate",
+   "in": [
+    "glucosyl-(heptosyl)3-Kdo2-lipid A-phosphate",
+    "ATP"
+   ],
+   "out": [
+    "ADP",
+    "H+",
+    "glucosyl-(heptosyl)3-Kdo2-lipid A-bisphosphate"
+   ],
+   "note": "pathbank PW000831 reaction PW_R003043; source direction >; source compartment: not given"
+  },
+  {
+   "hop": 6,
+   "name": "glucosyl-(heptosyl)3-Kdo2-lipid A-bisphosphate + UDP-\u03b1-D-galactose -> galactosyl-glucosyl-(heptosyl)3-Kdo2-lipid A-bisphosphate + UDP + H+",
+   "in": [
+    "glucosyl-(heptosyl)3-Kdo2-lipid A-bisphosphate",
+    "UDP-\u03b1-D-galactose"
+   ],
+   "out": [
+    "galactosyl-glucosyl-(heptosyl)3-Kdo2-lipid A-bisphosphate",
+    "UDP",
+    "H+"
+   ],
+   "note": "pathbank PW000831 reaction PW_R003044; source direction >; source compartment: not given"
+  },
+  {
+   "hop": 5,
+   "name": "galactosyl-glucosyl-(heptosyl)3-Kdo2-lipid A-bisphosphate + Uridine diphosphate glucose -> UDP + H+ + galactosyl-(glucosyl)2-(heptosyl)3-Kdo2-lipid A-bisphosphate",
+   "in": [
+    "galactosyl-glucosyl-(heptosyl)3-Kdo2-lipid A-bisphosphate",
+    "Uridine diphosphate glucose"
+   ],
+   "out": [
+    "UDP",
+    "H+",
+    "galactosyl-(glucosyl)2-(heptosyl)3-Kdo2-lipid A-bisphosphate"
+   ],
+   "note": "pathbank PW000831 reaction PW_R003045; source direction >; source compartment: not given"
+  },
+  {
+   "hop": 5,
+   "name": "galactosyl-(glucosyl)2-(heptosyl)3-Kdo2-lipid A-bisphosphate + Uridine diphosphate glucose -> UDP + H+ + galactosyl-(glucosyl)3-(heptosyl)3-Kdo2-lipid A-bisphosphate",
+   "in": [
+    "galactosyl-(glucosyl)2-(heptosyl)3-Kdo2-lipid A-bisphosphate",
+    "Uridine diphosphate glucose"
+   ],
+   "out": [
+    "UDP",
+    "H+",
+    "galactosyl-(glucosyl)3-(heptosyl)3-Kdo2-lipid A-bisphosphate"
+   ],
+   "note": "pathbank PW000831 reaction PW_R003046; source direction >; source compartment: not given"
+  },
+  {
+   "hop": 6,
+   "name": "galactosyl-(glucosyl)3-(heptosyl)3-Kdo2-lipid A-bisphosphate + ADP-L-glycero-\u03b2-D-manno-heptose -> H+ + ADP + lipid A-core",
+   "in": [
+    "galactosyl-(glucosyl)3-(heptosyl)3-Kdo2-lipid A-bisphosphate",
+    "ADP-L-glycero-\u03b2-D-manno-heptose"
+   ],
+   "out": [
+    "H+",
+    "ADP",
+    "lipid A-core"
+   ],
+   "note": "pathbank PW000831 reaction PW_R003047; source direction >; source compartment: not given"
+  },
+  {
+   "hop": 3,
+   "name": "Glucosamine 6-phosphate -> Glucosamine-1P",
+   "in": [
+    "Glucosamine 6-phosphate"
+   ],
+   "out": [
+    "Glucosamine-1P"
+   ],
+   "note": "pathbank PW000831 reaction PW_R003312; source direction <>; source compartment: not given"
+  },
+  {
+   "hop": 2,
+   "name": "Glucosamine-1P + Acetyl-CoA -> N-Acetyl-glucosamine 1-phosphate + Coenzyme A + H+",
+   "in": [
+    "Glucosamine-1P",
+    "Acetyl-CoA"
+   ],
+   "out": [
+    "N-Acetyl-glucosamine 1-phosphate",
+    "Coenzyme A",
+    "H+"
+   ],
+   "note": "pathbank PW000831 reaction PW_R003313; source direction >; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "N-Acetyl-glucosamine 1-phosphate + UTP + H+ -> UDP-GlcNAc + PPi",
+   "in": [
+    "N-Acetyl-glucosamine 1-phosphate",
+    "UTP",
+    "H+"
+   ],
+   "out": [
+    "UDP-GlcNAc",
+    "PPi"
+   ],
+   "note": "pathbank PW000831 reaction PW_R003314; source direction >; source compartment: not given"
+  },
+  {
+   "hop": 4,
+   "name": "Fructose 6-phosphate + L-Glutamine -> L-Glutamic acid + Glucosamine 6-phosphate",
+   "in": [
+    "Fructose 6-phosphate",
+    "L-Glutamine"
+   ],
+   "out": [
+    "L-Glutamic acid",
+    "Glucosamine 6-phosphate"
+   ],
+   "note": "pathbank PW000831 reaction PW_R003565; source direction >; source compartment: Cytosol"
+  },
+  {
+   "hop": 3,
+   "name": "a-Kdo-(2->4)-a-Kdo-(2->6)-lipid IVA + PE(12:0/10:0) -> 1,2-Diacyl-sn-glycerol (didodecanoyl, n-C12:0) + phosphoethanolamine-Kdo2-lipid A",
+   "in": [
+    "a-Kdo-(2->4)-a-Kdo-(2->6)-lipid IVA",
+    "PE(12:0/10:0)"
+   ],
+   "out": [
+    "1,2-Diacyl-sn-glycerol (didodecanoyl, n-C12:0)",
+    "phosphoethanolamine-Kdo2-lipid A"
+   ],
+   "note": "pathbank PW000831 reaction PW_R005296; source direction >; source compartment: not given"
+  },
+  {
+   "hop": 6,
+   "name": "UDP-\u03b1-D-galactose -> UDP-D-Galacto-1,4-furanose",
+   "in": [
+    "UDP-\u03b1-D-galactose"
+   ],
+   "out": [
+    "UDP-D-Galacto-1,4-furanose"
+   ],
+   "note": "pathbank PW000831 reaction PW_R005887; source direction <>; source compartment: not given"
+  },
+  {
+   "hop": 3,
+   "name": "PE(16:0/16:0) + a-Kdo-(2->4)-a-Kdo-(2->6)-lipid IVA -> phosphoethanolamine-Kdo2-lipid A + DG(16:0/16:0)",
+   "in": [
+    "PE(16:0/16:0)",
+    "a-Kdo-(2->4)-a-Kdo-(2->6)-lipid IVA"
+   ],
+   "out": [
+    "phosphoethanolamine-Kdo2-lipid A",
+    "DG(16:0/16:0)"
+   ],
+   "note": "pathbank PW001905 reaction PW_R005310; source direction >; source compartment: not given"
+  },
+  {
+   "hop": 4,
+   "name": "phosphoethanolamine-Kdo2-lipid A transport",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW000831 transport PW_T000485; source direction >"
+  }
+ ]
+}

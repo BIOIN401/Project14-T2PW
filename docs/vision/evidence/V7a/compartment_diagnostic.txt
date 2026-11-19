@@ -1,0 +1,27 @@
+Compartment diagnostic, default scope, runlist q-index 5 (menaquinone), 8 (enterobactin), 10 (sour taste).
+Script C:/t/vis-runs/scratch/checks/diag_comp.py, run through queue.sh (holder vis-checks, floor 2 GB), log C:/t/vis-runs/logs/checks-diag.log.
+Each line is an entity whose set of compartments differs between two formats (names as written in each format).
+
+q-index 5
+  sbml vs sbgn: 1,4-dihydroxy-2-naphthoic acid  sbml=[cell, extracellular, intracellular, unspecified location]  sbgn=[cell, extracellular, intracellular]
+  sbml vs sbgn: MenA                            sbml=[cell, intracellular, unspecified location]  sbgn=[cell, intracellular]
+  sbml vs sbgn: chorismate                      sbml=[cell, intracellular]  sbgn=[cell]
+  sbml vs sbgn: isochorismate                   sbml=[cell, intracellular]  sbgn=[cell]
+  pwml vs sbml: 1,4-dihydroxy-2-naphthoic acid  pwml=[Extracellular Space, cell, intracellular]  sbml=[cell, extracellular, intracellular, unspecified location]
+  pwml vs sbml: MenA                            pwml=[cell, intracellular]  sbml=[cell, intracellular, unspecified location]
+  pwml vs sbml: chorismate                      pwml=[cell]  sbml=[cell, intracellular]
+  pwml vs sbml: isochorismate                   pwml=[cell]  sbml=[cell, intracellular]
+q-index 8
+  sbml vs sbgn: TolC                            sbml=[outer membrane]  sbgn=[cytoplasm]
+  pwml vs sbml: TolC                            pwml=[Outer Membrane, cytoplasm]  sbml=[outer membrane]
+  pwml vs sbml: enterobactin                    pwml=[Extracellular Space, cytoplasm]  sbml=[cytoplasm, extracellular]
+q-index 10
+  sbml vs sbgn: 5-HT                            sbml=[cell, saliva, synapse, synaptic vesicles, unspecified location]  sbgn=[cell, saliva, synapse, synaptic vesicles]
+  sbml vs sbgn: Hydrogen Ion                    sbml=[apical, cell, cytosol, saliva]  sbgn=[cell, cytosol, saliva]
+  sbml vs sbgn: OTOP1                           sbml=[apical, apical membrane, unspecified location]  sbgn=[cell, saliva]
+  pwml vs sbml: 5-HT                            pwml=[cell, saliva, synapse, synaptic vesicles]  sbml=[cell, saliva, synapse, synaptic vesicles, unspecified location]
+  pwml vs sbml: OTOP1                           pwml=[Apical cell membrane, apical, cell]  sbml=[apical, apical membrane, unspecified location]
+
+Reading: SBML lists an entity in every compartment the payload's states give it; SBGN and PWML draw it only where a process uses it
+(chorismate), and SBGN assumes a compartment for a transporter or enzyme (TolC: sbgn cytoplasm vs sbml outer membrane).
+Case differences ("Outer Membrane" / "outer membrane") are PWML canonical names.
