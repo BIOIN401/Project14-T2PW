@@ -1,0 +1,399 @@
+{
+ "per_run": {
+  "0": {},
+  "10": {
+   "transport:llm_quote": 3
+  },
+  "102": {},
+  "134": {
+   "reaction:llm_quote": 2
+  },
+  "136": {
+   "reaction:llm_quote": 1
+  },
+  "138": {
+   "transport:organism_default": 2,
+   "reaction:organism_default": 8,
+   "compound_locations:organism_default": 11
+  },
+  "147": {
+   "reaction:organism_default": 1,
+   "compound_locations:organism_default": 2
+  },
+  "18": {
+   "reaction:organism_default": 5,
+   "compound_locations:organism_default": 8,
+   "protein_locations:organism_default": 2
+  },
+  "21": {
+   "transport:llm_quote": 1
+  },
+  "22": {
+   "reaction:llm_quote": 1
+  },
+  "24": {
+   "reaction:organism_default": 4
+  },
+  "25": {
+   "compound_locations:organism_default": 6,
+   "protein_locations:organism_default": 1
+  },
+  "26": {
+   "transport:llm_quote": 2,
+   "transport:organism_default": 1,
+   "compound_locations:organism_default": 3
+  },
+  "28": {
+   "reaction:organism_default": 4,
+   "compound_locations:organism_default": 5,
+   "protein_locations:organism_default": 5
+  },
+  "49": {
+   "reaction:organism_default": 4
+  },
+  "55": {
+   "reaction:organism_default": 2
+  },
+  "56": {
+   "reaction:organism_default": 1
+  },
+  "62": {
+   "reaction:organism_default": 1,
+   "compound_locations:organism_default": 8,
+   "protein_locations:organism_default": 2
+  },
+  "76": {},
+  "78": {
+   "transport:llm_quote": 2
+  },
+  "79": {
+   "reaction:llm_quote": 1
+  },
+  "84": {
+   "reaction:organism_default": 4
+  },
+  "85": {
+   "reaction:llm_quote": 1
+  },
+  "86": {
+   "reaction:llm_quote": 1
+  },
+  "89": {
+   "reaction:organism_default": 1,
+   "compound_locations:organism_default": 4,
+   "protein_locations:organism_default": 2
+  },
+  "97": {
+   "reaction:llm_quote": 1
+  },
+  "98": {
+   "reaction:llm_quote": 1
+  },
+  "s-lipid-a": {},
+  "s-menaquinone": {
+   "transport:llm_quote": 1
+  },
+  "s-sour-taste": {
+   "transport:llm_quote": 3
+  }
+ },
+ "kinds": {
+  "transport:llm_quote": 12,
+  "reaction:llm_quote": 9,
+  "transport:organism_default": 3,
+  "reaction:organism_default": 35,
+  "compound_locations:organism_default": 47,
+  "protein_locations:organism_default": 12
+ },
+ "llm": [
+  {
+   "run": "10",
+   "kind": "transport",
+   "name": "OTOP1-mediated H+ permeation",
+   "field": "from_biological_state",
+   "from_state": "__auto_state__",
+   "to_state": "apical state",
+   "quote": "permeation of H + through an apical ion channel"
+  },
+  {
+   "run": "10",
+   "kind": "transport",
+   "name": "OTOP1-mediated H+ permeation",
+   "field": "from_biological_state",
+   "from_state": "__auto_state__",
+   "to_state": "apical state",
+   "quote": "permeation of H + through an apical ion channel"
+  },
+  {
+   "run": "10",
+   "kind": "transport",
+   "name": "OTOP1-mediated H+ permeation",
+   "field": "to_biological_state",
+   "from_state": "__auto_state__",
+   "to_state": "Type III cell state",
+   "quote": "entering H + ions not only directly depolarize the taste cells"
+  },
+  {
+   "run": "134",
+   "kind": "reaction",
+   "name": "BBD reaction",
+   "field": "biological_state",
+   "from_state": null,
+   "to_state": "cytosolic state",
+   "quote": "carnitine biosynthesis occurs initially in the mitochondria and subsequently in the cytosol"
+  },
+  {
+   "run": "134",
+   "kind": "reaction",
+   "name": "Tha1 HTMLA reaction",
+   "field": "biological_state",
+   "from_state": null,
+   "to_state": "cytosolic state",
+   "quote": "the first hit is the cytosolic serine hydroxymethyltransferase (SHMT1"
+  },
+  {
+   "run": "136",
+   "kind": "reaction",
+   "name": "NicGH (\u03b2-GD1) reaction",
+   "field": "biological_state",
+   "from_state": null,
+   "to_state": "vacuolar state",
+   "quote": "predicted to encode a vacuolar localised \u03b2 -glucosidase ( \u03b2-GD1 , 884g0020 )"
+  },
+  {
+   "run": "21",
+   "kind": "transport",
+   "name": "enterobactin secretion",
+   "field": "to_biological_state",
+   "from_state": "__auto_state__",
+   "to_state": "Escherichia coli extracellular space",
+   "quote": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment"
+  },
+  {
+   "run": "22",
+   "kind": "reaction",
+   "name": "DHCR24 reaction",
+   "field": "biological_state",
+   "from_state": null,
+   "to_state": "endoplasmic reticulum state",
+   "quote": "This enzyme is mainly located in the endoplasmic reticulum, and its abundance and activity are regulated by feedback from the level of cholesterol to maintain the balance of intracellular sterol metabolism."
+  },
+  {
+   "run": "26",
+   "kind": "transport",
+   "name": "enterobactin secretion",
+   "field": "to_biological_state",
+   "from_state": "__auto_state__",
+   "to_state": "Escherichia coli extracellular space",
+   "quote": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment"
+  },
+  {
+   "run": "26",
+   "kind": "transport",
+   "name": "ferric-enterobactin import",
+   "field": "from_biological_state",
+   "from_state": "__auto_state__",
+   "to_state": "Escherichia coli extracellular space",
+   "quote": "Following secretion, enterobactin chelates extracellular ferric iron, and the ferric\u2010enterobactin complex is then imported"
+  },
+  {
+   "run": "78",
+   "kind": "transport",
+   "name": "enterobactin secretion",
+   "field": "from_biological_state",
+   "from_state": "cytoplasm",
+   "to_state": "cytoplasm",
+   "quote": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment"
+  },
+  {
+   "run": "78",
+   "kind": "transport",
+   "name": "enterobactin secretion",
+   "field": "to_biological_state",
+   "from_state": "cytoplasm",
+   "to_state": "extracellular",
+   "quote": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment"
+  },
+  {
+   "run": "79",
+   "kind": "reaction",
+   "name": "DHCR24 (3\u03b2-hydroxysterol \u039424-reductase) reaction",
+   "field": "biological_state",
+   "from_state": "__auto_state__",
+   "to_state": "endoplasmic reticulum state",
+   "quote": "This enzyme is mainly located in the endoplasmic reticulum, and its abundance and activity are regulated by feedback from the level of cholesterol to maintain the balance of intracellular sterol metabolism."
+  },
+  {
+   "run": "85",
+   "kind": "reaction",
+   "name": "DHCR24 reaction",
+   "field": "biological_state",
+   "from_state": null,
+   "to_state": "endoplasmic reticulum state",
+   "quote": "This enzyme is mainly located in the endoplasmic reticulum, and its abundance and activity are regulated by feedback from the level of cholesterol"
+  },
+  {
+   "run": "86",
+   "kind": "reaction",
+   "name": "DHCR24 reaction",
+   "field": "biological_state",
+   "from_state": null,
+   "to_state": "endoplasmic reticulum state",
+   "quote": "This enzyme is mainly located in the endoplasmic reticulum, and its abundance and activity are regulated by feedback from the level of cholesterol"
+  },
+  {
+   "run": "97",
+   "kind": "reaction",
+   "name": "DHCR24 reaction",
+   "field": "biological_state",
+   "from_state": null,
+   "to_state": "endoplasmic reticulum state",
+   "quote": "This enzyme is mainly located in the endoplasmic reticulum, and its abundance and activity are regulated by feedback from the level of cholesterol"
+  },
+  {
+   "run": "98",
+   "kind": "reaction",
+   "name": "DHCR24 reaction",
+   "field": "biological_state",
+   "from_state": null,
+   "to_state": "endoplasmic reticulum in human osteosarcoma cells",
+   "quote": "This enzyme is mainly located in the endoplasmic reticulum, and its abundance and activity are regulated by feedback from the level of cholesterol"
+  },
+  {
+   "run": "s-menaquinone",
+   "kind": "transport",
+   "name": "DHNA export",
+   "field": "to_biological_state",
+   "from_state": "Lactococcus lactis intracellular state",
+   "to_state": "Lactococcus lactis extracellular state",
+   "quote": "extracellular DHNA accumulation rate"
+  },
+  {
+   "run": "s-sour-taste",
+   "kind": "transport",
+   "name": "OTOP1-mediated H+ permeation",
+   "field": "from_biological_state",
+   "from_state": "__auto_state__",
+   "to_state": "apical state",
+   "quote": "permeation of H + through an apical ion channel"
+  },
+  {
+   "run": "s-sour-taste",
+   "kind": "transport",
+   "name": "OTOP1-mediated H+ permeation",
+   "field": "from_biological_state",
+   "from_state": "__auto_state__",
+   "to_state": "apical state",
+   "quote": "permeation of H + through an apical ion channel"
+  },
+  {
+   "run": "s-sour-taste",
+   "kind": "transport",
+   "name": "OTOP1-mediated H+ permeation",
+   "field": "to_biological_state",
+   "from_state": "__auto_state__",
+   "to_state": "Type III cell state",
+   "quote": "entering H + ions not only directly depolarize the taste cells"
+  }
+ ],
+ "hint_states": [
+  {
+   "run": "0",
+   "evidence": "Expected compartments: cytoplasm",
+   "location": "cytoplasm",
+   "state": "E. coli cytoplasm"
+  },
+  {
+   "run": "76",
+   "evidence": "Expected compartments: cytoplasm, inner membrane (IM), periplasm, outer membrane (OM)",
+   "location": "inner membrane (IM)",
+   "state": "E. coli inner membrane state"
+  },
+  {
+   "run": "76",
+   "evidence": "Expected compartments: cytoplasm, inner membrane (IM), periplasm, outer membrane (OM)",
+   "location": "outer membrane (OM)",
+   "state": "E. coli outer membrane state"
+  },
+  {
+   "run": "s-menaquinone",
+   "evidence": "Expected compartments: cytoplasm",
+   "location": "cytoplasm",
+   "state": "cytoplasmic state"
+  }
+ ],
+ "same_place_left": [
+  {
+   "run": "102",
+   "from": "E. coli cytoplasmic state",
+   "to": "E. coli cytoplasmic state",
+   "transport": "enterobactin secretion"
+  }
+ ],
+ "merged_states": [
+  {
+   "run": "138",
+   "into": "Streptomyces tubercidicus cytoplasm",
+   "into_location": "cytoplasm",
+   "location": "cell",
+   "placeholder": true,
+   "state": "__auto_state__"
+  },
+  {
+   "run": "21",
+   "into": "cytoplasmic state",
+   "into_location": "cytoplasm",
+   "location": "cell",
+   "placeholder": true,
+   "state": "__auto_state__"
+  },
+  {
+   "run": "26",
+   "into": "cytoplasmic state",
+   "into_location": "cytoplasm",
+   "location": "cell",
+   "placeholder": true,
+   "state": "__auto_state__"
+  },
+  {
+   "run": "s-lipid-a",
+   "into": "inner membrane cytoplasmic leaflet",
+   "into_location": "cytoplasmic leaflet of inner membrane",
+   "location": "cytoplasmic leaflet of the inner membrane",
+   "placeholder": false,
+   "state": "cytoplasmic leaflet of IM state"
+  },
+  {
+   "run": "s-lipid-a",
+   "into": "inner membrane periplasmic leaflet",
+   "into_location": "periplasmic leaflet of inner membrane",
+   "location": "periplasmic leaflet of the inner membrane",
+   "placeholder": false,
+   "state": "periplasmic leaflet of IM state"
+  },
+  {
+   "run": "s-lipid-a",
+   "into": "inner membrane cytoplasmic leaflet",
+   "into_location": "cytoplasmic leaflet of inner membrane",
+   "location": "inner membrane cytoplasmic leaflet",
+   "placeholder": false,
+   "state": "E. coli inner membrane cytoplasmic leaflet"
+  },
+  {
+   "run": "s-lipid-a",
+   "into": "inner membrane periplasmic leaflet",
+   "into_location": "periplasmic leaflet of inner membrane",
+   "location": "inner membrane periplasmic leaflet",
+   "placeholder": false,
+   "state": "E. coli inner membrane periplasmic leaflet"
+  },
+  {
+   "run": "s-menaquinone",
+   "into": "Lactococcus lactis intracellular state",
+   "into_location": "intracellular",
+   "location": "cytoplasm",
+   "placeholder": false,
+   "state": "cytoplasmic state"
+  }
+ ]
+}

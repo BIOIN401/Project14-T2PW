@@ -1,0 +1,164 @@
+# Locations: every element and transport where the paper says (lane loc/assign, 2026-11-19)
+
+Branch `loc/assign`, cut from main `fd814b8e`. **Biology change: merging into main waits for PO sign-off.** Code commit
+`15a5b425`. Plan and pilot: `C:/t/strategy/location/STRATEGY.md`. Rulings: D-W21 (c, e), D-W24 (2, 7a, 9), and the
+PO's approval of inferred locations that are always flagged and never override a stated one.
+
+## 1. What changed
+
+| # | Change | Where |
+|---|---|---|
+| 1a | L7 compares a transport's ends **by place** (location key, position words, cell type, tissue), not by state name. | `final_payload_compartments.py` |
+| 1b | L7 never fills an **export's destination** from neighbouring reactions (name says export / secretion / efflux / excretion / extrusion). | same |
+| 1c | **Leaflet spellings** share one location key: the membrane (word before "membrane", or IM / OM) plus the side words. Inner and outer membrane never merge (D-W21 e). | `final_payload_merge.location_key` |
+| 1d | States whose only evidence is the Stage-0 "Expected compartments: ..." hint are **flagged** (`evidence_is_stage0_hint`, review reason). Not moved. | `final_payload_locations.py` |
+| 1e | **`__auto__ -> __auto__` root cause**: `ensure_autostates` put the one placeholder on both ends of a transport with no stated side. The destination now gets its own placeholder (`__auto_state__ (other side)`); both stay unplaced and flagged. | `process_normalizer.py` |
+| 2 | **Bacterial organism default**: unplaced reactions and element rows go to the organism's cytoplasm (an existing plain cytoplasm state, else a new `<organism> cytoplasm`); an unplaced side of a transport whose **name** says export / import goes to cytoplasm or extracellular space. Flag `inferred: organism_default`. Eukaryotes get no default. | same |
+| 3 | **UniProt prior: not enabled.** Agreement with paper-stated locations is 77.9 % (< 80 %). See section 4. | none |
+| 4 | **LLM location pass** behind `T2PW_LOCATION_LLM` (off by default): gemini-3.8-flash, L7's prompt, gate and cache; closed vocabulary per organism (PathWhiz locations only) plus the run's own stated states; the verbatim quote must name the place and the item (the item's synonyms count, e.g. "DHNA"); only unplaced items, or the estimated side of a transport whose ends are one place; never a stated location; the two ends never become one place. Flag `inferred: llm_quote`. | same |
+| 5 | After steps 2 and 4, **L6's state merge runs again** (it guards transport ends itself), so a placeholder or synonym state that no transport end keeps apart now merges (menaquinone `cytoplasmic state` into `intracellular`, both the cytoplasm of a bacterium). | same |
+| 6 | A transport whose two ends are still one place is flagged `transport_ends_same_place`. | same |
+
+The new step (`final_payload_locations.assign_locations`) runs in `maybe_apply_final_id_fill` after L7 and before L8,
+offline unless the LLM flag is on, fails open, runs once (`final_payload_locations` marks it). A live payload that
+already carries L6/L7 gets this step alone, which also repairs an older L7 neighbour fill of an export destination.
+
+**Flags.** Every placed row carries `inferred` (`inferred_sides` on a transport), `compartment_source`
+(`organism_default` | `llm_estimate`), a `compartment_estimate` entry with the reason (and the quote) and a
+`location_inferred: ...` review reason. The payload's `final_payload_locations` record lists every inference, every
+Stage-0-hint state and every same-place transport left; the text record prints them under **INFERRED LOCATIONS (n)**
+(absent when empty, so other reports keep their bytes). L8 checks that every `organism_default` row carries a reason.
+**In the PWML** an inferred place follows the D-W24 (2) estimated-compartment convention: the row sits in that state;
+the flag lives in the payload, the text record and our SBML, not in PWML (which has no field for it).
+
+## 2. Gates: offline replay, 152 q-runs + 8 showcase runs (160 payloads, 105 PWML exports)
+
+Harness `C:/t/loc-work/replay.py` (adapted from the import-fixes `replay97.py` and the showcase replay; no network; the
+3 live showcase runs get the location step alone). Census `C:/t/loc-work/census.py`; arm diff `compare.py`; PWML A/B
+`C:/t/pwml-fix-work/ab_replay.py`. Base = main `fd814b8e`.
+
+| metric | base | deterministic | + LLM pass |
+|---|---|---|---|
+| same-place transports | 9 (8 runs) | 3 | **1** (idx 102, both ends stated) |
+| `__auto__ -> __auto__` transports | 4 | 2 (sour taste, eukaryote) | **0** |
+| duplicate state groups | 5 | 2 | 2 (by design, see Q3) |
+| leaflet states | 14 | 10 | 10 |
+| bacterial unplaced reactions | 35 (11 runs) | **0**, all 35 flagged | 0 |
+| bacterial unplaced element rows | 59 | **0**, all flagged | 0 |
+| unplaced reactions (all) | 119 | 84 (all flagged) | 75 (all flagged) |
+| unplaced transport sides (transports) | 19 | 15 | 11 |
+| placeholder / empty states | 60 | 57 | 57 |
+| Stage-0-hint states flagged | 0 of 4 | 3 of 3 (menaquinone's merged away) | 3 of 3 |
+| reactions / transports / element rows in payload | 692 / 128 / 1979 | 692 / 128 / 1979 | 692 / 128 / 1979 |
+| **stated-location changes** | | **0** | **0** |
+| inferred: organism_default (rx / transport side / element) | | 35 / 9 / 59 | 35 / 3 / 59 |
+| inferred: llm_quote (rx / transport side) | | | 9 / 12 |
+
+PWML A/B (deterministic arm): 105/105 exported, 98 byte-identical, 7 changed (138, 18, 25, 62, 78, lipid A, menaquinone).
+**Lost names 0, lost reaction signatures 0**; reactions 488, transports 96, interactions 79, compounds 817, proteins 473
+unchanged. Every listed change:
+
+- **6 transport signatures relabelled, none lost** (96 transports before and after): 138 TBN export `cell->cell` ->
+  `cytoplasm->Extracellular Space`; 78 enterobactin secretion `cytoplasm->cytoplasm` -> `cytoplasm->Extracellular Space`;
+  menaquinone DHNA export `cytoplasm->intracellular` -> `intracellular->Extracellular Space`; lipid A three leaflet
+  transports now carry one spelling per leaflet.
+- **138**: its 8 unplaced reactions were drawn in the extracellular box (the IR's row-0 default); now in a new
+  `Streptomyces tubercidicus cytoplasm` (+1 location, +1 compound location, +3 labels). 18 and 62: `cell` -> `cytoplasm`
+  (+1 location). 78: +1 compound location (enterobactin outside), +1 membrane.
+- **Rows that fell are duplicate boxes collapsing**, checked per (element, place) with `locpairs.py`: menaquinone
+  compound+protein location rows 32 -> 22 with the 20 distinct (element, place) pairs unchanged; lipid A 69 -> 67, 65
+  pairs unchanged; lipid A states 11 -> 7 (leaflet spellings), menaquinone 3 -> 2, 25: 2 -> 1 (no default state needed).
+
+LLM arm: section 3.
+
+**Tests.** Focused (new `tests/test_final_payload_locations.py` 16 tests; L6, L7, normalizer, autostate, reaction
+evidence, final-payload seam): 245 passed. `suite2.sh C:/t/lane-loc loc-s1`: SMOKE 511, golden batch 2 / c011 8 /
+stage8 4 / quarantine 24, equivalence 8 / 14 / 6, vision 357 (+1 skipped), web 83: **all passed, 0 survivors**. No
+golden-seam test edited. Edited test: `test_process_normalizer_transport_states.py` (3 assertions pinned the
+`__auto__ -> __auto__` this lane removes; one test added).
+
+**PathWhiz import: not run.** Docker was down on this machine all session (`docker info` fails); nothing to import into.
+
+## 3. LLM pass (gemini-3.8-flash)
+
+Live replay of the 160 payloads with `T2PW_LOCATION_LLM=1` (census in the table of section 2): **0 stated-location
+changes**; payload reactions 692, transports 128, element rows 1979 unchanged; same-place transports 9 -> 1;
+`__auto__ -> __auto__` 4 -> 0; unplaced reactions 84 -> 75 and unplaced transport sides 15 -> 11 beyond the
+deterministic arm. PWML: 105/105 exported; 20 files changed.
+
+**Caveat on the LLM-arm PWML A/B.** To give the client its key the harness loaded the app's `.env`, which also
+configures the name-resolution DB; 8 files (5, 9, 16, 18, 122, 131, 132, 141) then show different compound *display
+names* ("1,4-dihydroxy-2-naphthoic acid" -> "1,4-dihydroxy-2-naphthoate"), counted by `ab_replay.py` as 14 lost names
+and 23 lost reaction signatures. None of those 8 files received an LLM inference (the deterministic arm, without the
+`.env`, has 0 lost names in all of them), so the renames come from the resolver, not the pass; counts are unchanged in
+all 8. The clean A/B (LLM arm replayed from the reply cache with no `.env`, `replay.py --llm-cached`) is scripted
+but **did not run**: the heavy lock went to other lanes for over an hour and the queued job was stopped. Run it with
+`C:/t/loc-work/arm_llmc.sh` before the PO turns the pass on (Q4).
+
+Every accepted inference, with its quote (all pass the verbatim + place + item gate):
+
+| run | item | side | placed in | quote |
+|---|---|---|---|---|
+| 10, sour taste | OTOP1-mediated H+ permeation (x2) | from | apical state | "permeation of H + through an apical ion channel" |
+| 10, sour taste | OTOP1-mediated H+ permeation | to | Type III cell state | "entering H + ions not only directly depolarize the taste cells" |
+| 134 | BBD reaction | | cytosolic state | "carnitine biosynthesis occurs initially in the mitochondria and subsequently in the cytosol" |
+| 134 | Tha1 HTMLA reaction | | cytosolic state | "the first hit is the cytosolic serine hydroxymethyltransferase (SHMT1" |
+| 136 | NicGH (β-GD1) reaction | | vacuolar state | "predicted to encode a vacuolar localised β -glucosidase ( β-GD1 , 884g0020 )" |
+| 21, 26 | enterobactin secretion | to | E. coli extracellular space | "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment" |
+| 26 | ferric-enterobactin import | from | E. coli extracellular space | "Following secretion, enterobactin chelates extracellular ferric iron, ..." |
+| 78 | enterobactin secretion | from / to | cytoplasm / extracellular | "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment" |
+| 22, 79, 85, 86, 97, 98 | DHCR24 reaction | | endoplasmic reticulum state | "This enzyme is mainly located in the endoplasmic reticulum, ..." |
+| menaquinone | DHNA export | to | L. lactis extracellular state | "extracellular DHNA accumulation rate" |
+
+The DHCR24 answers settle the 6 cases L7 had left in a first state that was right "by accident" (idx 86 / 98 in
+CORRECTNESS-FIXES). Rejected answers: 10 (7 quote names none of the item's participants, 2 place not in the quote,
+1 quote does not name the state's place); null answers (no basis in the paper) are not counted. Spend: 36 calls,
+1.80 M chars in, 9.5 k chars out, **about $0.23** (estimated: the client reports no token usage; chars/4 tokens at an
+assumed $0.50/M in, $3/M out), well inside the $5 budget, plus the 4-call showcase pilot (~$0.03).
+
+**Gold sets and the 26-pathway sample.** The 3 gold-set live legs (menaquinone, enterobactin, lipid A) are in the
+showcase replay, and the 26-pathway sample (`evidence/correctness/sample.json`) is a subset of the 152 replayed. Gold
+A/B on fresh Stage-1 draws was not run (a live pipeline leg per gold paper; it does not fit this lane's lock time).
+
+## 4. UniProt prior: measured, not enabled
+
+`C:/t/loc-work/uniprot_agree.py` over the 152 runs: 540 proteins carry a cached UniProt subcellular location
+(`enrichment.protein.uniprot.subcellular_locations`); 385 also have a paper-stated location. Generous class-level
+agreement (any UniProt class equal to any stated class): **300 / 385 = 77.9 %** (79.9 % with the showcase copies).
+Below the 80 % bar, so the prior is not built. The main disagreement is UniProt's generic "Membrane" against a
+paper-stated cytoplasm (63 cases: peripheral membrane enzymes such as EntE). Excluding proteins whose only UniProt
+location is the generic "Membrane", agreement is 295 / 321 = 91.9 % (Q2).
+
+## 5. Open questions for the PO
+
+- **Q1. idx 102 "enterobactin secretion"**: both ends are *stated* as `E. coli cytoplasmic state` (a second copy of the
+  transport is stated correctly, cytoplasm -> extracellular). Fixing it would move a stated location, which the rule
+  forbids; it is flagged `transport_ends_same_place`. Options: (a) keep flagged (default); (b) allow a same-place
+  transport's destination to be replaced when the paper quote names another place (one row; changes a stated side).
+- **Q2. UniProt prior without generic "Membrane"** (91.9 % on 321 proteins). Options: (a) not built (current); (b)
+  build it for proteins whose UniProt location is specific, flagged `inferred: uniprot` (about 2 days; it would place
+  some of the 155 proteins that have a cached UniProt location and no stated one).
+- **Q3. Two duplicate state groups remain by design.** idx 3: "Type III cell cytoplasm state" and "Type III cell
+  cytosolic state" (location field both "cytoplasm"; L6 keeps cytoplasm and cytosol apart in a eukaryote). idx 34:
+  "E. coli biosynthetic / low-iron / high-iron state" (one place, three conditions). Options: (a) keep (default);
+  (b) merge condition-named states of one place (loses the condition in the state name); (c) treat cytosol =
+  cytoplasm in eukaryotes when the location field agrees.
+- **Q4. LLM pass default.** It is off. Turning it on costs about $0.006 per run with unplaced items and placed 21 items
+  on the replays with 0 stated changes. Options: (a) keep off until a fresh-draw gold A/B; (b) turn on now.
+- **Q5. Eukaryote element rows** (148 unplaced) get no default and the LLM pass does not ask about elements (they are
+  drawn with their reactions). Options: (a) leave; (b) place an unplaced element row in the state of the reactions
+  it takes part in, flagged.
+
+## 6. Dead ends and slips
+
+- First LLM showcase pilot accepted 0 of 4 real answers: the participant gate missed abbreviations (DHNA) and dropped a
+  currency cargo (H+). Fixed by passing the entity synonyms and the transport's own cargo to the gate.
+- One stray `python -` (stdin) command was started by mistake while inspecting; it was stopped at once, no survivor.
+- Vocabulary terms that are not PathWhiz locations (endosome, thylakoid, synaptic vesicle / cleft) were dropped from
+  the closed list; a run that declares them still offers them as candidate states.
+
+## 7. Evidence
+
+`docs/pwml_output/evidence/locations/`: arm diffs (`compare-*.json`, totals and stated-location changes), PWML A/B
+(`ab-*.json`), inference lists (`summary-*.json`), UniProt agreement counts, LLM cost. Scripts and full outputs:
+`C:/t/loc-work/`.
