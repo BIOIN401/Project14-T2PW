@@ -35,14 +35,25 @@ fails if either has a blocking error (`blocking_pwml_ir_errors(ir_report) or ir_
 record counts `issues` from the validation only (0), which is why `RESULT.txt` printed "issue codes: (none reported)".
 Not changed (artifact shapes are pinned by tests); recorded here.
 
-**Fix (`src/t2pw/pwml/ir.py`).**
-- `resolve_state` fallback: a name that is not a state name resolves to the one state whose payload location has
-  that name, or to the state named `<name> state`. Two candidates are ambiguous and stay unresolved. Warning
-  `biological_state_resolved_by_location`.
-- A transport side that still names no state withholds **only that transport**: it stays in the payload (and so the
-  text record and our SBML), is listed in the IR report `withheld_transports` with its reason, and gets a warning
-  `transport_withheld_from_pwml`; it is not drawn in the default state (that would misplace it). A transporter whose
-  state names nothing loses only the transporter (the D-114 Am. 1 s2 rule the quarantine already uses).
+**Fix (`src/t2pw/pwml/ir.py`; review round 2 narrowed and completed it).**
+- Location fallback, **transport sides only** (`resolve_state(..., location_fallback=...)`; reactions, placements,
+  interactions and transporters keep base behaviour on a miss): a side name that is not a state name resolves to the
+  one state whose payload location has that name, or to the state named `<name> state`, and only when that state's
+  species, cell type and tissue are empty or equal to the ones the side itself carries (if any). Two candidates are
+  ambiguous and stay unresolved. Warning `biological_state_resolved_by_location`.
+- A transport side that still names no state withholds **only that transport**: it stays in the payload (and so our
+  SBML), is listed in `withheld_transports` (IR report and `pwml_ir.json`, with `payload_index` and `failed_sides`:
+  element, left/right, the name that failed, per cargo) and gets the warning `transport_withheld_from_pwml`; it is not
+  drawn in the default state (that would misplace it). A transporter whose state names nothing loses only the
+  transporter (`withheld_transporters`, warning `transporter_withheld_from_pwml`; D-114 Am. 1 s2).
+- **D-114 s2/s3 (LOCKED) for these omissions.** Strict (pathwhiz) mode: `strict_quarantine._downstream_gate_errors`
+  now reads the two withheld warnings of the IR gate like errors and `_row_failures` maps their pointers to the
+  transport row (or its transporter), so the existing per-row omission does the rest: the transport is omitted
+  before the freeze (`quarantine_report.quarantined`, reason `transport_withheld_from_pwml`), a transporter is
+  dropped and kept verbatim in `removed_entity_report`, and the release is capped at `review_required`
+  (`omitted_from_pwml:...`). Research mode (no quarantine, no release verdict): the text record
+  (`app/reaction_evidence.py`) reads `pwml_ir.json`'s `withheld_transports` / `withheld_transporters` and lists them
+  under OMITTED FROM THE PWML (group `ir`, counted as not drawn) and OMITTED ACTOR.
 - An exact repeated state row (same name and same resolved components) no longer takes the name over; references
   stay on the first row (the default state). Its location is not counted twice for the fallback.
 
@@ -82,7 +93,7 @@ The V7b metric is vision code; fixing it is left to that lane (open question).
 
 | Message (files) | Root cause | Status |
 |---|---|---|
-| nucleic acid "Nucleotide type can't be blank / not included in the list" + cascades "Nucleic acid can't be blank", interaction "wrong length", "Element can't be blank", interaction visualization "can't be blank" (chlorophyll) | rows with no DNA/RNA type. 4 of the 7 are named "X promoter"; the writer's name rule (`nucleotide_type_for`) knew `gene`/`dna` but not `promoter`, and the paper reader (D-W20c) left them unresolved (cue inside the name; sentence conflict) | **Partial**: promoter, enhancer, locus, plasmid, allele in the name now mean DNA (the same nouns the paper reader takes as DNA cues). Chlorophyll 7 -> 3 untyped (`ALAD1/HEMB1`, `CHL27`, `LHCB1.1`: bare gene symbols, gene or transcript not stated). The 3 are deferred (D-W21 d: unknown stays unknown) |
+| nucleic acid "Nucleotide type can't be blank / not included in the list" + cascades "Nucleic acid can't be blank", interaction "wrong length", "Element can't be blank", interaction visualization "can't be blank" (chlorophyll) | rows with no DNA/RNA type. 4 of the 7 are named "X promoter"; the writer's name rule (`nucleotide_type_for`) knew `gene`/`dna` but not `promoter`, and the paper reader (D-W20c) left them unresolved (cue inside the name; sentence conflict) | **Partial**: promoter, enhancer, locus, plasmid, allele in the name now mean DNA (the same nouns the paper reader takes as DNA cues), **only when the name has no RNA word** (review round 2: "enhancer RNA", "promoter-associated RNA", "plasmid-encoded sRNA", "allele-specific mRNA" stay RNA as on base; gene/dna unchanged). Chlorophyll 7 -> 3 untyped (`ALAD1/HEMB1`, `CHL27`, `LHCB1.1`: bare gene symbols, gene or transcript not stated). The 3 are deferred (D-W21 d: unknown stays unknown) |
 | "Transport can't contain duplicate elements" + 3 cascades (coenzyme A, idx 128) | the payload lists TcyJKLMN twice on one transport (one stated, one inferred row); the IR wrote two identical `transport-transporter`s; PathWhiz `Transport#no_duplicates` refuses the whole transport | **Fixed**: same transporter in the same state written once (warning `duplicate_transporter_written_once`) |
 | "Biological state must have unique biological states" -> "Transport elements is too short" -> transport / transporter visualization "can't be blank" (sour taste idx 10; lipid A x3) | sour taste: the stored payload's row "OTOP1-mediated H+ permeation" is `__auto_state__ -> __auto_state__` (normalized 2026-10-22, before D-W20b; the row declares its right side in `elements_with_states`). Same-key transports in the replay: idx 10, 78, 102, 138, all from/to equal in the payload. Lipid A: the two leaflet states are distinct in our PWML but their locations ("cytoplasmic leaflet of inner membrane", ...) fail to create in the empty DB (ontology), so both collapse to one DB state | **Deferred**. Same-state rows are an extraction content gap; PO D-W21 c: fix at the extraction step, and "a fix that loses anything is not adopted" (withholding them would drop the transport from the PWML). Lipid A is the ontology cascade (out of scope) |
 | transport visualization "Transport can't be blank" | cascade of the two rows above | follows them |
@@ -138,6 +149,20 @@ Messages that went down: nucleotide type blank 14 -> 6 and not in list 14 -> 6; 
 elements" 2 -> 0; transport transporter visualization 10 -> 6; transport visualization 7 -> 5. No created count went
 down in any file. Extra (after only): B2's PWML imports with 0 messages, 11 reactions, 1 of its 2 identical transports.
 
+**Review round 2 (`d88c2d10`): gates so far.** The replay, suite and PathWhiz numbers above and below are for
+`b0d47b68`. Round 2 changes PWML bytes only through the RNA rule (no name in the 97 runs or the showcase has an RNA
+word next to a DNA-region noun) and through withheld transports (0 in the 97 runs), so the round-2 replay is expected
+to equal the `b0d47b68` after arm byte for byte; if it does, the PathWhiz A/B carries over unchanged.
+- Focused (`focused4.log`, 43 files incl. reaction-evidence, quarantine, L5-L8 and ORCH-77x/78x/79x tests):
+  901 passed, 13 failed. 12 are `test_batch_driver_quarantine_artifacts.py`, which pass alone on the branch (15/16 in
+  `focused5.log`; streamlit "Forms cannot be nested" state leaking between files in one process). The 13th,
+  `test_orch795_headline_unsigned.py::test_g9_an_unsigned_interaction_omitted_before_the_ir_leaves_the_headline`,
+  fails identically on main `a751f8f2` (`base795b.log`): pre-existing, not this branch.
+- **Not yet run (blocked):** the round-2 97-run replay and `suite2.sh` were queued at 03:00-03:30 and never got a
+  slot: free RAM stayed at 1-2 GB (floor 4 GB; committed memory 44.5 GB of 32 GB, non-paged pool 2.2 GB, i.e. the
+  machine's known kernel-memory state that needs a restart). Queued jobs were stopped by PID; re-run commands are in
+  the lane report.
+
 **Suites on `b0d47b68`** (`C:/t/vis-runs/suite2.sh` in one hold; log `evidence/import_fixes/suite.log`): SMOKE 511
 passed; golden seam 2 / 8 / 4 / 24 passed (unedited); equivalence run_pathway 8, app_vs_service 14, default_path 6;
 vision 357 passed + 1 skipped; web 83 passed; BW_EXIT 0, 0 surviving processes.
@@ -155,19 +180,16 @@ quarantine-omission, final-payload and layout files: 344 passed, 0 survivors.
 
 ## 4. Open questions for the PO / orchestrator
 
-1. **Test edits.** `tests/test_final_payload_nucleic_type.py` (one test) and `tests/test_final_payload_nucleic_lookup.py`
-   (one row) used "CHLH promoter" / "PORA promoter" as examples of a name the name rule does **not** settle. With the
-   new rule they are settled (DNA), so the examples were swapped for "CHLH" / "PORA region"; each test keeps its intent.
-   Not golden or equivalence tests. Needs the reviewer's ruling.
-2. **Release cap for a withheld transport.** A transport withheld by the IR is a warning (as ORCH-747 withheld
-   interactions are); release status does not read the IR report, so a strict run could stay `release_ready` with a
-   transport missing from the PWML. Options: (a) leave as is (parity with interactions); (b) map
-   `/processes/transports/N/*_biological_state` IR pointers to the row in `strict_quarantine._row_failures`, so the
-   quarantine omits the row and caps at `review_required` (touches `src/t2pw/pipeline/`). B2 itself no longer needs it
-   (the location fallback resolves it).
-3. **Placeholder box label** (1.4): "cell", "compartment not stated", or none.
-4. **Gene-symbol nucleic acids** (3 in chlorophyll): default to DNA ("gene"), keep unknown, or withhold.
-5. **Same-state transports**: switch on the D-W21 c extraction repair (`T2PW_TRANSPORT_SIDES`) after its test, or accept.
+Settled in review round 1 (orchestrator, 2026-11-19): the two nucleic test edits ("CHLH promoter" / "PORA promoter"
+swapped for "CHLH" / "PORA region" as names the rule leaves open) were confirmed legitimate; the release cap for a
+withheld transport is not a new ruling (D-114 s2/s3, Am. 1 s2 are LOCKED) and is implemented (1.1).
+
+Deferred by the orchestrator, open for the PO:
+1. **Placeholder box label** (1.4): "cell", "compartment not stated", or none.
+2. **Gene-symbol nucleic acids** (3 in chlorophyll): stay unknown for now (D-W21 d); alternatives: default to DNA
+   ("gene"), or withhold.
+3. **Same-state transports**: the D-W21 c extraction repair (`T2PW_TRANSPORT_SIDES`) stays off for now; alternative:
+   switch it on after its test.
 
 ## 5. Dead ends
 
