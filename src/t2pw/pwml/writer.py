@@ -740,10 +740,11 @@ def _serpentine_reaction_position(
 
 
 _RNA_TOKENS = {"rna", "mrna", "mirna", "rrna", "trna", "srna", "sirna", "ncrna", "lncrna", "snrna", "snorna"}
-# A promoter, enhancer, locus, plasmid or allele is DNA by definition ("CHLH promoter", chlorophyll idx 7); the same
-# nouns final_payload_nucleic reads as DNA cues next to a mention.
-_DNA_TOKENS = {"dna", "gene", "genes", "cdna", "gdna", "promoter", "promoters", "enhancer", "enhancers", "locus", "loci",
-               "plasmid", "plasmids", "allele", "alleles"}
+_DNA_TOKENS = {"dna", "gene", "genes", "cdna", "gdna"}
+# A promoter, enhancer, locus, plasmid or allele is DNA ("CHLH promoter", chlorophyll idx 7; the nouns final_payload_nucleic
+# reads as DNA cues) only when the name has no RNA word: "enhancer RNA", "plasmid-encoded sRNA" stay RNA.
+_DNA_REGION_TOKENS = {"promoter", "promoters", "enhancer", "enhancers", "locus", "loci", "plasmid", "plasmids", "allele",
+                      "alleles"}
 _PROTEIN_TOKENS = {"protein", "proteins", "factor", "complex", "enzyme", "receptor", "binding", "product", "subunit",
                    "pol", "polymerase", "polymerases", "chaperone", "chaperones", "repair", "pk", "kinase", "kinases",
                    "helicase", "primase", "ligase", "nuclease", "polypeptide"}
@@ -755,6 +756,7 @@ def nucleotide_type_for(record: Dict[str, Any]) -> Optional[str]:
         return record["nucleotide_type_paper"]
     texts = [str(record.get(k) or "") for k in ("class", "kind", "type", "nucleotide_type", "name")]
     found: set[str] = set()
+    region = False
     for text in texts:
         for tok in re.split(r"[^a-z0-9]+", text.casefold()):
             if tok in _PROTEIN_TOKENS or (tok.endswith("ase") and len(tok) > 4):
@@ -763,6 +765,10 @@ def nucleotide_type_for(record: Dict[str, Any]) -> Optional[str]:
                 found.add("RNA")
             elif tok in _DNA_TOKENS:
                 found.add("DNA")
+            elif tok in _DNA_REGION_TOKENS:
+                region = True
+    if region and not found:
+        found.add("DNA")
     return found.pop() if len(found) == 1 else None
 
 

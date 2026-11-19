@@ -3422,6 +3422,8 @@ def _placeholder_unidentified_enzymes(working: Dict[str, Any]) -> List[Dict[str,
     return records
 
 
+#: IR warnings for a transport / transporter withheld from the PWML (``ir.build_pwml_ir``): per-row omissions.
+IR_WITHHELD_TRANSPORT_CODES = frozenset({"transport_withheld_from_pwml", "transporter_withheld_from_pwml"})
 _ROW_POINTER =re.compile(r"^/(processes|entities)/([a-z_]+)/(\d+)(?:/([a-z_]+)/(\d+))?")
 _STATE_POINTER = re.compile(r"^/biological_states/(\d+)$")
 #: ORCH-788: the IR code (``ir.build_pwml_ir`` / ``ir.validate_pwml_ir``) for a state with no location.
@@ -3520,6 +3522,10 @@ def _downstream_gate_errors(candidate: Dict[str, Any], *, strict_db: bool):
     yield _GATE_REQUIRED, _issues(contract, "pointer", "code") if isinstance(contract, dict) else None, None
     ir, ir_report = build_pwml_ir(deepcopy(candidate), strict_db=bool(strict_db), width=3200)
     errors = [*blocking_pwml_ir_errors(ir_report), *_safe_list(validate_pwml_ir(ir).get("errors"))]
+    # pwml/import-fixes: a transport (or transporter) the IR withholds from the PWML is an omission (D-114 s2/s3,
+    # AMENDMENT 1 s2): map it to its row like an error, so it is listed and the release capped.
+    errors += [i for i in _safe_list(ir_report.get("warnings"))
+               if isinstance(i, dict) and i.get("code") in IR_WITHHELD_TRANSPORT_CODES]
     yield _GATE_IR, _issues({"errors": errors}, "pointer", "code"), ir
 
 
@@ -3550,7 +3556,7 @@ def _row_failures(
     def entity(bucket: str, row: Dict[str, Any], attached: bool) -> Dict[str, Any]:
         return {"kind": "entity", "bucket": bucket, "row": row, "reason": reason, "gate": gate, "attached": attached}
 
-    if ir is not None:
+    if ir is not None and reason not in IR_WITHHELD_TRANSPORT_CODES:  # a withheld transport maps as a process row, below
         # ORCH-788: a state the IR could place in no resolved subcellular location
         # (the IR already uses a location the state is named after). The state is
         # omitted; it maps back by name, IR state i being payload state i.
