@@ -1812,6 +1812,7 @@ def build_pwml_ir(
             )
 
     state_by_name: Dict[str, Dict[str, Any]] = {}
+    states_by_location: Dict[str, set] = {}
     for idx, raw in enumerate(raw_states):
         name = _canonical(raw.get("name")) or f"State {idx + 1}"
         state_key = f"bs_{idx + 1}"
@@ -1873,11 +1874,24 @@ def build_pwml_ir(
                 biological_state_key=state_key,
             )
         ir["biological_states"].append(state)
+        earlier = state_by_name.get(_norm(name))
+        components = ("species_key", "subcellular_location_key", "cell_type_key", "tissue_key")
+        if earlier and all(earlier[c] == state[c] for c in components):
+            # An exact repeat (same name, same components; run B2's two "cytosolic state" rows) keeps the first row as the
+            # one its name resolves to: the default state is that first row, so the two never get a box each.
+            continue
         state_by_name[_norm(name)] = state
+        raw_location = _canonical(
+            raw.get("subcellular_location") or raw.get("subcellular-location") or raw.get("compartment") or raw.get("compartment_canonical")
+        )
+        if raw_location:
+            states_by_location.setdefault(_norm(raw_location), set()).add(state_key)
 
     default_bs_key = ir["biological_states"][0]["key"] if ir["biological_states"] else None
 
-    def resolve_state(value: Any, pointer: str, *, required: bool = False) -> Optional[str]:
+    def resolve_state(value: Any, pointer: str, *, required: bool = False, withhold_on_miss: bool = False) -> Optional[str]:
+        """The state key ``value`` names. A name no state carries: the default state with an issue (error when strict or
+        required), or, with ``withhold_on_miss``, ``None`` and a warning, so the caller withholds its one row."""
         name = _canonical(value)
         if not name:
             if required and default_bs_key:
@@ -1886,18 +1900,36 @@ def build_pwml_ir(
         found = state_by_name.get(_norm(name))
         if found:
             return str(found["key"])
+        # A reference that names a location instead of a state ("extracellular" for "extracellular state", run B2):
+        # the one state of that location, or the state named "<name> state". Two candidates are ambiguous: not resolved.
+        candidates = set(states_by_location.get(_norm(name), set()))
+        named = state_by_name.get(_norm(f"{name} state"))
+        if named:
+            candidates.add(str(named["key"]))
+        if len(candidates) == 1:
+            key = next(iter(candidates))
+            _add_issue(
+                report,
+                "warning",
+                "biological_state_resolved_by_location",
+                f"Biological state '{name}' is not a state name; resolved to the only state of that location ('{key}').",
+                pointer=pointer,
+                biological_state=name,
+                biological_state_key=key,
+            )
+            return key
         report["unresolved"]["biological_state_references"].append(
             {"component_type": "biological_state", "name": name, "pointer": pointer}
         )
         _add_issue(
             report,
-            "error" if strict_db or required else "warning",
+            "warning" if withhold_on_miss else "error" if strict_db or required else "warning",
             "unresolved_biological_state",
             f"Biological state '{name}' was not found.",
             pointer=pointer,
             biological_state=name,
         )
-        return default_bs_key
+        return None if withhold_on_miss else default_bs_key
 
     preferred_order = {
         "reaction_member": ["compound", "nucleic_acid", "element_collection", "protein_complex", "protein"],
@@ -2325,6 +2357,7 @@ def build_pwml_ir(
         if not cargo_items:
             cargo_name = _canonical(raw.get("cargo") or raw.get("cargo_complex"))
             cargo_items = [{"element": cargo_name}] if cargo_name else []
+        resolved_cargo = []
         for cidx, cargo in enumerate(cargo_items):
             if isinstance(cargo, str):
                 cargo = {"element": cargo}
@@ -2340,6 +2373,7 @@ def build_pwml_ir(
                 or raw.get("from_biological_state"),
                 f"/processes/transports/{tidx}/from_biological_state",
                 required=True,
+                withhold_on_miss=True,
             )
             right_bs = resolve_state(
                 cargo.get("right_biological_state")
@@ -2347,7 +2381,28 @@ def build_pwml_ir(
                 or raw.get("to_biological_state"),
                 f"/processes/transports/{tidx}/to_biological_state",
                 required=True,
+                withhold_on_miss=True,
             )
+            resolved_cargo.append((cargo, entity, left_bs, right_bs))
+        if any(left is None or right is None for _c, _e, left, right in resolved_cargo):
+            # A side that names no state: drawing it in the default state would misplace it, and one bad transport must
+            # not refuse the whole export (run B2). Only this transport leaves the PWML; it stays in the payload.
+            transport_index -= 1
+            report.setdefault("withheld_transports", []).append(
+                {"name": transport["name"], "pointer": f"/processes/transports/{tidx}", "reason": "unresolved_biological_state",
+                 "from_biological_state": _canonical(raw.get("from_biological_state")),
+                 "to_biological_state": _canonical(raw.get("to_biological_state"))}
+            )
+            _add_issue(
+                report,
+                "warning",
+                "transport_withheld_from_pwml",
+                f"Transport {transport['name']!r} is withheld from the PWML: a side names no biological state.",
+                pointer=f"/processes/transports/{tidx}",
+                reason="unresolved_biological_state",
+            )
+            continue
+        for cargo, entity, left_bs, right_bs in resolved_cargo:
             member_key = f"{tr_key}_el_{len(transport['transport_elements']) + 1}"
             transport["transport_elements"].append(
                 {
@@ -2394,7 +2449,21 @@ def build_pwml_ir(
                 actor.get("biological_state") if isinstance(actor, dict) else "",
                 f"/processes/transports/{tidx}/transporters/{aidx}/biological_state",
                 required=True,
+                withhold_on_miss=True,
             )
+            if bs_key is None:  # D-114 AMENDMENT 1 s2: a failing transporter costs the transporter, not the transport
+                continue
+            if any((t["entity_key"], t["biological_state_key"]) == (entity["key"], bs_key) for t in transport["transporters"]):
+                # The same transporter in the same state twice (idx 128: a stated and an inferred TcyJKLMN row); PathWhiz
+                # refuses the whole transport ("can't contain duplicate elements"). Written once.
+                _add_issue(
+                    report,
+                    "warning",
+                    "duplicate_transporter_written_once",
+                    f"Transporter {entity.get('name')!r} of transport {transport['name']!r} is listed twice; written once.",
+                    pointer=f"/processes/transports/{tidx}/transporters/{aidx}",
+                )
+                continue
             transport["transporters"].append(
                 {"key": member_key, "entity_type": entity["entity_type"], "entity_key": entity["key"], "biological_state_key": bs_key}
             )

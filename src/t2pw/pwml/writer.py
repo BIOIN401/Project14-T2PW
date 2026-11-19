@@ -740,7 +740,10 @@ def _serpentine_reaction_position(
 
 
 _RNA_TOKENS = {"rna", "mrna", "mirna", "rrna", "trna", "srna", "sirna", "ncrna", "lncrna", "snrna", "snorna"}
-_DNA_TOKENS = {"dna", "gene", "genes", "cdna", "gdna"}
+# A promoter, enhancer, locus, plasmid or allele is DNA by definition ("CHLH promoter", chlorophyll idx 7); the same
+# nouns final_payload_nucleic reads as DNA cues next to a mention.
+_DNA_TOKENS = {"dna", "gene", "genes", "cdna", "gdna", "promoter", "promoters", "enhancer", "enhancers", "locus", "loci",
+               "plasmid", "plasmids", "allele", "alleles"}
 _PROTEIN_TOKENS = {"protein", "proteins", "factor", "complex", "enzyme", "receptor", "binding", "product", "subunit",
                    "pol", "polymerase", "polymerases", "chaperone", "chaperones", "repair", "pk", "kinase", "kinases",
                    "helicase", "primase", "ligase", "nuclease", "polypeptide"}
