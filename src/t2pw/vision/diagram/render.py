@@ -216,6 +216,11 @@ def build(ir):
     pw_name = ((ir.get("pathway") or {}).get("name") or "").lower()
     uses = Counter((x["entity_type"], x["entity_key"], cof(r.get("biological_state_key")))
                    for r in P.get("reactions", []) for x in {(y["entity_type"], y["entity_key"]): y for y in r["left"] + r["right"]}.values())
+    # transport cargo keeps its single drawing in each compartment it moves between: a local copy would cut the link
+    # between the transport and the reactions that use what it delivers (H+ pumped into the matrix, then used there)
+    cargo = {(el["entity_type"], el["entity_key"], cof(el.get(side)))
+             for t in P.get("transports", []) for el in t.get("transport_elements", [])
+             for side in ("left_biological_state_key", "right_biological_state_key")}
     sigs = defaultdict(list)
     # reactions
     msig = {}
@@ -248,7 +253,8 @@ def build(ir):
         def cur(x):  # CoA in a CoA pathway is the story, not currency
             nm = (ent.get(("compound", x["entity_key"])) or {}).get("name") or ""
             return (x["entity_type"] == "compound" and is_currency(nm) and nm.strip().lower() not in pw_name
-                    and uses[(x["entity_type"], x["entity_key"], ck)] > 1)  # only a hub needs local copies
+                    and uses[(x["entity_type"], x["entity_key"], ck)] > 1  # only a hub needs local copies
+                    and (x["entity_type"], x["entity_key"], ck) not in cargo)
         subs = [inst(x["entity_type"], x["entity_key"], ck, ("cur", r["key"]) if cur(x) else None) for x in r["left"]]
         prods = [inst(x["entity_type"], x["entity_key"], ck, ("cur", r["key"]) if cur(x) else None) for x in r["right"]]
         for n in subs + prods:
@@ -452,13 +458,30 @@ def assign_layers(m, style=None):
 
     layer = longest(keep)
     # two transports in one membrane band must not share a column (their straight lines would lie on top of each other)
+    def reaches(a, b, out):
+        todo, done = [a.id], set()
+        while todo:
+            x = todo.pop()
+            if x == b.id:
+                return True
+            if x not in done:
+                done.add(x)
+                todo += [v.id for v in out.get(x, ())]
+        return False
+
     for _ in range(8):
         seen, extra = {}, []
+        out = defaultdict(list)
+        for u, v, g in keep:
+            out[u.id].append(v)
         for n in sorted((n for n in nodes if n.kind == "junction" and n.jkind == "transport" and n.comp is not None),
                         key=lambda n: (layer[n.id], str(n.id))):
             k = (name_tokens(m.comps[n.comp]["name"]) if n.comp in m.comps else n.comp, layer[n.id])  # spellings share a lane
             if k in seen:
-                extra.append((seen[k], n, 1))
+                # these edges come after cycle breaking: never close a cycle. When n already leads to the transport
+                # seen first (chained transports through one membrane), order them the way the flow runs instead.
+                extra.append((n, seen[k], 1) if reaches(n, seen[k], out) else (seen[k], n, 1))
+                out[extra[-1][0].id].append(extra[-1][1])
             seen[k] = n
         if not extra:
             break
@@ -1553,9 +1576,10 @@ def hops_svg(m, lay):
                            f'<path class="hop k-{he.kind}" d="M{vx - HOP:.1f},{hy:.1f} A{HOP},{HOP} 0 0 1 {vx + HOP:.1f},{hy:.1f}"/>')
     return '<g class="hops">' + "".join(out) + "</g>"
 
-# membrane / compartment type -> CSS class (colour); DOUBLE = envelopes of two membranes
+# membrane / compartment type -> CSS class (colour); DOUBLE = envelopes of two membranes. Nucleus words only: the
+# bacterial nucleoid and the nucleolus have no membrane.
 MTYPES = (("mt-er", ("endoplasmic", "reticulum", " er ", "sarcoplasmic")), ("mt-golgi", ("golgi",)),
-          ("mt-mito", ("mitochond",)), ("mt-nuc", ("nucle",)), ("mt-plastid", ("chloroplast", "plastid", "thylakoid", "stroma")),
+          ("mt-mito", ("mitochond",)), ("mt-nuc", ("nucleus", "nuclear", "nucleoplasm")), ("mt-plastid", ("chloroplast", "plastid", "thylakoid", "stroma")),
           ("mt-vac", ("vacuol", "tonoplast")), ("mt-lyso", ("lysosom", "endosom")), ("mt-perox", ("peroxisom", "glyoxysom")),
           ("mt-outer", ("outer membrane",)), ("mt-plasma", ("plasma membrane", "cell membrane", "apical", "basolateral")))
 DOUBLE = ("mt-mito", "mt-nuc", "mt-plastid")
