@@ -9,8 +9,11 @@ For a reaction, answer the compartment where it takes place. For a transport, an
   directly ("in the mitochondrial matrix") or by context: the steps around it are described in one compartment
   and nothing says this one moves elsewhere.
 - Only if no candidate fits and the paper names another location, give "new_location" (a plain compartment name
-  such as "cytosol", "endoplasmic reticulum", "peroxisome") and leave "state" null.
-- Give a verbatim "quote" from the paper text (copied exactly, at least three words) that supports the answer.
+  such as "cytosol", "endoplasmic reticulum", "peroxisome") and leave "state" null. When the request lists a
+  "new_location_vocabulary", a new_location must be one of those terms, written exactly as listed.
+- Give a verbatim "quote" from the paper text (copied exactly, at least three words) that supports the answer. The quote
+  must name the place itself (for example "in the cytoplasm", "secreted into the medium") and the item (one of its
+  compounds, its cargo or its enzyme). A quote that names no place is rejected.
 - If the paper gives no basis, return null for the item (or for that side). Never guess.
 - The two sides of a transport must never be the same state, and never invent a direction the paper does not give.
 Reply with JSON only:

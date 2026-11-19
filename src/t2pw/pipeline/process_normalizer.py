@@ -3235,9 +3235,24 @@ def ensure_autostates(payload: Dict[str, Any], *, report: Optional[Dict[str, Any
             rep["summary"]["n_entities_assigned_to_autostate"] += 1
         if not to_state:
             other = row["from_biological_state"]
-            row["to_biological_state"] = right_decl if right_decl and _normalize(right_decl) != _normalize(other) else auto_state_name
+            to = right_decl if right_decl and _normalize(right_decl) != _normalize(other) else auto_state_name
+            if _normalize(to) == _normalize(other):
+                # Neither side stated: one placeholder on both ends made a transport from a place into itself, which
+                # PathWhiz refuses (D-W21 c). The destination gets its own placeholder; both stay unplaced and flagged
+                # downstream (final-payload location step), nothing is invented.
+                to = _other_side_autostate(biological_states, auto_state, auto_state_name)
+            row["to_biological_state"] = to
             rep["summary"]["n_entities_assigned_to_autostate"] += 1
     return payload
+
+
+def _other_side_autostate(states: List[Any], auto_state: Dict[str, Any], auto_state_name: str) -> str:
+    """The placeholder for the destination of a transport with no stated side (created once, beside ``__auto_state__``)."""
+    name = auto_state_name + " (other side)"
+    if _find_entity_row(states, name) is None:
+        row = {k: v for k, v in auto_state.items() if k in ("subcellular_location", "species")}
+        states.append({"name": name, **row})
+    return name
 
 
 #: ``element_locations`` buckets whose rows the PWML required-field gate treats as
