@@ -153,7 +153,13 @@ both orders and counted only when both orders agree. It ranks; it never moves an
 renderer. 20 pairs (8 showcases + 12 stored runs: the 6 hardest by baseline crossings + long edges, and 6 spread by
 index).
 
-Result: pending at the time of this commit (the run waits for the shared heavy lock); a follow-up docs commit adds `judge.json` and the numbers here.
+Result: **built, not run; spend $0.** The first attempt (inside the gate hold) made no calls: run from the worktree,
+the client loads the worktree's `.env`, which does not exist, so it fell back to the local LM Studio provider ("No
+models loaded"). With the app checkout's client and `T2PW_LLM_PROVIDER=openrouter`, one diagnostic call
+(`judge_diag.py`, 54 tokens) succeeded. The real run was queued, then stopped after about 30 minutes waiting for the
+shared heavy lock (other lanes' live jobs); its waiting shell was killed by PID. To run it:
+`T2PW_LLM_PROVIDER=openrouter python judge.py <app checkout> <out> pairs.json` (pairs = the 20 PNG pairs in
+`C:/t/lane-draw-work/pairs.json`; budget guard $2.50).
 
 Spot-check (mine, looking at the PNGs, before the judge ran): after is better for menaquinone, enterobactin, lipid A,
 chlorophyll, sour taste (also run 10), coenzyme A (weakly: U-shape, but more crossings) and run 125 (local SAM copies,
