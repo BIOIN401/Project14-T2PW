@@ -23,6 +23,8 @@ export T2PW_DB="$D/jobs.sqlite" T2PW_WORK_ROOT="$D/work"
 export T2PW_BASE_URL="${T2PW_BASE_URL:-http://192.168.1.232:$PORT}"
 export T2PW_RATE_KEY_SECRET="$(cat "$D/rate_key_secret")"
 export T2PW_RATE_LIMIT=${T2PW_RATE_LIMIT:-2} T2PW_MAX_QUEUED=${T2PW_MAX_QUEUED:-5}
+# PO ruling 2026-11-19: the server runs 3 Stage-1 extraction draws (code default is 1).
+export T2PW_EXTRACTION_DRAWS=${T2PW_EXTRACTION_DRAWS:-3}
 cd "$R"
 stamp=$(date +%Y%m%d-%H%M%S)
 
