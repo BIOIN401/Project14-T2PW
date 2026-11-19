@@ -121,3 +121,59 @@
 .dg.hl .nodes .on,.dg.hl .edges .on{opacity:1}
 .dg.hl .edges .e.wh.on{opacity:.85}
 .dg .jn text.xcap{font-size:9.5px;font-weight:600;fill:var(--accent)}
+
+/* DRAW-RENDERER: lanes, membrane types, double membranes, line bridges, local copies */
+.dg .lane .bg{fill:none}
+.dg .lanesep{stroke:var(--sepline);stroke-width:1;stroke-dasharray:4 4}
+.dg .mt-er{--mb:#E3ECF9;--ml:#5B7FB8}
+.dg .mt-golgi{--mb:#F6E6F0;--ml:#A0588A}
+.dg .mt-mito{--mb:#FBE8DF;--ml:#B85C38}
+.dg .mt-nuc{--mb:#ECE7F8;--ml:#6E5BAA}
+.dg .mt-plastid,.dg .mt-plastid1{--mb:#E3F1DC;--ml:#4E8A3C}
+.dg .mt-vac{--mb:#E3F2F2;--ml:#3F8C8C}
+.dg .mt-lyso{--mb:#F6EDDB;--ml:#A07A2E}
+.dg .mt-perox{--mb:#EFF3DA;--ml:#7A8A2E}
+.dg .mt-outer{--mb:#EFE2CF;--ml:#9A6A12}
+.dg .mt-plasma{--mb:#F1E6D2;--ml:#9A6A12}
+@media (prefers-color-scheme: dark){
+:root:not([data-theme="light"]) .dg .mt-er{--mb:#1C2A3D;--ml:#7FA3D9}
+:root:not([data-theme="light"]) .dg .mt-golgi{--mb:#33202D;--ml:#D58BBE}
+:root:not([data-theme="light"]) .dg .mt-mito{--mb:#36231B;--ml:#E59572}
+:root:not([data-theme="light"]) .dg .mt-nuc{--mb:#262036;--ml:#A795E0}
+:root:not([data-theme="light"]) .dg .mt-plastid,:root:not([data-theme="light"]) .dg .mt-plastid1{--mb:#1B2C1A;--ml:#86C474}
+:root:not([data-theme="light"]) .dg .mt-vac{--mb:#172D2D;--ml:#71C2C2}
+:root:not([data-theme="light"]) .dg .mt-lyso{--mb:#30281A;--ml:#D2AA5B}
+:root:not([data-theme="light"]) .dg .mt-perox{--mb:#262B17;--ml:#B4C45B}
+:root:not([data-theme="light"]) .dg .mt-outer,:root:not([data-theme="light"]) .dg .mt-plasma{--mb:#352B1D;--ml:#E0B25A}}
+:root[data-theme="dark"] .dg .mt-er{--mb:#1C2A3D;--ml:#7FA3D9}
+:root[data-theme="dark"] .dg .mt-golgi{--mb:#33202D;--ml:#D58BBE}
+:root[data-theme="dark"] .dg .mt-mito{--mb:#36231B;--ml:#E59572}
+:root[data-theme="dark"] .dg .mt-nuc{--mb:#262036;--ml:#A795E0}
+:root[data-theme="dark"] .dg .mt-plastid,:root[data-theme="dark"] .dg .mt-plastid1{--mb:#1B2C1A;--ml:#86C474}
+:root[data-theme="dark"] .dg .mt-vac{--mb:#172D2D;--ml:#71C2C2}
+:root[data-theme="dark"] .dg .mt-lyso{--mb:#30281A;--ml:#D2AA5B}
+:root[data-theme="dark"] .dg .mt-perox{--mb:#262B17;--ml:#B4C45B}
+:root[data-theme="dark"] .dg .mt-outer,:root[data-theme="dark"] .dg .mt-plasma{--mb:#352B1D;--ml:#E0B25A}
+.dg .band[class*=" mt-"] .bg,.dg .orgblob[class*=" mt-"]{fill:var(--mb)}
+.dg .orgblob[class*=" mt-"]{stroke:var(--ml);stroke-width:1.6}
+.dg .orgline2{fill:none;stroke:var(--ml);stroke-width:1.2}
+.dg .mline1,.dg .mline2{stroke:var(--ml);stroke-width:1.6}
+.dg .hopgap{fill:none;stroke:var(--canvas);stroke-width:5}
+.dg .hopgap.g-cytosol{stroke:var(--r-cytosol)}
+.dg .hopgap.g-extra{stroke:var(--r-extra)}
+.dg .hopgap.g-membrane{stroke:var(--r-membrane)}
+.dg .hopgap.g-organelle{stroke:var(--r-organelle)}
+.dg .hopgap.g-auto{stroke:var(--r-auto)}
+.dg .hopgap.g-cell{stroke:var(--r-cell)}
+.dg .hopgap.g-periplasm{stroke:var(--r-periplasm)}
+.dg .hopgap.g-iface{stroke:var(--r-iface)}
+.dg .hopgap.g-spine{stroke:var(--r-extra)}
+.dg .hopgap[class*=" mt-"]{stroke:var(--mb)}
+.dg .hop,.dg .hopv{fill:none;stroke:var(--edge);stroke-width:1.5}
+.dg .hop.k-cat,.dg .hopv.k-cat{stroke-width:1.2}
+.dg .hop.k-act,.dg .hopv.k-act{stroke:var(--act)}
+.dg .hop.k-inh,.dg .hopv.k-inh{stroke:var(--inh)}
+.dg .hop.k-assoc,.dg .hopv.k-assoc{stroke:var(--assoc)}
+.dg .spinecomp{font-size:10.5px;fill:var(--muted)}
+.dg .n.compound.cur rect{stroke-dasharray:3 2}
+.dg.hl .hops{opacity:.14}

@@ -199,3 +199,19 @@ def test_svg_aspect_ratio_and_totals():
     assert (m["aspect_ratio"], m["canvas_w"], m["canvas_h"]) == (5.0, 1000.0, 200.0) and LM.svg_layout_metrics(SVG)["aspect_ratio"] is None
     t = LM._sum([dict(aspect_ratio=5.0, crossings=1), dict(aspect_ratio=2.0, crossings=2), dict(aspect_ratio=None, crossings=0)])
     assert (t["crossings"], t["runs_aspect_gt_4"], t["aspect_ratio_max"]) == (3, 1, 5.0)
+
+
+# --------------------------------------------------------------------------- DRAW-RENDERER readability counts
+def test_svg_readability_counts_hand_made():
+    block = '<g class="n compound" data-ent="compound:X"><rect x="40" y="40" width="20" height="20"/><text x="50" y="54" text-anchor="middle">X</text></g>'
+    svg = SVG.replace('<g class="nodes">', '<g class="nodes">' + block).replace(
+        '</g></g></svg>', '</g><g class="hops"><path class="hop" d="M45,50 A5,5 0 0 1 55,50"/></g></g></svg>')
+    m = LM.svg_layout_metrics(svg)
+    assert (m["long_edges"], m["non_straight"], m["edge_length"]) == (1, 0, 1090)  # 100 + 100 + 390 + 500 px
+    assert m["node_edge_overlaps"] == 2  # both crossing lines run through X, which is neither line's end
+    assert m["hops"] == 1 and m["duplicate_names"] == 0 and m["score"] > LM.svg_layout_metrics(SVG)["score"]
+    twice = svg.replace(block, block + block.replace('x="40" y="40"', 'x="200" y="40"').replace('x="50" y="54"', 'x="210" y="54"'))
+    assert LM.svg_layout_metrics(twice)["duplicate_names"] == 1
+    assert m["edge_overlaps"] == 0
+    on_top = SVG.replace('<path class="e prod" d="M50,0 L50,100"/>', '<path class="e prod" d="M50,0 L50,100"/><path class="e prod" d="M30,50 L90,50"/>')
+    assert LM.svg_layout_metrics(on_top)["edge_overlaps"] == 1  # 60 px on top of the first line, no end node in common
