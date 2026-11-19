@@ -157,6 +157,30 @@ def test_strict_quarantine_omits_the_withheld_transport_and_caps_the_release() -
     assert any(r.startswith("omitted_from_pwml:") for r in release["reasons"])
 
 
+def test_strict_quarantine_drops_only_the_withheld_transporter_and_caps_the_release() -> None:
+    """D-114 AMENDMENT 1 s2: a transporter whose state names nothing loses the transporter, never the transport, in
+    strict mode; the drop is recorded and the release is review_required (review round 2, finding a)."""
+    from test_orch773_omit_per_row import _leg, _quarantine, _refusals, _surviving
+
+    payload, context = _leg("runs_verify_2026-08-21_2057_PMC12096016")
+    protein = next(p["name"] for p in payload["entities"]["proteins"] if isinstance(p, dict))
+    transport = payload["processes"]["transports"][0]
+    good = {"entity": protein, "entity_type": "protein", "biological_state": transport["from_biological_state"]}
+    bad = {"entity": protein, "entity_type": "protein", "biological_state": "nowhere lumen"}
+    transport["transporters"] = [good, bad]
+    result = _quarantine(payload, context)
+    assert _refusals(result) == []
+    kept = [t for t in _surviving(result, "transports") if t["name"] == transport["name"]]
+    assert len(kept) == 1
+    assert [a.get("biological_state") for a in kept[0]["transporters"]] == [transport["from_biological_state"]]
+    dropped = [e for e in result.removed_entity_report["removed_entities"] if e["bucket"] == "transporters"]
+    assert [(e["name"], e["reason"], e["detail"]["actor"]["biological_state"]) for e in dropped] == [
+        (protein, "transporter_withheld_from_pwml", "nowhere lumen")]
+    release = result.quarantine_report["release"]
+    assert release["status"] == "review_required"
+    assert any(r.startswith("omitted_from_pwml:") for r in release["reasons"])
+
+
 def test_text_record_lists_an_ir_withheld_transport_and_transporter_as_omitted(tmp_path) -> None:
     from t2pw.app.reaction_evidence import build_report, render_text
 
