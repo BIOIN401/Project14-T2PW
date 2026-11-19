@@ -16,7 +16,8 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from t2pw.pwml.layout import _label_lines, _path, _pava, label_text, layout_version, relayout  # noqa: E402
+from t2pw.pwml.layout import (_label_lines, _path, _pava, compartment_kind, compartment_parents, label_text,  # noqa: E402
+                              layout_version, relayout)
 from t2pw.pwml.validate import discover_structure_signature  # noqa: E402
 from t2pw.pwml.writer import DeterministicPwmlBuilder  # noqa: E402
 
@@ -163,10 +164,17 @@ def test_v2_quality(monkeypatch):
         xs, ys = nums[0::2], nums[1::2]
         assert (xs[0], ys[0]) == (xs[-1], ys[-1])
         rects.append((min(xs), min(ys), max(xs), max(ys)))
-    assert len(rects) == len({st for st, _ in drawn})
+    # PathBank conventions: at most two lines per compartment (a double membrane), none for the outside of the cell,
+    # membranes nest or stay apart, and no membrane is empty
+    assert 1 <= len(rects) <= 2 * len({st for st, _ in drawn})
+
+    def within(p, q):
+        return q[0] <= p[0] and q[1] <= p[1] and p[2] <= q[2] and p[3] <= q[3]
+
+    for a, b in combinations(rects, 2):
+        assert within(a, b) or within(b, a) or a[2] <= b[0] or b[2] <= a[0] or a[3] <= b[1] or b[3] <= a[1]
     for r in rects:
-        inside = {st for st, bx in drawn if r[0] <= bx[0] and r[1] <= bx[1] and bx[2] <= r[2] and bx[3] <= r[3]}
-        assert len(inside) == 1  # no empty box, no mixed box
+        assert any(within(bx, r) for _, bx in drawn)  # no empty box
     texts = [lb.findtext("label-text") for lb in root.iter("label-location")]
     assert texts and not any(t.startswith("__") for t in texts)
     # every edge stays inside the canvas
@@ -252,7 +260,8 @@ def test_relayout_edge_cases_and_determinism():
     bv = {b["id"]: b for b in a["bound-visualizations"]}
     assert bv[95]["x"] <= loc[1]["x"] and bv[96]["width"] == "200"  # empty state: a small box of its own
     assert [l["label-text"] for l in a["label-locations"]] == ["cytosol", "nucleus"]
-    assert len(a["membrane-visualizations"]) == 2
+    # the cell (Plasma Membrane) and, inside it, the nucleus drawn as a double Nucleus Membrane
+    assert [m["visualization-template-id"] for m in a["membrane-visualizations"]] == [1, 93, 93]
 
 
 def test_labels_never_show_internal_names_and_wrap_like_pathwhiz():
@@ -324,3 +333,49 @@ def test_reaction_point_joins_the_box_of_a_drawn_neighbour():
     box = [int(t) for t in re.findall(r"-?[0-9]+", items["membrane-visualizations"][0]["path"])]
     end = [int(t) for t in re.findall(r"-?[0-9]+", items["edges"][0]["path"])][-2:]  # the reaction point
     assert min(box[0::2]) <= end[0] <= max(box[0::2]) and min(box[1::2]) <= end[1] <= max(box[1::2])
+
+
+def test_compartment_kinds_follow_pathbank_templates():
+    cases = {"Endoplasmic Reticulum Membrane": "er", "medial Golgi": "golgi", "mitochondrial matrix": "mito_matrix",
+             "mitochondrial inner membrane": "mito_inner", "Mitochondrion": "mito", "nucleus": "nucleus",
+             "Extracellular Space": "extracellular", "saliva": "extracellular", "cell": "cytoplasm",
+             "cytosol": "cytoplasm", "Apical cell membrane": "membrane", "Inner Membrane": "membrane",
+             "Outer Membrane": "outer_membrane", "periplasm": "periplasm", "periplasmic leaflet of the IM": "leaflet",
+             "synaptic vesicle": "vesicle", "thylakoid membrane": "thylakoid", "etioplast": "plastid",
+             "microsomal fraction": "er", "synapse": "other"}
+    assert {n: compartment_kind(n) for n in cases} == cases
+    assert compartment_kind("", "Lactococcus lactis intracellular state") == "cytoplasm"
+    # Gram-negative envelope: outer membrane > periplasm > inner membrane > cytoplasm; leaflets inside the membrane;
+    # organelles inside the cell; the matrix inside its mitochondrion; the outside of the cell at the top
+    kinds = {"om": "outer_membrane", "pp": "periplasm", "im": "membrane", "cy": "cytoplasm", "lf": "leaflet",
+             "mi": "mito", "mx": "mito_matrix", "ex": "extracellular", "sy": "other"}
+    assert compartment_parents(kinds) == {"om": None, "pp": "om", "im": "pp", "cy": "im", "lf": "im", "mi": "cy",
+                                          "mx": "mi", "ex": None, "sy": None}
+
+
+def test_transporter_sits_on_the_membrane_between_its_cargo():
+    items = {"biological-states": [{"id": 1, "name": "cytosol state", "subcellular-location-id": 11},
+                                   {"id": 2, "name": "mitochondrial matrix state", "subcellular-location-id": 12}],
+             "subcellular-locations": [{"id": 11, "name": "cytosol"}, {"id": 12, "name": "mitochondrial matrix"}],
+             "compound-locations": [_loc(1, 1), _loc(2, 1), _loc(3, 2), _loc(4, 2)],
+             "protein-locations": [dict(_loc(5, 1, "150", "70", tid=2), **{"protein-id": 5})],
+             "protein-complex-visualizations": [{"id": 50, "protein_complex_protein_visualizations": [{"id": 51, "protein-location-id": 5}]}],
+             "edges": [{"id": 70 + i, "path": "M0 0", "hidden": False, "options": None} for i in range(4)],
+             "reaction-visualizations": [{"id": 80, "reaction-id": 1, "biological-state-id": 2,
+                                          "reaction_compound_visualizations": [
+                                              {"compound-location-id": 3, "edge-id": 72, "side": "Left"},
+                                              {"compound-location-id": 4, "edge-id": 73, "side": "Right"}],
+                                          "reaction_enzyme_visualizations": []}],
+             "transport-visualizations": [{"id": 90, "transport-id": 1,
+                                           "transport_compound_visualizations": [
+                                               {"compound-location-id": 1, "edge-id": 70, "side": "Left"},
+                                               {"compound-location-id": 3, "edge-id": 71, "side": "Right"}],
+                                           "transport_transporter_visualizations": [{"protein-complex-visualization-id": 50}]}]}
+    relayout(items, _ids())
+    mems = [(m["visualization-template-id"], [int(t) for t in re.findall(r"-?[0-9]+", m["path"])]) for m in items["membrane-visualizations"]]
+    assert [t for t, _ in mems] == [1, 84, 84]  # the cell; the matrix inside the mitochondrion's two membranes
+    outer, inner = mems[1][1], mems[2][1]
+    t = items["protein-locations"][0]
+    cy = t["y"] + 35
+    # the transporter's centre lies between the two lines of the double membrane, on its top or bottom side
+    assert min(outer[1::2]) < cy < min(inner[1::2]) or max(inner[1::2]) < cy < max(outer[1::2]), (cy, outer[1::2], inner[1::2])
