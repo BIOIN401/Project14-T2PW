@@ -747,6 +747,11 @@ _ACTOR_PARENTHETICAL = r"\([^()]{1,60}\)"
 _ATTACHED_ACTOR = (
     rf"[A-Za-z][\w\-/]*(?:\s+(?:{_ACTOR_PARENTHETICAL}|[\w\-/]+)){{0,5}}?"
 )
+#: One protein symbol, case-sensitive even inside an IGNORECASE template: a bacterial
+#: Xxx[A-Z] name with an optional digit (EntC, MenF, LpxK, HemA1) or an all-capitals
+#: symbol of 3+ letters with an optional digit (ALAS2, CHLH, HEMA1). Used only by the
+#: VD-18 templates.
+_SYMBOL_ACTOR = r"(?-i:[A-Z][a-z]{2}[A-Z]\d?|[A-Z]{3,}\d?)"
 
 #: Templates added by C-061 (and extended by C-118), kept OUT of
 #: :data:`_PROSE_PATTERNS` so that constant stays byte-identical, and tried LAST
@@ -821,6 +826,53 @@ _EXTRA_PROSE_PATTERNS: Tuple[Tuple[str, re.Pattern], ...] = (
             rf"(?P<lhs>[^.;,()]+?)\s+(?:in)?to\s+"
             rf"(?P<rhs>[^.;,()]+?)\s*(?:\(\s*|,\s*)catal(?:yz|ys)ed\s+by\s+"
             rf"(?P<enz>{_ATTACHED_ACTOR})\s*(?=[).,;]|$)",
+            re.IGNORECASE,
+        ),
+    ),
+    # VD-18 (acc/verifier lane). Three shapes measured in the stored admission reports as
+    # sole-blocker ``roles_unassignable`` refusals of true pathway steps. Each one, like
+    # the D-095 template above, binds the catalyst ONLY from an explicit ``by`` /
+    # ``catalyzed by`` attached to the same clause, keeps both participant groups free of
+    # ``.;,()`` so neither side runs into another clause, and is tried after every older
+    # template, so it only reads spans nothing else could. Narrower than D-095 in one more
+    # way: the catalyst must be a protein SYMBOL (:data:`_SYMBOL_ACTOR`: EntC, MenF, HemA,
+    # ALAS2, CHLH). On the replay, the same shapes with a prose catalyst ("by
+    # phosphotransacetylase", "catalyzed by acetate kinase") were true chemistry of a
+    # DIFFERENT pathway (acetate overflow in a menaquinone paper), and a span cut mid-name
+    # ("by Ent") would have admitted a protein called "Ent".
+    (
+        # "chorismate, is first converted to isochorismate by EntC (isochorismate synthase;"
+        # The adverb list is closed; "is not converted" never matches.
+        "copula_adverb_converted_by",
+        re.compile(
+            rf"(?P<lhs>[^.;,()]+?)\s*,?\s+(?:is|are|was|were)\s+"
+            rf"(?:first|then|further|subsequently|next|finally|initially|rapidly|in\s+turn)\s+"
+            rf"(?:converted|isomeri[sz]ed|oxidi[sz]ed|reduced)\s+(?:in)?to\s+"
+            rf"(?P<rhs>[^.;,()]+?)\s*,?\s*(?:catal(?:yz|ys)ed\s+)?by\s+"
+            rf"(?P<enz>{_SYMBOL_ACTOR})\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        # "activation of DHB to DHB-AMP by EntE" / "isomerization of chorismate to
+        # isochorismate by EntC": a nominalization with "of A to B by E". The head noun
+        # is a closed list of single-step conversions; "condensation"/"formation" (the
+        # nominalized-SUBJECT shape F-179 blocks, and product-only phrases) are not in it.
+        "nominalized_of_to_by",
+        re.compile(
+            rf"\b{_NOT_NEGATED}(?:activation|isomeri[sz]ation|conversion|reduction|oxidation)\s+of\s+"
+            rf"(?P<lhs>[^.;,()]+?)\s+(?:in)?to\s+(?P<rhs>[^.;,()]+?)\s+by\s+"
+            rf"(?P<enz>{_SYMBOL_ACTOR})\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        # "the EntC-catalyzed isomerization of chorismate to isochorismate".
+        "catalyzed_nominalization_of_to",
+        re.compile(
+            rf"(?P<enz>{_SYMBOL_ACTOR})[\-‐‑\s]catal(?:yz|ys)ed\s+"
+            rf"(?:activation|isomeri[sz]ation|conversion|reduction|oxidation)\s+of\s+"
+            rf"(?P<lhs>[^.;,()]+?)\s+(?:in)?to\s+(?P<rhs>[^.;,()]+?)\s*(?=[.,;()]|$)",
             re.IGNORECASE,
         ),
     ),
