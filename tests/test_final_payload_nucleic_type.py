@@ -140,25 +140,25 @@ def test_seam_flag_off_does_nothing_and_flag_on_reads_state(monkeypatch) -> None
 
 
 def test_writer_accepts_paper_type_only_with_flag_and_no_id(monkeypatch) -> None:
-    assert nucleotide_type_for({"name": "CHLH promoter"}) is None
+    assert nucleotide_type_for({"name": "CHLH"}) is None
     monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "0")
-    assert nucleotide_type_for({"name": "CHLH promoter", "nucleotide_type_paper": "DNA"}) is None  # M-fix: flag off ignores it
+    assert nucleotide_type_for({"name": "CHLH", "nucleotide_type_paper": "DNA"}) is None  # M-fix: flag off ignores it
     monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
-    assert nucleotide_type_for({"name": "CHLH promoter", "nucleotide_type_paper": "DNA"}) == "DNA"
+    assert nucleotide_type_for({"name": "CHLH", "nucleotide_type_paper": "DNA"}) == "DNA"
     assert nucleotide_type_for({"name": "RNA chaperone", "nucleotide_type_paper": "bogus"}) is None
     monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "0")
 
     def payload(**extra):
         pl = _payload()
-        pl["entities"]["nucleic_acids"] = [{"name": "CHLH promoter", "nucleotide_type_paper": "DNA", **extra}]
+        pl["entities"]["nucleic_acids"] = [{"name": "CHLH", "nucleotide_type_paper": "DNA", **extra}]
         return pl
 
     monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
     builder, root = _build(payload())
-    assert _na_types(root) == {"CHLH promoter": "DNA"}
+    assert _na_types(root) == {"CHLH": "DNA"}
     assert "nucleic_acids_type_unset" not in builder.layout_debug_counts
     _, root = _build(payload(pathbank_nucleic_acid_id=7))  # existing PathWhiz row: never typed
-    assert _na_types(root) == {"CHLH promoter": ""}
+    assert _na_types(root) == {"CHLH": ""}
     monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "0")
     _, root = _build(payload())  # flag off: byte-identical behaviour, no type
-    assert _na_types(root) == {"CHLH promoter": ""}
+    assert _na_types(root) == {"CHLH": ""}
