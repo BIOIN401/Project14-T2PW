@@ -12,6 +12,8 @@ from xml.sax.saxutils import escape
 
 from PIL import ImageFont
 
+from t2pw.vision.currency import CURRENCY, is_currency  # noqa: F401  one list with checks/layout_metrics
+
 
 def _font(size):
     """Text-width measuring font. The prototype used Segoe UI; layout widths depend on it, so output is only
@@ -90,16 +92,6 @@ def comp_role(name, auto=False):
     if n.startswith("cyto") or n in ("cytosol", "cytoplasm"):
         return "cytosol", 4.0
     return "organelle", 5.0
-
-
-CURRENCY = {"atp", "adp", "amp", "nadh", "nad+", "nad", "nadph", "nadp+", "nadp", "h2o", "water", "coa", "coa-sh", "coenzyme a",
-            "co2", "carbon dioxide", "h+", "hydrogen ion", "proton", "phosphate", "pi", "ppi", "pyrophosphate", "diphosphate",
-            "sam", "s-adenosyl-l-methionine", "s-adenosylmethionine", "sah", "s-adenosylhomocysteine", "o2", "oxygen", "nh3",
-            "ammonia", "udp", "gtp", "gdp", "fad", "fadh2", "nad(p)h", "nad(p)+", "nadp(h)"}
-
-
-def is_currency(name):
-    return re.sub(r"\s+", " ", (name or "").strip().lower()) in CURRENCY
 
 
 def icls(t):

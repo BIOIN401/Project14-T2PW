@@ -27,11 +27,10 @@ from itertools import combinations
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-# Compounds every metabolic reaction shares; a chain that "runs backwards" through one of them is not a reading-order claim.
-CURRENCY = {"atp", "adp", "amp", "nadh", "nad+", "nad", "nadph", "nadp+", "nadp", "h2o", "water", "coa", "coa-sh", "coenzyme a",
-            "co2", "carbon dioxide", "h+", "hydrogen ion", "phosphate", "pi", "ppi", "pyrophosphate", "diphosphate", "sam",
-            "s-adenosyl-l-methionine", "s-adenosylmethionine", "sah", "s-adenosylhomocysteine", "o2", "oxygen", "nh3", "ammonia",
-            "udp", "gtp", "gdp", "fad", "fadh2"}
+# Compounds every metabolic reaction shares; a chain that "runs backwards" through one of them is not a reading-order
+# claim. One list with the renderer.
+from t2pw.vision.currency import CURRENCY
+
 LOCS = ("compound-location", "protein-location", "nucleic-acid-location", "element-collection-location")
 LABEL_GEOM = {"15": (160, 10), "235": (200, 16)}  # label template -> (box width, px per line), label_locations/*.jst.eco
 LABEL_MARGIN = 10  # 5 px each side inside the box
