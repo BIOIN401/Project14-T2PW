@@ -315,3 +315,47 @@ belongs to the draw lane and was not touched.
 **Still open for the PO:** Gram-negative name defaults; preferring the more specific name when merging states; a
 D-entry for "inferred, always flagged, never overrides a stated location (except a quote-verified `llm_corrected`
 contradiction)"; Q2-Q5 of section 5.
+
+## 10. PathWhiz import A/B (D-W24 (9)), PWMLs of `0cec290a`
+
+Harness: `C:/t/loc-work/harness` (the import-fixes harness, compose project **`t2pw-loc`**, ports 3367 db / 3064 app;
+PathWhiz `t2pw/latest` `63959982` cloned into `C:/t/loc-work/smpdb-run`, MolDB pointed at a closed local port as in
+the showcase). One lock hold (`C:/t/loc-work/logs/loc-pw.log`, 706 s, exit 0, 0 survivors). Docker Desktop was started
+for it and stopped afterwards (no other container up); the stack went down with its volumes kept. Clean database per
+file: the import rake truncates every data table before each file. Base = main `fd814b8e` replay; rules = rules-only
+arm; LLM = LLM-from-cache arm. Every file imported (`success` true in all 32 imports).
+
+| file | arm | created counts that changed (base -> branch) | importer messages | verdict |
+|---|---|---|---|---|
+| 10 (sour taste, stored) | LLM | transports 6 -> 7, transporters 2 -> 3 | 10 -> 6 (OTOP1 same-state transport refusal gone) | better |
+| 102 | LLM | same counts | 3 -> 0 (same-state "enterobactin secretion" refusal gone) | better |
+| 134 | LLM | compound locations 16 -> 19, protein locations 11 -> 13 | 0 -> 0 | better |
+| 136 | LLM | compound locations 16 -> 17 | 0 -> 0 | better |
+| 138 | rules, LLM | transports 0 -> 1, compound locations 13 -> 14 | 3 -> 0 (TBN export no longer refused) | better |
+| 18 | rules, LLM | same counts | 0 -> 0 | same |
+| 25 | rules, LLM | **biological states 2 -> 1** | 0 -> 0 | **BLOCKER (count down)** |
+| 62 | rules, LLM | same counts | 0 -> 0 | same |
+| 78 | LLM | transports 0 -> 1, compound locations 17 -> 18 | 3 -> 0 (enterobactin secretion no longer refused) | better |
+| 79 | LLM | compound locations 6 -> 7 | 0 -> 0 | better |
+| lipid A | rules, LLM | **compound locations 47 -> 45**, label locations and membrane visualisations down | 29 -> 21 (two kinds of ontology message gone) | **BLOCKER (count down)** |
+| menaquinone | rules, LLM | **transports 2 -> 1**, biological states 3 -> 2, compound locations 16 -> 13, protein locations 16 -> 9, element states 15 -> 8 (and their drawings) | 0 -> 0 | **BLOCKER (count down)** |
+| sour taste (showcase) | LLM | transports 6 -> 7, transporters 2 -> 3 | 10 -> 6 | better |
+
+**No new refusal and no new message in any file**; message counts only fall (25 fewer in the LLM arm). **Three files have a created count that goes
+down: reported as blockers, not fixed** (per the brief). What each one is, from created vs the count in the PWML
+(`C:/t/loc-work/pw_detail.py`):
+- **menaquinone, transports 2 -> 1.** The PWML still holds 2 transports (expected 2). In base they were "DHNA diffusion"
+  intracellular -> extracellular and "DHNA export" cytoplasm -> intracellular (one place at both ends in a bacterium).
+  On the branch both are intracellular -> extracellular, i.e. the same cargo between the same two states, and PathWhiz
+  stores that once. The other drops follow from merging the `cytoplasmic state` into the `intracellular` state (the
+  cytoplasm of a bacterium): 20 distinct (element, place) pairs before and after; the drop is duplicate drawings.
+  Options: (a) accept (no distinct transport lost); (b) write two transports with the same cargo and sides as one in the
+  PWML; (c) keep the two states apart in this run. PO decision.
+- **lipid A, compound locations 47 -> 45.** The PWML itself holds 45 (expected 45): two duplicate drawings collapse
+  when the three spellings of each inner-membrane leaflet merge into one state (65 distinct pairs before and after).
+  Fewer state boxes, so fewer labels and membrane drawings. Transports created 3 of 7 in both arms (unchanged).
+- **25, biological states 2 -> 1.** Base placed the unplaced element rows in a second, default state; the branch puts
+  them in the run's own cytoplasm state (organism default, flagged). Same 7 (element, place) pairs.
+
+Evidence: `evidence/locations/pw_ab_rules.json`, `pw_ab_llm.json` (per file: every created count, messages gained and
+gone) and the three harness `results*.jsonl`.
