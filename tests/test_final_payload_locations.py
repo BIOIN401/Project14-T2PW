@@ -169,11 +169,15 @@ def test_eukaryotes_get_no_default():
     assert FL.FIELD not in p
 
 
-def test_bacterial_auto_auto_transport_gets_a_direction_from_its_name_and_a_stated_side_never_moves():
-    p = _payload([_st("__auto_state__", "cell"), _st("cytoplasmic state", "cytoplasm")], [],
+STREP = (("Streptomyces tubercidicus", "Prokaryote", "1960"),)
+
+
+def test_gram_positive_auto_auto_transport_gets_a_direction_from_its_name_and_a_stated_side_never_moves():
+    sp = "Streptomyces tubercidicus"
+    p = _payload([_st("__auto_state__", "cell", sp), _st("cytoplasmic state", "cytoplasm", sp)], [],
                  [_tr("TubI-mediated TBN export", "TBN", "__auto_state__", "__auto_state__"),
                   _tr("ferric-enterobactin import", "Fe-Ent", "__auto_state__", "cytoplasmic state"),
-                  _tr("enterobactin secretion", "Ent", "cytoplasmic state", "cytoplasmic state")])
+                  _tr("enterobactin secretion", "Ent", "cytoplasmic state", "cytoplasmic state")], STREP)
     rep = FL.assign_locations(p)
     t0, t1, t2 = p["processes"]["transports"]
     assert (_state_of(p, t0["from_biological_state"])["subcellular_location"],
@@ -186,6 +190,62 @@ def test_bacterial_auto_auto_transport_gets_a_direction_from_its_name_and_a_stat
     assert "inferred_sides" not in t2 and any("transport_ends_same_place" in r for r in t2["review_reasons"])
     assert [x["transport"] for x in rep["same_place_left"]] == ["enterobactin secretion"]
 
+
+@pytest.mark.parametrize("states", [
+    [_st("__auto_state__", "cell")],                                              # E. coli: Gram-negative
+    [_st("__auto_state__", "cell", "Bacillus subtilis"), _st("periplasm state", "periplasm", "Bacillus subtilis")],
+])
+def test_no_name_default_for_gram_negative_or_a_paper_with_periplasm(states):
+    sp = states[0]["species"]
+    p = _payload(copy.deepcopy(states), [], [_tr("LPS export", "LPS", "__auto_state__", "__auto_state__")],
+                 ((sp, "Prokaryote", "1"),))
+    rep = FL.assign_locations(p)
+    t = p["processes"]["transports"][0]
+    assert (t["from_biological_state"], t["to_biological_state"]) == ("__auto_state__", "__auto_state__")
+    assert "inferred_sides" not in t and any("transport_ends_same_place" in r for r in t["review_reasons"])
+    assert rep["transport_default_skipped"]
+
+
+def test_two_differently_named_unplaced_ends_are_flagged_as_possibly_one_place():
+    sp = "Homo sapiens"
+    p = _payload([_st("__auto_state__", "cell", sp), _st("__auto_state__ (other side)", "cell", sp)], [],
+                 [_tr("OTOP1-mediated H+ permeation", "H+", "__auto_state__", "__auto_state__ (other side)")], HUMAN)
+    rep = FL.assign_locations(p)
+    assert [x["transport"] for x in rep["same_place_left"]] == ["OTOP1-mediated H+ permeation"]
+
+
+@pytest.mark.parametrize("species,states", [
+    (ECOLI, [_st("E. coli state", "cell"), _st("Arabidopsis leaf", "cell", "Arabidopsis thaliana")]),  # stray state
+    (ECOLI + (("Homo sapiens", "Eukaryote", "9606"),), [_st("E. coli state", "cell")]),               # host species
+    (ECOLI + (("Bacillus subtilis", "Prokaryote", "1423"),), [_st("E. coli state", "cell")]),           # two bacteria
+])
+def test_no_bacterial_default_in_a_mixed_organism_paper(species, states):
+    p = _payload(copy.deepcopy(states), [_rx("EntC", ["chorismate"], ["isochorismate"])],
+                 [_tr("enterobactin secretion", "Ent", "E. coli state")], species,
+                 elements=[{"compound": "chorismate"}])
+    rep = FL.assign_locations(p)
+    r, el, t = p["processes"]["reactions"][0], p["element_locations"]["compound_locations"][0], p["processes"]["transports"][0]
+    assert "biological_state" not in r and "biological_state" not in el and "to_biological_state" not in t
+    for row in (r, el):
+        assert "inferred" not in row and row["review_required"]
+        assert any(x.startswith("compartment_not_stated: no organism default") for x in row["review_reasons"])
+    assert rep["default_skipped"] and rep["counts"]["organism_default"] == 0
+
+
+def test_a_eukaryote_export_keeps_its_neighbour_fill():
+    # citrate leaves the mitochondrion; its only other reaction is in the cytosol: L7 fills the destination, and the
+    # location step leaves that flagged estimate alone
+    sp = "Homo sapiens"
+    p = _payload([_st("mitochondrial matrix state", "mitochondrial matrix", sp), _st("cytosolic state", "cytosol", sp)],
+                 [_rx("citrate synthase", ["oxaloacetate", "acetyl-CoA"], ["citrate"], "mitochondrial matrix state"),
+                  _rx("ATP citrate lyase", ["citrate"], ["oxaloacetate", "acetyl-CoA"], "cytosolic state")],
+                 [_tr("citrate export", "citrate", "mitochondrial matrix state")], HUMAN)
+    estimate_compartments(p)
+    t = p["processes"]["transports"][0]
+    assert t["to_biological_state"] == "cytosolic state" and t["compartment_source"] == "neighbour_estimate"
+    before = copy.deepcopy(t)
+    FL.assign_locations(p)
+    assert p["processes"]["transports"][0] == before
 
 def test_runs_once_and_fails_open(monkeypatch):
     p = _payload([], [_rx("EntC", ["chorismate"], ["isochorismate"])])
@@ -269,6 +329,39 @@ def test_llm_quote_may_name_the_item_by_a_synonym_or_a_currency_cargo(monkeypatc
     t = p["processes"]["transports"][0]
     assert t["to_biological_state"] == "L. lactis extracellular state" and t["inferred_sides"] == {"to_biological_state": "llm_quote"}
     assert rep["llm"]["rejected"] == []  # a null answer is no answer, not a rejection
+
+
+def test_a_chat_call_that_raises_leaves_the_rules_only_result(monkeypatch):
+    def build():
+        return _payload([_st("E. coli periplasmic state", "periplasm"), _st("cytoplasmic state", "cytoplasm")],
+                        [_rx("EntF step", ["DHB-AMP"], ["enterobactin"], enzymes=["EntF"])],
+                        [_tr("enterobactin secretion", "enterobactin", "cytoplasmic state")])
+
+    off = build()
+    FL.assign_locations(off, {"final_payload_paper_text": PAPER})
+    monkeypatch.setenv(FL.LLM_ENV, "1")
+
+    def boom(messages, **kw):
+        raise RuntimeError("provider down at C:/secret/path/.x")
+
+    on = build()
+    rep = FL.assign_locations(on, {"final_payload_paper_text": PAPER}, chat_fn=boom)
+    assert rep["error"] is None and rep["llm"]["calls"] == 1 and rep["llm"]["error"].startswith("RuntimeError")
+    assert "secret" not in rep["llm"]["error"]  # paths redacted
+    strip = lambda p: {k: v for k, v in p.items() if k != FL.FIELD}  # noqa: E731
+    assert strip(on) == strip(off)  # only the rules-only placements; nothing from the failed call
+
+
+def test_the_location_pass_has_its_own_prompt_and_l7_keeps_its_request(monkeypatch):
+    from t2pw.service import final_payload_compartments as C
+
+    assert FL.PROMPT_FILE != C.PROMPT_FILE and FL.PROMPT_ID != C.PROMPT_ID
+    seen = []
+    monkeypatch.setattr(C, "_system", lambda prompt_file=C.PROMPT_FILE: seen.append(prompt_file) or prompt_file)
+    ctx = C._Ctx(_payload([_st("cytosolic state", "cytosol", "Homo sapiens")], species=HUMAN))
+    system, user = C.build_request([{"id": 0}], ctx, "text")
+    assert system == "compartment_estimate_system.txt" and "new_location_vocabulary" not in user
+    assert list(json.loads(user)) == ["organism", "candidate_states", "items", "paper_text"]  # L7's request bytes
 
 
 def test_every_vocabulary_term_is_a_pathwhiz_location():

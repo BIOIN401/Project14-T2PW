@@ -79,9 +79,6 @@ SOURCES = ("unresolved", "llm_estimate", "neighbour_estimate")  # weakest first
 SIDES = ("from_biological_state", "to_biological_state")
 _ELEMENT_SIDES = ("left_biological_state", "right_biological_state", "from_biological_state", "to_biological_state")
 _TRUE = frozenset({"1", "true", "yes", "on", "y", "t"})
-#: Transport names that say the cargo leaves the cell / goes into it (read from the name only).
-EXPORT = re.compile(r"\b(export\w*|secret\w*|efflux\w*|excret\w*|extru\w*)\b", re.I)
-IMPORT = re.compile(r"\b(import\w*|uptake|influx\w*|internali[sz]\w*)\b", re.I)
 
 
 def _norm(v: Any) -> str:
@@ -301,18 +298,19 @@ def _llm_gate(state: Any, chat_fn: Any, fetcher: Any) -> Optional[str]:
     return None
 
 
-def _system() -> str:
+def _system(prompt_file: str = PROMPT_FILE) -> str:
     from t2pw.paths import PROMPTS_DIR
 
-    return (PROMPTS_DIR / PROMPT_FILE).read_text(encoding="utf-8")
+    return (PROMPTS_DIR / prompt_file).read_text(encoding="utf-8")
 
 
-def _ask(system: str, user: str, chat_fn: Optional[Callable[..., Any]], model: str = "") -> Dict[str, Any]:
+def _ask(system: str, user: str, chat_fn: Optional[Callable[..., Any]], model: str = "",
+         max_tokens: int = 4000) -> Dict[str, Any]:
     if chat_fn is None:
         from t2pw.llm.client import chat_detailed as chat_fn  # noqa: PLW2901
     how = {"model_override": model} if model else {"model_env_var": MODEL_ENV_VAR}
     res = chat_fn([{"role": "system", "content": system}, {"role": "user", "content": user}],
-                  temperature=0.0, max_tokens=8000, response_json=True, **how,
+                  temperature=0.0, max_tokens=max_tokens, response_json=True, **how,
                   stage_name="Final payload compartment estimate", timeout=LLM_TIMEOUT_S)
     parsed = json.loads(str(getattr(res, "text", res)))
     if not isinstance(parsed, dict) or not isinstance(parsed.get("items"), list):
@@ -320,7 +318,8 @@ def _ask(system: str, user: str, chat_fn: Optional[Callable[..., Any]], model: s
     return parsed
 
 
-def build_request(items: List[Dict[str, Any]], ctx: _Ctx, text: str, vocabulary: Optional[List[str]] = None) -> Tuple[str, str]:
+def build_request(items: List[Dict[str, Any]], ctx: _Ctx, text: str, vocabulary: Optional[List[str]] = None,
+                  prompt_file: str = PROMPT_FILE) -> Tuple[str, str]:
     """(system, user) of the one call; also used by the live-check script to count tokens. ``vocabulary``: the closed list
     a new location must come from (the location pass); absent = any PathWhiz location (L7's own, off, step)."""
     cands = []
@@ -332,7 +331,7 @@ def build_request(items: List[Dict[str, Any]], ctx: _Ctx, text: str, vocabulary:
     if vocabulary:
         body["new_location_vocabulary"] = vocabulary
     user = json.dumps({**body, "paper_text": text[:MAX_PAPER_CHARS]}, ensure_ascii=False)
-    return _system(), user
+    return _system(prompt_file), user
 
 
 def _names_place(quote: str, loc: Any, pro: bool) -> bool:
@@ -427,14 +426,17 @@ def _place(target: Tuple[str, str], quote: str, ctx: _Ctx) -> str:
 
 
 def _llm(items: List[Dict[str, Any]], ctx: _Ctx, text: str, state: Any, cache: Any, chat_fn: Any, fetcher: Any,
-         today: str, report: Dict[str, Any], vocabulary: Optional[List[str]] = None, model: str = "") -> Dict[int, Any]:
+         today: str, report: Dict[str, Any], vocabulary: Optional[List[str]] = None, model: str = "",
+         prompt_file: str = PROMPT_FILE, prompt_id: str = PROMPT_ID, max_tokens: int = 4000) -> Dict[int, Any]:
+    """L7's own call with the defaults (its cache key unchanged); the location step passes its own prompt, id, model,
+    vocabulary and token cap."""
     from t2pw.clean_model.fill.cache import Cache, request_key
 
     rep = report["llm"]
-    system, user = build_request(items, ctx, text, vocabulary)
+    system, user = build_request(items, ctx, text, vocabulary, prompt_file)
     tail = f"\nmodel: {model}" if model else ""  # in the cache key only: another model never reads this reply
     sha = hashlib.sha256((system + "\n" + user + tail).encode("utf-8")).hexdigest()
-    key = request_key("llm", PROMPT_ID, {"sha256": sha})
+    key = request_key("llm", prompt_id, {"sha256": sha})
     cache = cache if cache is not None else Cache()
     hit = cache.get(key)
     rep["request_sha256"] = sha
@@ -449,11 +451,11 @@ def _llm(items: List[Dict[str, Any]], ctx: _Ctx, text: str, state: Any, cache: A
             return {}
         rep["calls"] += 1
         try:
-            reply = _ask(system, user, chat_fn, model)
+            reply = _ask(system, user, chat_fn, model, max_tokens)
         except Exception as exc:  # noqa: BLE001 - the step goes on without the model
             rep["error"] = _redact(f"{type(exc).__name__}: {exc}")[:300]
             return {}
-        cache.put(key, PROMPT_ID, {"sha256": sha}, reply, today)
+        cache.put(key, prompt_id, {"sha256": sha}, reply, today)
     return {a.get("id"): a for a in reply.get("items") or [] if isinstance(a, dict)}
 
 
@@ -516,11 +518,6 @@ def _run(payload: Dict[str, Any], state: Any, report: Dict[str, Any], cache: Any
             t_why[i] = "neither side stated; a direction is not inferred from neighbours"
             continue
         other = t.get(SIDES[1] if missing[0] == SIDES[0] else SIDES[0])
-        if missing[0] == SIDES[1] and EXPORT.search(str(t.get("name") or "")):
-            # An export's destination is outside; the cargo's other reactions are inside (menaquinone "DHNA export" got
-            # cytoplasm -> intracellular). Never filled from neighbours.
-            t_why[i] = "the destination of an export is not filled from neighbouring reactions"
-            continue
         cargo = _linking(_cargo(t))
         found: Dict[Tuple[str, Any], List[Dict[str, Any]]] = {}
         for k in sorted(cargo):

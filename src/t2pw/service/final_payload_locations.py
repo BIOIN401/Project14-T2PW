@@ -10,13 +10,15 @@ Order:
 2. Transport sides to fill: an unplaced side (empty, or a placeholder state with no place); an estimated side (L6
    ``estimated``, L7 estimate) of a transport whose two ends are now the same place; an export's destination L7 filled
    from neighbours. A stated side is never touched.
-3. LLM pass (``T2PW_LOCATION_LLM``, gemini-3.8-flash; L7's prompt, gate and cache): unplaced reactions and the sides of
+3. LLM pass (``T2PW_LOCATION_LLM``, gemini-3.8-flash; its own prompt file and cache id, L7's gate): unplaced reactions and the sides of
    step 2. A candidate state or a new location from a closed per-organism vocabulary; the verbatim quote must name the
    place and the item; the two ends of a transport never become one place. Flag ``inferred: llm_quote``.
-4. Bacterium (organism default): a side still open on a transport whose NAME says export / import goes to the cytoplasm
-   (inside) or the extracellular space (outside). Flag ``inferred: organism_default``.
+4. Gram-positive bacterium with no periplasm / outer membrane state (organism default): a side still open on a
+   transport whose NAME says export / import goes to the cytoplasm (inside) or the extracellular space (outside). Flag
+   ``inferred: organism_default``. Gram-negative or unknown: no name default ("LPS export" ends in the outer membrane).
 5. Bacterium: unplaced reactions and element rows go to the cytoplasm (an existing plain cytoplasm state, else a new
-   "<organism> cytoplasm"). Flag ``inferred: organism_default``. Eukaryotes get no default.
+   "<organism> cytoplasm"). Flag ``inferred: organism_default``. Eukaryotes get no default. Steps 4-5 never fire in a
+   paper that names another organism or a non-prokaryote species; its unplaced rows stay put, flagged.
 6. L6's state merge again (spelling variants, leaflets; it guards transport ends itself): after steps 3-5 a placeholder or
    synonym state no transport end keeps apart merges.
 7. A transport whose ends are still one place is flagged ``transport_ends_same_place`` (both ends stated: never changed).
@@ -33,6 +35,7 @@ from __future__ import annotations
 
 import copy
 import os
+import re
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from t2pw.service import final_payload_compartments as C
@@ -41,7 +44,21 @@ from t2pw.service import final_payload_merge as M
 FIELD = "final_payload_locations"
 LLM_ENV = "T2PW_LOCATION_LLM"
 LLM_MODEL = "google/gemini-3.8-flash"
+PROMPT_FILE = "location_assign_system.txt"  # its own prompt; L7's (compartment_estimate_system.txt) is untouched
+PROMPT_ID = "t2pw:location_assign:v1"
+MAX_TOKENS = 8000
 HINT = "expected compartments"
+#: Transport names that say the cargo leaves the cell / goes into it (read from the name only).
+EXPORT = re.compile(r"\b(export\w*|secret\w*|efflux\w*|excret\w*|extru\w*)\b", re.I)
+IMPORT = re.compile(r"\b(import\w*|uptake|influx\w*|internali[sz]\w*)\b", re.I)
+#: Gram-positive genera (one membrane, no periplasm): only for these is an export's destination the outside.
+# ponytail: a genus list, not a taxonomy lookup; an unlisted genus counts as unknown and gets no name default.
+GRAM_POSITIVE = frozenset({
+    "bacillus", "lactococcus", "lactobacillus", "lactiplantibacillus", "lacticaseibacillus", "streptococcus",
+    "staphylococcus", "enterococcus", "listeria", "clostridium", "clostridioides", "streptomyces", "corynebacterium",
+    "micrococcus", "bifidobacterium", "leuconostoc", "pediococcus", "paenibacillus", "geobacillus", "actinomyces",
+    "nocardia", "rhodococcus", "saccharopolyspora", "amycolatopsis", "micromonospora", "cutibacterium",
+    "propionibacterium"})
 SIDES = C.SIDES
 VOCABULARY = {
     "bacterium": ["cytoplasm", "inner membrane", "periplasm", "outer membrane", "cell wall", "extracellular space"],
@@ -73,8 +90,11 @@ def _unplaced(ctx: C._Ctx, ref: Any) -> bool:
 
 
 def _same_place(ctx: C._Ctx, a: Any, b: Any) -> bool:
-    if _unplaced(ctx, a) or _unplaced(ctx, b):
-        return M._norm(a) == M._norm(b) and bool(M._norm(a))  # auto -> auto
+    """One place at both ends, or possibly so: two unplaced ends (``__auto_state__`` -> ``__auto_state__``, or two
+    differently named placeholders that are both "cell") count as the same place."""
+    ua, ub = _unplaced(ctx, a), _unplaced(ctx, b)
+    if ua or ub:
+        return ua and ub
     return C._same(("state", ctx.name(a)), ("state", ctx.name(b)), ctx)
 
 
@@ -138,10 +158,8 @@ def _side_todo(ctx: C._Ctx, tr: List[Any]) -> Dict[int, List[str]]:
                                           for e in t.get("transport_elements") or []):
             continue
         same = _same_place(ctx, t.get(SIDES[0]), t.get(SIDES[1]))
+        # menaquinone (an older L7 fill): "DHNA export" cytoplasm -> intracellular is one place, so its estimated side is redone
         sides = [f for f in SIDES if _unplaced(ctx, t.get(f)) or (same and _estimated(t, f))]
-        if (SIDES[1] not in sides and C.EXPORT.search(str(t.get("name") or ""))
-                and _estimated(t, SIDES[1], ("neighbour_estimate",))):
-            sides.append(SIDES[1])  # menaquinone: L7 (before the fix) filled "DHNA export" with an inside state
         if sides:
             todo[i] = sides
     return todo
@@ -214,7 +232,8 @@ def _llm_pass(payload: Dict[str, Any], ctx: C._Ctx, rx: List[Any], tr: List[Any]
     import datetime
 
     answers = C._llm(items, ctx, text, state, cache, chat_fn, fetcher, today or datetime.date.today().isoformat(), report,
-                     vocabulary=vocab, model=LLM_MODEL)
+                     vocabulary=vocab, model=LLM_MODEL, prompt_file=PROMPT_FILE, prompt_id=PROMPT_ID,
+                     max_tokens=MAX_TOKENS)
     text_words = f" {_words(text)} "
     for n, (kind, i, sides, names) in ask.items():
         if n >= len(items):
@@ -256,11 +275,45 @@ def _target(ctx: C._Ctx, loc: str) -> str:
     return str(hit["name"]) if hit is not None else ctx.add(loc)
 
 
+def _not_one_bacterium(payload: Dict[str, Any], ctx: C._Ctx) -> str:
+    """Why the bacterial default must not fire ('' = it may): a species row that is not a prokaryote, or a species row or
+    state naming another organism (a mixed-organism paper, or stray rows of another organism)."""
+    for r in M._species_rows(payload):
+        if str(r.get("classification") or "").strip().casefold() != "prokaryote":
+            return f"species '{r.get('name')}' is not a prokaryote"
+    names = [r.get("name") for r in M._species_rows(payload)] + [s.get("species") for s in ctx.states]
+    other = sorted({str(n) for n in names if isinstance(n, str) and n.strip() and not ctx.org.same(n, ctx.organism)})
+    return f"the paper names more than one organism ({ctx.organism}; {', '.join(other)})" if other else ""
+
+
+def _name_default_blocked(ctx: C._Ctx) -> str:
+    """Why a transport's destination is not read from its name ('' = it may be): a Gram-negative or unknown Gram status
+    ("LPS export", Sec "protein export" end in the outer membrane or the periplasm, not outside), or a periplasm / outer
+    membrane state in the paper."""
+    if (ctx.organism.split() or [""])[0].strip(".").casefold() not in GRAM_POSITIVE:
+        return f"Gram status of {ctx.organism} not known to be positive"
+    for s in ctx.states:
+        if M.location_key(M._state_loc(s) or s.get("name"), True) in ("periplasm", "outer membrane"):
+            return f"the paper has a periplasm / outer membrane state ('{s.get('name')}')"
+    return ""
+
+
+def _flag_unplaced(payload: Dict[str, Any], ctx: C._Ctx, rx: List[Any], why: str) -> None:
+    """No default: every unplaced reaction and element row stays where it is, flagged."""
+    note = f"{C.NOT_STATED}: no organism default ({why}); left unplaced"
+    rows = [r for r in rx if isinstance(r, dict)]
+    rows += [r for rs in (payload.get("element_locations") or {}).values() if isinstance(rs, list) for r in rs if isinstance(r, dict)]
+    for r in rows:
+        if _unplaced(ctx, r.get("biological_state")) and not any(str(x).startswith(C.NOT_STATED) for x in r.get("review_reasons") or []):
+            r["review_required"] = True
+            r.setdefault("review_reasons", []).append(note)
+
+
 def _transport_default(ctx: C._Ctx, tr: List[Any], side_todo: Dict[int, List[str]], report: Dict[str, Any]) -> None:
     for i, sides in side_todo.items():
         t = tr[i]
         name = str(t.get("name") or "")
-        m_out, m_in = C.EXPORT.search(name), C.IMPORT.search(name)
+        m_out, m_in = EXPORT.search(name), IMPORT.search(name)
         if not sides or bool(m_out) == bool(m_in):
             continue
         word = (m_out or m_in).group(0)
@@ -309,8 +362,17 @@ def _run(payload: Dict[str, Any], state: Any, report: Dict[str, Any], cache: Any
     side_todo = _side_todo(ctx, tr)
     _llm_pass(payload, ctx, rx, tr, side_todo, state, cache, chat_fn, fetcher, today, report)
     if ctx.pro and ctx.organism:
-        _transport_default(ctx, tr, side_todo, report)
-        _bacterial_default(payload, ctx, rx, report)  # before the merge: a row on a placeholder is flagged as a default
+        why = _not_one_bacterium(payload, ctx)
+        if why:  # mixed-organism paper: no default at all (PO question)
+            report["default_skipped"] = why
+            _flag_unplaced(payload, ctx, rx, why)
+        else:
+            blocked = _name_default_blocked(ctx)
+            if blocked:
+                report["transport_default_skipped"] = blocked
+            else:
+                _transport_default(ctx, tr, side_todo, report)
+            _bacterial_default(payload, ctx, rx, report)  # before the merge: a row on a placeholder is flagged as a default
     _rerun_state_merge(payload, report)
     ctx = C._Ctx(payload, organism_hint)
     for t in tr:

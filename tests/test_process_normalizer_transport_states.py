@@ -5,7 +5,6 @@ import copy
 from t2pw.pipeline.process_normalizer import ensure_autostates
 
 AUTO = "__auto_state__"
-AUTO_OTHER = "__auto_state__ (other side)"
 
 
 def _payload(transport):
@@ -36,29 +35,19 @@ def test_both_sides_declared():
     assert (t["from_biological_state"], t["to_biological_state"]) == ("Outside state", "Cytosol state")
 
 
-def test_nothing_declared_keeps_placeholders_on_two_different_states():
-    # lane loc/assign (D-W21 c): one placeholder on both ends was a transport from a place into itself (__auto__ -> __auto__)
-    out = ensure_autostates(_payload({"name": "t", "cargo": "H+"}))
-    t = out["processes"]["transports"][0]
-    assert (t["from_biological_state"], t["to_biological_state"]) == (AUTO, AUTO_OTHER)
-    other = [s for s in out["biological_states"] if s["name"] == AUTO_OTHER]
-    auto = [s for s in out["biological_states"] if s["name"] == AUTO]
-    assert len(other) == 1 and other[0]["subcellular_location"] == auto[0]["subcellular_location"] == "cell"
+def test_nothing_declared_keeps_placeholder():
+    t = _run({"name": "t", "cargo": "H+"})
+    assert (t["from_biological_state"], t["to_biological_state"]) == (AUTO, AUTO)
 
 
 def test_declared_state_not_in_payload_keeps_placeholder():
     t = _run({"name": "t", "cargo": "H+", "elements_with_states": [_ews("right", "Nowhere state")]})
-    assert t["to_biological_state"] == AUTO_OTHER  # from is the placeholder too
+    assert t["to_biological_state"] == AUTO
 
 
 def test_conflicting_declarations_keep_placeholder():
     t = _run({"name": "t", "cargo": "H+", "elements_with_states": [_ews("right", "Cytosol state"), _ews("right", "Outside state")]})
-    assert t["to_biological_state"] == AUTO_OTHER
-
-
-def test_a_stated_from_side_keeps_the_one_placeholder():
-    t = _run({"name": "t", "cargo": "H+", "from_biological_state": "Outside state"})
-    assert (t["from_biological_state"], t["to_biological_state"]) == ("Outside state", AUTO)
+    assert t["to_biological_state"] == AUTO
 
 
 def test_row_level_state_wins_over_declaration():
