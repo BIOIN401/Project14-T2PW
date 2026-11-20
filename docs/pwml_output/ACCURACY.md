@@ -4,7 +4,7 @@ Branch `acc/verifier` (from main `fd814b8e`). Biology change: **merge waits for 
 Work dir (scripts, logs, answers, scores): `C:/t/acc-runs/`. Strategy it implements:
 `C:/t/strategy/accuracy/STRATEGY.md`.
 
-STATUS: see § 9 (live arm) — this file is written as results come in.
+STATUS: replay, policy, VD-18, typing and gates done; live 3x3 A/B in progress (§ 8-9).
 
 ## 1. What was built
 
@@ -202,12 +202,66 @@ rows).
 
 ## 8. Baseline (main fd814b8e, live, 3 runs x 6 papers, DRAWS=3)
 
-PLACEHOLDER_BASE
+## 8-9. Live arms (IN PROGRESS)
 
-## 9. Live verifier arm (c49a00b8, flags on, 3 runs x 6 papers)
+Baseline = main `fd814b8e` in `C:/t/acc-base`; verifier arm = `175dd1b9` in `C:/t/acc-ver` with
+`T2PW_REACTION_VERIFIER=1 T2PW_INTERACTION_TYPING=1 T2PW_VERIFIER_GRANULARITY=merge`. Both DRAWS=3, strict,
+deepseek-v4-flash (default), interleaved per paper by `C:/t/acc-runs/scripts/driver_all.sh` through
+`queue.sh` (holder `acc`, 4 GB floor, 10-min gap after every leg). Both trees read the same cached full
+texts (seeded from the primary checkout; `scripts/check_cache.py`).
 
-PLACEHOLDER_LIVE
+Legs completed so far (2026-11-20):
+
+| leg | outcome | gold (final) |
+|---|---|---|
+| base1-PMC13231680 | pass, 0 reactions (3 interactions) | negative control: 0 rows |
+| ver1-PMC13231680 | fail `no_reactions` (Stage 1 returned nothing; verifier made no call) | 0 rows |
+| base1-PMC12312563 | review_required | R1, P 0.25 (4 rows) |
+| base1-PMC12657337 | **timeout 5400 s**, nothing produced (the same deepseek heavy tail the A/B saw) | - |
+| ver1-PMC12096016 | **crash** in post-pipeline: `AMBIGUOUS_RENAME_TARGET: 2 distinct compound names canonicalize to '2pyrocatechuicacid'` | Stage 1: R1-R5 all matched |
+
+The ver1 enterobactin crash: Stage 1 of that draw wrote both `2,3-dihydroxybenzoic acid` and
+`2,3-dihydroxybenzoate` (the verifier report shows both names in the rows before it touched them; none
+of the 7 A/B enterobactin legs ever had the `-ate` spelling). `pwml/prefreeze_resolution.py` refuses to
+merge two spellings that map to one compound and the run ends without a PWML. The verifier did not add
+the name, but it also did not fold the bogus row (`DHB + ATP -> DHB-ate`, which it "repaired" by adding
+DHB-AMP). Open question § 10.
+
+Lost to infrastructure (re-queued, not scored): 3 legs whose paper fetch failed (`no_full_text`: a failed
+fetch is cached as `""` and then served from cache forever; fixed in the lane trees by
+`scripts/fix_cache.py`), and 1 verifier leg killed by the PC reboot (`C:/t/acc-runs/partial/`).
+
+**To finish:** let `driver_all.sh` run to `DRIVER_ALL_DONE`, run it once more (it redoes every leg without
+an `.end`), then `score_legs.py C:/t/lane-acc json/live.json "legs/*"` and `ixscore.py` on the legs'
+`final_mapped.json`; the gate is per gold reaction: matched in no fewer verifier runs than base runs.
 
 ## 10. Gates, cost, open questions
 
-PLACEHOLDER_GATES
+**Gates on `2fba9118` (code = `175dd1b9`), one hold, 0 surviving processes** (`C:/t/acc-runs/logs/gates1.log`):
+SMOKE 511 passed; golden-seam batch 2, c011 8, stage8 4, quarantine 24 passed (none edited);
+equivalence run 8, app 14, default 6; vision 357 + 1 skipped; web 83; lane tests (verifier, VD-18,
+adversarial admission) 104 passed.
+
+**97-run PWML proof, flags off**: 88/97 identical to the stored `replay_out/base_on` — and main
+`fd814b8e` itself gives the same 88/97 (`logs/noreg-main.log`; the stored baseline predates the
+import fixes). Lane vs main: **97/97 byte-identical** (same sha per run).
+
+**Cost**: $0.61 spent of $15 (replays $0.21, live legs $0.40 incl. the killed one). Verifier per paper:
+about $0.005-0.02 (two calls; chlorophyll ~$0.02). Live verifier legs so far $0.03-0.09 per paper.
+
+**Open questions for the PO**
+1. Merge the verifier default-off and enable it on the server only after the live 3x3 confirms "no gold
+   lost", or wait for the live arm before merging at all?
+2. Stage-1 only: Stage 2/RAG/audit additions (MenD intermediates written by the audit, lactate and
+   ferric-enterobactin from RAG, the negative control's meropenem row) are not verified. A second pass on
+   the final payload (before export) is the next step; it needs a rule for rows that carry mapped ids.
+3. `not_stated` is flag-only. Accept that invented-looking rows stay when their quote is not verbatim,
+   or allow omission when the row is also unconnected (a source/sink)?
+4. `AMBIGUOUS_RENAME_TARGET` ends a run when Stage 1 spells one compound two ways (acid / -ate). Out of
+   this lane (pwml/); should the verifier fold such rows, or should prefreeze merge the spellings?
+5. The 0.746 interaction baseline counts binding-where-the-paper-states-an-effect as wrong. Agree with
+   that standard (it is what makes them exportable as Activation/Inhibition)?
+6. VD-18 reaches 15% of the refused true steps, not 50%. More shapes (§ 5) one by one, each with a replay?
+7. Lipid A gold (1 day of reading) to widen the eval set?
+8. Fetch cache stores a failed fetch as an empty text forever (`rag/acquire.py fetch_full_text`). Out of
+   lane; worth a fix ticket.
