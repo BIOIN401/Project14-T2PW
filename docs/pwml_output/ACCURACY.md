@@ -4,17 +4,42 @@ Branch `acc/verifier` (from main `fd814b8e`). Biology change: **merge waits for 
 Work dir (scripts, logs, answers, scores): `C:/t/acc-runs/`. Strategy it implements:
 `C:/t/strategy/accuracy/STRATEGY.md`.
 
-STATUS: replay, policy, VD-18, typing and gates done; live 3x3 A/B in progress (§ 8-9).
+STATUS: review R1 blocking fixes done (VD-18 behind its own default-off flag; flags-off tests; record corrected). Merge default-off only; "must fix before enabling" list in § 1. Live 3x3 paused (re-run after those fixes).
 
 ## 1. What was built
 
-| piece | where | flag (default) |
-|---|---|---|
-| Stage-1 reaction verifier + repair | `src/t2pw/service/reaction_verifier.py`, hook in `service/extraction.py` next to `transport_sides` | `T2PW_REACTION_VERIFIER` (off) |
-| split / summary rule | same module, `apply_verdicts` | `T2PW_VERIFIER_GRANULARITY` = `merge` (only read when the verifier is on) |
-| interaction typing from after-effects | same module, `apply_types` | `T2PW_INTERACTION_TYPING` (off) |
-| VD-18 span templates | `src/t2pw/rag/admission.py`, `_EXTRA_PROSE_PATTERNS` | none (a parser fix; see § 5) |
-| tests | `tests/test_reaction_verifier.py`, `tests/test_rag_admission_vd18.py` | |
+**Flag defaults (review R1).** Every new behaviour is behind a flag that is OFF by default; with all
+four unset the branch behaves like main on the code paths it touches (tests
+`test_flags_off_stage_one_hook_is_main`, `test_flags_off_admission_is_main`, `test_flag_off_is_main`).
+
+| piece | where | flag | default |
+|---|---|---|---|
+| Stage-1 reaction verifier + repair | `src/t2pw/service/reaction_verifier.py`, hook in `service/extraction.py` next to `transport_sides` | `T2PW_REACTION_VERIFIER` | **off** |
+| interaction typing from after-effects | same module, `apply_types` | `T2PW_INTERACTION_TYPING` | **off** |
+| split / summary rule | same module, `apply_verdicts` | `T2PW_VERIFIER_GRANULARITY` | `merge`, **read only when the verifier is on** |
+| VD-18 span templates | `src/t2pw/rag/admission.py`, `_VD18_PROSE_PATTERNS`, walked via `_prose_patterns()` | `T2PW_VD18_SPAN_TEMPLATES` | **off** (R1 F1: it was ungated and default-on in 175dd1b9) |
+| tests | `tests/test_reaction_verifier.py`, `tests/test_rag_admission_vd18.py` | | |
+
+**Must fix before enabling any flag** (review R1, deferred to the next round by the orchestrator; the
+live 3x3 re-runs only after these):
+1. F3: the summary drop is not lossless: `_reach` lets a co-product (CO2, AMP) stand in for the
+   product. Every non-currency output must be reached from the non-currency inputs.
+2. F4: `off_pathway` omits on the model's word with no quote, and `_bridges` is dominated by currency
+   (the LDH assay row was kept, real endpoints are not protected). Quote + non-currency bridging, or flag only.
+3. F5: "a signed row is never flipped" covers only words in the PWML table (`allosteric_inhibitor_of`,
+   `inhibited_by` count as unsigned); a quote the paper prefixes with a negation/loss word in the same
+   sentence ("Loss of function of PIF1 caused ...") passes as a substring. Change only empty/unsigned words;
+   refuse such quotes.
+4. F6: the first live typing leg made a false signed edge (EntC/EntB "interact" -> activation). And
+   unsigned interaction words already export at main (D-W26: Binding/Unspecified/Regulation), so § 6's
+   "withheld from the PWML" is wrong: a wrong re-typing is a new wrong assertion.
+5. F7: split/merge and incomplete are loosely anchored: a model `merged_step` is not tied to the row;
+   `_chain_steps` joins unrelated chains sharing "intermediate I"; `incomplete` only appends (DHB-ate row).
+6. F8: the lock manifest is written before the hook, so it still lists verifier-omitted lock ids
+   (the "lock id is dropped so the manifest agrees" line below is wrong); `reaction_verifier_report.json`
+   is written to the repo `tmp/` diagnostics dir, not the run output dir.
+7. F9: no per-run cap on verifier calls / wall time. F10: tests for the paths above.
+8. VD-18: prove PWML no-loss with the flag on (admissions reaching export) before enabling.
 
 **Verifier contract.** One model call per 30 Stage-1 rows (the Stage-1 model,
 `OPENROUTER_EXTRACTION_MODEL`), after the Stage-1 boundary. The model gives a verdict and a quote per row;
@@ -34,7 +59,7 @@ everything after that is deterministic:
 * A row the verifier changed that became identical to another row is folded into it (enzymes kept).
   Duplicates it did not make are left alone.
 * Nothing is deleted silently: an omitted row is marked `scope_membership: out_of_scope` (the existing
-  out-of-scope filter removes it before Stage 2, and its lock id is dropped so the manifest agrees) and
+  out-of-scope filter removes it before Stage 2; its lock id is dropped from the row, but the lock manifest, written earlier, still lists it: R1 F8) and
   keeps a `verifier` record `{verdict, action, reason, model_quote}` in `stage1_payload.json`; the full
   report is `reaction_verifier_report.json` in the run's diagnostics dir. Every repair appends an
   `audit_repair / audit_modified` lineage entry sourced to the seed paper.
@@ -107,7 +132,7 @@ All four options were applied to the same model answers (the policy is determini
 * the model labels a real one-enzyme step as a "summary" (EntF's three condensation cycles), so
   any rule that drops a summary on the model's word alone loses a certified gold reaction; `merge` drops
   a summary only when the rows it summarises are all present (2+ row path from its input to its
-  output), which is lossless by construction;
+  output). This was claimed lossless by construction; review R1 F3 shows it is not (a co-product can satisfy the path), see "must fix before enabling";
 * the MenD chain (`2-oxoglutarate -> intermediate I -> intermediate II -> SEPHCHC`) is the paper's own
   mechanism, and the model said "ok" to it in the first sample. `merge` therefore treats any row through
   a generic intermediate (`intermediate I`, `an adduct`) as split whatever the model says, and joins the
@@ -136,12 +161,23 @@ Each distinct candidate is re-checked with `validate_evidence_span` under main's
 | candidates main accepts that the branch refuses | 0 |
 | new false admissions | **0** |
 
-The three templates (`copula_adverb_converted_by`, `nominalized_of_to_by`,
-`catalyzed_nominalization_of_to`) bind the catalyst only from an explicit `by`/`catalyzed by` and only
-when it is a protein symbol (EntC, MenF, ALAS2). The first version took any catalyst phrase and read 8
-candidates, three of them wrong to admit: acetate-overflow chemistry in a menaquinone paper ("acetyl-CoA is
-first converted into acetyl-Pi by phosphotransacetylase", "... catalyzed by acetate kinase") and a span
-cut mid-name ("by Ent"). The symbol rule removed exactly those.
+The table above is the replay of `175dd1b9` (three templates, default on). **Review R1 (F1) rejected
+that**: an ungated, default-on admission change with no PWML-level no-loss proof (the replay only re-runs
+the span check; nothing measured what the admissions do downstream), and the symbol rule is a proxy: the
+copula template still read other-pathway chemistry when the paper writes a symbol ("acetyl-Pi is then
+converted to acetate by AckA"), and all-capitals non-proteins ("by NADH", "by HPLC") passed as catalysts.
+
+Now (R1 fix): the templates are behind `T2PW_VD18_SPAN_TEMPLATES` (**default off**; unset = main's
+template list, tested); the copula template is **removed**; the catalyst symbol is `Xxx[A-Z]` or an
+all-capitals symbol **with a digit** (NADH/HPLC/NMR/ATP refused); negative tests cover the AckA copula
+sentence, "by NADH", "measured by HPLC", "by NMR", a cut name, negation, F-179, wrong direction and wrong
+catalyst. Remaining limit, stated plainly: a parser cannot judge pathway membership. "conversion of A to
+B by AckA" is read with the flag on, exactly as main's D-095 template already reads "conversion of A to B,
+catalyzed by AckA"; refusing off-pathway chemistry stays with the pathway and connection rules.
+Replay with the flag on, two templates (`json/vd18-3.json`; 150 of the 194 report files were still on disk): **2 distinct candidates / 84 refusals now read, both the true EntE step `DHB -> DHB-AMP` (R4); 0 on the negative control; 0 that main accepts now refused.** The EntC copula span (805 refusals) is no longer read.
+
+History: the first version took any catalyst phrase and read 8 candidates, three wrong to admit
+(acetate-overflow chemistry "by phosphotransacetylase", "catalyzed by acetate kinase", and "by Ent").
 
 Against the strategy's success line ("admits >= 50% of the true refused steps") this is **short**: 908 of
 6044 sole refusals (15%). The large remaining shapes need their own templates and their own review:
@@ -161,7 +197,7 @@ supports; `binding` only for a physical interaction with no stated effect.
 On the 14 A/B outputs + 2 chlorophyll runs (final payloads), **current interaction-type accuracy is
 0.746** (101/135 judged). Every error has the same shape: **the paper states the effect but the row says
 `binding` (or `regulates`, `allosteric_inhibitor_of`)**, 34 of 34; there are **0 wrong signs**. Since
-PathWhiz stores only Activation/Inhibition, those 34 rows are withheld from the PWML today.
+(Correction, review R1 F6: unsigned words already export at main as Binding/Unspecified/Regulation, D-W26; these rows are exported with the wrong type, not withheld, and a wrong re-typing would be a new wrong assertion.)
 
 **Rule built.** The model reads the after-effect (target level/activity down, pathway blocked, product
 lower, or loss of the regulator raising them -> inhibition; the reverse -> activation) and must give the
@@ -202,7 +238,7 @@ rows).
 
 ## 8. Baseline (main fd814b8e, live, 3 runs x 6 papers, DRAWS=3)
 
-## 8-9. Live arms (IN PROGRESS)
+## 8-9. Live arms (PAUSED after review R1; must re-run after the "must fix before enabling" items)
 
 Baseline = main `fd814b8e` in `C:/t/acc-base`; verifier arm = `175dd1b9` in `C:/t/acc-ver` with
 `T2PW_REACTION_VERIFIER=1 T2PW_INTERACTION_TYPING=1 T2PW_VERIFIER_GRANULARITY=merge`. Both DRAWS=3, strict,
@@ -231,20 +267,24 @@ Lost to infrastructure (re-queued, not scored): 3 legs whose paper fetch failed 
 fetch is cached as `""` and then served from cache forever; fixed in the lane trees by
 `scripts/fix_cache.py`), and 1 verifier leg killed by the PC reboot (`C:/t/acc-runs/partial/`).
 
-**To finish:** let `driver_all.sh` run to `DRIVER_ALL_DONE`, run it once more (it redoes every leg without
+**Paused 2026-11-20** (`C:/t/acc-runs/PAUSE`; driver stopped while its next leg waited at the gate, no lock held). It ran 175dd1b9, so its legs do not count for the fixed code. **To re-run:** let `driver_all.sh` run to `DRIVER_ALL_DONE`, run it once more (it redoes every leg without
 an `.end`), then `score_legs.py C:/t/lane-acc json/live.json "legs/*"` and `ixscore.py` on the legs'
 `final_mapped.json`; the gate is per gold reaction: matched in no fewer verifier runs than base runs.
 
 ## 10. Gates, cost, open questions
 
-**Gates on `2fba9118` (code = `175dd1b9`), one hold, 0 surviving processes** (`C:/t/acc-runs/logs/gates1.log`):
-SMOKE 511 passed; golden-seam batch 2, c011 8, stage8 4, quarantine 24 passed (none edited);
-equivalence run 8, app 14, default 6; vision 357 + 1 skipped; web 83; lane tests (verifier, VD-18,
-adversarial admission) 104 passed.
+**Gates after the R1 fixes, code `84d79e15`, every new flag unset, one queue hold, 0 surviving processes** (`C:/t/acc-runs/logs/gates2.log`): SMOKE 511 passed; golden-seam batch 2, c011 8, stage8 4, quarantine 24 passed (no golden test edited; the branch adds only two new test files); equivalence run 8, app 14, default 6; vision 357 + 1 skipped; web 83; lane 217 passed (verifier, VD-18, admission adversarial, relation recall, service extraction stage 1, transport sides).
 
-**97-run PWML proof, flags off**: 88/97 identical to the stored `replay_out/base_on` — and main
-`fd814b8e` itself gives the same 88/97 (`logs/noreg-main.log`; the stored baseline predates the
-import fixes). Lane vs main: **97/97 byte-identical** (same sha per run).
+Earlier gates on `2fba9118` (code `175dd1b9`, before the R1 fixes; `logs/gates1.log`): SMOKE 511,
+golden 2/8/4/24, equivalence 8/14/6, vision 357+1 skipped, web 83, lane 104, 0 survivors.
+
+**What the 97-run PWML proof does and does not show.** `proof_generate.py` loads each stored
+`final_mapped.json` and calls the exporter. It never runs Stage 1 and never runs RAG admission, so it
+exercises **none** of this branch's code; "97/97 byte-identical to main" (88/97 against the stored
+`replay_out/base_on` for both main `fd814b8e` and the lane, that baseline predating the import fixes) only
+shows the export path is untouched. It is not evidence for flags-off equivalence. That evidence is the
+flags-off tests (§ 1) plus, for the verifier and typing, the hook being inert by inspection with the flags
+unset (review R1).
 
 **Cost**: $0.61 spent of $15 (replays $0.21, live legs $0.40 incl. the killed one). Verifier per paper:
 about $0.005-0.02 (two calls; chlorophyll ~$0.02). Live verifier legs so far $0.03-0.09 per paper.
