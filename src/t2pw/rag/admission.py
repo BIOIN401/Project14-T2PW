@@ -749,9 +749,14 @@ _ATTACHED_ACTOR = (
 )
 #: One protein symbol, case-sensitive even inside an IGNORECASE template: a bacterial
 #: Xxx[A-Z] name with an optional digit (EntC, MenF, LpxK, HemA1) or an all-capitals
-#: symbol of 3+ letters with an optional digit (ALAS2, CHLH, HEMA1). Used only by the
-#: VD-18 templates.
-_SYMBOL_ACTOR = r"(?-i:[A-Z][a-z]{2}[A-Z]\d?|[A-Z]{3,}\d?)"
+#: symbol WITH a digit (ALAS2, HEMA1, CHL27). An all-capitals word without a digit is
+#: refused: NADH, HPLC, NMR, ATP are reagents and methods, not catalysts. Used only by
+#: the VD-18 templates.
+_SYMBOL_ACTOR = r"(?-i:[A-Z][a-z]{2}[A-Z]\d?|[A-Z]{2,}\d+[A-Za-z]?)"
+
+#: VD-18 switch, default OFF. With it unset the parser walks exactly main's template
+#: list (:data:`_ALL_PROSE_PATTERNS`); the VD-18 templates are added only when it is on.
+VD18_ENV_FLAG = "T2PW_VD18_SPAN_TEMPLATES"
 
 #: Templates added by C-061 (and extended by C-118), kept OUT of
 #: :data:`_PROSE_PATTERNS` so that constant stays byte-identical, and tried LAST
@@ -829,30 +834,21 @@ _EXTRA_PROSE_PATTERNS: Tuple[Tuple[str, re.Pattern], ...] = (
             re.IGNORECASE,
         ),
     ),
-    # VD-18 (acc/verifier lane). Three shapes measured in the stored admission reports as
-    # sole-blocker ``roles_unassignable`` refusals of true pathway steps. Each one, like
-    # the D-095 template above, binds the catalyst ONLY from an explicit ``by`` /
-    # ``catalyzed by`` attached to the same clause, keeps both participant groups free of
-    # ``.;,()`` so neither side runs into another clause, and is tried after every older
-    # template, so it only reads spans nothing else could. Narrower than D-095 in one more
-    # way: the catalyst must be a protein SYMBOL (:data:`_SYMBOL_ACTOR`: EntC, MenF, HemA,
-    # ALAS2, CHLH). On the replay, the same shapes with a prose catalyst ("by
-    # phosphotransacetylase", "catalyzed by acetate kinase") were true chemistry of a
-    # DIFFERENT pathway (acetate overflow in a menaquinone paper), and a span cut mid-name
-    # ("by Ent") would have admitted a protein called "Ent".
-    (
-        # "chorismate, is first converted to isochorismate by EntC (isochorismate synthase;"
-        # The adverb list is closed; "is not converted" never matches.
-        "copula_adverb_converted_by",
-        re.compile(
-            rf"(?P<lhs>[^.;,()]+?)\s*,?\s+(?:is|are|was|were)\s+"
-            rf"(?:first|then|further|subsequently|next|finally|initially|rapidly|in\s+turn)\s+"
-            rf"(?:converted|isomeri[sz]ed|oxidi[sz]ed|reduced)\s+(?:in)?to\s+"
-            rf"(?P<rhs>[^.;,()]+?)\s*,?\s*(?:catal(?:yz|ys)ed\s+)?by\s+"
-            rf"(?P<enz>{_SYMBOL_ACTOR})\b",
-            re.IGNORECASE,
-        ),
-    ),
+)
+
+#: VD-18 (acc/verifier lane), behind :data:`VD18_ENV_FLAG` (default off). Two shapes
+#: measured in the stored admission reports as sole-blocker ``roles_unassignable``
+#: refusals of a true pathway step ("activation of DHB to DHB-AMP by EntE"). Like D-095
+#: they bind the catalyst ONLY from an explicit ``by`` attached to the same
+#: nominalization and keep both participant groups free of ``.;,()``; unlike D-095 the
+#: catalyst must be a protein symbol (:data:`_SYMBOL_ACTOR`), so "by NADH" / "by HPLC"
+#: is never read as a catalyst. A copula form ("X is first converted to Y by EntC") was
+#: tried and removed: it equally reads other-pathway chemistry ("acetyl-Pi is then
+#: converted to acetate by AckA"). What the parser cannot do is judge pathway
+#: membership: "conversion of A to B by AckA" is read here exactly as main's D-095
+#: template already reads "conversion of A to B, catalyzed by AckA"; refusing
+#: off-pathway chemistry stays the job of the pathway and connection rules.
+_VD18_PROSE_PATTERNS: Tuple[Tuple[str, re.Pattern], ...] = (
     (
         # "activation of DHB to DHB-AMP by EntE" / "isomerization of chorismate to
         # isochorismate by EntC": a nominalization with "of A to B by E". The head noun
@@ -883,6 +879,15 @@ _EXTRA_PROSE_PATTERNS: Tuple[Tuple[str, re.Pattern], ...] = (
 _ALL_PROSE_PATTERNS: Tuple[Tuple[str, re.Pattern], ...] = (
     _PROSE_PATTERNS + _EXTRA_PROSE_PATTERNS
 )
+
+
+def _prose_patterns() -> Tuple[Tuple[str, re.Pattern], ...]:
+    """:data:`_ALL_PROSE_PATTERNS`, plus the VD-18 templates (last) when :data:`VD18_ENV_FLAG` is on."""
+    import os
+
+    if os.environ.get(VD18_ENV_FLAG, "").strip().casefold() in ("1", "true", "yes"):
+        return _ALL_PROSE_PATTERNS + _VD18_PROSE_PATTERNS
+    return _ALL_PROSE_PATTERNS
 
 #: Clause connectors. Text before one of these on the substrate side, or after one
 #: on the product side, belongs to a different clause and is dropped — this is what
@@ -1603,7 +1608,7 @@ def parse_span_relations(span: str) -> List[SpanRelation]:
 
     out: List[SpanRelation] = []
     seen: Set[Tuple[Any, ...]] = set()
-    for name, pattern in _ALL_PROSE_PATTERNS:
+    for name, pattern in _prose_patterns():
         for match in _pattern_matches(pattern, body, first_only=False):
             relation = _relation_from_match(name, match, body)
             if relation is None:
@@ -1658,7 +1663,7 @@ def parse_span_relation(span: str) -> Optional[SpanRelation]:
                 pattern="arrow",
             )
 
-    for name, pattern in _ALL_PROSE_PATTERNS:
+    for name, pattern in _prose_patterns():
         for match in _pattern_matches(pattern, body, first_only=True):
             relation = _relation_from_match(name, match, body)
             if relation is None:

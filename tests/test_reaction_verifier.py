@@ -206,3 +206,47 @@ def test_hook_end_to_end_with_a_scripted_model(tmp_path, monkeypatch):
     assert seen[0]["requested_pathway"] == "enterobactin biosynthesis" and seen[0]["task"] == "task line"
     assert state["reaction_verifier"]["error"] is None
     assert json.loads((tmp_path / V.REPORT_FILE).read_text(encoding="utf-8"))["reactions"]["repaired"] == [0]
+
+
+# -- flags off = main, on the two code paths this branch touches (no network) ----------------------
+from test_service_extraction_stage1 import _run, world  # noqa: E402,F401
+
+ALL_FLAGS = (V.ENV_FLAG, V.IX_FLAG, V.GRANULARITY_ENV, "T2PW_VD18_SPAN_TEMPLATES")
+
+
+def test_flags_off_stage_one_hook_is_main(world, monkeypatch):
+    """service.extraction.run_stage_one with every new flag unset: the verifier is never entered and
+    Stage 1 returns what main returns (the settled boundary payload, untouched)."""
+    for f in ALL_FLAGS:
+        monkeypatch.delenv(f, raising=False)
+    entered = []
+    monkeypatch.setattr(V, "apply_to_stage_one", lambda *a, **k: entered.append(1) or a[0])
+    monkeypatch.setattr(V, "_ask", lambda *a, **k: entered.append(2) or {})
+    world.stage1 = {"entities": {}, "processes": {"reactions": [
+        {"name": "EntB", "inputs": ["isochorismate"], "outputs": ["2,3-diDHB"]}],
+        "interactions": [{"entity_1": "Fur", "entity_2": "entC", "relationship": "binding"}]}}
+    res, _, state = _run(world)
+    assert entered == [] and "reaction_verifier" not in state
+    assert res.stage_one == dict(world.stage1, settled=True)
+    # sensitivity: the same fixture with the flag on does enter the verifier
+    monkeypatch.setenv(V.ENV_FLAG, "1")
+    _run(world)
+    assert entered == [1]
+
+
+def test_flags_off_admission_is_main(monkeypatch):
+    """rag.admission with T2PW_VD18_SPAN_TEMPLATES unset gives exactly main's verdicts and readings on a
+    fixture of spans (the VD-18 shapes and the shapes it must not read)."""
+    from t2pw.rag import admission as AD
+    import test_rag_admission_vd18 as T
+
+    for f in ALL_FLAGS:
+        monkeypatch.delenv(f, raising=False)
+    cases = T.POSITIVE + T.NEGATIVE
+    got = [(AD.validate_evidence_span(s, inputs=i, outputs=o, enzymes=e).ok, AD.parse_span_relations(s))
+           for s, i, o, e in cases]
+    main_list = AD._PROSE_PATTERNS + AD._EXTRA_PROSE_PATTERNS  # main's walk, rebuilt from its two parts
+    monkeypatch.setattr(AD, "_prose_patterns", lambda: main_list)
+    want = [(AD.validate_evidence_span(s, inputs=i, outputs=o, enzymes=e).ok, AD.parse_span_relations(s))
+            for s, i, o, e in cases]
+    assert got == want
