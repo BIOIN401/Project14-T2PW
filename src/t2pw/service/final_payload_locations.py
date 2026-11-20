@@ -18,7 +18,9 @@ Order:
    ``inferred: organism_default``. Gram-negative or unknown: no name default ("LPS export" ends in the outer membrane).
    3b. (PO ruling 2) Same flag: a transport whose two STATED ends are one place gets its own call (its own prompt and
    cache id); a side is corrected only with a verbatim quote naming the item and the new place, the ends must then
-   differ. Flag ``inferred: llm_corrected``, the stated value kept as ``stated_was``. Otherwise unchanged and flagged.
+   differ. Exactly one side is corrected; a name that gives the direction fixes which (export / secretion / efflux: "to";
+   import / uptake: "from"); only against the paper text (no paper text: no call). Flag ``inferred: llm_corrected``, the
+   stated value kept as ``stated_was``. Otherwise unchanged and flagged.
 5. Bacterium: unplaced reactions and element rows go to the cytoplasm (an existing plain cytoplasm state, else a new
    "<organism> cytoplasm"). Flag ``inferred: organism_default``. Eukaryotes get no default. (PO ruling 1, "just use main
    organism") Steps 4-5 use the paper's MAIN organism (the organism hint, else the most frequent species among the
@@ -57,14 +59,15 @@ HINT = "expected compartments"
 #: Transport names that say the cargo leaves the cell / goes into it (read from the name only).
 EXPORT = re.compile(r"\b(export\w*|secret\w*|efflux\w*|excret\w*|extru\w*)\b", re.I)
 IMPORT = re.compile(r"\b(import\w*|uptake|influx\w*|internali[sz]\w*)\b", re.I)
-#: Gram-positive genera (one membrane, no periplasm): only for these is an export's destination the outside.
+#: Gram-positive genera (one membrane, no periplasm): only for these is an export's destination the outside. The
+#: mycolic-acid genera (Corynebacterium, Nocardia, Rhodococcus, Mycobacterium, Gordonia, ...) are left out: they have an
+#: outer mycomembrane.
 # ponytail: a genus list, not a taxonomy lookup; an unlisted genus counts as unknown and gets no name default.
 GRAM_POSITIVE = frozenset({
     "bacillus", "lactococcus", "lactobacillus", "lactiplantibacillus", "lacticaseibacillus", "streptococcus",
-    "staphylococcus", "enterococcus", "listeria", "clostridium", "clostridioides", "streptomyces", "corynebacterium",
+    "staphylococcus", "enterococcus", "listeria", "clostridium", "clostridioides", "streptomyces",
     "micrococcus", "bifidobacterium", "leuconostoc", "pediococcus", "paenibacillus", "geobacillus", "actinomyces",
-    "nocardia", "rhodococcus", "saccharopolyspora", "amycolatopsis", "micromonospora", "cutibacterium",
-    "propionibacterium"})
+    "saccharopolyspora", "amycolatopsis", "micromonospora", "cutibacterium", "propionibacterium"})
 SIDES = C.SIDES
 VOCABULARY = {
     "bacterium": ["cytoplasm", "inner membrane", "periplasm", "outer membrane", "cell wall", "extracellular space"],
@@ -306,10 +309,11 @@ def _conflict_pass(payload: Dict[str, Any], ctx: C._Ctx, tr: List[Any], side_tod
     if not todo:
         return
     paper = state.get("final_payload_paper_text") if hasattr(state, "get") else None
-    text = paper if isinstance(paper, str) and paper.strip() else "\n".join(C._text(tr[i].get("evidence")) for i in todo)
-    if not text.strip():
-        rep["skipped"] = "no_text"
+    if not (isinstance(paper, str) and paper.strip()):
+        # a STATED location is corrected only against the paper itself, never the extraction's own evidence strings
+        rep["skipped"] = "no_paper_text"
         return
+    text = paper
     vocab = VOCABULARY["bacterium" if ctx.pro else "eukaryote"]
     items, names = [], []
     for i in todo:
@@ -344,9 +348,20 @@ def _conflict_pass(payload: Dict[str, Any], ctx: C._Ctx, tr: List[Any], side_tod
                 rep["rejected"].append({"transport": t.get("name"), "side": f, "reason": "same place as stated"})
             else:
                 got[f] = (target, quote)
-        fin = {f: got[f][0] if f in got else ("state", ctx.name(t.get(f))) for f in SIDES}
         if not got:
             continue
+        if len(got) != 1:  # both stated ends would be overwritten: only one end of a stated pair is ever corrected
+            rep["rejected"].append({"transport": t.get("name"), "reason": "both ends returned; exactly one may be corrected"})
+            continue
+        name = str(t.get("name") or "")
+        allowed = (SIDES[1] if EXPORT.search(name) and not IMPORT.search(name) else
+                   SIDES[0] if IMPORT.search(name) and not EXPORT.search(name) else None)
+        if allowed and allowed not in got:  # "secretion" moves the cargo out: only where it ends up can be wrong
+            rep["rejected"].append({"transport": name, "side": next(iter(got)),
+                                    "reason": f"the name '{name}' gives the direction; only the {allowed.split('_')[0]} side "
+                                              "may be corrected"})
+            continue
+        fin = {f: got[f][0] if f in got else ("state", ctx.name(t.get(f))) for f in SIDES}
         if C._same(fin[SIDES[0]], fin[SIDES[1]], ctx):
             rep["rejected"].append({"transport": t.get("name"), "reason": "both ends would still be one place"})
             continue

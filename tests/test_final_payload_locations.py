@@ -194,6 +194,8 @@ def test_gram_positive_auto_auto_transport_gets_a_direction_from_its_name_and_a_
 @pytest.mark.parametrize("states", [
     [_st("__auto_state__", "cell")],                                              # E. coli: Gram-negative
     [_st("__auto_state__", "cell", "Bacillus subtilis"), _st("periplasm state", "periplasm", "Bacillus subtilis")],
+    [_st("__auto_state__", "cell", "Corynebacterium glutamicum")],                # mycomembrane: not on the list (N4)
+    [_st("__auto_state__", "cell", "Mycobacterium tuberculosis")],
 ])
 def test_no_name_default_for_gram_negative_or_a_paper_with_periplasm(states):
     sp = states[0]["species"]
@@ -441,6 +443,45 @@ def test_a_correction_whose_quote_fails_the_check_changes_nothing(monkeypatch, q
     t = p["processes"]["transports"][0]
     assert (t["from_biological_state"], t["to_biological_state"]) == (before["from_biological_state"], before["to_biological_state"])
     assert "inferred_sides" not in t and rep["llm_conflict"]["rejected"] and rep["same_place_left"]
+
+
+def _side(quote="secreted into the extracellular medium by EntS"):
+    return {"state": "E. coli extracellular state", "new_location": None, "quote": quote}
+
+
+@pytest.mark.parametrize("reply,why", [
+    ({"items": [{"id": 0, "from": _side(), "to": _side()}]}, "exactly one"),          # N1: both stated ends returned
+    ({"items": [{"id": 0, "from": _side(), "to": None}]}, "only the to side"),        # N2: a reversed secretion
+])
+def test_a_conflict_answer_that_would_overwrite_both_ends_or_reverse_the_direction_is_rejected(monkeypatch, reply, why):
+    monkeypatch.setenv(FL.LLM_ENV, "1")
+    p = _conflict_payload()
+    rep = FL.assign_locations(p, {"final_payload_paper_text": PAPER}, chat_fn=_fake(reply, []))
+    t = p["processes"]["transports"][0]
+    assert (t["from_biological_state"], t["to_biological_state"]) == ("E. coli cytoplasmic state",) * 2
+    assert "inferred_sides" not in t and any(why in r["reason"] for r in rep["llm_conflict"]["rejected"])
+    assert rep["same_place_left"]
+
+
+def test_an_import_conflict_may_correct_only_its_from_side(monkeypatch):
+    monkeypatch.setenv(FL.LLM_ENV, "1")
+    p = _conflict_payload()
+    p["processes"]["transports"][0]["name"] = "enterobactin uptake"
+    FL.assign_locations(p, {"final_payload_paper_text": PAPER},
+                        chat_fn=_fake({"items": [{"id": 0, "from": _side(), "to": None}]}, []))
+    t = p["processes"]["transports"][0]
+    assert t["from_biological_state"] == "E. coli extracellular state" and t["inferred_sides"] == {"from_biological_state": "llm_corrected"}
+
+
+def test_no_paper_text_means_no_conflict_call(monkeypatch):
+    # N3: a stated location is corrected only against the paper, never against the extraction's own evidence strings
+    monkeypatch.setenv(FL.LLM_ENV, "1")
+    calls = []
+    p = _conflict_payload()
+    p["processes"]["transports"][0]["evidence"] = "secreted into the extracellular medium by EntS"
+    rep = FL.assign_locations(p, {}, chat_fn=_fake(_conflict_reply("secreted into the extracellular medium by EntS"), calls))
+    assert calls == [] and rep["llm_conflict"]["skipped"] == "no_paper_text"
+    assert p["processes"]["transports"][0]["to_biological_state"] == "E. coli cytoplasmic state"
 
 
 def test_a_conflict_call_that_raises_changes_nothing(monkeypatch):
