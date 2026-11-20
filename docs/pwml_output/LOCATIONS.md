@@ -379,3 +379,9 @@ LLM-from-cache arm are **byte-identical to `0cec290a`'s**, every PWML and every 
 "enterobactin secretion", the direction N2 allows). The section 9 table and the section 10 PathWhiz A/B therefore stand
 unchanged for this HEAD: no Corynebacterium, Nocardia or Rhodococcus run in the set, and the one conflict answer
 returned only its "to" side.
+
+## 12. Post-merge gate fix (code `66e393e0`)
+
+`tests/test_final_payload_fill.py::test_seam_resolver_error_without_a_fill_is_raised_as_before` failed on loc/assign merged with main (`[1, 1] == [1]`). On a payload with nothing to assign (`{}` or empty `entities`), `assign_locations` wrote one thing: `"biological_states": []` (`final_payload_compartments._Ctx.__init__` adds the empty list). `prefreeze_with_final_fill` saw `payload != snapshot`, took it for a fill, restored and called the resolver a second time.
+
+Fix: when the step writes no `final_payload_locations` report and the payload had no `biological_states` key, the empty list is removed again (2 lines, `final_payload_locations.py`). Payloads where something is assigned are untouched by the change. Regression test `test_nothing_to_assign_leaves_the_payload_untouched` (2 params). Gates: all `test_final_payload_*` + `test_pwml_*` 526 passed; SMOKE 511 passed with every golden and equivalence group green; 0 surviving processes (logs `C:/t/vis-runs/logs/locfix_a.log`, `locfix_smoke.log`).
