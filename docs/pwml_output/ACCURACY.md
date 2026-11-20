@@ -4,7 +4,7 @@ Branch `acc/verifier` (from main `fd814b8e`). Biology change: **merge waits for 
 Work dir (scripts, logs, answers, scores): `C:/t/acc-runs/`. Strategy it implements:
 `C:/t/strategy/accuracy/STRATEGY.md`.
 
-STATUS: review R1 blocking fixes done (VD-18 behind its own default-off flag; flags-off tests; record corrected). Merge default-off only; "must fix before enabling" list in § 1. Live 3x3 paused (re-run after those fixes).
+STATUS: default-off merge reviewed (R2 approve-with-nits, on acc/verifier). This branch acc/verifier-r2 fixes every "must fix before enabling" item (§ 11); flags still off; live 3x3 not yet re-run.
 
 ## 1. What was built
 
@@ -20,7 +20,7 @@ four unset the branch behaves like main on the code paths it touches (tests
 | VD-18 span templates | `src/t2pw/rag/admission.py`, `_VD18_PROSE_PATTERNS`, walked via `_prose_patterns()` | `T2PW_VD18_SPAN_TEMPLATES` | **off** (R1 F1: it was ungated and default-on in 175dd1b9) |
 | tests | `tests/test_reaction_verifier.py`, `tests/test_rag_admission_vd18.py` | | |
 
-**Must fix before enabling any flag** (review R1, deferred to the next round by the orchestrator; the
+**Must fix before enabling any flag** (review R1; ALL ADDRESSED on branch `acc/verifier-r2`, see § 11. Still required before enabling: the live 3x3 on the fixed code, and PO sign-off. Original list kept for the record:
 live 3x3 re-runs only after these):
 1. F3: the summary drop is not lossless: `_reach` lets a co-product (CO2, AMP) stand in for the
    product. Every non-currency output must be reached from the non-currency inputs.
@@ -305,3 +305,46 @@ about $0.005-0.02 (two calls; chlorophyll ~$0.02). Live verifier legs so far $0.
 7. Lipid A gold (1 day of reading) to widen the eval set?
 8. Fetch cache stores a failed fetch as an empty text forever (`rag/acquire.py fetch_full_text`). Out of
    lane; worth a fix ticket.
+
+## 11. Round 2 (branch `acc/verifier-r2`, from 3ca54d0a): every "must fix before enabling" item
+
+Flags stay OFF by default; nothing below runs with them unset (tests in § 1 still hold, now against a
+frozen copy of main). No live run this round (unit and offline only).
+
+| finding | what changed (`service/reaction_verifier.py` unless noted) | test(s) |
+|---|---|---|
+| F3 summary drop | `summary_covered`: a summary is dropped only when the KEPT rows make every non-currency product from its non-currency substrates; currency (CO2, AMP, PPi, NAD, ATP...) neither stands in for a product nor carries the walk. A one-enzyme step (EntF) is dropped only if another kept row already makes enterobactin from its inputs, i.e. never lost. | `test_summary_dropped_only_when_kept_steps_make_its_product`, `test_summary_is_not_covered_through_a_co_product` (the R1 DHNA/CO2 scenario), `test_a_mislabelled_one_enzyme_step_is_never_dropped` (the R1 EntF/AMP scenario) |
+| F4 off-pathway drop | Omitted only when (a) the model's quote is verified in the paper, (b) the row is isolated: it shares no non-currency name with any other row, so it is never a first, middle or last step of what the other rows draw (currency never connects), (c) other rows remain. Otherwise flagged, never dropped. The LDH assay row (shares pyruvate) and ferric-enterobactin (shares enterobactin) are now flagged. | `test_off_pathway_isolated_row_with_a_verified_quote_is_omitted_and_reported`, `test_off_pathway_never_drops_the_first_or_last_step[0,3]`, `test_off_pathway_without_a_verified_quote_or_connected_by_a_real_name_is_only_flagged`, `test_off_pathway_never_empties_the_pathway` |
+| F5 typing guard | `retypable`: only an empty word or an unsigned Binding/Unspecified/Regulation word may get a sign; any word carrying a sign stem (inhibit, activat, repress, induc, negative, positive, ...) is signed whatever table it is (not) in, so `allosteric_inhibitor_of`, `inhibited_by`, `activated_by`, `negatively_regulates` are never flipped. `quote_unqualified`: the quote must occur in a paper sentence with no negation/loss word ("loss", "mutant", "not", "knockout", ...) before it that the quote left out. | `test_a_signed_word_is_never_flipped[8 words]`, `test_a_quote_that_drops_a_leading_negation_is_refused` (the R1 PIF1 case) |
+| F6 false edge from a contact | `states_effect`: a re-typing quote must state an effect (inhibit, activat, increas, decreas, reduc, degrad, stabiliz, ...), not only a contact. The live EntC/EntB "interact to form a dynamic channeling system" -> activation is now refused. (Record: unsigned words already export at main as Binding/Unspecified; corrected in § 6.) | `test_a_quote_that_states_no_effect_does_not_type_the_row`, `test_unsigned_row_gets_the_sign_its_after_effect_states` |
+| F7a unanchored merged step | The chain's own rows are joined first (no new names). A model's whole step is used only for a row through a generic intermediate, and only if it keeps every real (non-generic, non-currency) name of that row. A model "split" on a real row never replaces it (flagged). | `test_model_whole_step_must_keep_the_rows_real_names`, `test_model_split_on_a_real_row_never_replaces_it` |
+| F7b shared generic key | Rows are linked only through a generic name that exactly one row makes and exactly one row uses, and only when they share a catalyst (or one names none); a group is joined only if every intermediate it makes it also uses. Two mechanisms that both say "intermediate I" are never joined. | `test_two_unrelated_mechanisms_saying_intermediate_I_are_never_joined`, `test_split_chain_is_joined_from_its_own_rows_and_folded_into_the_paper_row`, `test_generic_chain_without_the_paper_row` |
+| F7c append-only incomplete | `rename` is applied for `incomplete` too (a WRONG participant is replaced, not kept next to the right one); the prompt says so. Folding compares non-currency names, so a joined step without the paper row's CO2 folds into the paper row. A string `add_*` is one name, never its letters; one-letter names are refused. | `test_incomplete_may_correct_a_wrong_participant`, `test_incomplete_with_a_string_adds_the_name_not_its_letters` |
+| F8 lock manifest | `prune_lock_manifest`: the omitted (and folded) rows' lock ids are removed from `tmp/locked_reaction_manifest.json` (Stage 1 wrote it before the hook), so manifest and payload agree. The hook passes `manifest_dir=PROJECT_ROOT/tmp` (`service/extraction.py`). | `test_hook_prunes_the_lock_manifest_and_hands_the_report_to_the_run` |
+| F8 report location | The full report goes into the run state (`reaction_verifier_report`); `batch/driver.py` `_add_common_artifacts` writes it into the run's own output folder as `reaction_verifier_report.json` (only when present, so the artifact set is unchanged with the flags off). The diagnostics copy stays. | same test, `test_batch_driver_writes_the_report_only_when_present` |
+| F9 cap | `Budget`: at most `MAX_CALLS` = 6 model calls and `MAX_SECONDS` = 600 s per run (each call's timeout is clipped to what is left, at most 300 s); rows past the budget get no verdict and stay untouched; the report counts `calls_skipped_over_budget`. | `test_budget_caps_calls_and_rows_past_it_stay_untouched` |
+| F10 tests | all of the above | 63 lane tests (`logs/ut9.log`) |
+| R2 N1 | `test_flags_off_admission_is_main` now compares the flag-off template list, pattern by pattern, with a FROZEN sha256 of main fd814b8e's list (14 templates, computed from C:/t/acc-base by `scripts/main_pattern_hash.py`), not with the branch's own tuple. | `test_flags_off_admission_is_main` |
+| R2 N3 | `tests/test_reaction_verifier.py` no longer imports another test module's fixtures; it has its own minimal stand-ins for `run_stage_one`'s callees. | `test_flags_off_stage_one_hook_is_main` |
+| R2 N4 | `rag/admission.py` `_SYMBOL_ACTOR`: an all-capitals symbol needs 3+ capitals and a digit (ALAS2, POR1, CHL27); CO2, NO2, SO4 are refused. | `test_flag_on_still_refuses` ("by CO2" x2, "by NO2") |
+
+**VD-18 PWML-level no-loss replay, flag on** (`scripts/vd18_admit.py`, `json/vd18adm-1.json`,
+`logs/vd18adm-1.log`). VD-18 changes nothing but the span check inside admission, so if the gate accepts
+the same candidates with the flag on, the merged payload and the PWML are the same. For every stored run
+that still has `rag_admission_report.json` + `stage1_payload.json` + `plan.json`, the replay rebuilds the
+gate's input (seed = in-scope Stage-1 payload, gaps = `detect_gaps` on it, candidates = every accepted and
+rejected record) and runs `admit_candidates` with the flag unset and set.
+
+* 240 reports are on disk; **20 runs are replayable** (220 lack a stored Stage-1 payload): 8 enterobactin,
+  4 menaquinone (L. lactis), 3 MenD, 1 MK-7, 2 lipid A, 2 negative control, plus their RAG candidates
+  (13 to 205 per run).
+* Fidelity: the flag-off replay accepts exactly what the stored report accepted on **20/20**.
+* Flag on: accepted set identical on **20/20**; **0 new admissions, 0 lost**, 0 on the negative control.
+  The one span VD-18 newly reads in these runs (B4 enterobactin, "activation of DHB to DHB-AMP by EntE")
+  is still refused by the later admission rules, so it never reaches the payload.
+* Limit: 20 runs, and VD-18 reads few spans in them; this shows no loss, not a gain.
+
+Still required before enabling any flag: the live 3x3 (baseline vs flags on) re-run on this code, and PO
+sign-off.
+
+**Round-2 gates, code `5bb5ad77`, every new flag unset, one queue hold, 0 surviving processes** (`C:/t/acc-runs/logs/gates3.log`): SMOKE 511 passed; golden-seam batch 2, c011 8, stage8 4, quarantine 24 passed (none edited); equivalence run 8, app 14, default 6; vision 357 + 1 skipped; web 83; lane 302 passed (verifier, VD-18, admission adversarial, relation recall, service extraction stage 1, transport sides, batch driver). Focused lane run: 63 passed (`logs/ut9.log`). Spend this round: $0 (no model calls); lane total $0.61 of $15.
