@@ -379,3 +379,37 @@ def test_transporter_sits_on_the_membrane_between_its_cargo():
     cy = t["y"] + 35
     # the transporter's centre lies between the two lines of the double membrane, on its top or bottom side
     assert min(outer[1::2]) < cy < min(inner[1::2]) or max(inner[1::2]) < cy < max(outer[1::2]), (cy, outer[1::2], inner[1::2])
+
+
+def test_no_parent_claimed_when_two_compartments_share_the_top_depth():
+    # two tissues' cytosols: a mitochondrion belongs to one of them, but which is unknown
+    assert compartment_parents({"liver": "cytoplasm", "kidney": "cytoplasm", "mi": "mito"})["mi"] is None
+    # apical and basolateral membranes: the cytosol is not inside either one
+    assert compartment_parents({"ap": "membrane", "bl": "membrane", "cy": "cytoplasm"})["cy"] is None
+    # a leaflet with two candidate membranes
+    assert compartment_parents({"im": "membrane", "m": "membrane", "lf": "leaflet"})["lf"] is None
+    # the drawing follows: three compartments with a node each, no membrane inside another
+    items = {"biological-states": [{"id": i, "name": n, "subcellular-location-id": 10 + i} for i, n in
+                                   ((1, "liver cytosol state"), (2, "kidney cytosol state"), (3, "mitochondrion state"))],
+             "subcellular-locations": [{"id": 11, "name": "cytosol"}, {"id": 12, "name": "cytosol"},
+                                       {"id": 13, "name": "mitochondrion"}],
+             "compound-locations": [_loc(i, (i + 1) // 2) for i in range(1, 7)],
+             "edges": [{"id": 70 + i, "path": "M0 0", "hidden": False, "options": None} for i in range(6)],
+             "reaction-visualizations": [{"id": 80 + s, "reaction-id": s, "biological-state-id": s,
+                                          "reaction_compound_visualizations": [
+                                              {"compound-location-id": 2 * s - 1, "edge-id": 70 + 2 * s - 2, "side": "Left"},
+                                              {"compound-location-id": 2 * s, "edge-id": 70 + 2 * s - 1, "side": "Right"}],
+                                          "reaction_enzyme_visualizations": []} for s in (1, 2, 3)]}
+    relayout(items, _ids())
+    boxes = []
+    for m in items["membrane-visualizations"]:
+        n = [int(t) for t in re.findall(r"-?[0-9]+", m["path"])]
+        boxes.append((min(n[0::2]), min(n[1::2]), max(n[0::2]), max(n[1::2])))
+    assert len(boxes) == 1 + 1 + 2  # two cells, one double mitochondrion
+    outer = [b for b in boxes if not any(o != b and o[0] <= b[0] and o[1] <= b[1] and b[2] <= o[2] and b[3] <= o[3] for o in boxes)]
+    assert len(outer) == 3  # the mitochondrion's inner line is its only nested path
+
+
+def test_single_parent_chain_matrix_in_mitochondrion_in_cell():
+    kinds = {"cy": "cytoplasm", "mi": "mito", "mx": "mito_matrix", "nu": "nucleus"}
+    assert compartment_parents(kinds) == {"cy": None, "mi": "cy", "mx": "mi", "nu": "cy"}

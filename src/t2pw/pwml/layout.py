@@ -90,10 +90,10 @@ def compartment_kind(location_name: str, state_name: str = "") -> str:
     return "other"
 
 
-def compartment_parents(kinds: Dict[Any, str], weight: Optional[Dict[Any, int]] = None) -> Dict[Any, Any]:
+def compartment_parents(kinds: Dict[Any, str]) -> Dict[Any, Any]:
     """Parent compartment of each compartment (``None`` at the top): the deepest present compartment with a smaller
-    depth on its chain (the cell envelope, then its own organelle). Ties go to the heavier one (``weight``), then order."""
-    weight = weight or {}
+    depth on its chain (the cell envelope, then its own organelle). When two or more compartments share that depth
+    (two tissues' cytosols, apical and basolateral membranes) the parent is ambiguous and none is claimed."""
     parent: Dict[Any, Any] = {}
     for s, k in kinds.items():
         if k not in _DEPTH:
@@ -103,7 +103,9 @@ def compartment_parents(kinds: Dict[Any, str], weight: Optional[Dict[Any, int]] 
         cands = [o for o, ko in kinds.items() if o != s and ko in allowed and _DEPTH[ko] < _DEPTH[k]]
         if k == "leaflet":  # a leaflet lies inside the membrane it belongs to, never inside a compartment
             cands = [o for o in cands if kinds[o] == "membrane"]
-        parent[s] = max(cands, key=lambda o: (_DEPTH[kinds[o]], weight.get(o, 0), -list(kinds).index(o)), default=None)
+        top = max((_DEPTH[kinds[o]] for o in cands), default=None)
+        best = [o for o in cands if _DEPTH[kinds[o]] == top]
+        parent[s] = best[0] if len(best) == 1 else None
     return parent
 
 
@@ -759,7 +761,7 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
     label_w = int((5 + 200) * LABEL_SCALE)
     kinds = {st: compartment_kind(loc_names.get(states.get(st, {}).get("subcellular-location-id")) or "",
                                   str(states.get(st, {}).get("name") or "")) for st in bands}
-    parent = compartment_parents(kinds, {st: len(by_state[st]) for st in bands})
+    parent = compartment_parents(kinds)
     children: Dict[Any, List[Any]] = defaultdict(list)
     for st in bands:
         children[parent[st]].append(st)
