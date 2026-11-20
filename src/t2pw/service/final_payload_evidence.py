@@ -57,7 +57,7 @@ CHECKS = (
     "evidence_not_in_paper", "step_skips_intermediate", "evidence_describes_several_steps", "enzyme_not_tied_to_step",
     "estimated_compartment_without_evidence",
 )
-ESTIMATED_SOURCES = ("estimated", "neighbour_estimate", "llm_estimate")
+ESTIMATED_SOURCES = ("estimated", "neighbour_estimate", "llm_estimate", "organism_default")
 # ponytail: a fixed share of word trigrams; a paraphrase that keeps under 60% of the paper's wording is flagged.
 MIN_TRIGRAM_COVERAGE = 0.6
 #: review F3: a contradiction is a sentence, not a phrase; the judge's quote needs at least this many words, in the paper.
