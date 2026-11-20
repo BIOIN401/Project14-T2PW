@@ -359,3 +359,23 @@ down: reported as blockers, not fixed** (per the brief). What each one is, from 
 
 Evidence: `evidence/locations/pw_ab_rules.json`, `pw_ab_llm.json` (per file: every created count, messages gained and
 gone) and the three harness `results*.jsonl`.
+
+## 11. Review round 2 (APPROVE-WITH-NITS; fixes in `ddd12ab4`)
+
+| # | nit | fix |
+|---|---|---|
+| N1 | The conflict pass could overwrite both stated ends. | A correction is accepted only when exactly one side is returned and passes the checks. |
+| N2 | The direction was not checked. | A name that gives the direction fixes the end that may be corrected: export / secretion / efflux, only "to"; import / uptake, only "from"; otherwise the earlier rule. A reversed secretion is rejected. |
+| N3 | With no paper text the conflict pass fell back to the extraction's evidence strings. | No paper text: no conflict call (`skipped: no_paper_text`). A stated location is corrected only against the paper. The ordinary unplaced-side pass is unchanged. |
+| N4 | Mycolic-acid genera were on the Gram-positive list. | Corynebacterium, Nocardia and Rhodococcus removed (outer mycomembrane); Mycobacterium was not listed. |
+
+**Tests**: focused 266 passed (new: both ends returned, reversed secretion, an import corrects only its "from" side, no
+paper text means no call, Corynebacterium and Mycobacterium get no name default). L7's request sha and cache key are
+still identical to base. suite2 on `ddd12ab4` (clean tree, log `C:/t/vis-runs/logs/loc-suite2-n2.log`): SMOKE 511, golden batch 2 / c011 8 / stage8 4 / quarantine 24, equivalence 8 / 14 / 6, vision 357 (+1 skipped), web 83: all passed, 0 survivors.
+
+**Replays on `ddd12ab4`** (152 q-runs + 8 showcase; `C:/t/loc-work/n2_arms.sh`): the rules-only arm and the
+LLM-from-cache arm are **byte-identical to `0cec290a`'s**, every PWML and every payload (bar the step's own `llm` /
+`llm_conflict` sub-reports). Stated-location changes 0 in both; `llm_corrected` still exactly 1 (run 102, "to" side of
+"enterobactin secretion", the direction N2 allows). The section 9 table and the section 10 PathWhiz A/B therefore stand
+unchanged for this HEAD: no Corynebacterium, Nocardia or Rhodococcus run in the set, and the one conflict answer
+returned only its "to" side.
