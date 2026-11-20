@@ -165,7 +165,7 @@ idx 11 and 134 (mitochondria) and 114 (cell wall), with screenshots of 134 and 1
 Missing template id, from PathWhiz's source (`t2pw/latest` `63959982`, read only): the importer only validates that
 `visualization_template_id` is present (`membrane_visualization.rb`), so an unknown id imports. The viewer renders a
 membrane from the template the server embeds (`path.js.coffee` `parseVisualizationTemplate`; `for_template` calls
-`@visualization_template.get('hex_color')`), which is nil for an unknown id, so the browser throws; PathWhiz's SBGN
+`@visualization_template.get('hex_color')`), which is nil for an unknown id, so the browser throws (a guess from the source; the probe below disproves it); PathWhiz's SBGN
 export (`sbgn_instance`) calls `visualization_template.description` and would raise. Every id T2PW writes (1, 84, 91,
 92, 93, 94, 95, 146, 220, 237, 238, 304) is a row of PathBank's `visualization_templates` and of the harness seed.
 A probe file (`make_missing_template.py`: the furochromone showcase with membrane template 99999) is in the A/B list
@@ -194,22 +194,46 @@ Layout metrics, base `fd814b8e` -> `23ffd20c` (`sum97_after5.json`, `sumshow_aft
 | node overlaps / edges through a node / empty boxes | 0 / 0 / 0 | 0 / 0 / 0 |
 | membrane paths | 167 -> 148 | 33 -> 31 |
 
-**PathWhiz A/B on `23ffd20c`: NOT RUN (blocked by memory, not by a failure).** The re-gate was first one hold
-(`final3.sh`); with Docker up the machine had 3 GB free, under the queue's 4 GB floor, so the gate never opened.
-I stopped Docker Desktop (no container was running; I had started it), split the A/B into `final4.sh`, and armed
-`start_docker_then_queue.sh` (waits for an idle lock and >= 7 GB free, starts Docker outside the bounded wrapper,
-then queues `final4.sh`). Starting Docker once at 4 GB free took the machine to 0-1 GB free, so I stopped it again.
-Free RAM then stayed at 4 GB for 40 minutes with the lock idle (41 GB committed on 31 GB physical), so the waiter was
-stopped. The stack `t2pw-pwdraw` is down, volumes kept, Docker Desktop stopped.
+**PathWhiz A/B on `23ffd20c`** (run after the PC reboot, 14 GB free; `final4.sh` through the queue, holder `pwdraw`,
+log `final4.log`, BW_EXIT 0, 0 survivors; project `t2pw-pwdraw` only). The first attempt was blocked by memory: with
+Docker up the machine sat under the queue's 4 GB floor (41 GB committed on 31 GB), so the A/B waited for the reboot.
+Base arm `pw/base2` (`fd814b8e` files; the 14 imported before were reused with `--resume`, the 3 F3 files imported
+now); after arm `pw/after5` (replay `after5` = `23ffd20c`, every file imported fresh). `pathwhiz_ab_23ffd20c.json`.
 
-What the earlier A/B (`4b701677`, section 3) still covers: F1 changes geometry only (content check 0), and only in
-lipid A, chlorophyll, sour taste and V7b idx 7, 10, 126 of the A/B set; the other 8 files are byte-identical to the
-ones imported then (created counts equal, messages unchanged). Not covered yet: those 6 files on `23ffd20c`, the F3
-files (idx 11, 134, 114) and the missing-template probe.
+| 17 files | base | after |
+|---|---|---|
+| imports successful | 17/17 | 17/17 |
+| compounds / proteins / complexes / reactions | 210 / 159 / 168 / 167 | same |
+| transports / transport transporters / interactions | 32 / 18 / 39 | same |
+| compound locations / nucleic acids / states / labels | 322 / 20 / 67 / 70 | same |
+| importer messages | 89 | **89** |
 
-To run it when memory allows (one command, it waits and queues itself):
-`"C:/Program Files/Git/bin/bash.exe" C:/t/lane-pwdraw-work/scripts/start_docker_then_queue.sh`
-then `pw_ab.py pw/base2 pw/after5 OUT.json` and `compare_page.py` (point it at `after5`).
+No created count and no message count changed in any file. The files the coordinator asked for (the 6 that F1
+changed, then the 3 F3 files):
+
+| file | compounds | proteins | p_complexes | reactions | transports | interactions | compound_locations | nucleic_acids | t_transporters | biological_states | label_locations | messages |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| show_lipid-a | 32 | 12 | 14 | 29 | 3 | 8 | 47 | 1 | 2 | 6 | 19 | 29 -> 29 |
+| show_chlorophyll | 25 | 39 | 33 | 21 | 0 | 11 | 34 | 9 | 0 | 4 | 4 | 18 -> 18 |
+| show_sour-taste | 3 | 1 | 1 | 0 | 6 | 0 | 12 | 0 | 2 | 7 | 5 | 10 -> 10 |
+| v7b_7 | 25 | 39 | 33 | 21 | 0 | 11 | 34 | 9 | 0 | 4 | 4 | 18 -> 18 |
+| v7b_10 | 3 | 1 | 1 | 0 | 6 | 0 | 12 | 0 | 2 | 7 | 5 | 10 -> 10 |
+| v7b_126 | 10 | 0 | 7 | 4 | 1 | 0 | 18 | 0 | 0 | 5 | 4 | 0 -> 0 |
+| v7b_11 | 6 | 1 | 4 | 4 | 1 | 0 | 8 | 0 | 0 | 3 | 2 | 0 -> 0 |
+| v7b_134 | 8 | 0 | 6 | 7 | 1 | 0 | 16 | 0 | 0 | 3 | 4 | 0 -> 0 |
+| v7b_114 | 4 | 2 | 2 | 2 | 2 | 0 | 10 | 0 | 2 | 3 | 2 | 0 -> 0 |
+
+What PathWhiz draws (screenshots `pw/after5/screenshots/`, showcases side by side in `C:/t/lane-pwdraw-work/compare5/`):
+idx 134 shows the mitochondrion as two red Mitochondria Membrane lines, with the two cytoplasm-kind states
+("cytosolic", "human carnitine biosynthesis") as separate cells beside it, as F1 intends; idx 114 shows the green Cell
+Wall band around the cyan cell, with the transporter DltD on the cell membrane.
+
+**Missing template probe** (`after_extra_missing-template.pwml`: the furochromone showcase with membrane template
+99999). The import succeeds with **0 messages** and creates the membrane row (`membrane_visualizations: 1`); the viewer
+logs **no console error** and draws the membrane with the Plasma Membrane template's look (`data-default-color
+#4BC8F2`, 50-unit band; the template's own default colour). This **corrects** the source-based guess above ("the
+browser throws"): the viewer falls back to the default. PathWhiz's SBGN export (`sbgn_instance`, which reads the
+template's description) was not exercised. Every id T2PW writes exists, so this only matters for hand-edited files.
 
 Open for the PO (unchanged, not decided here): leaflet / synonym bands (and whether a bare "membrane" state may be
 nested), wrapping long chains, grouping compartments by tissue, a peptidoglycan line in the periplasm.
