@@ -134,3 +134,82 @@ No created count changed in any file; no message count changed in any file.
    periplasm. Not drawn: no T2PW state names it. Draw it whenever a periplasm exists?
 6. Drawable cell images (mitochondrion, nucleus, bacterium pictures, common in PathBank) are PWML content
    (`drawable-element-locations`) and would fail content_check; out of this lane's scope.
+
+## 6. Review round 1 (APPROVE-WITH-NITS; fixes F1-F4)
+
+Code commit `23ffd20c` (F1, F2). This docs commit adds this section, F4 and the new evidence.
+
+**F1, ambiguous parent.** `compartment_parents()` picked the "heavier" of two candidates at the same depth. It now
+claims **no parent** when more than one candidate shares the top depth (the `weight` argument is gone). Effect on
+the replays (geometry only): 8 of 97 runs and 3 of 8 showcases changed (idx 3, 7, 10, 119, 126, 134, 150, 151; lipid A,
+chlorophyll, sour taste).
+- **Lipid A:** "inner membrane" and the generic "membrane" are both membrane-kind, so the cytoplasm and the four
+  leaflets are no longer put inside either: the cytoplasm is its own cell, the leaflets stand alone. Crossings
+  109 -> 99 (base 90). **Still there:** the generic "membrane" is drawn as a second Plasma Membrane box inside the
+  outer membrane, next to "inner membrane", because its own parent (the periplasm) is the single candidate at its
+  depth, so F1 does not touch it. Whether a bare "membrane" state may be nested at all is the leaflet/synonym
+  question below; not decided here.
+- **Menaquinone:** unchanged ("intracellular" and "cytoplasm" have no children; both stay separate cells).
+- **Sour taste:** the synaptic vesicle is no longer put inside "Type III cell" (two cytoplasm-kind states). Crossings
+  9 -> 14 (base 9).
+
+**F2, tests** (`tests/test_pwml_layout.py`): `test_no_parent_claimed_when_two_compartments_share_the_top_depth` (two
+tissues' cytosols with a mitochondrion; apical and basolateral membranes with a cytosol; a leaflet with two
+membranes; plus a relayout check that the three compartments are drawn apart, the mitochondrion's inner line being
+the only nested path) and `test_single_parent_chain_matrix_in_mitochondrion_in_cell`.
+
+**F3, templates the A/B never covered.** Replay runs drawing them (after arm, `f3_find.py`): Mitochondria Membrane 84
+in 11 runs (idx 11, 39, 44, 54, 74, 77, 88, 100, 109, 118, 134; two lines each), Cell Wall Membrane 304 in idx 114,
+**Melanosome Membrane 95 in none** (no replay run, showcase or test fixture names a melanosome). Added to the A/B:
+idx 11 and 134 (mitochondria) and 114 (cell wall), with screenshots of 134 and 114.
+Missing template id, from PathWhiz's source (`t2pw/latest` `63959982`, read only): the importer only validates that
+`visualization_template_id` is present (`membrane_visualization.rb`), so an unknown id imports. The viewer renders a
+membrane from the template the server embeds (`path.js.coffee` `parseVisualizationTemplate`; `for_template` calls
+`@visualization_template.get('hex_color')`), which is nil for an unknown id, so the browser throws; PathWhiz's SBGN
+export (`sbgn_instance`) calls `visualization_template.description` and would raise. Every id T2PW writes (1, 84, 91,
+92, 93, 94, 95, 146, 220, 237, 238, 304) is a row of PathBank's `visualization_templates` and of the harness seed.
+A probe file (`make_missing_template.py`: the furochromone showcase with membrane template 99999) is in the A/B list
+to confirm this empirically. Side effect found while reading: that SBGN export names a compartment after its membrane
+template ("Plasma" -> "Intracellular Space", others the template name without "Membrane"); with template 220 every
+compartment was "Simple", now they read "Intracellular Space", "Mitochondria", "Nucleus" and so on.
+
+**F4.** `scripts/final2.sh` header now says what the script does (both arms imported fresh).
+
+### Re-gate on `23ffd20c` (clean tree; `logs/final3.log`, one hold, BW_EXIT 0, 0 survivors)
+
+| gate | result |
+|---|---|
+| content check, 97 replay runs | **0** differences (`cc97_after5.json`) |
+| content check, 8 showcases | **0** differences (`cc8_after5.json`) |
+| focused (14 `test_pwml_*.py`, final-payload writer fixes, ORCH-768 replay corpus) | 300 passed |
+| `suite2.sh` (log records HEAD `23ffd20c`, status clean) | SMOKE 511; golden seam 2 / 8 / 4 / 24; equivalence 8 / 14 / 6; vision 357 + 1 skipped; web 83; all passed |
+
+Layout metrics, base `fd814b8e` -> `23ffd20c` (`sum97_after5.json`, `sumshow_after5.json`):
+
+| | 97 runs | 8 showcases |
+|---|---|---|
+| edge crossings | 81 -> **75** (71 before F1) | 121 -> **136** (141 before F1): lipid A 90 -> 99, sour taste 9 -> 14, others 22 -> 23 |
+| long edges | 38 -> 32 | 15 -> 16 |
+| runs wider than 4:1 | 10 -> 12 | 2 -> 2 |
+| node overlaps / edges through a node / empty boxes | 0 / 0 / 0 | 0 / 0 / 0 |
+| membrane paths | 167 -> 148 | 33 -> 31 |
+
+**PathWhiz A/B on `23ffd20c`: NOT RUN (blocked by memory, not by a failure).** The re-gate was first one hold
+(`final3.sh`); with Docker up the machine had 3 GB free, under the queue's 4 GB floor, so the gate never opened.
+I stopped Docker Desktop (no container was running; I had started it), split the A/B into `final4.sh`, and armed
+`start_docker_then_queue.sh` (waits for an idle lock and >= 7 GB free, starts Docker outside the bounded wrapper,
+then queues `final4.sh`). Starting Docker once at 4 GB free took the machine to 0-1 GB free, so I stopped it again.
+Free RAM then stayed at 4 GB for 40 minutes with the lock idle (41 GB committed on 31 GB physical), so the waiter was
+stopped. The stack `t2pw-pwdraw` is down, volumes kept, Docker Desktop stopped.
+
+What the earlier A/B (`4b701677`, section 3) still covers: F1 changes geometry only (content check 0), and only in
+lipid A, chlorophyll, sour taste and V7b idx 7, 10, 126 of the A/B set; the other 8 files are byte-identical to the
+ones imported then (created counts equal, messages unchanged). Not covered yet: those 6 files on `23ffd20c`, the F3
+files (idx 11, 134, 114) and the missing-template probe.
+
+To run it when memory allows (one command, it waits and queues itself):
+`"C:/Program Files/Git/bin/bash.exe" C:/t/lane-pwdraw-work/scripts/start_docker_then_queue.sh`
+then `pw_ab.py pw/base2 pw/after5 OUT.json` and `compare_page.py` (point it at `after5`).
+
+Open for the PO (unchanged, not decided here): leaflet / synonym bands (and whether a bare "membrane" state may be
+nested), wrapping long chains, grouping compartments by tissue, a peptidoglycan line in the periplasm.

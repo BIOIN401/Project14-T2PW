@@ -1,6 +1,7 @@
 #!/bin/bash
 # One heavy-lock hold on HEAD 4b701677: focused tests, the 97 + 8 replays (after4), content check, suite2, then the
-# PathWhiz after arm only (the base arm of final.sh is reused: same base files).
+# PathWhiz A/B with both arms imported fresh (base into pw/base2, after into pw/after2; final.sh's run lost its
+# showcase imports to CRLF paths), then the stack goes down (volumes kept).
 B="C:/Program Files/Git/bin/bash.exe"
 W=C:/t/lane-pwdraw-work
 PY=C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe
