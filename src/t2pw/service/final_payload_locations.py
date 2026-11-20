@@ -495,6 +495,8 @@ def assign_locations(payload: Dict[str, Any], state: Any = None, *, cache: Any =
         _run(payload, state, report, cache, chat_fn, fetcher, today, str(organism_hint or ""))
         if report["inferred"] or report["hint_states"] or report["same_place_left"] or (report["merge"] or {}).get("states"):
             payload[FIELD] = copy.deepcopy(report)
+        elif "biological_states" not in snapshot and payload.get("biological_states") == []:
+            del payload["biological_states"]  # C._Ctx adds an empty list; nothing assigned means an untouched payload
     except Exception as exc:  # fail open
         payload.clear()
         payload.update(snapshot)

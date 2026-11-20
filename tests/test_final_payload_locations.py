@@ -518,3 +518,10 @@ def test_text_record_lists_every_inferred_location():
     assert any(l.startswith("reaction EntC: state -> 'E. coli cytoplasm' [inferred: organism_default:") for l in lines)
     assert any(l.startswith("state E. coli cytoplasm: location 'cytoplasm' [evidence is only the Stage-0 hint") for l in lines)
     assert any(l.startswith("transport enterobactin secretion: both ends are one place") for l in lines)
+
+
+@pytest.mark.parametrize("p", [{}, {"entities": {"species": [], "compounds": [], "proteins": []}}])
+def test_nothing_to_assign_leaves_the_payload_untouched(p):
+    before = copy.deepcopy(p)
+    FL.assign_locations(p)
+    assert p == before
