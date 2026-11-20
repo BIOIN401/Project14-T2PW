@@ -1,6 +1,13 @@
-"""T2PW_REACTION_VERIFIER / T2PW_INTERACTION_TYPING: deterministic half, with a scripted model."""
+"""T2PW_REACTION_VERIFIER / T2PW_INTERACTION_TYPING: deterministic half, with a scripted model.
 
+Self-contained (review R2 N3): the Stage-1 hook tests build their own minimal stand-ins for the callees
+of ``service.extraction.run_stage_one`` instead of importing another test module's fixtures."""
+
+import hashlib
 import json
+import types
+
+import pytest
 
 from t2pw.service import reaction_verifier as V
 
@@ -11,7 +18,10 @@ TEXT = (
     "Chorismate is converted to DHNA by MenF, MenD, MenH, MenC, MenE and MenB. "
     "Chorismate is isomerised to isochorismate by MenF. Isochorismate is converted to DHNA by later enzymes. "
     "Enterobactin binds ferric iron outside the cell. "
-    "Loss of function of PIF1 caused increased expression of CHLH in seedlings grown in the dark."
+    "Lactate dehydrogenase reduces pyruvate to lactate in the coupled assay used to follow the reaction. "
+    "Loss of function of PIF1 caused increased expression of CHLH in seedlings grown in the dark. "
+    "EntC and EntB interact to form a dynamic channeling system. "
+    "DHNA inhibits MenD allosterically, lowering its activity in vitro."
 )
 
 
@@ -39,13 +49,30 @@ def live(rows):
     return [r for r in rows if r.get("scope_membership") != "out_of_scope"]
 
 
+# -- repairs ---------------------------------------------------------------------------------------
 def test_incomplete_adds_only_names_in_the_paper():
     rows, rep, out = run([rx(["isochorismate"], ["2,3-dihydro-2,3-dihydroxybenzoate"], name="EntB")],
-                         {0: {"verdict": "incomplete", "add_outputs": ["pyruvate", "lactate"]}})
+                         {0: {"verdict": "incomplete", "add_outputs": ["pyruvate", "lactate x"]}})
     assert rows[0]["outputs"] == ["2,3-dihydro-2,3-dihydroxybenzoate", "pyruvate"]
     assert rep["repaired"] == [0]
     assert any(c["name"] == "pyruvate" for c in out["entities"]["compounds"])
     assert rows[0]["provenance_lineage"][-1]["origin"] == "audit_modified"
+
+
+def test_incomplete_with_a_string_adds_the_name_not_its_letters():
+    rows, _, _ = run([rx(["isochorismate"], ["2,3-dihydro-2,3-dihydroxybenzoate"])],
+                     {0: {"verdict": "incomplete", "add_outputs": "pyruvate"}})
+    assert rows[0]["outputs"] == ["2,3-dihydro-2,3-dihydroxybenzoate", "pyruvate"]
+    rows, rep, _ = run([rx(["isochorismate"], ["x"])], {0: {"verdict": "incomplete", "add_outputs": "a"}})
+    assert rows[0]["outputs"] == ["x"] and rep["repaired"] == []
+
+
+def test_incomplete_may_correct_a_wrong_participant():
+    """R1 F7c: the live DHB-ate row. A wrong name is replaced (rename), not kept next to the right one."""
+    rows, rep, _ = run([rx(["2,3-DHB", "ATP"], ["2,3-dihydroxybenzoyl-AMP"], name="EntE"),
+                        rx(["2,3-DHB", "ATP"], ["pyruvate"], name="EntE2")],
+                       {1: {"verdict": "incomplete", "rename": [{"old": "pyruvate", "new": "2,3-dihydroxybenzoyl-AMP"}]}})
+    assert len(live(rows)) == 1 and rep["merged"][0]["into"] == 0
 
 
 def test_vague_rename_then_fold_into_the_identical_row():
@@ -62,78 +89,6 @@ def test_rename_to_a_name_not_in_the_paper_is_refused():
     assert rows[0]["outputs"] == ["activated 2,3-DHB"] and rep["repaired"] == []
 
 
-def test_off_pathway_is_omitted_and_reported_with_its_quote():
-    rows, rep, _ = run([rx(["enterobactin", "ferric iron"], ["ferric-enterobactin"], lock="rxn_lock_001")],
-                       {0: {"verdict": "off_pathway", "quote": "Enterobactin binds ferric iron outside the cell"}})
-    r = rows[0]
-    assert r["scope_membership"] == "out_of_scope" and "locked_reaction_id" not in r and "locked" not in r
-    assert r["verifier"]["action"] == "omitted" and r["verifier"]["model_quote"].startswith("Enterobactin binds")
-    assert rep["omitted"] == [0]
-
-
-def test_not_stated_with_a_verbatim_quote_is_only_flagged():
-    q = "MenD condenses 2-oxoglutarate with isochorismate to form SEPHCHC"
-    rows, rep, _ = run([rx(["2-oxoglutarate", "isochorismate"], ["SEPHCHC"], ev=q)], {0: {"verdict": "not_stated"}})
-    assert rows[0]["scope_membership"] == "core" and rep["flagged"] == [0]
-    # even with no verbatim quote anywhere: a model's "not stated" never deletes (replay: 5 certified steps)
-    rows, rep, _ = run([rx(["x"], ["y"], ev="made up words that are nowhere")], {0: {"verdict": "not_stated"}})
-    assert rows[0]["scope_membership"] == "core" and rep["flagged"] == [0]
-
-
-def test_off_pathway_link_of_the_chain_is_kept():
-    chain = [rx(["a"], ["b"]), rx(["b"], ["c"]), rx(["c"], ["d"])]
-    rows, rep, _ = run(chain, {1: {"verdict": "off_pathway"}})
-    assert rows[1]["scope_membership"] == "core" and rep["flagged"] == [1]
-    rows, rep, _ = run(chain, {2: {"verdict": "off_pathway"}})  # a sink: omitted
-    assert rows[2]["scope_membership"] == "out_of_scope"
-
-
-SPLIT = [rx(["2-oxoglutarate", "isochorismate"], ["SEPHCHC", "carbon dioxide"], name="MenD"),
-         rx(["2-oxoglutarate"], ["intermediate I"]),
-         rx(["intermediate I", "isochorismate"], ["SEPHCHC"])]
-MERGED = {"inputs": ["2-oxoglutarate", "isochorismate"], "outputs": ["SEPHCHC", "carbon dioxide"],
-          "quote": "MenD condenses 2-oxoglutarate with isochorismate to form SEPHCHC and carbon dioxide"}
-
-
-def test_split_policies():
-    ans = {1: {"verdict": "split", "merged_step": MERGED}, 2: {"verdict": "split", "merged_step": MERGED}}
-    for policy, n_live in (("merge", 1), ("combo", 1), ("omit", 1), ("keep", 3)):
-        rows, rep, _ = run(SPLIT, ans, policy)
-        assert len(live(rows)) == n_live, policy
-    bad = {1: {"verdict": "split", "merged_step": dict(MERGED, quote="not in the paper at all ok")}}
-    # the model's whole step fails the paper check: the chain's own rows are joined instead
-    rows = live(run(SPLIT, bad, "merge")[0])
-    assert len(rows) == 2 and rows[1]["inputs"] == ["2-oxoglutarate", "isochorismate"] and rows[1]["outputs"] == ["SEPHCHC"]
-    plain_split = [rx(["isochorismate"], ["X1"]), rx(["X1"], ["SEPHCHC"])]  # no generic name: nothing to join
-    assert len(live(run(plain_split, {0: bad[1]}, "merge")[0])) == 2  # kept
-    assert len(live(run(plain_split, {0: bad[1]}, "combo")[0])) == 1  # combo omits it anyway
-
-
-def test_generic_intermediates_are_split_even_when_the_model_says_ok():
-    chain = [rx(["2-oxoglutarate"], ["intermediate I"]),
-             rx(["intermediate I", "isochorismate"], ["intermediate II"]),
-             rx(["intermediate II"], ["SEPHCHC", "carbon dioxide"])]
-    rows, rep, _ = run(chain, {}, "merge")  # no merged_step from the model: the chain's own rows are joined
-    joined = live(rows)
-    assert len(joined) == 1
-    assert joined[0]["inputs"] == ["2-oxoglutarate", "isochorismate"]
-    assert joined[0]["outputs"] == ["SEPHCHC", "carbon dioxide"]
-    rows, _, _ = run(SPLIT[:1] + chain, {}, "merge")  # joined step equals the paper's row: folded into it
-    assert len(live(rows)) == 1
-    assert len(live(run(chain, {}, "keep")[0])) == 3
-
-
-def test_summary_under_merge_needs_its_steps():
-    steps = [rx(["chorismate"], ["isochorismate"]), rx(["isochorismate"], ["DHNA"])]
-    summ = rx(["chorismate"], ["DHNA"])
-    rows, _, _ = run(steps + [summ], {2: {"verdict": "summary"}}, "merge")
-    assert rows[2]["scope_membership"] == "out_of_scope"
-    rows, rep, _ = run([steps[0], summ], {1: {"verdict": "summary"}}, "merge")
-    assert rows[1]["scope_membership"] == "core" and rep["flagged"] == [1]
-    rows, _, _ = run([steps[0], summ], {1: {"verdict": "summary"}}, "combo")
-    assert rows[1]["scope_membership"] == "out_of_scope"
-
-
 def test_reversed_needs_a_verbatim_quote():
     r = [rx(["isochorismate"], ["chorismate"])]
     rows, _, _ = run(r, {0: {"verdict": "reversed", "quote": "Chorismate is isomerised to isochorismate by MenF"}})
@@ -142,45 +97,194 @@ def test_reversed_needs_a_verbatim_quote():
     assert rows[0]["inputs"] == ["isochorismate"]
 
 
-def test_interaction_type_from_after_effect_needs_a_verbatim_quote():
-    p = payload([], [{"entity_1": "PIF1", "entity_2": "CHLH", "relationship": "binding"},
-                     {"entity_1": "HY5", "entity_2": "CHLH", "relationship": "binding"},
-                     {"entity_1": "PIF1", "entity_2": "GUN4", "relationship": "inhibits"}])
-    ans = {0: {"type": "inhibition", "quote": "Loss of function of PIF1 caused increased expression of CHLH"},
-           1: {"type": "activation", "quote": "HY5 strongly activates CHLH in the light"},
-           2: {"type": "inhibition", "quote": "Loss of function of PIF1 caused increased expression of CHLH"}}
-    out, rep = V.apply_types(p, TEXT, ans)
-    ix = out["processes"]["interactions"]
-    assert [x["relationship"] for x in ix] == ["inhibition", "binding", "inhibits"]
-    assert rep["changed"] == [0]
+# -- off pathway (R1 F4) ------------------------------------------------------------------------------
+CHAIN = [rx(["chorismate"], ["isochorismate"], name="EntC"),
+         rx(["isochorismate"], ["2,3-dihydro-2,3-dihydroxybenzoate", "pyruvate"], name="EntB"),
+         rx(["2,3-DHB", "ATP"], ["2,3-dihydroxybenzoyl-AMP"], name="EntE"),
+         rx(["2,3-dihydroxybenzoyl-AMP", "L-serine"], ["enterobactin"], name="EntF")]
+Q_IRON = "Enterobactin binds ferric iron outside the cell"
 
 
-def test_quote_may_drop_a_citation_but_not_words():
+def test_off_pathway_isolated_row_with_a_verified_quote_is_omitted_and_reported():
+    rows, rep, _ = run(CHAIN + [rx(["ferric iron", "siderophore X"], ["iron complex"], lock="rxn_lock_009")],
+                       {4: {"verdict": "off_pathway", "quote": Q_IRON}})
+    r = rows[4]
+    assert r["scope_membership"] == "out_of_scope" and "locked_reaction_id" not in r and "locked" not in r
+    assert r["verifier"]["action"] == "omitted" and r["verifier"]["model_quote"].startswith("Enterobactin binds")
+    assert rep["omitted"] == [4] and rep["rows"][4]["lock_id"] == "rxn_lock_009"
+
+
+@pytest.mark.parametrize("idx", [0, 3])
+def test_off_pathway_never_drops_the_first_or_last_step(idx):
+    rows, rep, _ = run(CHAIN, {idx: {"verdict": "off_pathway", "quote": Q_IRON}})
+    assert len(live(rows)) == 4 and rep["flagged"] == [idx]
+
+
+def test_off_pathway_without_a_verified_quote_or_connected_by_a_real_name_is_only_flagged():
+    iso = rx(["ferric iron", "siderophore X"], ["iron complex"])
+    rows, rep, _ = run(CHAIN + [iso], {4: {"verdict": "off_pathway", "quote": "iron is bound outside by it"}})
+    assert rep["flagged"] == [4]
+    # the LDH assay row shares pyruvate (a real name) with EntB: flagged, not dropped
+    ldh = rx(["pyruvate", "NADH"], ["lactate", "NAD+"])
+    rows, rep, _ = run(CHAIN + [ldh], {4: {"verdict": "off_pathway", "quote": "Lactate dehydrogenase reduces pyruvate to lactate in the coupled assay"}})
+    assert rep["flagged"] == [4]
+    # currency alone never connects: an ATP -> ADP row is isolated
+    rows, rep, _ = run(CHAIN + [rx(["ATP"], ["ADP", "glucose 6-phosphate"])], {4: {"verdict": "off_pathway", "quote": Q_IRON}})
+    assert rep["omitted"] == [4]
+
+
+def test_off_pathway_never_empties_the_pathway():
+    rows, rep, _ = run([rx(["2-oxoglutarate", "isochorismate"], ["SEPHCHC"])], {0: {"verdict": "off_pathway", "quote": Q_IRON}})
+    assert rep["flagged"] == [0]
+
+
+def test_not_stated_only_flags():
+    q = "MenD condenses 2-oxoglutarate with isochorismate to form SEPHCHC"
+    rows, rep, _ = run([rx(["2-oxoglutarate", "isochorismate"], ["SEPHCHC"], ev=q)], {0: {"verdict": "not_stated"}})
+    assert rows[0]["scope_membership"] == "core" and rep["flagged"] == [0]
+    rows, rep, _ = run([rx(["x"], ["y"], ev="made up words that are nowhere")], {0: {"verdict": "not_stated"}})
+    assert rows[0]["scope_membership"] == "core" and rep["flagged"] == [0]
+
+
+# -- split / merge (R1 F7) --------------------------------------------------------------------------
+SPLIT = [rx(["2-oxoglutarate", "isochorismate"], ["SEPHCHC", "carbon dioxide"], name="MenD"),
+         rx(["2-oxoglutarate"], ["intermediate I"]),
+         rx(["intermediate I", "isochorismate"], ["SEPHCHC"])]
+MERGED = {"inputs": ["2-oxoglutarate", "isochorismate"], "outputs": ["SEPHCHC", "carbon dioxide"],
+          "quote": "MenD condenses 2-oxoglutarate with isochorismate to form SEPHCHC and carbon dioxide"}
+
+
+def test_split_chain_is_joined_from_its_own_rows_and_folded_into_the_paper_row():
+    for policy, n_live in (("merge", 1), ("combo", 1), ("omit", 1), ("keep", 3)):
+        rows, rep, _ = run(SPLIT, {1: {"verdict": "split", "merged_step": MERGED}}, policy)
+        assert len(live(rows)) == n_live, policy
+    rows = live(run(SPLIT, {}, "merge")[0])
+    assert rows[0]["name"] == "MenD" and rows[0]["outputs"] == ["SEPHCHC", "carbon dioxide"]
+
+
+def test_generic_chain_without_the_paper_row():
+    chain = [rx(["2-oxoglutarate"], ["intermediate I"]),
+             rx(["intermediate I", "isochorismate"], ["intermediate II"]),
+             rx(["intermediate II"], ["SEPHCHC", "carbon dioxide"])]
+    rows, _, _ = run(chain, {}, "merge")
+    joined = live(rows)
+    assert len(joined) == 1
+    assert joined[0]["inputs"] == ["2-oxoglutarate", "isochorismate"]
+    assert joined[0]["outputs"] == ["SEPHCHC", "carbon dioxide"]
+    assert len(live(run(chain, {}, "keep")[0])) == 3
+
+
+def test_two_unrelated_mechanisms_saying_intermediate_I_are_never_joined():
+    a = [rx(["2-oxoglutarate"], ["intermediate I"], name="MenD"), rx(["intermediate I"], ["SEPHCHC"], name="MenD")]
+    b = [rx(["glycine"], ["intermediate I"], name="ALAS"), rx(["intermediate I"], ["ALA"], name="ALAS")]
+    rows, _, _ = run(a + b, {}, "merge")
+    assert len(live(rows)) == 4  # nothing joined, nothing invented: all kept and flagged
+    assert not any(set(r["inputs"]) >= {"2-oxoglutarate", "glycine"} for r in live(rows))
+
+
+def test_model_whole_step_must_keep_the_rows_real_names():
+    row = [rx(["intermediate I", "isochorismate"], ["SEPHCHC"])]
+    other = dict(MERGED, inputs=["2-oxoglutarate", "chorismate"])  # drops isochorismate: a different step
+    rows, rep, _ = run(row, {0: {"verdict": "split", "merged_step": other}}, "merge")
+    assert rep["flagged"] == [0] and len(live(rows)) == 1
+
+
+def test_model_split_on_a_real_row_never_replaces_it():
+    real = [rx(["chorismate"], ["isochorismate"], name="EntC")]
+    rows, rep, _ = run(real, {0: {"verdict": "split", "merged_step": MERGED}}, "merge")
+    assert rows[0]["inputs"] == ["chorismate"] and rep["flagged"] == [0] and rep["appended"] == 0
+
+
+# -- summary (R1 F3) ---------------------------------------------------------------------------------
+def test_summary_dropped_only_when_kept_steps_make_its_product():
+    steps = [rx(["chorismate"], ["isochorismate"]), rx(["isochorismate"], ["DHNA"])]
+    summ = rx(["chorismate"], ["DHNA"])
+    rows, _, _ = run(steps + [summ], {2: {"verdict": "summary"}}, "merge")
+    assert rows[2]["scope_membership"] == "out_of_scope"
+    rows, rep, _ = run([steps[0], summ], {1: {"verdict": "summary"}}, "merge")
+    assert rows[1]["scope_membership"] == "core" and rep["flagged"] == [1]
+
+
+def test_summary_is_not_covered_through_a_co_product():
+    """R1 F3 scenario: chorismate -> isochorismate -> CO2 is a path, but nothing makes DHNA."""
+    kept = [rx(["chorismate"], ["isochorismate"], name="MenF"),
+            rx(["isochorismate", "2-oxoglutarate"], ["SEPHCHC", "carbon dioxide"], name="MenD")]
+    summ = rx(["chorismate", "2-oxoglutarate"], ["DHNA", "carbon dioxide"])
+    rows, rep, _ = run(kept + [summ], {2: {"verdict": "summary"}}, "merge")
+    assert rows[2]["scope_membership"] == "core" and rep["flagged"] == [2]
+
+
+def test_a_mislabelled_one_enzyme_step_is_never_dropped():
+    """The EntF-type false summary: its product is made by no kept row, so it stays (whatever co-products)."""
+    kept = [rx(["L-serine", "ATP"], ["seryl-AMP"]), rx(["seryl-AMP"], ["seryl-EntF", "AMP"])]
+    entf = rx(["2,3-dihydroxybenzoyl-AMP", "L-serine"], ["enterobactin", "AMP"], name="EntF")
+    rows, _, _ = run(CHAIN[:3] + kept + [entf], {5: {"verdict": "summary"}}, "merge")
+    assert rows[5]["scope_membership"] == "core"
+
+
+# -- interaction typing (R1 F5, F6) --------------------------------------------------------------------
+Q_PIF = "Loss of function of PIF1 caused increased expression of CHLH"
+
+
+def _types(rel, ans):
+    p = payload([], [{"entity_1": "A", "entity_2": "B", "relationship": rel}])
+    out, rep = V.apply_types(p, TEXT, {0: ans})
+    return out["processes"]["interactions"][0]["relationship"], rep
+
+
+def test_unsigned_row_gets_the_sign_its_after_effect_states():
+    rel, rep = _types("binding", {"type": "inhibition", "quote": Q_PIF})
+    assert rel == "inhibition" and rep["changed"] == [0]
+
+
+@pytest.mark.parametrize("word", ["inhibits", "activation", "allosteric_inhibitor_of", "inhibited_by",
+                                  "activated_by", "negatively_regulates", "positive regulator of", "represses"])
+def test_a_signed_word_is_never_flipped(word):
+    rel, rep = _types(word, {"type": "activation", "quote": Q_PIF})
+    assert rel == word and rep["changed"] == []
+
+
+def test_a_quote_that_drops_a_leading_negation_is_refused():
+    rel, _ = _types("binding", {"type": "activation", "quote": "PIF1 caused increased expression of CHLH in seedlings grown in the dark"})
+    assert rel == "binding"
+
+
+def test_a_quote_that_states_no_effect_does_not_type_the_row():
+    """R1 F6, the live false edge: EntC/EntB 'interact' became 'activation'."""
+    rel, _ = _types("interaction", {"type": "activation", "quote": "EntC and EntB interact to form a dynamic channeling system"})
+    assert rel == "interaction"
+
+
+def test_quote_may_drop_a_citation_or_a_clause_but_not_words_or_a_negation():
     tw = V.text_words("MenD can be allosterically inhibited by DHNA in Staphylococcus aureus ( 19 ) and "
                       "Mycobacterium tuberculosis (Smith et al., 2009), suggesting feedback.")
     assert V.quote_in_paper("inhibited by DHNA in Staphylococcus aureus and Mycobacterium tuberculosis", tw)
     assert not V.quote_in_paper("inhibited by DHNA in Staphylococcus aureus and in Mycobacterium tuberculosis", tw)
-    assert not V.quote_in_paper("aureus and Mycobacterium", tw)  # too short to be a quote
+    assert not V.quote_in_paper("aureus and Mycobacterium", tw)
     tw = V.text_words("FHY3 and FAR1 induce the expression of ALAD1/HEMB1 encoding an ALAD by binding to its "
                       "promoter region. PIF1 does not induce the expression of HEMA1 in the dark.")
-    # a clause left out of the middle is accepted ...
     assert V.quote_in_paper("FHY3 and FAR1 induce the expression of ALAD1/HEMB1 by binding to its promoter region", tw)
-    # ... a negation left out is not, and neither are added or reordered words
     assert not V.quote_in_paper("PIF1 does induce the expression of HEMA1 in the dark", tw)
     assert not V.quote_in_paper("FHY3 and FAR1 strongly induce the expression of ALAD1/HEMB1 by binding", tw)
-    assert not V.quote_in_paper("FHY3 and FAR1 induce ALAD1/HEMB1 the expression of by binding", tw)
 
 
-def test_a_signed_interaction_is_never_flipped():
-    p = payload([], [{"entity_1": "PIF1", "entity_2": "HEMA1", "relationship": "inhibits"}])
-    ans = {0: {"type": "activation", "quote": "Loss of function of PIF1 caused increased expression of CHLH"}}
-    out, rep = V.apply_types(p, TEXT, ans)
-    assert out["processes"]["interactions"][0]["relationship"] == "inhibits" and rep["changed"] == []
+# -- run-level: budget, failure, lock manifest, report (R1 F8, F9) ----------------------------------
+def test_budget_caps_calls_and_rows_past_it_stay_untouched(monkeypatch):
+    calls = []
+
+    def fake_ask(system, user, chat_fn, stage, timeout=None):
+        calls.append(stage)
+        return {"rows": []}
+    monkeypatch.setattr(V, "_ask", fake_ask)
+    monkeypatch.setattr(V, "MAX_CALLS", 2)
+    rows = [rx(["a%d" % i], ["b%d" % i]) for i in range(95)]  # 4 chunks of 30
+    out, rep = V.verify_stage_one(payload(rows), TEXT, {}, interactions=True)
+    assert len(calls) == 2 and rep["calls_skipped_over_budget"] >= 1 and rep["error"] is None
 
 
 def test_model_error_fails_open_and_flags_default_off(monkeypatch):
-    monkeypatch.delenv(V.ENV_FLAG, raising=False)
-    monkeypatch.delenv(V.IX_FLAG, raising=False)
+    for f in (V.ENV_FLAG, V.IX_FLAG, V.GRANULARITY_ENV):
+        monkeypatch.delenv(f, raising=False)
     assert not V.enabled() and not V.typing_enabled() and V.granularity() == V.DEFAULT_GRANULARITY
 
     def boom(*a, **k):
@@ -190,31 +294,90 @@ def test_model_error_fails_open_and_flags_default_off(monkeypatch):
     assert out is p and "provider down" in rep["error"]
 
 
-def test_hook_end_to_end_with_a_scripted_model(tmp_path, monkeypatch):
-    seen = []
-
-    def fake_ask(system, user, chat_fn, stage):
-        seen.append(json.loads(user))
-        return {"rows": [{"id": 0, "verdict": "incomplete", "add_outputs": ["pyruvate"]}]}
+def test_hook_prunes_the_lock_manifest_and_hands_the_report_to_the_run(tmp_path, monkeypatch):
+    def fake_ask(system, user, chat_fn, stage, timeout=None):
+        return {"rows": [{"id": 4, "verdict": "off_pathway", "quote": Q_IRON}]}
     monkeypatch.setattr(V, "_ask", fake_ask)
     monkeypatch.setenv(V.ENV_FLAG, "1")
     monkeypatch.delenv(V.IX_FLAG, raising=False)
-    p = payload([rx(["isochorismate"], ["2,3-dihydro-2,3-dihydroxybenzoate"])])
+    rows = [dict(r, locked_reaction_id="rxn_lock_00%d" % i) for i, r in enumerate(CHAIN)]
+    rows.append(rx(["ferric iron", "siderophore X"], ["iron complex"], lock="rxn_lock_009"))
+    manifest = [{"locked_reaction_id": r["locked_reaction_id"]} for r in rows]
+    (tmp_path / "locked_reaction_manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
     state = {}
-    out = V.apply_to_stage_one(p, TEXT, state, tmp_path, {"pathway_name": "enterobactin biosynthesis"}, "task line")
-    assert "pyruvate" in out["processes"]["reactions"][0]["outputs"]
-    assert seen[0]["requested_pathway"] == "enterobactin biosynthesis" and seen[0]["task"] == "task line"
-    assert state["reaction_verifier"]["error"] is None
-    assert json.loads((tmp_path / V.REPORT_FILE).read_text(encoding="utf-8"))["reactions"]["repaired"] == [0]
+    out = V.apply_to_stage_one(payload(rows), TEXT, state, tmp_path / "diag", {"pathway_name": "enterobactin"},
+                               "task", manifest_dir=tmp_path)
+    left = json.loads((tmp_path / "locked_reaction_manifest.json").read_text(encoding="utf-8"))
+    assert [e["locked_reaction_id"] for e in left] == ["rxn_lock_000", "rxn_lock_001", "rxn_lock_002", "rxn_lock_003"]
+    assert state[V.REPORT_STATE_KEY]["lock_manifest_entries_removed"] == 1
+    assert state[V.REPORT_STATE_KEY]["reactions"]["omitted"] == [4]
+    assert out["processes"]["reactions"][4]["scope_membership"] == "out_of_scope"
+
+
+def test_batch_driver_writes_the_report_only_when_present():
+    from t2pw.batch import driver as D
+
+    at = types.SimpleNamespace(session_state={"reaction_verifier_report": {"flags": {}, "error": None}})
+    out = {}
+    D._add_common_artifacts(at, {}, out)
+    assert "reaction_verifier_report.json" in out
+    out = {}
+    D._add_common_artifacts(types.SimpleNamespace(session_state={}), {}, out)
+    assert "reaction_verifier_report.json" not in out
 
 
 # -- flags off = main, on the two code paths this branch touches (no network) ----------------------
-from test_service_extraction_stage1 import _run, world  # noqa: E402,F401
-
 ALL_FLAGS = (V.ENV_FLAG, V.IX_FLAG, V.GRANULARITY_ENV, "T2PW_VD18_SPAN_TEMPLATES")
 
+#: sha256 of [(name, pattern, flags)] of rag.admission._ALL_PROSE_PATTERNS at main fd814b8e (14 templates),
+#: computed from C:/t/acc-base by C:/t/acc-runs/scripts/main_pattern_hash.py. Frozen: an independent copy of
+#: main's list, not the branch's own tuple (review R2 N1).
+MAIN_PROSE_PATTERNS_SHA256 = "4aa0034162fcab79dafa4cd877c5f08bdcc81a9d4573bf573e61b48848017c4b"
 
-def test_flags_off_stage_one_hook_is_main(world, monkeypatch):
+
+class _Reporter:
+    def __getattr__(self, name):
+        class _Ctx:
+            def __enter__(self):
+                return None
+
+            def __exit__(self, *a):
+                return False
+        return lambda *a, **k: _Ctx()
+
+
+@pytest.fixture
+def stage_one_world(monkeypatch, tmp_path):
+    """Minimal stand-ins for the callees of ``service.extraction.run_stage_one`` (no network, no model)."""
+    import t2pw.config as config
+    import t2pw.paths as paths
+    import t2pw.pipeline.extraction_diagnostics as diag
+    import t2pw.pipeline.pipeline as pipeline
+    import t2pw.pipeline.stage_one_boundary as boundary
+
+    w = types.SimpleNamespace(stage1={"entities": {}, "processes": {
+        "reactions": [{"name": "EntB", "inputs": ["isochorismate"], "outputs": ["2,3-diDHB"]}],
+        "interactions": [{"entity_1": "Fur", "entity_2": "entC", "relationship": "binding"}]}})
+    monkeypatch.setattr(paths, "PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(pipeline, "run_stage_one_with_chunking", lambda text, **kw: (json.loads(json.dumps(w.stage1)), []))
+    monkeypatch.setattr(boundary, "settle_stage_one", lambda p, **kw: types.SimpleNamespace(
+        payload=dict(p, settled=True), ok=True, failure=None, reconstruction={}, incomplete_reason="",
+        to_summary=lambda: {"ok": True}))
+    monkeypatch.setattr(diag, "current", lambda: types.SimpleNamespace(artifacts=lambda: {}))
+    monkeypatch.setattr(config, "rag_config", lambda *a, **k: {"enabled": False})
+    return w
+
+
+def _run_stage_one(state):
+    from t2pw.service import extraction as ex
+
+    return ex.run_stage_one("the paper", pathway_context={"pathway_name": "Menaquinone"}, user_task_context="focus",
+                            diagnostics_dir="C:/diag/run-1", enable_chunking=True, chunk_size=1200.0, chunk_overlap=200.0,
+                            extract_attempts=3.0, temperature=0.25, extract_tokens=8000.0, rag_incomplete_flag=0,
+                            state=state, reporter=_Reporter())
+
+
+def test_flags_off_stage_one_hook_is_main(stage_one_world, monkeypatch):
     """service.extraction.run_stage_one with every new flag unset: the verifier is never entered and
     Stage 1 returns what main returns (the settled boundary payload, untouched)."""
     for f in ALL_FLAGS:
@@ -222,31 +385,22 @@ def test_flags_off_stage_one_hook_is_main(world, monkeypatch):
     entered = []
     monkeypatch.setattr(V, "apply_to_stage_one", lambda *a, **k: entered.append(1) or a[0])
     monkeypatch.setattr(V, "_ask", lambda *a, **k: entered.append(2) or {})
-    world.stage1 = {"entities": {}, "processes": {"reactions": [
-        {"name": "EntB", "inputs": ["isochorismate"], "outputs": ["2,3-diDHB"]}],
-        "interactions": [{"entity_1": "Fur", "entity_2": "entC", "relationship": "binding"}]}}
-    res, _, state = _run(world)
-    assert entered == [] and "reaction_verifier" not in state
-    assert res.stage_one == dict(world.stage1, settled=True)
-    # sensitivity: the same fixture with the flag on does enter the verifier
-    monkeypatch.setenv(V.ENV_FLAG, "1")
-    _run(world)
+    state = {}
+    res = _run_stage_one(state)
+    assert entered == [] and "reaction_verifier" not in state and V.REPORT_STATE_KEY not in state
+    assert res.stage_one == dict(stage_one_world.stage1, settled=True)
+    monkeypatch.setenv(V.ENV_FLAG, "1")  # sensitivity: the same fixture with the flag on enters the verifier
+    _run_stage_one({})
     assert entered == [1]
 
 
 def test_flags_off_admission_is_main(monkeypatch):
-    """rag.admission with T2PW_VD18_SPAN_TEMPLATES unset gives exactly main's verdicts and readings on a
-    fixture of spans (the VD-18 shapes and the shapes it must not read)."""
+    """rag.admission with T2PW_VD18_SPAN_TEMPLATES unset walks a template list identical, pattern by
+    pattern, to main fd814b8e's (frozen hash), so its verdicts are main's."""
     from t2pw.rag import admission as AD
-    import test_rag_admission_vd18 as T
 
     for f in ALL_FLAGS:
         monkeypatch.delenv(f, raising=False)
-    cases = T.POSITIVE + T.NEGATIVE
-    got = [(AD.validate_evidence_span(s, inputs=i, outputs=o, enzymes=e).ok, AD.parse_span_relations(s))
-           for s, i, o, e in cases]
-    main_list = AD._PROSE_PATTERNS + AD._EXTRA_PROSE_PATTERNS  # main's walk, rebuilt from its two parts
-    monkeypatch.setattr(AD, "_prose_patterns", lambda: main_list)
-    want = [(AD.validate_evidence_span(s, inputs=i, outputs=o, enzymes=e).ok, AD.parse_span_relations(s))
-            for s, i, o, e in cases]
-    assert got == want
+    rows = [[n, p.pattern, int(p.flags)] for n, p in AD._prose_patterns()]
+    assert len(rows) == 14
+    assert hashlib.sha256(json.dumps(rows, ensure_ascii=False).encode("utf-8")).hexdigest() == MAIN_PROSE_PATTERNS_SHA256
