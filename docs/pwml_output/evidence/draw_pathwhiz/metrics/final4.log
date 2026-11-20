@@ -1,0 +1,71 @@
+HEAD 32dd991acec516a0760595fb946ea2f110fc03ba
+membrane template ids replaced: 1
+base 10 7
+after 11 7
+[pwi] starting rails server in the container
+[pwi] OK       24.2s  base_v7b_134.pwml  errors=0
+[pwi] OK       30.4s  base_v7b_114.pwml  errors=0
+[pwi] OK       26.9s  base_v7b_11.pwml  errors=0
+[pwi] summary: {"files": 17, "success_true": 17, "success_true_no_errors": 10, "success_false": 0, "total_seconds": 957.8}
+EXIT_import_base2=0
+[pwi] starting rails server in the container
+[pwi] OK       60.6s  after_show_enterobactin.pwml  errors=0
+[pwi] OK       30.3s  after_v7b_114.pwml  errors=0
+[pwi] OK      178.6s  after_show_chlorophyll.pwml  errors=15
+[pwi] OK       51.4s  after_show_ceramide-sphingolipid.pwml  errors=1
+[pwi] OK       22.0s  after_v7b_134.pwml  errors=0
+[pwi] OK       19.8s  after_show_furochromone.pwml  errors=0
+[pwi] OK       53.2s  after_show_menaquinone.pwml  errors=0
+[pwi] OK       77.7s  after_show_lipid-a.pwml  errors=22
+[pwi] OK       23.6s  after_show_sour-taste.pwml  errors=7
+[pwi] OK       18.4s  after_extra_missing-template.pwml  errors=0
+[pwi] OK       90.6s  after_show_coenzyme-a.pwml  errors=0
+[pwi] OK      181.4s  after_v7b_7.pwml  errors=15
+[pwi] OK        8.4s  after_v7b_10.pwml  errors=7
+[pwi] OK        1.7s  after_v7b_14.pwml  errors=0
+[pwi] OK       31.7s  after_v7b_116.pwml  errors=1
+[pwi] OK        2.7s  after_v7b_126.pwml  errors=0
+[pwi] OK       70.5s  after_v7b_128.pwml  errors=0
+[pwi] OK        5.9s  after_v7b_11.pwml  errors=0
+[pwi] summary: {"files": 18, "success_true": 18, "success_true_no_errors": 11, "success_false": 0, "total_seconds": 928.5}
+EXIT_import_after5=0
+ Container t2pw-pwdraw-app-1 Stopping 
+ Container t2pw-pwdraw-app-1 Stopped 
+ Container t2pw-pwdraw-app-1 Removing 
+ Container t2pw-pwdraw-app-1 Removed 
+ Container t2pw-pwdraw-db-1 Stopping 
+ Container t2pw-pwdraw-db-1 Stopped 
+ Container t2pw-pwdraw-db-1 Removing 
+ Container t2pw-pwdraw-db-1 Removed 
+ Network t2pw-pwdraw_default Removing 
+ Network t2pw-pwdraw_default Removed 
+STACK_DOWN rc=0
+FINAL4_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 69448fcd5009dfb3d31c5eabc03a1ec8db8b3f30  [git, worktree dirty=True]
+label                   : pwdraw-final4
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/lane-pwdraw-work/scripts/final4.sh
+cwd                     : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 25788 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 7200 s
+duration                : 2771.28 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 165  39388:bash.exe, 36524:bash.exe, 38332:python.exe, 41632:python.exe, 6996:python.exe, 11792:python.exe, 42816:bash.exe, 42840:python.exe, 42852:python.exe, 42308:docker-compose.exe, 42992:docker.exe, 42284:docker.exe, 42756:docker-compose.exe, 36712:docker-compose.exe, 42964:docker.exe, 42468:docker.exe, 38748:docker-compose.exe, 43240:docker-compose.exe, 43996:docker.exe, 44980:python.exe, 45000:python.exe, 40768:node.exe, 44136:chrome-headless-shell.exe, 42832:chrome-headless-shell.exe, 44280:chrome-headless-shell.exe, 44300:chrome-headless-shell.exe, 43128:docker.exe, 45740:docker-compose.exe, 4040:docker-compose.exe, 20696:python.exe, 32532:python.exe, 44772:node.exe, 46032:chrome-headless-shell.exe, 46108:chrome-headless-shell.exe, 46128:chrome-headless-shell.exe, 46160:chrome-headless-shell.exe, 48232:docker-compose.exe, 48548:docker.exe, 47200:docker-compose.exe, 45960:docker-compose.exe, 48452:docker.exe, 41888:cat.exe, 46428:bash.exe, 46216:python.exe, 46588:python.exe, 48796:bash.exe, 46440:docker.exe, 46084:docker.exe, 46632:docker-compose.exe, 47252:docker-compose.exe, 48640:docker.exe, 46352:docker-compose.exe, 46608:docker.exe, 48552:docker-compose.exe, 24856:docker.exe, 44700:docker-compose.exe, 23524:docker.exe, 45984:docker-compose.exe, 48536:python.exe, 49156:python.exe, 49180:node.exe, 49392:chrome-headless-shell.exe, 49548:chrome-headless-shell.exe, 49568:chrome-headless-shell.exe, 49600:chrome-headless-shell.exe, 51748:docker.exe, 51836:docker-compose.exe, 42700:python.exe, 46328:python.exe, 4220:node.exe, 37076:chrome-headless-shell.exe, 49364:chrome-headless-shell.exe, 50832:chrome-headless-shell.exe, 45348:chrome-headless-shell.exe, 49556:docker.exe, 51580:docker-compose.exe, 50492:docker-compose.exe, 43052:python.exe, 51328:python.exe, 54020:node.exe, 24344:chrome-headless-shell.exe, 54336:chrome-headless-shell.exe, 54372:chrome-headless-shell.exe, 54396:chrome-headless-shell.exe, 57080:docker.exe, 57160:docker-compose.exe, 54652:python.exe, 56936:python.exe, 51632:node.exe, 52432:chrome-headless-shell.exe, 55080:chrome-headless-shell.exe, 55588:chrome-headless-shell.exe, 55828:chrome-headless-shell.exe, 57780:docker.exe, 58212:docker-compose.exe, 58052:python.exe, 58180:python.exe, 56444:node.exe, 33644:chrome-headless-shell.exe, 57016:chrome-headless-shell.exe, 57404:chrome-headless-shell.exe, 57908:chrome-headless-shell.exe, 54432:docker-compose.exe, 58500:docker.exe, 52332:docker-compose.exe, 60136:python.exe, 60156:python.exe, 60184:node.exe, 60388:chrome-headless-shell.exe, 54988:chrome-headless-shell.exe, 59464:chrome-headless-shell.exe, 59548:chrome-headless-shell.exe, 53160:docker.exe, 59880:docker-compose.exe, 60096:docker-compose.exe, 58844:python.exe, 60476:python.exe, 57368:node.exe, 2136:chrome-headless-shell.exe, 59476:chrome-headless-shell.exe, 60584:chrome-headless-shell.exe, 56960:chrome-headless-shell.exe, 52508:docker-compose.exe, 62460:docker.exe, 60516:docker-compose.exe, 60988:python.exe, 62752:python.exe, 62020:node.exe, 60952:chrome-headless-shell.exe, 61160:chrome-headless-shell.exe, 62904:chrome-headless-shell.exe, 63324:chrome-headless-shell.exe, 60480:docker.exe, 63044:docker-compose.exe, 61804:python.exe, 62116:python.exe, 64540:node.exe, 64680:chrome-headless-shell.exe, 64828:chrome-headless-shell.exe, 64864:chrome-headless-shell.exe, 64888:chrome-headless-shell.exe, 48864:docker-compose.exe, 58916:docker.exe, 65408:python.exe, 66524:python.exe, 63836:node.exe, 62304:chrome-headless-shell.exe, 63084:chrome-headless-shell.exe, 64340:chrome-headless-shell.exe, 65944:chrome-headless-shell.exe, 67208:docker.exe, 67216:docker-compose.exe, 66324:python.exe, 68792:python.exe, 68132:node.exe, 46668:chrome-headless-shell.exe, 67088:chrome-headless-shell.exe, 68756:chrome-headless-shell.exe, 69104:chrome-headless-shell.exe, 70740:docker.exe, 70784:docker-compose.exe, 70824:docker-compose.exe, 73036:docker.exe, 73104:docker-compose.exe, 73148:docker-compose.exe
+descendants terminated  : 165  2136, 4040, 4220, 6996, 11792, 20696, 23524, 24344, 24856, 32532, 33644, 36524, 36712, 37076, 38332, 38748, 39388, 40768, 41632, 41888, 42284, 42308, 42468, 42700, 42756, 42816, 42832, 42840, 42852, 42964, 42992, 43052, 43128, 43240, 43996, 44136, 44280, 44300, 44700, 44772, 44980, 45000, 45348, 45740, 45960, 45984, 46032, 46084, 46108, 46128, 46160, 46216, 46328, 46352, 46428, 46440, 46588, 46608, 46632, 46668, 47200, 47252, 48232, 48452, 48536, 48548, 48552, 48640, 48796, 48864, 49156, 49180, 49364, 49392, 49548, 49556, 49568, 49600, 50492, 50832, 51328, 51580, 51632, 51748, 51836, 52332, 52432, 52508, 53160, 54020, 54336, 54372, 54396, 54432, 54652, 54988, 55080, 55588, 55828, 56444, 56936, 56960, 57016, 57080, 57160, 57368, 57404, 57780, 57908, 58052, 58180, 58212, 58500, 58844, 58916, 59464, 59476, 59548, 59880, 60096, 60136, 60156, 60184, 60388, 60476, 60480, 60516, 60584, 60952, 60988, 61160, 61804, 62020, 62116, 62304, 62460, 62752, 62904, 63044, 63084, 63324, 63836, 64340, 64540, 64680, 64828, 64864, 64888, 65408, 65944, 66324, 66524, 67088, 67208, 67216, 68132, 68756, 68792, 69104, 70740, 70784, 70824, 73036, 73104, 73148
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/lane-pwdraw-work/logs/final4.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=pwdraw  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
+BW_EXIT=0
