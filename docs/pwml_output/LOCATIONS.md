@@ -2,7 +2,8 @@
 
 Branch `loc/assign`, cut from main `fd814b8e`. **Biology change: merging into main waits for PO sign-off.** Code commit
 `15a5b425`, review round 1 `56dd2803` (**section 8 supersedes rows 1b, 1e, 2 and 4 of section 1 and the numbers of
-sections 2-3**). Plan and pilot: `C:/t/strategy/location/STRATEGY.md`. Rulings: D-W21 (c, e), D-W24 (2, 7a, 9), and the
+sections 2-3**), PO rulings `0cec290a` (**section 9 supersedes section 8's fix 3 and table; it holds the current
+numbers**). Plan and pilot: `C:/t/strategy/location/STRATEGY.md`. Rulings: D-W21 (c, e), D-W24 (2, 7a, 9), and the
 PO's approval of inferred locations that are always flagged and never override a stated one.
 
 ## 1. What changed
@@ -234,3 +235,83 @@ get no default, including menaquinone's DHNA export and 138's TBN export); Gram-
 in E. coli ever reach the extracellular space without a quote?); preferring the more specific name when merging states
 (menaquinone keeps "intracellular" over "cytoplasmic state", lipid A keeps the first leaflet spelling); and a D-entry for
 "inferred, always flagged, never overrides a stated location". Q1-Q5 of section 5 stand.
+
+## 9. PO rulings (code `0cec290a`; supersedes section 8's fix 3 and Q1 of section 5)
+
+**Ruling 1, mixed-organism papers.** PO, verbatim: "just use main organism".
+The blanket skip of review round 1 (fix 3) is reverted. The bacterial default uses the paper's MAIN organism: the
+organism hint, else the most frequent species among the states. It applies even when other organisms or stray species
+rows are present. It stays flagged `organism_default`, and the estimate entry carries `organism` and a reason that names
+the organism assumed and the others the paper lists ("main organism assumed: Escherichia coli (the paper also names
+Arabidopsis thaliana)"). A eukaryote main organism still gets no default. The Gram rule for name-based transport sides
+(fix 4) stands.
+
+**Ruling 2, contradictory stated locations.** PO, verbatim: "whatever is most correct; if it states it in paper but then
+in another part it says something else the LLM should be able to reason between the lines".
+Scoped to the detected contradiction: a transport whose two STATED ends are the same place (run 102's "enterobactin
+secretion", cytoplasm -> cytoplasm). With the LLM pass on, a separate call (own prompt
+`llm/prompts/location_conflict_system.txt`, own cache id `t2pw:location_conflict:v1`, so the pass's cached replies stay
+valid) gets the paper text and the conflict. A side is corrected only if the reply's quote is verbatim in the source
+text and names both the item (cargo, transporter or process) and the new place, the place is a candidate state or in
+the organism's closed vocabulary, and the two ends then differ. Flag `inferred: llm_corrected`; the estimate entry keeps
+the original (`stated_was`, `stated_location_was`) and the quote. No quote, a failed check or a model error: no change,
+and the row stays flagged `transport_ends_same_place`. Rules-only mode makes no call and changes nothing.
+
+**Tests** (focused 260 passed): the mixed-organism cases now default to the main organism and name it; the organism hint
+picks the main organism; a eukaryote main organism gets no default even beside a bacterium; rules-only leaves a stated
+conflict; an accepted correction (stated value kept, text record line); a quote not in the paper and a quote that names
+no new place change nothing; a raising conflict call changes nothing. L7's request sha and cache key are still identical
+to base. suite2 on `0cec290a` (clean tree, log `C:/t/vis-runs/logs/loc-suite2-po.log`): SMOKE 511, golden batch 2 / c011 8 / stage8 4 / quarantine 24, equivalence 8 / 14 / 6, vision 357 (+1 skipped), web 83: all passed, 0 survivors; no golden-seam test edited.
+
+**Replay on `0cec290a`** (152 q-runs + 8 showcase):
+
+| metric | base | rules only | + LLM pass (from cache, no `.env`) |
+|---|---|---|---|
+| same-place transports | 9 | 7 (all flagged) | **0** |
+| `__auto__ -> __auto__` transports | 4 | 3 (flagged) | 0 |
+| duplicate state groups | 5 | 2 | 2 |
+| leaflet states | 14 | 10 | 10 |
+| bacterial reactions with no place | 35 | **0** (35 flagged `organism_default`) | 0 |
+| bacterial element rows with no place | 59 | 0 (59 flagged) | 0 |
+| unplaced reactions (all) | 119 | 84 (all flagged) | 76 (all flagged) |
+| unplaced transport sides (transports) | 19 | 18 | 15 |
+| placeholder / empty states | 60 | 59 | 57 |
+| Stage-0-hint states flagged | 0 of 4 | 3 of 3 | 3 of 3 |
+| reactions / transports / element rows (payload) | 692 / 128 / 1979 | same | same |
+| **stated-location changes** | | **0** | **0** |
+| **llm_corrected** (stated side replaced, quote-verified) | | 0 | **1** (run 102) |
+| inferred: organism_default (rx / side / element) | | 35 / 3 / 59 | 35 / 2 / 59 |
+| inferred: llm_quote (rx / side) | | | 8 / 8 |
+| PWML exports / byte-identical / changed | 105 | 105 / 99 / 6 | 105 / 92 / 13 |
+| PWML lost names / reaction signatures | | **0 / 0** | **0 / 0** |
+| PWML transport signatures relabelled (none lost; 96 transports) | | 5 | 7 |
+
+**llm_corrected, every case:**
+
+| run | transport | side | stated (kept in `stated_was`) | corrected to | quote |
+|---|---|---|---|---|---|
+| 102 | enterobactin secretion | to | E. coli cytoplasmic state (cytoplasm) | extracellular space | "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment" |
+
+Per-file no-loss check of every changed PWML (`locpairs.py`): every name kept; a "lost" pair is an element leaving a
+default box. Rules only: 138 (its 8 unplaced reactions leave the row-0 extracellular box for a new *S. tubercidicus*
+cytoplasm; TBN export `cell -> cell` becomes cytoplasm -> extracellular), 18 and 62 (`cell` -> `cytoplasm`), 25 (7
+pairs unchanged), lipid A (65 pairs unchanged; leaflet states 11 -> 7), menaquinone (DHNA export cytoplasm ->
+intracellular becomes intracellular -> extracellular; 20 pairs unchanged, 32 -> 22 rows). The LLM arm adds 10 and sour
+taste (13 pairs unchanged), 102 (16 pairs unchanged; the correction), 78 (+ enterobactin outside), 79 (DHCR24 -> ER),
+134 (-> cytosol), 136 (-> vacuole). The 5 runs round 1 skipped for stray *Arabidopsis* rows (76, 78, 138, lipid A,
+menaquinone) now get the main organism's default where they have unplaced rows, flagged with both organisms named.
+
+**A model call that raises.** Every call raising (44: 43 main pass + 1 conflict; original fill cache): 105/105 exports
+succeed; every PWML and every payload (bar the step's own `llm` / `llm_conflict` error reports) is byte-identical to the
+rules-only arm.
+
+**Spend.** Only the new conflict prompt needed a fresh call: 1 call, about $0.006. Session total about $0.53 of $5
+(estimates: the client reports no token usage). The live arm loaded the app's `.env` for the key; the arm of record
+replays from the reply cache without it (0 renames).
+
+**PathWhiz import: not run.** No lock hold of this lane had Docker with a `t2pw-loc` stack; the `t2pw-pwdraw` stack
+belongs to the draw lane and was not touched.
+
+**Still open for the PO:** Gram-negative name defaults; preferring the more specific name when merging states; a
+D-entry for "inferred, always flagged, never overrides a stated location (except a quote-verified `llm_corrected`
+contradiction)"; Q2-Q5 of section 5.
