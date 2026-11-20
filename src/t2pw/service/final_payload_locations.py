@@ -16,9 +16,13 @@ Order:
 4. Gram-positive bacterium with no periplasm / outer membrane state (organism default): a side still open on a
    transport whose NAME says export / import goes to the cytoplasm (inside) or the extracellular space (outside). Flag
    ``inferred: organism_default``. Gram-negative or unknown: no name default ("LPS export" ends in the outer membrane).
+   3b. (PO ruling 2) Same flag: a transport whose two STATED ends are one place gets its own call (its own prompt and
+   cache id); a side is corrected only with a verbatim quote naming the item and the new place, the ends must then
+   differ. Flag ``inferred: llm_corrected``, the stated value kept as ``stated_was``. Otherwise unchanged and flagged.
 5. Bacterium: unplaced reactions and element rows go to the cytoplasm (an existing plain cytoplasm state, else a new
-   "<organism> cytoplasm"). Flag ``inferred: organism_default``. Eukaryotes get no default. Steps 4-5 never fire in a
-   paper that names another organism or a non-prokaryote species; its unplaced rows stay put, flagged.
+   "<organism> cytoplasm"). Flag ``inferred: organism_default``. Eukaryotes get no default. (PO ruling 1, "just use main
+   organism") Steps 4-5 use the paper's MAIN organism (the organism hint, else the most frequent species among the
+   states) even when other organisms are present; the flag names the organism assumed and the others.
 6. L6's state merge again (spelling variants, leaflets; it guards transport ends itself): after steps 3-5 a placeholder or
    synonym state no transport end keeps apart merges.
 7. A transport whose ends are still one place is flagged ``transport_ends_same_place`` (both ends stated: never changed).
@@ -46,6 +50,8 @@ LLM_ENV = "T2PW_LOCATION_LLM"
 LLM_MODEL = "google/gemini-3.8-flash"
 PROMPT_FILE = "location_assign_system.txt"  # its own prompt; L7's (compartment_estimate_system.txt) is untouched
 PROMPT_ID = "t2pw:location_assign:v1"
+CONFLICT_PROMPT_FILE = "location_conflict_system.txt"  # PO ruling 2: its own call, so the pass's cached replies stay valid
+CONFLICT_PROMPT_ID = "t2pw:location_conflict:v1"
 MAX_TOKENS = 8000
 HINT = "expected compartments"
 #: Transport names that say the cargo leaves the cell / goes into it (read from the name only).
@@ -114,11 +120,11 @@ def _resolve_source(row: Dict[str, Any]) -> None:
 
 
 def _place(row: Dict[str, Any], field: str, state: str, kind: str, reason: str, report: Dict[str, Any], what: str,
-           quote: str = "", resolved: bool = True) -> None:
+           quote: str = "", resolved: bool = True, extra: Optional[Dict[str, Any]] = None) -> None:
     old = row.get(field)
-    src = "llm_estimate" if kind == "llm_quote" else kind
+    src = "llm_estimate" if kind in ("llm_quote", "llm_corrected") else kind
     entry = {"step": "locations", "field": field, "from_state": old or None, "to_state": state, "source": src,
-             "inferred": kind, "reason": reason}
+             "inferred": kind, "reason": reason, **(extra or {})}
     if quote:
         entry["quote"] = quote
     row[field] = state
@@ -137,7 +143,7 @@ def _place(row: Dict[str, Any], field: str, state: str, kind: str, reason: str, 
     report["inferred"].append({"kind": what, "name": row.get("name") or row.get("compound") or row.get("protein")
                                or row.get("nucleic_acid") or row.get("element_collection") or row.get("entity"),
                                "field": field, "from_state": old or None, "to_state": state, "inferred": kind,
-                               "reason": reason, **({"quote": quote} if quote else {})})
+                               "reason": reason, **({"quote": quote} if quote else {}), **(extra or {})})
 
 
 def _flag_hints(payload: Dict[str, Any], report: Dict[str, Any]) -> None:
@@ -269,21 +275,103 @@ def _llm_pass(payload: Dict[str, Any], ctx: C._Ctx, rx: List[Any], tr: List[Any]
             sides.remove(f)
 
 
+def _conflicts(ctx: C._Ctx, tr: List[Any], side_todo: Dict[int, List[str]]) -> List[int]:
+    """Transports whose two STATED ends are one place (run 102: "enterobactin secretion" cytoplasm -> cytoplasm)."""
+    out = []
+    for i, t in enumerate(tr):
+        if not isinstance(t, dict) or i in side_todo or any(
+                isinstance(e, dict) and any(M._norm(e.get(f)) for f in C._ELEMENT_SIDES) for e in t.get("transport_elements") or []):
+            continue
+        a, b = t.get(SIDES[0]), t.get(SIDES[1])
+        if not _unplaced(ctx, a) and not _unplaced(ctx, b) and _same_place(ctx, a, b):
+            out.append(i)
+    return out
+
+
+def _conflict_pass(payload: Dict[str, Any], ctx: C._Ctx, tr: List[Any], side_todo: Dict[int, List[str]], state: Any,
+                   cache: Any, chat_fn: Any, fetcher: Any, today: Optional[str], report: Dict[str, Any]) -> None:
+    """PO ruling 2 (contradictory stated locations: "whatever is most correct ... the LLM should be able to reason between
+    the lines"), scoped to a transport whose two stated ends are one place. The model gets the paper and the conflict; a
+    side is corrected only with a verbatim quote that names the item (cargo, transporter or the process) and the new
+    place, and only when the two ends then differ. Flag ``inferred: llm_corrected``; the stated value is kept in the
+    estimate entry (``stated_was``). No quote, a failed check or a model error: no change, the row stays flagged."""
+    from t2pw.pwml.ir import _actor_name_and_hint
+    from t2pw.service.transport_sides import _window, _words
+
+    rep = report["llm_conflict"]
+    if not _on():
+        rep["skipped"] = "off"
+        return
+    todo = _conflicts(ctx, tr, side_todo)[:C.MAX_ITEMS]
+    if not todo:
+        return
+    paper = state.get("final_payload_paper_text") if hasattr(state, "get") else None
+    text = paper if isinstance(paper, str) and paper.strip() else "\n".join(C._text(tr[i].get("evidence")) for i in todo)
+    if not text.strip():
+        rep["skipped"] = "no_text"
+        return
+    vocab = VOCABULARY["bacterium" if ctx.pro else "eukaryote"]
+    items, names = [], []
+    for i in todo:
+        t = tr[i]
+        ev = C._text(t.get("evidence"))
+        stated = ctx.name(t.get(SIDES[0]))
+        loc = M._state_loc(ctx.states[ctx.last[M._norm(t.get(SIDES[0]))]]) if M._norm(t.get(SIDES[0])) in ctx.last else ""
+        items.append({"id": len(items), "kind": "transport_conflict", "name": t.get("name"), "cargo": C._cargo(t),
+                      "evidence": ev, "text_around_evidence": _window(text, ev) if ev else "",
+                      "stated_from": stated, "stated_to": ctx.name(t.get(SIDES[1])),
+                      "conflict": f"both ends are stated as '{stated}' ({loc}); a transport moves its cargo between two "
+                                  "different places"})
+        names.append(_with_synonyms(payload, C._cargo(t) + [str(t.get("name") or "")]
+                                    + [_actor_name_and_hint(a)[0] for a in t.get("transporters") or []]))
+    import datetime
+
+    answers = C._llm(items, ctx, text, state, cache, chat_fn, fetcher, today or datetime.date.today().isoformat(),
+                     {"llm": rep}, vocabulary=vocab, model=LLM_MODEL, prompt_file=CONFLICT_PROMPT_FILE,
+                     prompt_id=CONFLICT_PROMPT_ID, max_tokens=MAX_TOKENS)
+    text_words = f" {_words(text)} "
+    for n, i in enumerate(todo):
+        t, ans = tr[i], answers.get(n)
+        got = {}
+        for f in SIDES:
+            side = ans.get(f.split("_")[0]) if isinstance(ans, dict) else None
+            if not _answered(side):
+                continue
+            target, quote = C._accept(side, ctx, text_words, names[n], vocab)
+            if target is None:
+                rep["rejected"].append({"transport": t.get("name"), "side": f, "reason": quote})
+            elif C._same(target, ("state", ctx.name(t.get(f))), ctx):
+                rep["rejected"].append({"transport": t.get("name"), "side": f, "reason": "same place as stated"})
+            else:
+                got[f] = (target, quote)
+        fin = {f: got[f][0] if f in got else ("state", ctx.name(t.get(f))) for f in SIDES}
+        if not got:
+            continue
+        if C._same(fin[SIDES[0]], fin[SIDES[1]], ctx):
+            rep["rejected"].append({"transport": t.get("name"), "reason": "both ends would still be one place"})
+            continue
+        for f, (target, quote) in got.items():
+            was = ctx.name(t.get(f))
+            was_loc = M._state_loc(ctx.states[ctx.last[M._norm(t.get(f))]]) if M._norm(t.get(f)) in ctx.last else ""
+            st = C._place(target, quote, ctx)
+            _place(t, f, st, "llm_corrected",
+                   f"{f.split('_')[0]} side was stated as '{was}' ({was_loc}), the same place as the other end; corrected "
+                   f"from the paper: \"{quote}\"", report, "transport", quote,
+                   extra={"stated_was": was, "stated_location_was": was_loc})
+
+
 # ---- steps 4 and 6: bacterium ------------------------------------------------------------------------------------------
 def _target(ctx: C._Ctx, loc: str) -> str:
     hit = ctx.at(loc)
     return str(hit["name"]) if hit is not None else ctx.add(loc)
 
 
-def _not_one_bacterium(payload: Dict[str, Any], ctx: C._Ctx) -> str:
-    """Why the bacterial default must not fire ('' = it may): a species row that is not a prokaryote, or a species row or
-    state naming another organism (a mixed-organism paper, or stray rows of another organism)."""
-    for r in M._species_rows(payload):
-        if str(r.get("classification") or "").strip().casefold() != "prokaryote":
-            return f"species '{r.get('name')}' is not a prokaryote"
+def _main_organism_note(payload: Dict[str, Any], ctx: C._Ctx) -> str:
+    """PO ruling (mixed-organism papers, "just use main organism"): the default is the MAIN organism's (the organism hint,
+    else the most frequent species among the states); the flag names it and any other organism the paper lists."""
     names = [r.get("name") for r in M._species_rows(payload)] + [s.get("species") for s in ctx.states]
     other = sorted({str(n) for n in names if isinstance(n, str) and n.strip() and not ctx.org.same(n, ctx.organism)})
-    return f"the paper names more than one organism ({ctx.organism}; {', '.join(other)})" if other else ""
+    return (f"main organism assumed: {ctx.organism}" + (f" (the paper also names {', '.join(other)})" if other else ""))
 
 
 def _name_default_blocked(ctx: C._Ctx) -> str:
@@ -298,18 +386,8 @@ def _name_default_blocked(ctx: C._Ctx) -> str:
     return ""
 
 
-def _flag_unplaced(payload: Dict[str, Any], ctx: C._Ctx, rx: List[Any], why: str) -> None:
-    """No default: every unplaced reaction and element row stays where it is, flagged."""
-    note = f"{C.NOT_STATED}: no organism default ({why}); left unplaced"
-    rows = [r for r in rx if isinstance(r, dict)]
-    rows += [r for rs in (payload.get("element_locations") or {}).values() if isinstance(rs, list) for r in rs if isinstance(r, dict)]
-    for r in rows:
-        if _unplaced(ctx, r.get("biological_state")) and not any(str(x).startswith(C.NOT_STATED) for x in r.get("review_reasons") or []):
-            r["review_required"] = True
-            r.setdefault("review_reasons", []).append(note)
-
-
-def _transport_default(ctx: C._Ctx, tr: List[Any], side_todo: Dict[int, List[str]], report: Dict[str, Any]) -> None:
+def _transport_default(ctx: C._Ctx, tr: List[Any], side_todo: Dict[int, List[str]], report: Dict[str, Any],
+                       note: str) -> None:
     for i, sides in side_todo.items():
         t = tr[i]
         name = str(t.get("name") or "")
@@ -323,24 +401,25 @@ def _transport_default(ctx: C._Ctx, tr: List[Any], side_todo: Dict[int, List[str
                 continue
             st = _target(ctx, place[f])
             reason = (f"{f.split('_')[0]} side not stated; the transport is named '{name}' ('{word}'), so in the bacterium "
-                      f"{ctx.organism} the cargo moves {place[SIDES[0]]} -> {place[SIDES[1]]}; organism default, not stated")
-            _place(t, f, st, "organism_default", reason, report, "transport")
+                      f"{ctx.organism} the cargo moves {place[SIDES[0]]} -> {place[SIDES[1]]}; organism default, not stated; {note}")
+            _place(t, f, st, "organism_default", reason, report, "transport", extra={"organism": ctx.organism})
             sides.remove(f)
 
 
-def _bacterial_default(payload: Dict[str, Any], ctx: C._Ctx, rx: List[Any], report: Dict[str, Any]) -> None:
+def _bacterial_default(payload: Dict[str, Any], ctx: C._Ctx, rx: List[Any], report: Dict[str, Any], note: str) -> None:
     reason = (f"no compartment stated in the paper record; {ctx.organism} is a bacterium, so it is placed in its cytoplasm; "
-              "organism default, not stated")
+              f"organism default, not stated; {note}")
     target = None
     for r in rx:
         if isinstance(r, dict) and _unplaced(ctx, r.get("biological_state")):
             target = target or _target(ctx, "cytoplasm")
-            _place(r, "biological_state", target, "organism_default", reason, report, "reaction")
+            _place(r, "biological_state", target, "organism_default", reason, report, "reaction", extra={"organism": ctx.organism})
     for bucket, rows in (payload.get("element_locations") or {}).items():
         for r in rows if isinstance(rows, list) else []:
             if isinstance(r, dict) and _unplaced(ctx, r.get("biological_state")):
                 target = target or _target(ctx, "cytoplasm")
-                _place(r, "biological_state", target, "organism_default", reason, report, bucket)
+                _place(r, "biological_state", target, "organism_default", reason, report, bucket,
+                       extra={"organism": ctx.organism})
 
 
 # ---- the step ----------------------------------------------------------------------------------------------------------
@@ -361,18 +440,16 @@ def _run(payload: Dict[str, Any], state: Any, report: Dict[str, Any], cache: Any
     ctx = C._Ctx(payload, organism_hint)
     side_todo = _side_todo(ctx, tr)
     _llm_pass(payload, ctx, rx, tr, side_todo, state, cache, chat_fn, fetcher, today, report)
-    if ctx.pro and ctx.organism:
-        why = _not_one_bacterium(payload, ctx)
-        if why:  # mixed-organism paper: no default at all (PO question)
-            report["default_skipped"] = why
-            _flag_unplaced(payload, ctx, rx, why)
+    _conflict_pass(payload, ctx, tr, side_todo, state, cache, chat_fn, fetcher, today, report)
+    if ctx.pro and ctx.organism:  # the MAIN organism is a prokaryote (PO ruling: other organisms do not stop it)
+        note = _main_organism_note(payload, ctx)
+        report["main_organism"] = note
+        blocked = _name_default_blocked(ctx)
+        if blocked:
+            report["transport_default_skipped"] = blocked
         else:
-            blocked = _name_default_blocked(ctx)
-            if blocked:
-                report["transport_default_skipped"] = blocked
-            else:
-                _transport_default(ctx, tr, side_todo, report)
-            _bacterial_default(payload, ctx, rx, report)  # before the merge: a row on a placeholder is flagged as a default
+            _transport_default(ctx, tr, side_todo, report, note)
+        _bacterial_default(payload, ctx, rx, report, note)  # before the merge: a row on a placeholder is flagged as a default
     _rerun_state_merge(payload, report)
     ctx = C._Ctx(payload, organism_hint)
     for t in tr:
@@ -383,7 +460,8 @@ def _run(payload: Dict[str, Any], state: Any, report: Dict[str, Any], cache: Any
             t.setdefault("review_reasons", []).append(why)
             report["same_place_left"].append({"transport": t.get("name"), "from": t.get(SIDES[0]), "to": t.get(SIDES[1])})
     report["organism"], report["prokaryote"] = ctx.organism, ctx.pro
-    report["counts"] = {k: sum(1 for x in report["inferred"] if x["inferred"] == k) for k in ("organism_default", "llm_quote")}
+    report["counts"] = {k: sum(1 for x in report["inferred"] if x["inferred"] == k)
+                        for k in ("organism_default", "llm_quote", "llm_corrected")}
 
 
 def assign_locations(payload: Dict[str, Any], state: Any = None, *, cache: Any = None,
@@ -392,6 +470,7 @@ def assign_locations(payload: Dict[str, Any], state: Any = None, *, cache: Any =
     """Apply the step to ``payload`` in place. Never raises; on error the payload is restored and the report says why."""
     report: Dict[str, Any] = {"schema": 1, "inferred": [], "hint_states": [], "same_place_left": [], "merge": None,
                               "counts": {}, "llm": {"calls": 0, "cache_hits": 0, "skipped": None, "error": None, "rejected": []},
+                              "llm_conflict": {"calls": 0, "cache_hits": 0, "skipped": None, "error": None, "rejected": []},
                               "error": None}
     if not isinstance(payload, dict) or FIELD in payload:
         report["skipped"] = "already_assigned" if isinstance(payload, dict) else "not_a_payload"

@@ -219,17 +219,41 @@ def test_two_differently_named_unplaced_ends_are_flagged_as_possibly_one_place()
     (ECOLI + (("Homo sapiens", "Eukaryote", "9606"),), [_st("E. coli state", "cell")]),               # host species
     (ECOLI + (("Bacillus subtilis", "Prokaryote", "1423"),), [_st("E. coli state", "cell")]),           # two bacteria
 ])
-def test_no_bacterial_default_in_a_mixed_organism_paper(species, states):
+def test_a_mixed_organism_paper_gets_the_main_organisms_default_naming_it(species, states):
+    # PO ruling 1: "just use main organism" (the most frequent species among the states here)
     p = _payload(copy.deepcopy(states), [_rx("EntC", ["chorismate"], ["isochorismate"])],
                  [_tr("enterobactin secretion", "Ent", "E. coli state")], species,
                  elements=[{"compound": "chorismate"}])
     rep = FL.assign_locations(p)
     r, el, t = p["processes"]["reactions"][0], p["element_locations"]["compound_locations"][0], p["processes"]["transports"][0]
-    assert "biological_state" not in r and "biological_state" not in el and "to_biological_state" not in t
+    other = next(n for n, *_ in species[1:]) if len(species) > 1 else "Arabidopsis thaliana"
     for row in (r, el):
-        assert "inferred" not in row and row["review_required"]
-        assert any(x.startswith("compartment_not_stated: no organism default") for x in row["review_reasons"])
-    assert rep["default_skipped"] and rep["counts"]["organism_default"] == 0
+        assert row["biological_state"] == "E. coli state" and row["inferred"] == "organism_default"
+        e = row["compartment_estimate"][-1]
+        assert e["organism"] == "Escherichia coli"
+        assert "main organism assumed: Escherichia coli" in e["reason"] and other in e["reason"]
+    assert "to_biological_state" not in t  # E. coli is Gram-negative: no destination from the name
+    assert rep["main_organism"].startswith("main organism assumed: Escherichia coli")
+
+
+def test_the_organism_hint_picks_the_main_organism():
+    states = [_st("cytosolic state", "cytosol", "Homo sapiens"), _st("nuclear state", "nucleus", "Homo sapiens")]
+    sp = HUMAN + (("Escherichia coli", "Prokaryote", "562"),)
+    p = _payload(copy.deepcopy(states), [_rx("EntC", ["chorismate"], ["isochorismate"])], species=sp)
+    FL.assign_locations(p, organism_hint="Escherichia coli")
+    r = p["processes"]["reactions"][0]
+    assert r["inferred"] == "organism_default" and r["compartment_estimate"][-1]["organism"] == "Escherichia coli"
+
+
+def test_a_eukaryote_main_organism_gets_no_default_even_beside_a_bacterium():
+    states = [_st("cytosolic state", "cytosol", "Homo sapiens"), _st("nuclear state", "nucleus", "Homo sapiens"),
+              _st("E. coli state", "cell")]
+    p = _payload(copy.deepcopy(states), [_rx("X", ["a"], ["b"])], species=HUMAN + ECOLI,
+                 elements=[{"compound": "a"}])
+    rep = FL.assign_locations(p)
+    assert "biological_state" not in p["processes"]["reactions"][0]
+    assert "biological_state" not in p["element_locations"]["compound_locations"][0]
+    assert not rep["counts"].get("organism_default") and "main_organism" not in rep
 
 
 def test_a_eukaryote_export_keeps_its_neighbour_fill():
@@ -362,6 +386,75 @@ def test_the_location_pass_has_its_own_prompt_and_l7_keeps_its_request(monkeypat
     system, user = C.build_request([{"id": 0}], ctx, "text")
     assert system == "compartment_estimate_system.txt" and "new_location_vocabulary" not in user
     assert list(json.loads(user)) == ["organism", "candidate_states", "items", "paper_text"]  # L7's request bytes
+
+
+# ---- PO ruling 2: contradictory stated locations ------------------------------------------------------------------------
+def _conflict_payload():
+    return _payload([_st("E. coli cytoplasmic state", "cytoplasm"), _st("E. coli extracellular state", "extracellular")],
+                    [_rx("EntF step", ["DHB-AMP"], ["enterobactin"], "E. coli cytoplasmic state", enzymes=["EntF"])],
+                    [_tr("enterobactin secretion", "enterobactin", "E. coli cytoplasmic state", "E. coli cytoplasmic state",
+                         transporters=["EntS"])])
+
+
+def _conflict_reply(quote):
+    return {"items": [{"id": 0, "from": None,
+                       "to": {"state": "E. coli extracellular state", "new_location": None, "quote": quote}}]}
+
+
+def test_rules_only_never_touches_a_stated_conflict():
+    p = _conflict_payload()
+    rep = FL.assign_locations(p, {"final_payload_paper_text": PAPER})
+    t = p["processes"]["transports"][0]
+    assert t["to_biological_state"] == "E. coli cytoplasmic state" and "inferred_sides" not in t
+    assert rep["llm_conflict"]["skipped"] == "off" and rep["same_place_left"]
+
+
+def test_llm_corrects_a_stated_same_place_transport_with_a_verified_quote(monkeypatch):
+    from t2pw.app.reaction_evidence import _inferred_locations
+
+    monkeypatch.setenv(FL.LLM_ENV, "1")
+    calls = []
+    p = _conflict_payload()
+    rep = FL.assign_locations(p, {"final_payload_paper_text": PAPER},
+                              chat_fn=_fake(_conflict_reply("secreted into the extracellular medium by EntS"), calls))
+    assert len(calls) == 1 and json.loads(calls[0][0][1]["content"])["items"][0]["kind"] == "transport_conflict"
+    assert calls[0][0][0]["content"].startswith("You resolve contradictory locations")  # its own prompt
+    t = p["processes"]["transports"][0]
+    assert t["from_biological_state"] == "E. coli cytoplasmic state"  # the right end is untouched
+    assert t["to_biological_state"] == "E. coli extracellular state"
+    assert t["inferred_sides"] == {"to_biological_state": "llm_corrected"} and t["compartment_source"] == "llm_estimate"
+    e = t["compartment_estimate"][-1]
+    assert e["stated_was"] == "E. coli cytoplasmic state" and e["stated_location_was"] == "cytoplasm"
+    assert e["quote"] == "secreted into the extracellular medium by EntS"
+    assert rep["counts"]["llm_corrected"] == 1 and not rep["same_place_left"]
+    assert any("[inferred: llm_corrected:" in l and "was stated as 'E. coli cytoplasmic state'" in l
+               for l in _inferred_locations(p[FL.FIELD]))
+
+
+@pytest.mark.parametrize("quote", ["secreted into the periplasm by EntS",          # not in the paper
+                                   "Enterobactin is assembled by EntF in the cytoplasm"])  # names no new place
+def test_a_correction_whose_quote_fails_the_check_changes_nothing(monkeypatch, quote):
+    monkeypatch.setenv(FL.LLM_ENV, "1")
+    p = _conflict_payload()
+    before = copy.deepcopy(p["processes"]["transports"][0])
+    rep = FL.assign_locations(p, {"final_payload_paper_text": PAPER}, chat_fn=_fake(_conflict_reply(quote), []))
+    t = p["processes"]["transports"][0]
+    assert (t["from_biological_state"], t["to_biological_state"]) == (before["from_biological_state"], before["to_biological_state"])
+    assert "inferred_sides" not in t and rep["llm_conflict"]["rejected"] and rep["same_place_left"]
+
+
+def test_a_conflict_call_that_raises_changes_nothing(monkeypatch):
+    monkeypatch.setenv(FL.LLM_ENV, "1")
+
+    def boom(messages, **kw):
+        raise RuntimeError("provider down")
+
+    off, on = _conflict_payload(), _conflict_payload()
+    FL.assign_locations(off, {"final_payload_paper_text": PAPER})
+    rep = FL.assign_locations(on, {"final_payload_paper_text": PAPER}, chat_fn=boom)
+    assert rep["error"] is None and rep["llm_conflict"]["error"].startswith("RuntimeError")
+    strip = lambda p: {k: v for k, v in p.items() if k != FL.FIELD}  # noqa: E731
+    assert strip(on) == strip(off) and rep["same_place_left"]
 
 
 def test_every_vocabulary_term_is_a_pathwhiz_location():
