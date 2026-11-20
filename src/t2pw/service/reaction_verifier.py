@@ -130,10 +130,42 @@ def text_words(text: str) -> str:
     return f" {_words(text)} | {_words(bare)} "
 
 
+#: Words a model may not drop from the middle of a quote: dropping one can reverse what the paper says.
+_KEEP_WORDS = frozenset("not no nor never without loss lack lacking absence absent mutant mutants mutation "
+                        "mutations deletion deleted knockout knockdown null fail fails failed unable neither".split())
+
+
+def _gapped(q: List[str], doc: List[str]) -> bool:
+    """``q`` is the paper's own words in order, a few left out: the first three words are consecutive in
+    the paper, the rest follow in order within 1.5x the quote's length, and no left-out word is in
+    :data:`_KEEP_WORDS`. (A model copying a sentence drops a clause such as "encoding an ALAD".)"""
+    if len(q) < 6:
+        return False
+    span = int(len(q) * 1.5) + 2
+    for start in range(len(doc) - 2):
+        if doc[start:start + 3] != q[:3]:
+            continue
+        i, j = 3, start + 3
+        while i < len(q) and j < min(len(doc), start + span):
+            if doc[j] == q[i]:
+                i += 1
+            elif doc[j] in _KEEP_WORDS:
+                break
+            j += 1
+        if i == len(q):
+            return True
+    return False
+
+
 def quote_in_paper(evidence: Any, text_words: str) -> bool:
-    """Every piece of the quote (split at ellipses) of 3+ words is in the paper, and one has 4+."""
+    """Every piece of the quote (split at ellipses) of 3+ words is in the paper, and one has 4+. A piece
+    of 6+ words may also leave out a few of the paper's words (see :func:`_gapped`)."""
     parts = [p for p in re.split(r"\.\.\.|…|\[\s*\]", str(evidence or "")) if len(_words(p).split()) >= 3]
-    return bool(parts) and all(_in_text(p, text_words) for p in parts) and any(len(_words(p).split()) >= 4 for p in parts)
+    docs = [d.split() for d in text_words.split(" | ")]
+
+    def found(p: str) -> bool:
+        return _in_text(p, text_words) or any(_gapped(_words(p).split(), d) for d in docs)
+    return bool(parts) and all(found(p) for p in parts) and any(len(_words(p).split()) >= 4 for p in parts)
 
 
 def _name(item: Any) -> str:

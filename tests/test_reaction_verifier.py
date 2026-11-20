@@ -161,6 +161,14 @@ def test_quote_may_drop_a_citation_but_not_words():
     assert V.quote_in_paper("inhibited by DHNA in Staphylococcus aureus and Mycobacterium tuberculosis", tw)
     assert not V.quote_in_paper("inhibited by DHNA in Staphylococcus aureus and in Mycobacterium tuberculosis", tw)
     assert not V.quote_in_paper("aureus and Mycobacterium", tw)  # too short to be a quote
+    tw = V.text_words("FHY3 and FAR1 induce the expression of ALAD1/HEMB1 encoding an ALAD by binding to its "
+                      "promoter region. PIF1 does not induce the expression of HEMA1 in the dark.")
+    # a clause left out of the middle is accepted ...
+    assert V.quote_in_paper("FHY3 and FAR1 induce the expression of ALAD1/HEMB1 by binding to its promoter region", tw)
+    # ... a negation left out is not, and neither are added or reordered words
+    assert not V.quote_in_paper("PIF1 does induce the expression of HEMA1 in the dark", tw)
+    assert not V.quote_in_paper("FHY3 and FAR1 strongly induce the expression of ALAD1/HEMB1 by binding", tw)
+    assert not V.quote_in_paper("FHY3 and FAR1 induce ALAD1/HEMB1 the expression of by binding", tw)
 
 
 def test_a_signed_interaction_is_never_flipped():
