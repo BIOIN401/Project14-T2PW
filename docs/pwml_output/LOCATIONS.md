@@ -1,7 +1,8 @@
 # Locations: every element and transport where the paper says (lane loc/assign, 2026-11-19)
 
 Branch `loc/assign`, cut from main `fd814b8e`. **Biology change: merging into main waits for PO sign-off.** Code commit
-`15a5b425`. Plan and pilot: `C:/t/strategy/location/STRATEGY.md`. Rulings: D-W21 (c, e), D-W24 (2, 7a, 9), and the
+`15a5b425`, review round 1 `56dd2803` (**section 8 supersedes rows 1b, 1e, 2 and 4 of section 1 and the numbers of
+sections 2-3**). Plan and pilot: `C:/t/strategy/location/STRATEGY.md`. Rulings: D-W21 (c, e), D-W24 (2, 7a, 9), and the
 PO's approval of inferred locations that are always flagged and never override a stated one.
 
 ## 1. What changed
@@ -162,3 +163,74 @@ location is the generic "Membrane", agreement is 295 / 321 = 91.9 % (Q2).
 `docs/pwml_output/evidence/locations/`: arm diffs (`compare-*.json`, totals and stated-location changes), PWML A/B
 (`ab-*.json`), inference lists (`summary-*.json`), UniProt agreement counts, LLM cost. Scripts and full outputs:
 `C:/t/loc-work/`.
+
+## 8. Review round 1 (independent review: REJECT; fixes in `56dd2803`)
+
+The review confirmed: stated locations are never overwritten; the 7 changed PWMLs were no-loss; the LLM path is off by
+default, quote-checked and failure-isolated; the `.env` explanation of the 8 renames holds; repo hygiene is clean.
+Fixed:
+
+| # | finding | fix |
+|---|---|---|
+| 1 HIGH | The `ensure_autostates` "(other side)" placeholder never ran in the replay (it starts from stored payloads); two `cell -> cell` ends would still bind to one PathWhiz state; and two differently named unplaced ends were no longer flagged. | Hunk dropped; `process_normalizer.py` and `test_process_normalizer_transport_states.py` are byte-identical to base. Two unplaced ends now count as a possible same-place transport and are flagged. Row 1e of section 1 is withdrawn: the 4 -> 2 drop came from the location step. |
+| 2 MED | L7's EXPORT rule removed correct, flagged neighbour fills in eukaryotes (citrate export out of the mitochondrion). | Rule dropped (row 1b withdrawn). The by-place comparison already covers DHNA; the location step's legacy repair keys on same-place ends only. New test: a eukaryote export keeps its neighbour fill. |
+| 3 MED | The bacterial default fired in mixed-organism papers. | No default (reactions, element rows, transport sides) when any species row is not a prokaryote or a species row / state names another organism; those rows stay unplaced and get a `compartment_not_stated: no organism default (...)` review reason. Fires on 5 runs, all from stray *Arabidopsis thaliana* species rows: 76, 78, 138, lipid A, menaquinone. |
+| 4 LOW-MED | The name-based transport default sends Gram-negative "LPS export" / Sec "protein export" to the extracellular space. | Name default only for a genus on a Gram-positive list and no periplasm / outer membrane state in the paper; Gram-negative or unknown: unplaced and flagged. Fired on no run this round (E. coli runs blocked; the Gram-positive runs had no open export side or were blocked by rule 3). |
+| 5 LOW | L7's shared prompt and `max_tokens` were changed. | Both restored. The location pass has its own prompt (`llm/prompts/location_assign_system.txt`), prompt id `t2pw:location_assign:v1` and `max_tokens` 8000. L7's request sha and cache key for a fixed payload are identical on base and HEAD (`C:/t/loc-work/l7key.py`: `100cb0ba...` / key `471ce885...` on both). |
+
+**Tests.** Focused 253 passed (new: 3 mixed-organism cases, Gram-negative and periplasm, eukaryote export fill kept,
+two unplaced ends flagged, a chat call that raises leaves exactly the rules-only result with the error path-redacted,
+L7's request unchanged). suite2 on `56dd2803` (clean tree, log `C:/t/vis-runs/logs/loc-suite2-r1.log`): SMOKE 511, golden batch 2 / c011 8 / stage8 4 / quarantine 24, equivalence 8 / 14 / 6, vision 357 (+1 skipped), web 83: all passed, 0 survivors; no golden-seam test edited.
+
+**Replay on `56dd2803`** (152 q-runs + 8 showcase, same harness and census as section 2):
+
+| metric | base | rules only | + LLM pass (from cache, no `.env`) |
+|---|---|---|---|
+| same-place transports | 9 | 9 (all flagged) | **2** (102 both stated; 138 auto->auto) |
+| `__auto__ -> __auto__` transports | 4 | 4 (flagged) | 1 (138) |
+| duplicate state groups | 5 | 3 | 2 |
+| leaflet states | 14 | 10 | 10 |
+| bacterial reactions with no place | 35 | 13 (all flagged; mixed-organism runs) | 13 (all flagged) |
+| bacterial element rows with no place | 59 | 13 (flagged) | 13 (flagged) |
+| unplaced reactions (all) | 119 | 97 (all flagged) | 89 (all flagged) |
+| unplaced transport sides (transports) | 19 | 19 | 16 |
+| placeholder / empty states | 60 | 60 | 58 |
+| Stage-0-hint states flagged | 0 of 4 | 4 of 4 | 3 of 3 |
+| reactions / transports / element rows (payload) | 692 / 128 / 1979 | same | same |
+| **stated-location changes** | | **0** | **0** |
+| inferred: organism_default (rx / side / element) | | 22 / 0 / 46 | 22 / 0 / 46 |
+| inferred: llm_quote (rx / side) | | | 8 / 8 |
+| PWML exports / byte-identical / changed | 105 | 105 / 101 / 4 | 105 / 94 / 11 |
+| PWML lost names / reaction signatures | | **0 / 0** | **0 / 0** |
+| PWML transport signatures relabelled (none lost; 96 transports) | | 3 (lipid A leaflets) | 5 (+ 78, menaquinone) |
+
+Per-file no-loss check of every changed PWML (`locpairs.py`, element drawings per (name, place), merged spellings
+mapped together); every name is kept, a "lost" pair is an element moving out of a default box:
+- rules only: 18 (7 compounds, 2 proteins `cell` -> `cytoplasm`), 25 (7 pairs unchanged; 2 -> 1 states), 62 (3 pairs
+  `cell` -> `cytoplasm`), lipid A (69 -> 67 rows, 65 pairs unchanged; leaflet states 11 -> 7).
+- LLM arm adds: 10 and sour taste (13 pairs unchanged; OTOP1 H+ permeation to-side -> Type III cell), 78 (+ enterobactin
+  outside), 79 (DHCR24, desmosterol, cholesterol -> ER), 134 (carnitine-pathway steps from the row-0 mitochondrion box to
+  the cytosol), 136 (NicGH step from the row-0 cytosol box to the vacuole), menaquinone (32 -> 22 rows, 20 pairs
+  unchanged).
+
+**LLM arm.** A fresh live pass was needed (the new prompt id changes the cache key): 40 calls, about $0.26 (estimated:
+chars/4 at an assumed $0.50/M in, $3/M out); session total about $0.52 of $5. The arm of record replays those replies
+from the cache with no `.env` loaded, so no resolver renames: 0 lost names. 16 accepted inferences, all with a
+verbatim, place-naming quote (DHCR24 -> ER in 22, 79, 85, 86, 97; BBD and Tha1 -> cytosol in 134; NicGH -> vacuole in
+136; enterobactin secretion -> extracellular in 21, 26, 78; ferric-enterobactin import from extracellular in 26; DHNA
+export -> extracellular in menaquinone; OTOP1 H+ permeation -> Type III cell in 10 and sour taste). The model answered
+DHCR24 in 98 last round and not this round (same input, temperature 0).
+
+**A chat call that raises.** Replay with the pass on and every model call raising (43 calls, fill cache without
+location replies): 105/105 exports succeed, and every PWML and every payload (bar the step's own `llm` error report) is
+byte-identical to the rules-only arm.
+
+**PathWhiz import: not run.** `docker ps` cannot reach the Docker engine (Docker Desktop is down). Earlier in the round
+it was briefly up running another lane's stack (`t2pw-pwdraw`), never this lane's `t2pw-loc`; per the instruction it was
+not started.
+
+**Open questions for the PO (undecided):** the mixed-organism default (5 runs with stray *Arabidopsis* species rows now
+get no default, including menaquinone's DHNA export and 138's TBN export); Gram-negative name defaults (should "secretion"
+in E. coli ever reach the extracellular space without a quote?); preferring the more specific name when merging states
+(menaquinone keeps "intracellular" over "cytoplasmic state", lipid A keeps the first leaflet spelling); and a D-entry for
+"inferred, always flagged, never overrides a stated location". Q1-Q5 of section 5 stand.
