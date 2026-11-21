@@ -931,13 +931,17 @@ def chat_detailed(
     model_env_var: Optional[str] = None,
     stage_name: Optional[str] = None,
     timeout: Optional[float] = None,
+    max_retries: Optional[int] = None,
 ) -> CompletionResult:
     """:func:`chat` plus a :class:`CompletionDiagnostics` describing the call.
 
     ``timeout`` bounds each attempt of THIS call only, defaulting to
     :data:`REQUEST_TIMEOUT_SECONDS`; :func:`worst_case_call_seconds` prices the
     whole call in advance. A budget spent on timeouts raises
-    :class:`LLMOperationTimeout`, never the empty string.
+    :class:`LLMOperationTimeout`, never the empty string. ``max_retries`` (default:
+    ``LLM_MAX_RETRIES``, unchanged) lets a caller with a wall-clock budget cap the
+    attempts of THIS call, so ``worst_case_call_seconds(timeout=..., max_retries=...)``
+    is a real bound for it.
 
     The text returned is identical to what ``chat`` returns for the same inputs;
     the only behavioural difference anywhere in this function relative to the
@@ -990,7 +994,7 @@ def chat_detailed(
             kwargs["response_format"] = {"type": "json_object"}
 
     # Retry tuning (env configurable)
-    max_retries = int(os.getenv("LLM_MAX_RETRIES", "8"))
+    max_retries = int(os.getenv("LLM_MAX_RETRIES", "8")) if max_retries is None else max(1, int(max_retries))
     base_sleep = float(os.getenv("LLM_RETRY_BASE_SLEEP", "1.0"))
     max_sleep = float(os.getenv("LLM_RETRY_MAX_SLEEP", "20.0"))
 

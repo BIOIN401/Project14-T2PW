@@ -105,37 +105,23 @@ CHAIN = [rx(["chorismate"], ["isochorismate"], name="EntC"),
 Q_IRON = "Enterobactin binds ferric iron outside the cell"
 
 
-def test_off_pathway_isolated_row_with_a_verified_quote_is_omitted_and_reported():
-    rows, rep, _ = run(CHAIN + [rx(["ferric iron", "siderophore X"], ["iron complex"], lock="rxn_lock_009")],
-                       {4: {"verdict": "off_pathway", "quote": Q_IRON}})
-    r = rows[4]
-    assert r["scope_membership"] == "out_of_scope" and "locked_reaction_id" not in r and "locked" not in r
-    assert r["verifier"]["action"] == "omitted" and r["verifier"]["model_quote"].startswith("Enterobactin binds")
-    assert rep["omitted"] == [4] and rep["rows"][4]["lock_id"] == "rxn_lock_009"
+@pytest.mark.parametrize("row,quote", [
+    (rx(["ferric iron", "siderophore X"], ["iron complex"], lock="rxn_lock_009"), Q_IRON),  # isolated, verified quote
+    (rx(["pyruvate", "NADH"], ["lactate", "NAD+"]), "Lactate dehydrogenase reduces pyruvate to lactate in the coupled assay"),
+    (rx(["ATP"], ["ADP", "glucose 6-phosphate"]), Q_IRON),
+])
+def test_off_pathway_only_flags_never_drops(row, quote):
+    """R3 P6: even an isolated row with a verified quote may be a gold step Stage 1 drew disconnected."""
+    rows, rep, _ = run(CHAIN + [row], {4: {"verdict": "off_pathway", "quote": quote}})
+    assert len(live(rows)) == 5 and rep["flagged"] == [4] and rep["omitted"] == []
+    assert rows[4]["verifier"]["action"] == "flagged"
+    assert rows[4].get("locked_reaction_id") == row.get("locked_reaction_id")
 
 
 @pytest.mark.parametrize("idx", [0, 3])
 def test_off_pathway_never_drops_the_first_or_last_step(idx):
     rows, rep, _ = run(CHAIN, {idx: {"verdict": "off_pathway", "quote": Q_IRON}})
     assert len(live(rows)) == 4 and rep["flagged"] == [idx]
-
-
-def test_off_pathway_without_a_verified_quote_or_connected_by_a_real_name_is_only_flagged():
-    iso = rx(["ferric iron", "siderophore X"], ["iron complex"])
-    rows, rep, _ = run(CHAIN + [iso], {4: {"verdict": "off_pathway", "quote": "iron is bound outside by it"}})
-    assert rep["flagged"] == [4]
-    # the LDH assay row shares pyruvate (a real name) with EntB: flagged, not dropped
-    ldh = rx(["pyruvate", "NADH"], ["lactate", "NAD+"])
-    rows, rep, _ = run(CHAIN + [ldh], {4: {"verdict": "off_pathway", "quote": "Lactate dehydrogenase reduces pyruvate to lactate in the coupled assay"}})
-    assert rep["flagged"] == [4]
-    # currency alone never connects: an ATP -> ADP row is isolated
-    rows, rep, _ = run(CHAIN + [rx(["ATP"], ["ADP", "glucose 6-phosphate"])], {4: {"verdict": "off_pathway", "quote": Q_IRON}})
-    assert rep["omitted"] == [4]
-
-
-def test_off_pathway_never_empties_the_pathway():
-    rows, rep, _ = run([rx(["2-oxoglutarate", "isochorismate"], ["SEPHCHC"])], {0: {"verdict": "off_pathway", "quote": Q_IRON}})
-    assert rep["flagged"] == [0]
 
 
 def test_not_stated_only_flags():
@@ -268,11 +254,90 @@ def test_quote_may_drop_a_citation_or_a_clause_but_not_words_or_a_negation():
     assert not V.quote_in_paper("FHY3 and FAR1 strongly induce the expression of ALAD1/HEMB1 by binding", tw)
 
 
+# -- round 3 (review R3 P1-P7) --------------------------------------------------------------------------
+@pytest.mark.parametrize("quote", ["HY5 binds to the promoter of CHLH in the light",
+                                   "GUN4 is a reductase subunit bound to CHLH",
+                                   "an inducible promoter drove CHLH in the line",
+                                   "antibodies raised against CHLH detected the protein",
+                                   "accumulation of CHLH protein was measured in leaves"])
+def test_contact_or_naming_words_are_not_effects(quote):
+    assert not V.states_effect(quote)
+
+
+@pytest.mark.parametrize("quote", ["HY5 promotes CHLH expression", "FLU inhibits GluTR", "loss of HY5 reduced CHLH",
+                                   "GBP prevents degradation of GluTR1", "PIFs down-regulate CHLH", "expression was upregulated"])
+def test_effect_words_are_effects(quote):
+    assert V.states_effect(quote)
+
+
+def test_binding_to_a_promoter_stays_unsigned():
+    text = "HY5 binds to the promoter of CHLH in the light."
+    p = payload([], [{"entity_1": "HY5", "entity_2": "CHLH", "relationship": "binding"}])
+    out, rep = V.apply_types(p, text, {0: {"type": "activation", "quote": "HY5 binds to the promoter of CHLH in the light"}})
+    assert out["processes"]["interactions"][0]["relationship"] == "binding" and rep["changed"] == []
+
+
+def test_a_genus_initial_does_not_hide_the_negation_before_it():
+    text = "Deletion of fur in E. coli increased expression of entC in iron-replete medium. Fig. 2 shows it."
+    assert len(V.split_sentences(text)) == 2
+    assert not V.quote_unqualified("increased expression of entC in iron-replete medium", text)
+    assert not V.quote_unqualified("coli increased expression of entC in iron-replete medium", text)
+    assert V.quote_unqualified("Deletion of fur in E. coli increased expression of entC", text)
+
+
+def test_a_dropped_leading_loss_is_refused_even_when_the_quote_has_its_own_negation():
+    text = "Loss of PIF1 did not reduce expression of CHLH in seedlings."
+    assert not V.quote_unqualified("PIF1 did not reduce expression of CHLH", text)
+    assert V.quote_unqualified("Loss of PIF1 did not reduce expression of CHLH", text)
+
+
+def test_the_typing_word_is_read_as_the_exporter_reads_it():
+    p = payload([], [{"entity_1": "A", "entity_2": "B", "interaction_type": "inhibits", "relationship": ""},
+                     {"entity_1": "A", "entity_2": "B", "interaction_type": "binding", "relationship": ""}])
+    out, rep = V.apply_types(p, TEXT, {0: {"type": "activation", "quote": Q_PIF}, 1: {"type": "inhibition", "quote": Q_PIF}})
+    ix = out["processes"]["interactions"]
+    assert ix[0]["interaction_type"] == "inhibits" and ix[0]["relationship"] == ""  # signed: untouched
+    assert ix[1]["interaction_type"] == "inhibition" and ix[1]["relationship"] == "inhibition"  # text and PWML agree
+
+
+def test_a_rename_never_leaves_two_spellings_of_one_compound():
+    """R3 P4 (the AMBIGUOUS_RENAME_TARGET shape): other rows keep '2,3-dihydroxybenzoic acid'."""
+    text = TEXT + " Then 2,3-dihydroxybenzoate is adenylated."
+    rows = [rx(["2,3-dihydroxybenzoic acid", "ATP"], ["2,3-dihydroxybenzoyl-AMP"]),
+            rx(["2,3-dihydroxybenzoic acid", "L-serine"], ["enterobactin"])]
+    out, rep = V.apply_verdicts(payload(rows), text, {1: {"verdict": "vague", "rename": [
+        {"old": "2,3-dihydroxybenzoic acid", "new": "2,3-dihydroxybenzoate"}]}}, "merge")
+    names = {n for r in out["processes"]["reactions"] for n in r["inputs"] + r["outputs"]}
+    assert "2,3-dihydroxybenzoate" not in names  # refused: the old spelling lives on in row 0
+    out, _ = V.apply_verdicts(payload([rx(["isochorismate"], ["2,3-dihydro-2,3-dihydroxybenzoate"]),
+                                       rx(["pyruvic acid", "NADH"], ["lactate"])]), TEXT,
+                              {0: {"verdict": "incomplete", "add_outputs": ["pyruvate"]}}, "merge")
+    assert out["processes"]["reactions"][0]["outputs"][-1] == "pyruvic acid"  # the payload's own spelling
+
+
+def test_rows_differing_in_cofactor_are_not_folded():
+    rows = [rx(["malate", "NAD+"], ["oxaloacetate", "NADH"]), rx(["malate", "X"], ["oxaloacetate", "NADPH"])]
+    out, rep = V.apply_verdicts(payload(rows), TEXT + " NADP+ is used.", {1: {"verdict": "vague", "rename": [
+        {"old": "X", "new": "NADP+"}]}}, "merge")
+    assert rep["merged"] == []
+
+
+def test_budget_is_a_wall_clock_bound_across_retries():
+    from t2pw.llm.client import worst_case_call_seconds
+
+    t, attempts = V.Budget(seconds=700).take()
+    assert worst_case_call_seconds(timeout=t, max_retries=attempts) <= 700
+    assert V.Budget(seconds=40).take() is None
+    seen = {}
+    V._ask("s", "u", lambda *a, **k: seen.update(k) or '{"rows": []}', "stage", (120.0, 2))
+    assert seen["timeout"] == 120.0 and seen["max_retries"] == 2
+
+
 # -- run-level: budget, failure, lock manifest, report (R1 F8, F9) ----------------------------------
 def test_budget_caps_calls_and_rows_past_it_stay_untouched(monkeypatch):
     calls = []
 
-    def fake_ask(system, user, chat_fn, stage, timeout=None):
+    def fake_ask(system, user, chat_fn, stage, limit=None):
         calls.append(stage)
         return {"rows": []}
     monkeypatch.setattr(V, "_ask", fake_ask)
@@ -295,13 +360,13 @@ def test_model_error_fails_open_and_flags_default_off(monkeypatch):
 
 
 def test_hook_prunes_the_lock_manifest_and_hands_the_report_to_the_run(tmp_path, monkeypatch):
-    def fake_ask(system, user, chat_fn, stage, timeout=None):
-        return {"rows": [{"id": 4, "verdict": "off_pathway", "quote": Q_IRON}]}
+    def fake_ask(system, user, chat_fn, stage, limit=None):
+        return {"rows": [{"id": 4, "verdict": "summary"}]}
     monkeypatch.setattr(V, "_ask", fake_ask)
     monkeypatch.setenv(V.ENV_FLAG, "1")
     monkeypatch.delenv(V.IX_FLAG, raising=False)
     rows = [dict(r, locked_reaction_id="rxn_lock_00%d" % i) for i, r in enumerate(CHAIN)]
-    rows.append(rx(["ferric iron", "siderophore X"], ["iron complex"], lock="rxn_lock_009"))
+    rows.append(rx(["chorismate"], ["2,3-dihydro-2,3-dihydroxybenzoate"], lock="rxn_lock_009"))  # covered summary
     manifest = [{"locked_reaction_id": r["locked_reaction_id"]} for r in rows]
     (tmp_path / "locked_reaction_manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
     state = {}

@@ -7,8 +7,7 @@ Each row gets a verdict with a quote from the paper: ``ok`` · ``incomplete`` ·
 
 * a name the model adds or renames to is used only when it occurs in the paper text;
 * ``reversed`` swaps the sides only when the model's quote is in the paper;
-* ``off_pathway`` omits only with a verified quote and only an isolated row (no non-currency name shared
-  with any other row, so never a first, middle or last step); otherwise it flags;
+* ``off_pathway`` only flags (it never drops a row);
 * ``not_stated`` only flags;
 * ``split``: a chain through generic intermediates is joined into the whole step from its own rows
   (linked only through an intermediate exactly one row makes and one row uses); a model's whole step is
@@ -174,10 +173,31 @@ def quote_in_paper(evidence: Any, text_words: str) -> bool:
     return bool(parts) and all(found(p) for p in parts) and any(len(_words(p).split()) >= 4 for p in parts)
 
 
+#: Tokens that end with a period without ending a sentence ("E. coli", "et al.", "Fig. 2", "e.g.").
+_ABBREV = frozenset("fig figs e.g i.e al ref refs no nos vs ca approx eq eqs sp spp st dr mr ms cf resp suppl "
+                    "vol pp ed eds etc var subsp str".split())
+
+
+def split_sentences(text: str) -> List[str]:
+    """Sentences, cut only at . ! ? ; followed by space and a capital letter or a digit-free opener, and
+    never after a known abbreviation or a single capital letter (a genus initial: "E. coli"). A cut at
+    "E. coli" would hide a negation before it (review R3 P2)."""
+    out, start = [], 0
+    for m in re.finditer(r"[.!?;]\s+(?=[A-Z(\[])", str(text or "")):
+        before = re.findall(r"([A-Za-z.]+)\.?$", text[start:m.start() + 1].rstrip("."))
+        tok = (before[-1] if before else "").strip(".").casefold()
+        if text[m.start()] == "." and (tok in _ABBREV or re.fullmatch(r"[a-z]", tok)):
+            continue
+        out.append(text[start:m.start() + 1])
+        start = m.end()
+    out.append(text[start:])
+    return [x for x in out if x.strip()]
+
+
 def _sentences(text: str) -> List[List[str]]:
     """The paper's sentences as word lists, as written and with short parentheticals taken out."""
     bare = re.sub(r"\([^()]{0,80}\)|\[[^\[\]]{0,40}\]", " ", str(text or ""))
-    return [_words(s).split() for t in (str(text or ""), bare) for s in re.split(r"(?<=[.!?;])\s+", t) if s.strip()]
+    return [_words(s).split() for t in (str(text or ""), bare) for s in split_sentences(t)]
 
 
 def _starts(q: List[str], doc: List[str]) -> List[int]:
@@ -195,21 +215,29 @@ def quote_unqualified(quote: Any, text: str) -> bool:
         return False
     for sent in _sentences(text):
         for k in _starts(q, sent):
-            if not (set(sent[:k]) & _KEEP_WORDS) or (set(q) & _KEEP_WORDS):
+            if not set(sent[:k]) & _KEEP_WORDS:  # checked whatever the quote itself contains (R3 P2b)
                 return True
     return False
 
 
 #: A quote that re-types an interaction must state an effect, not only a contact: "EntC and EntB interact
-#: to form a dynamic channeling system" states none. Stems, matched at the start of a word.
-_EFFECT_STEMS = ("inhibit", "repress", "activat", "induc", "stimulat", "suppress", "block", "promot", "enhanc",
-                 "increas", "decreas", "elevat", "reduc", "lower", "rais", "accumul", "degrad", "stabiliz",
-                 "destabiliz", "abolish", "upregul", "downregul", "silenc", "prevent", "attenuat", "impair",
-                 "restor", "abrogat", "antagoniz", "diminish", "boost")
+#: to form a dynamic channeling system" states none. Whole word forms, not stems: "promoter", "reductase",
+#: "reduction", "inducible", "raised" and "accumulation" are not effects (review R3 P1).
+_EFFECT_WORDS = re.compile(
+    r"^(?:inhibit(?:s|ed|ing|ion)?|repress(?:es|ed|ing|ion)?|activat(?:e|es|ed|ing|ion)|induc(?:e|es|ed|ing|tion)|"
+    r"stimulat(?:e|es|ed|ing|ion)|suppress(?:es|ed|ing|ion)?|block(?:s|ed|ing)?|promot(?:e|es|ed|ing)|"
+    r"enhanc(?:es|ed|ing|ement)?|increas(?:es|ed|ing|e)|decreas(?:es|ed|ing|e)|elevat(?:e|es|ed|ing)|"
+    r"reduc(?:e|es|ed|ing)|lower(?:s|ed|ing)|degrad(?:e|es|ed|ing|ation)|stabiliz(?:e|es|ed|ing|ation)|"
+    r"destabiliz(?:e|es|ed|ing|ation)|abolish(?:es|ed|ing)?|up-?regulat(?:e|es|ed|ing|ion)|"
+    r"down-?regulat(?:e|es|ed|ing|ion)|silenc(?:e|es|ed|ing)|prevent(?:s|ed|ing)?|attenuat(?:e|es|ed|ing|ion)|"
+    r"impair(?:s|ed|ing)?|restor(?:e|es|ed|ing)|abrogat(?:e|es|ed|ing)|antagoniz(?:e|es|ed|ing)|"
+    r"diminish(?:es|ed|ing)?|boost(?:s|ed|ing)?)$")
 
 
 def states_effect(quote: Any) -> bool:
-    return any(w.startswith(_EFFECT_STEMS) for w in _words(quote).split())
+    raw = str(quote or "").casefold()
+    words = re.findall(r"[a-z]+(?:-[a-z]+)?", raw)
+    return any(_EFFECT_WORDS.match(w) for w in words) or "up regulat" in raw or "down regulat" in raw
 
 
 #: Words that carry a sign whatever table they are (not) in: "allosteric_inhibitor_of", "inhibited_by",
@@ -298,23 +326,31 @@ class Budget:
         self.deadline = time.monotonic() + (MAX_SECONDS if seconds is None else seconds)
         self.skipped = 0
 
-    def take(self) -> Optional[float]:
-        """Seconds the next call may use, or None when the budget is spent."""
+    def take(self) -> Optional[Tuple[float, int]]:
+        """``(per-attempt timeout, attempts)`` for the next call such that the client's own worst case
+        (:func:`t2pw.llm.client.worst_case_call_seconds`: every attempt, backoff and SDK retry) fits in
+        the time left, or None when the budget is spent. This makes :data:`MAX_SECONDS` a real
+        wall-clock bound across retries (review R3 P3), not a check between calls."""
         import time
 
+        from t2pw.llm.client import worst_case_call_seconds
+
         left = self.deadline - time.monotonic()
-        if self.calls <= 0 or left < 30:
-            self.skipped += 1
-            return None
-        self.calls -= 1
-        return left
+        if self.calls > 0:
+            for attempts in (2, 1):
+                for t in (300.0, 240.0, 180.0, 120.0, 90.0, 60.0):
+                    if worst_case_call_seconds(timeout=t, max_retries=attempts) <= left:
+                        self.calls -= 1
+                        return t, attempts
+        self.skipped += 1
+        return None
 
 
 def _ask(system: str, user: str, chat_fn: Optional[Callable[..., Any]], stage: str,
-         timeout: Optional[float] = None) -> Dict[str, Any]:
+         limit: Optional[Tuple[float, int]] = None) -> Dict[str, Any]:
     if chat_fn is None:
         from t2pw.llm.client import chat_detailed as chat_fn  # noqa: PLW2901
-    extra = {"timeout": min(timeout, 300.0)} if timeout else {}
+    extra = {"timeout": limit[0], "max_retries": limit[1]} if limit else {}
     result = chat_fn([{"role": "system", "content": system}, {"role": "user", "content": user}],
                      temperature=0.0, max_tokens=32000, response_json=True,
                      model_env_var=MODEL_ENV_VAR, stage_name=stage, **extra)
@@ -468,20 +504,50 @@ def _chain_steps(split_rows: Sequence[Tuple[int, Dict[str, Any]]]) -> Dict[int, 
     return out
 
 
-def _isolated(i: int, row: Dict[str, Any], rows: Sequence[Tuple[int, Dict[str, Any]]]) -> bool:
-    """True when the row shares no non-currency name with any other row: it is not the first, a middle or
-    the last step of anything the other rows draw. Currency (NAD, ATP, CO2) never connects (R1 F4)."""
-    mine = _core(row.get("inputs")) | _core(row.get("outputs"))
-    return bool(mine) and not any(mine & (_core(r.get("inputs")) | _core(r.get("outputs")))
-                                  for j, r in rows if j != i)
+def _spelling(name: Any) -> str:
+    """One key for spellings of one compound: case, punctuation, and acid / -ate (-ous acid / -ite) folded."""
+    k = re.sub(r"[^a-z0-9]+", "", str(name or "").casefold())
+    return re.sub(r"ousacid$", "ite", re.sub(r"icacid$", "ate", k))
 
 
-def _apply_renames(row: Dict[str, Any], renames: Any, tw: str) -> List[List[str]]:
-    """Rename participants of ``row`` in place, only to names that occur in the paper. -> [[old, new]]."""
+def _payload_names(payload: Dict[str, Any], skip: Optional[Dict[str, Any]] = None, registry: bool = True) -> Dict[str, str]:
+    """spelling key -> the spelling the payload already uses (every participant of every other row, and
+    every registry entity)."""
+    out: Dict[str, str] = {}
+    for r in _rows(payload, "reactions"):
+        if isinstance(r, dict) and r is not skip:
+            for n in _names(r.get("inputs")) + _names(r.get("outputs")):
+                out.setdefault(_spelling(n), n)
+    for bucket in (payload.get("entities") or {}).values() if registry else ():
+        for e in bucket if isinstance(bucket, list) else []:
+            if _name(e):
+                out.setdefault(_spelling(_name(e)), _name(e))
+    return out
+
+
+def _one_spelling(name: str, known: Dict[str, str]) -> str:
+    """The payload's own spelling when it already names this compound, else ``name`` (review R3 P4: never
+    a second spelling of one compound, the AMBIGUOUS_RENAME_TARGET shape that ends a run)."""
+    return known.get(_spelling(name), name)
+
+
+def _apply_renames(row: Dict[str, Any], renames: Any, tw: str, payload: Optional[Dict[str, Any]] = None) -> List[List[str]]:
+    """Rename participants of ``row`` in place, only to names that occur in the paper. A rename is applied
+    only when the new name is one the payload already uses (its spelling is kept) or the old name occurs in
+    no other row (so no row keeps the old spelling next to the new one); otherwise it is refused (R3 P4).
+    -> [[old, new]]."""
+    known = _payload_names(payload or {}, skip=row)
+    others = _payload_names(payload or {}, skip=row, registry=False)
     done = []
     for ren in renames if isinstance(renames, list) else []:
         old, new = (ren.get("old"), ren.get("new")) if isinstance(ren, dict) else (None, None)
         if not (isinstance(old, str) and isinstance(new, str) and len(new.strip()) > 1 and _in_text(new, tw)):
+            continue
+        if _spelling(new) in known:
+            new = known[_spelling(new)]
+        elif _spelling(old) in others:
+            continue
+        if _key(new) == _key(old):
             continue
         for side in ("inputs", "outputs"):
             for j, item in enumerate(row.get(side) or []):
@@ -492,6 +558,18 @@ def _apply_renames(row: Dict[str, Any], renames: Any, tw: str) -> List[List[str]
                         row[side][j] = new.strip()
                     done.append([old, new.strip()])
     return done
+
+
+def _currency_compatible(a: Dict[str, Any], b: Dict[str, Any]) -> bool:
+    """Same non-currency names already established; on each side one row's currency must contain the
+    other's (one lists CO2 the other leaves out) -- never two different cofactors. The Stage-1 ensemble
+    refuses the same merge."""
+    for side in ("inputs", "outputs"):
+        ca = {_key(n) for n in _names(a.get(side)) if _currency(n)}
+        cb = {_key(n) for n in _names(b.get(side)) if _currency(n)}
+        if not (ca <= cb or cb <= ca):
+            return False
+    return True
 
 
 def _omit(row: Dict[str, Any]) -> None:
@@ -534,14 +612,18 @@ def apply_verdicts(payload: Dict[str, Any], text: str, answers: Dict[int, Dict[s
             # A participant that is wrong rather than missing comes as a rename (the model may give one with
             # either verdict, R1 F7c); a missing co-product comes as an addition. Every name must be the
             # paper's own.
-            done = _apply_renames(r, a.get("rename"), tw)
+            done = _apply_renames(r, a.get("rename"), tw, out)
             added = []
             if v == "incomplete":
+                known = _payload_names(out)
                 for side, field in (("inputs", "add_inputs"), ("outputs", "add_outputs")):
                     have = set(_side_key(r.get(side)))
                     names = a.get(field)
                     for n in [names] if isinstance(names, str) else (names or []):
                         if isinstance(n, str) and len(n.strip()) > 1 and _key(n) not in have and _in_text(n, tw):
+                            n = _one_spelling(n.strip(), known)
+                            if _key(n) in have:
+                                continue
                             r.setdefault(side, []).append(n.strip())
                             have.add(_key(n))
                             added.append([side, n.strip()])
@@ -559,14 +641,9 @@ def apply_verdicts(payload: Dict[str, Any], text: str, answers: Dict[int, Dict[s
                 rec["action"] = "repaired"
                 _lineage(r, "direction swapped to the paper's")
         elif v == "off_pathway":
-            # Omitted only with the model's quote verified in the paper AND when the row is isolated (shares
-            # no non-currency name with any other row, so it cannot be a first, middle or last step of what
-            # the others draw) AND other rows remain. Anything else is flagged, never dropped (R1 F4).
-            if rec["model_quote_in_paper"] and len(live) > 1 and _isolated(i, r, live):
-                _omit(r)
-                rec["action"] = "omitted"
-            else:
-                rec["action"] = "flagged"
+            # Flag only (review R3 P6): even an isolated row with a verified quote can be a gold step that
+            # Stage 1 extracted disconnected, or a step linked only through the pathway's own cofactor.
+            rec["action"] = "flagged"
         elif v == "not_stated":
             # Flag only. On the replay the model called five certified paper steps "not stated" (their
             # quotes were not verbatim); a negative judgement by the model never deletes a row.
@@ -635,6 +712,8 @@ def apply_verdicts(payload: Dict[str, Any], text: str, answers: Dict[int, Dict[s
         if i not in changed and seen[k] not in changed:
             continue
         keep = rows[seen[k]]
+        if not _currency_compatible(keep, r):  # NAD vs NADP, ATP vs GTP: different rows (R3 P5)
+            continue
         have = {_key(e) for e in _enzymes(keep)}
         for e in r.get("enzymes") or []:
             n = e.get("protein") or e.get("protein_complex") or e.get("name") if isinstance(e, dict) else e
@@ -687,13 +766,15 @@ def apply_types(payload: Dict[str, Any], text: str, answers: Dict[int, Dict[str,
             continue
         a = answers.get(i) or {}
         want, quote = str(a.get("type") or "").strip().casefold(), str(a.get("quote") or "")
-        old = str(r.get("relationship") or "")
+        old = str(r.get("interaction_type") or r.get("relationship") or "")  # as the exporter reads it (R3 P7)
         rec = {"index": i, "entity_1": r.get("entity_1"), "entity_2": r.get("entity_2"), "old": old, "model": want,
                "quote": quote[:400], "quote_in_paper": quote_in_paper(quote, tw), "action": "kept"}
         rec["quote_unqualified"] = rec["quote_in_paper"] and quote_unqualified(quote, text)
         rec["states_effect"] = states_effect(quote)
         if want in SIGNED and retypable(old) and rec["quote_unqualified"] and rec["states_effect"]:
             r["relationship"] = want
+            if r.get("interaction_type"):
+                r["interaction_type"] = want
             r.setdefault("evidence", quote)
             r["type_evidence"] = quote
             _lineage(r, f"type {old or 'none'} -> {want} from the stated after-effect")
