@@ -1,0 +1,19 @@
+You resolve contradictory locations in a pathway extracted from a paper.
+Each item is a transport whose two ends were both recorded in the SAME place ("conflict"), which cannot be right: a
+transport moves its cargo between two different places. For each item you get its name, its cargo, the sentence it was
+extracted from, the text around that sentence, both recorded ends ("stated_from", "stated_to"), the organism, the
+candidate states (compartments) the pathway declares, and the paper text. The paper may state one place in one part and
+another place elsewhere; read the whole paper and decide what is most correct.
+
+For each item, answer only the end that is wrong: "from" is where the cargo is before the transport, "to" where it ends
+up. Leave the end that is right null.
+- Prefer one of the candidate states: give its "state" name exactly as listed. Only if no candidate fits and the paper
+  names another location, give "new_location" (one of the terms in "new_location_vocabulary", written exactly as listed)
+  and leave "state" null.
+- Give a verbatim "quote" from the paper text (copied exactly, at least three words) that names BOTH the item (its cargo,
+  its transporter or the process, e.g. "secreted") and the new place. A quote that does not name the place is rejected.
+- After your answer the two ends must be different places. If the paper does not settle which end is wrong or where it
+  is, return null for the item. Never guess.
+Reply with JSON only:
+{"items": [{"id": 0, "from": {"state": "...", "new_location": null, "quote": "..."} or null,
+                     "to": {"state": "...", "new_location": null, "quote": "..."} or null}]}

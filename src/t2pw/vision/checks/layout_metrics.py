@@ -27,11 +27,10 @@ from itertools import combinations
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-# Compounds every metabolic reaction shares; a chain that "runs backwards" through one of them is not a reading-order claim.
-CURRENCY = {"atp", "adp", "amp", "nadh", "nad+", "nad", "nadph", "nadp+", "nadp", "h2o", "water", "coa", "coa-sh", "coenzyme a",
-            "co2", "carbon dioxide", "h+", "hydrogen ion", "phosphate", "pi", "ppi", "pyrophosphate", "diphosphate", "sam",
-            "s-adenosyl-l-methionine", "s-adenosylmethionine", "sah", "s-adenosylhomocysteine", "o2", "oxygen", "nh3", "ammonia",
-            "udp", "gtp", "gdp", "fad", "fadh2"}
+# Compounds every metabolic reaction shares; a chain that "runs backwards" through one of them is not a reading-order
+# claim. One list with the renderer.
+from t2pw.vision.currency import CURRENCY
+
 LOCS = ("compound-location", "protein-location", "nucleic-acid-location", "element-collection-location")
 LABEL_GEOM = {"15": (160, 10), "235": (200, 16)}  # label template -> (box width, px per line), label_locations/*.jst.eco
 LABEL_MARGIN = 10  # 5 px each side inside the box
@@ -385,6 +384,13 @@ def svg_layout_metrics(svg: str) -> Dict[str, Any]:
         jn = min(jx, key=lambda j: _dist_to_rect(ends[1 - k], j[2]))
         d.append(math.dist(en[3], jn[3]))
     vb = [float(v) for v in re.findall(r"-?\d+(?:\.\d+)?", root.get("viewBox") or "")]
+    res = dict(**_core(vb, edges, ents, d, nodes, view), **_quality(view, edges, nodes))
+    res["score"] = layout_score(res)
+    return res
+
+
+def _core(vb, edges, ents, d, nodes, view):
+    from t2pw.vision.diagram import metrics as M
     return dict(canvas_w=vb[2] if len(vb) == 4 else None, canvas_h=vb[3] if len(vb) == 4 else None,
                 aspect_ratio=round(vb[2] / vb[3], 2) if len(vb) == 4 and vb[3] else None,  # the core view's width / height
                 crossings=M.crossings(edges), bends=sum(max(0, len(e.pts) - 2) for e in edges),
@@ -393,6 +399,164 @@ def svg_layout_metrics(svg: str) -> Dict[str, Any]:
                 node_overlaps=sum(1 for a, b in combinations(nodes, 2) if _overlap(a[2], b[2])),
                 labels_truncated=sum(1 for t in view.iter() if _local(t) == "text" and (t.text or "").endswith("\u2026")
                                      and "chip" not in _classes(t)))
+
+
+# --------------------------------------------------------------------------- readability (DRAW-RENDERER quality gate)
+LONG_EDGE = 400  # px of polyline: a line longer than this crosses most of a page-width drawing
+SMALL_TEXT = ("chip", "xcap", "bsub", "rlabel", "ifacelbl", "spinelbl", "lanelbl")
+_OWNERS = ("n", "jn", "badge", "band", "lane")
+
+
+def _plen(pts) -> float:
+    return sum(math.dist(a, b) for a, b in zip(pts, pts[1:]))
+
+
+def _seg_hits_rect(p, q, r: Rect) -> bool:
+    """Axis-parallel or general segment p-q passes through the open rectangle r (Liang-Barsky clip)."""
+    t0, t1, dx, dy = 0.0, 1.0, q[0] - p[0], q[1] - p[1]
+    for pk, qk in ((-dx, p[0] - r[0]), (dx, r[2] - p[0]), (-dy, p[1] - r[1]), (dy, r[3] - p[1])):
+        if pk == 0:
+            if qk <= 0:
+                return False
+        else:
+            t = qk / pk
+            if pk < 0:
+                t0 = max(t0, t)
+            else:
+                t1 = min(t1, t)
+            if t0 >= t1:
+                return False
+    return True
+
+
+def _texts(el, owner=None, out=None):
+    """(owner id, class list, box) of every <text> under el, outside the legend; owner = the nearest node/badge/band group."""
+    out = [] if out is None else out
+    for c in el:
+        tag, cl = _local(c), _classes(c)
+        if tag == "g" and "legend" in cl:
+            continue
+        if tag == "text" and (c.text or "").strip():
+            small = any(k in cl for k in SMALL_TEXT) or owner is not None and owner[1] in ("badge", "jn")
+            w = _text_width(c.text.strip()) * (0.8 if small else 1.0)
+            x, y = float(c.get("x") or 0), float(c.get("y") or 0)
+            anc = c.get("text-anchor") or "start"
+            x0 = x - w / 2 if anc == "middle" else x - w if anc == "end" else x
+            out.append((owner, cl, (x0, y - (8 if small else 10), x0 + w, y + 2)))
+        if tag == "g":
+            own = next((k for k in _OWNERS if k in cl), None)
+            _texts(c, (id(c), own) if own else owner, out)
+    return out
+
+
+def _quality(view, edges, nodes) -> Dict[str, Any]:
+    """Readability counts of the core view (lower is better for all of them except ``bands``).
+
+    long_edges            edges whose drawn polyline is longer than LONG_EDGE px; edge_length = total px of all edges
+    non_straight          edges with at least one bend
+    node_edge_overlaps    (edge, node) pairs where the edge runs through a node box that is not one of its two ends
+    label_collisions      pairs of texts of different owners whose boxes intersect, plus texts lying on another node's box
+    edges_through_labels  (edge, text) pairs where an edge runs through a text that is not part of its end nodes
+    bands, empty_bands, sparse_bands   compartment bands / lanes drawn; those holding no node; those holding one node
+    duplicate_names       extra drawings of one non-currency compound (same data-ent) beyond the first
+    repeated_captions     compartment captions under nodes that repeat a caption already shown
+    hops                  line bridges drawn where two lines still cross
+    edge_overlaps         pairs of edges without a common end node that run on top of each other for 10 px or more
+    """
+    boxes = [(n[2], n[1].get("data-ent") or n[1].get("data-p") or "") for n in nodes]
+    shrink = lambda r, k: (r[0] + k, r[1] + k, r[2] - k, r[3] - k)  # noqa: E731
+    long_, length, bent, through = 0, 0.0, 0, 0
+    ends_of = []
+    for e in edges:
+        L = _plen(e.pts)
+        length += L
+        long_ += L > LONG_EDGE
+        bent += len(e.pts) > 2
+        ends = [i for i, (b, _) in enumerate(boxes) if any(_dist_to_rect(p, b) <= 6 for p in (e.pts[0], e.pts[-1]))]
+        ends_of.append(set(ends))
+        for i, (b, _) in enumerate(boxes):
+            if i in ends:
+                continue
+            sb = shrink(b, 2)
+            if sb[0] < sb[2] and sb[1] < sb[3] and any(_seg_hits_rect(p, q, sb) for p, q in zip(e.pts, e.pts[1:])):
+                through += 1
+    txt = _texts(view)
+    coll = 0
+    for (oa, _, a), (ob, _, b) in combinations(txt, 2):
+        if (oa is None or ob is None or oa[0] != ob[0]) and _overlap(a, b):
+            coll += 1
+    # texts on a foreign node box: the owner of a node's own text is the node group itself
+    nb = [(id(g), _svg_box(g)) for g in view.iter() if _local(g) == "g" and ("n" in _classes(g) or "jn" in _classes(g))]
+    nb = [(gid, b) for gid, b in nb if b]
+    for own, cl, r in txt:
+        for gid, b in nb:
+            if (own is None or own[0] != gid) and _overlap(shrink(b, 1), r):
+                coll += 1
+    elt = 0
+    box_owner = {}
+    for gid, b in nb:
+        box_owner.setdefault(b, gid)
+    for e, ends in zip(edges, ends_of):
+        mine = {box_owner.get(boxes[i][0]) for i in ends}
+        for own, cl, r in txt:
+            if own is not None and own[0] in mine or own is not None and own[1] in ("band", "lane"):
+                continue
+            if any(_seg_hits_rect(p, q, shrink(r, 1)) for p, q in zip(e.pts, e.pts[1:])):
+                elt += 1
+    # overlapping lines: two edges (with no end node in common) running on the same line for 10 px or more
+    runs = defaultdict(list)
+    for k, e in enumerate(edges):
+        for p, q in zip(e.pts, e.pts[1:]):
+            if abs(p[1] - q[1]) < 0.5 and abs(p[0] - q[0]) > 0.5:
+                runs[("h", round(p[1]))].append((min(p[0], q[0]), max(p[0], q[0]), k))
+            elif abs(p[0] - q[0]) < 0.5 and abs(p[1] - q[1]) > 0.5:
+                runs[("v", round(p[0]))].append((min(p[1], q[1]), max(p[1], q[1]), k))
+    shared = defaultdict(float)
+    for segs in runs.values():
+        for (a0, a1, i), (b0, b1, j) in combinations(segs, 2):
+            if i != j and not (ends_of[i] & ends_of[j]):
+                shared[(min(i, j), max(i, j))] += max(0.0, min(a1, b1) - max(a0, b0))
+    edge_overlaps = sum(1 for v in shared.values() if v >= 10)
+    bands = []
+    for g in view.iter():
+        cl = _classes(g)
+        if _local(g) == "g" and ("band" in cl or "lane" in cl) and "nolane" not in cl:
+            r = next((s for s in g if _local(s) == "rect" and "bg" in _classes(s)), None)
+            if r is not None:
+                x, y, w, h = (float(r.get(k) or 0) for k in ("x", "y", "width", "height"))
+                bands.append(((x, y, x + w, y + h), "lane" in cl))
+    centres = [n[3] for n in nodes]
+    inside = [sum(1 for c in centres if b[0] <= c[0] <= b[2] and b[1] <= c[1] <= b[3]) for b, _ in bands]
+    # a band split into lanes is counted through its lanes
+    lanes_present = any(is_lane for _, is_lane in bands)
+    counted = [k for k, (_, is_lane) in enumerate(bands) if is_lane or not lanes_present or not any(
+        bl and bands[k][0][0] <= bb[0] and bands[k][0][1] <= bb[1] and bb[3] <= bands[k][0][3] for bb, bl in bands)]
+    per_ent = Counter()
+    for g in view.iter():
+        ent = (g.get("data-ent") or "") if _local(g) == "g" else ""
+        if ent.startswith("compound:"):
+            name = _norm(" ".join((t.text or "").strip() for t in g if _local(t) == "text" and "chip" not in _classes(t)))
+            if name not in CURRENCY:  # currency molecules are drawn as local copies on purpose
+                per_ent[ent] += 1
+    chips = Counter(t.text.strip() for t in view.iter() if _local(t) == "text" and "chip" in _classes(t) and t.text)
+    hops = sum(1 for p in view.iter() if _local(p) == "path" and "hop" in _classes(p))
+    return dict(long_edges=long_, edge_length=round(length), non_straight=bent, node_edge_overlaps=through,
+                label_collisions=coll, edges_through_labels=elt,
+                bands=len(counted), empty_bands=sum(1 for k in counted if inside[k] == 0),
+                sparse_bands=sum(1 for k in counted if inside[k] == 1),
+                duplicate_names=sum(n - 1 for n in per_ent.values() if n > 1),
+                repeated_captions=sum(n - 1 for n in chips.values()), hops=hops, edge_overlaps=edge_overlaps)
+
+
+def layout_score(m: Dict[str, Any]) -> float:
+    """One number for ranking candidate drawings of the SAME pathway (lower is better). Weights are judgement calls,
+    tuned so that one crossing costs about as much as 1.5 extra long edges; never compare scores across pathways."""
+    a = m.get("aspect_ratio") or 1.0
+    shape = 10 * max(0.0, a - 2.5) + 20 * max(0.0, a - 3.5) + 4 * max(0.0, 1 / a - 1.25)  # wider than 4:1 is unreadable at page width
+    return round(3 * m["crossings"] + 3 * m["edge_overlaps"] + 4 * m["node_edge_overlaps"] + 2 * m["label_collisions"] + m["edges_through_labels"]
+                 + 4 * m["long_edges"] + m["edge_length"] / 500 + 0.5 * m["non_straight"] + 6 * m["empty_bands"]
+                 + 1.5 * m["sparse_bands"] + 2 * m["duplicate_names"] + 0.25 * m["repeated_captions"]
+                 + 10 * m["node_overlaps"] + shape, 2)
 
 
 # --------------------------------------------------------------------------- the 97 runs

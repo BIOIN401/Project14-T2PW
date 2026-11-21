@@ -149,12 +149,32 @@ def location_key(value: Any, prokaryote: bool) -> str:
     s = _text(value)  # a parenthetical is kept: "chloroplast (thylakoid membrane)" is not "chloroplast"
     s = re.sub(r"^the ", "", s)
     s = re.sub(r" state$", "", s)
+    if "leaflet" in s:
+        return _leaflet_key(s)
     s = LOCATION_SYNONYMS.get(s, LOCATION_SYNONYMS.get(_singular(s), _singular(s)))
     if prokaryote and s in PROKARYOTE_CYTOPLASM:
         return "cytoplasm"
     if not prokaryote and s in EUKARYOTE_UNSTATED:
         return "cell"
     return s
+
+
+_LEAFLET_FILLER = frozenset({"of", "the", "a", "leaflet", "membrane", "state"})
+
+
+def _leaflet_key(s: str) -> str:
+    """One key per leaflet, whatever the spelling: the membrane it is a leaflet of (the word before "membrane", or IM/OM)
+    and its side words. "cytoplasmic leaflet of the IM" = "inner membrane cytoplasmic leaflet"; the inner and the outer
+    membrane are never one (D-W21 e): "outer leaflet of the inner membrane" is not "inner leaflet of the outer membrane"."""
+    words = re.findall(r"[a-z0-9]+", s)
+    membrane = ""
+    for i, w in enumerate(words):
+        if w in ("im", "om"):
+            membrane, words[i] = ("inner" if w == "im" else "outer"), ""
+        elif w == "membrane" and i and not membrane:
+            membrane, words[i - 1] = words[i - 1], ""
+    side = sorted({_word(w) for w in words if w and w not in _LEAFLET_FILLER})
+    return f"leaflet: {' '.join(side)} | {membrane}"
 
 
 def context_key(value: Any) -> str:

@@ -26,11 +26,11 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 from t2pw.pwml.compound_templates import TEMPLATE_DIMS
 
 LOC_SECTIONS = ("compound-locations", "protein-locations", "nucleic-acid-locations", "element-collection-locations")
-MARGIN, BAND_GAP, BAND_PAD_X, BAND_PAD_BOT = 40, 40, 40, 40
-HGAP, VGAP, MEMBER_GAP, MEMBERS_PER_ROW = 110, 40, 10, 3
+MARGIN, BAND_GAP, BAND_PAD_X, BAND_PAD_BOT = 40, 80, 40, 40
+HGAP, VGAP, MEMBER_GAP, MEMBERS_PER_ROW = 160, 60, 10, 3  # PathBank substrate-to-product step: median 667
 JUNCTION_W, JUNCTION_H = 40, 20
 OBSTACLE_PAD, CELL = 8, 10
-ASPECT = 2.0  # target width:height of the packed picture
+ASPECT = 1.5  # target width:height of the packed picture (PathBank content: median 1.4)
 MEMBRANE_TEMPLATE = 220  # PathWhiz "Simple Membrane"
 # Labels as in PathBank's own files (PW000001: template 235 "Simple Label - Large", scale 1.9). PathWhiz draws it as a
 # rounded box at (x + 5s, y + 25s) of 200s x (15 + 16 lines)s, text wrapped at 28 characters (the template's text_length).
@@ -39,6 +39,74 @@ BOX_PAD_TOP_NO_LABEL, LABEL_GAP = 40, 24
 INTERNAL_NAME_PREFIXES = ("__", "AutoState_")
 # PathWhiz template sizes of non-compound location templates met in T2PW output (template 2 "Enzyme Monomer I")
 OTHER_TEMPLATE_DIMS = {2: (150, 70)}
+
+# ---- compartment drawing conventions mined from curated PathBank diagrams (docs/pwml_output/PATHBANK-CONVENTIONS.md)
+# kind of a compartment, from its subcellular location name (else its state name); first match wins
+_KIND_RULES = [(k, re.compile(p)) for k, p in (
+    ("leaflet", r"leaflet"),
+    ("thylakoid", r"thylakoid"),
+    ("plastid", r"chloroplast|plastid|etioplast|amyloplast|stroma"),
+    ("mito_inner", r"mitochondri\w* inner membrane|inner mitochondrial membrane|intermembrane"),
+    ("mito_matrix", r"mitochondri\w* matrix"),
+    ("mito", r"mitochondri"),
+    ("nucleus", r"\bnucle(us|i|ar|oplasm|olus)\b"),
+    ("er", r"endoplasmic reticulum|\ber\b|microsom|sarcoplasmic reticulum"),
+    ("golgi", r"golgi"),
+    ("lysosome", r"lysosom"),
+    ("peroxisome", r"peroxisom|glyoxysom"),
+    ("melanosome", r"melanosom"),
+    ("vacuole", r"vacuol|tonoplast"),
+    ("vesicle", r"vesic|endosom|granule"),
+    ("periplasm", r"periplasm"),
+    ("outer_membrane", r"outer membrane"),
+    ("cell_wall", r"cell wall|peptidoglycan"),
+    ("extracellular", r"extracellular|secret|saliva|synaptic cleft|blood|\bplasma\b(?! membrane)|urine|leaf surface|environment"),
+    ("membrane", r"membrane|apical|basolateral"),
+    ("cytoplasm", r"cytoplasm|cytosol|intracellular|\bcell\b|cellular"),
+)]
+# PathBank membrane visualization templates (visualization_templates, type MembraneVisualization)
+KIND_TEMPLATE = {"mito": 84, "mito_inner": 84, "mito_matrix": 84, "nucleus": 93, "er": 91, "golgi": 146, "lysosome": 92,
+                 "peroxisome": 94, "melanosome": 95, "vacuole": 238, "vesicle": 238, "plastid": 237, "thylakoid": 237,
+                 "cell_wall": 304, "membrane": 1, "outer_membrane": 1, "periplasm": 1, "cytoplasm": 1}
+THIN_TEMPLATES = {MEMBRANE_TEMPLATE}  # template 220 draws a 6-unit line; the others a 50-unit band
+BAND_STROKE = 50
+# double membranes, drawn as two concentric lines: centre line to centre line (curated median: 70, 74, 94)
+DOUBLE_GAP = {"nucleus": 70, "mito": 74, "plastid": 94}
+# nesting: depth from the outside in; a compartment sits inside the deepest present compartment its chain allows
+_DEPTH = {"cell_wall": 1, "outer_membrane": 1, "periplasm": 2, "membrane": 3, "leaflet": 3.5, "cytoplasm": 4,
+          "mito": 5, "nucleus": 5, "er": 5, "golgi": 5, "lysosome": 5, "peroxisome": 5, "melanosome": 5, "vacuole": 5,
+          "vesicle": 5, "plastid": 5, "mito_inner": 6, "thylakoid": 6, "mito_matrix": 7}
+_CHAIN = {"cell_wall", "outer_membrane", "periplasm", "membrane", "cytoplasm"}
+_OWN_CHAIN = {"mito_inner": {"mito"}, "mito_matrix": {"mito", "mito_inner"}, "thylakoid": {"plastid"}, "leaflet": {"membrane"}}
+
+
+def compartment_kind(location_name: str, state_name: str = "") -> str:
+    """Kind of a compartment (``other`` when nothing matches), from its location name, else its state name."""
+    for text in (location_name, state_name):
+        t = str(text or "").casefold().replace("_", " ")
+        for kind, rx in _KIND_RULES:
+            if rx.search(t):
+                return kind
+    return "other"
+
+
+def compartment_parents(kinds: Dict[Any, str]) -> Dict[Any, Any]:
+    """Parent compartment of each compartment (``None`` at the top): the deepest present compartment with a smaller
+    depth on its chain (the cell envelope, then its own organelle). When two or more compartments share that depth
+    (two tissues' cytosols, apical and basolateral membranes) the parent is ambiguous and none is claimed."""
+    parent: Dict[Any, Any] = {}
+    for s, k in kinds.items():
+        if k not in _DEPTH:
+            parent[s] = None
+            continue
+        allowed = _CHAIN | _OWN_CHAIN.get(k, set())
+        cands = [o for o, ko in kinds.items() if o != s and ko in allowed and _DEPTH[ko] < _DEPTH[k]]
+        if k == "leaflet":  # a leaflet lies inside the membrane it belongs to, never inside a compartment
+            cands = [o for o in cands if kinds[o] == "membrane"]
+        top = max((_DEPTH[kinds[o]] for o in cands), default=None)
+        best = [o for o in cands if _DEPTH[kinds[o]] == top]
+        parent[s] = best[0] if len(best) == 1 else None
+    return parent
 
 
 def _label_chunks(text: str, length: int = LABEL_TEXT_LENGTH) -> List[str]:
@@ -411,11 +479,29 @@ def _layered(blocks: Dict[Any, "_Block"], keys: List[Any], flow: List[Tuple[Any,
                 pos[k] = i
 
     renumber()
-    for sweep in range(8):
+    pairs = [(u, v) for u in keys for v in dag[u]]
+
+    def crossings():
+        n = 0
+        for i, (a, b) in enumerate(pairs):
+            for c, d in pairs[i + 1:]:
+                if layer[a] == layer[c] and layer[b] == layer[d] and (pos[a] - pos[c]) * (pos[b] - pos[d]) < 0:
+                    n += 1
+        return n
+
+    best = (crossings(), [list(c) for c in cells])
+    for sweep in range(24):  # barycenter sweeps; the order with the fewest crossings wins
         nb = pred if sweep % 2 == 0 else dag
         for cell in cells:
             bary = {k: (sum(pos[n] for n in nb[k]) / len(nb[k]) if nb[k] else pos[k]) for k in cell}
             cell.sort(key=lambda k: bary[k])
+        renumber()
+        if best[0] and len(pairs) <= 400:
+            n = crossings()
+            if n < best[0]:
+                best = (n, [list(c) for c in cells])
+    if len(pairs) <= 400:
+        cells[:] = best[1]
         renumber()
     yc: Dict[Any, float] = {}
     for cell in cells:
@@ -538,6 +624,8 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
             product = _options(opts).get("start_arrow") is True
             for h in hubs or [hub]:
                 flow.append((h, k) if product else (k, h))
+    n_flow_before_transports = len(flow)
+    transports: List[Tuple[Any, List[Tuple[Any, Any]]]] = []  # (hub, [(cargo block, side)])
     for tv in items.get("transport-visualizations", []):
         hubs = []
         for tt in tv.get("transport_transporter_visualizations", []):
@@ -551,6 +639,7 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
         first = next((k for m, k in members if k is not None), None)
         hub = hubs[0] if hubs else junction(blocks[first].state if first is not None else None)
         hub_of[("t", tv.get("transport-id"))] = hub
+        transports.append((hub, [(k, m.get("side")) for m, k in members if k is not None]))
         for m, k in members:
             left = m.get("side") == "Left"
             if m.get("edge-id") is not None and int(m["edge-id"]) in edges:
@@ -558,6 +647,7 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
                 edge_ends[int(m["edge-id"])] = (kk, hub) if left else (hub, kk)
             if k is not None:
                 flow.append((k, hub) if left else (hub, k))
+    n_flow_after_transports = len(flow)
     for iv in items.get("interaction-visualizations", []):
         ends: Dict[str, List[Tuple[Dict[str, Any], Any]]] = {"Left": [], "Right": []}
         for sec, fld in (("interaction_compound_visualizations", "compound-location-id"),
@@ -663,52 +753,115 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
 
     area = sum((w + HGAP) * (h + VGAP) for cs in comps_by_state.values() for _, w, h in cs)
     target = max([int((area * ASPECT) ** 0.5)] + [w for cs in comps_by_state.values() for _, w, _ in cs])
-    # inside each compartment its groups are shelf-packed; the compartment boxes are then packed in rows
+    # compartment kinds (PathBank membrane template and colour per kind) and nesting (organelles inside the cell,
+    # the cell inside its envelope); each box holds its own groups (shelf-packed), then its child boxes in rows
     states = {s.get("id"): s for s in items.get("biological-states", [])}
+    loc_names = {l.get("id"): l.get("name") for l in items.get("subcellular-locations", [])}
     labels = {st: label_text(states.get(st, {})) for st in bands}
     label_w = int((5 + 200) * LABEL_SCALE)
+    kinds = {st: compartment_kind(loc_names.get(states.get(st, {}).get("subcellular-location-id")) or "",
+                                  str(states.get(st, {}).get("name") or "")) for st in bands}
+    parent = compartment_parents(kinds)
+    children: Dict[Any, List[Any]] = defaultdict(list)
+    for st in bands:
+        children[parent[st]].append(st)
+
+    def style(st):
+        """(membrane template or None for a label only, gap of a double line or 0) of a compartment box."""
+        if st == loose_key:
+            return None, 0
+        k, pk = kinds[st], kinds.get(parent.get(st))
+        if k == "extracellular":
+            return None, 0  # PathBank draws no outline around the outside of a cell
+        if (k == "cytoplasm" and pk == "membrane") or (k == "periplasm" and pk == "outer_membrane") \
+                or (k in ("mito_inner", "mito_matrix") and pk in ("mito", "mito_inner")) or (k == "thylakoid" and pk == "plastid"):
+            return None, 0  # the enclosing box already draws this compartment's membrane
+        if k == "mito_matrix":
+            return KIND_TEMPLATE[k], DOUBLE_GAP["mito"]  # the matrix alone: inside the mitochondrion's two membranes
+        return KIND_TEMPLATE.get(k, MEMBRANE_TEMPLATE), DOUBLE_GAP.get(k, 0)
+
+    def inset(st):
+        tpl, gap = style(st)
+        return (0 if tpl is None else 3 if tpl in THIN_TEMPLATES else BAND_STROKE // 2) + gap
 
     def pad_top(st):
         text = labels.get(st, "")
-        return _label_pad(label_parts(text)) + LABEL_GAP if text else BOX_PAD_TOP_NO_LABEL
+        return inset(st) + (_label_pad(label_parts(text)) + LABEL_GAP if text else BOX_PAD_TOP_NO_LABEL)
 
-    boxes = []
-    for st in bands + ([loose_key] if loose_key in comps_by_state else []):
-        placed, cx, cy, shelf_h, used_w = [], 0, 0, 0, 0
-        for comp, w, h in comps_by_state[st]:
+    def pad_x(st):
+        return BAND_PAD_X + inset(st)
+
+    def pad_bot(st):
+        return BAND_PAD_BOT + inset(st)
+
+    def pack_rows(sizes, limit):
+        """Row packing of (w, h) boxes: offsets, total width, total height."""
+        offs, x, y, row_h, used = [], 0, 0, 0, 0
+        for w, h in sizes:
+            if x > 0 and x + w > limit:
+                x, y, row_h = 0, y + row_h + BAND_GAP, 0
+            offs.append((x, y))
+            used, row_h, x = max(used, x + w), max(row_h, h), x + w + BAND_GAP
+        return offs, used, (y + row_h) if sizes else 0
+
+    sizes: Dict[Any, Tuple[int, int]] = {}
+    layouts: Dict[Any, Any] = {}
+
+    def measure(st):
+        placed, cx, cy, shelf_h, own_w = [], 0, 0, 0, 0
+        for comp, w, h in comps_by_state.get(st, []):
             if cx > 0 and cx + w > target:
                 cx, cy, shelf_h = 0, cy + shelf_h + 2 * VGAP, 0
             placed.append((comp, cx, cy))
-            used_w, shelf_h, cx = max(used_w, cx + w), max(shelf_h, h), cx + w + HGAP
-        if labels.get(st):
-            used_w = max(used_w, label_w)
-        boxes.append((st, used_w + 2 * BAND_PAD_X, cy + shelf_h + pad_top(st) + BAND_PAD_BOT, placed))
-    row_limit = max([target + 2 * BAND_PAD_X] + [bw for _, bw, _, _ in boxes])
+            own_w, shelf_h, cx = max(own_w, cx + w), max(shelf_h, h), cx + w + HGAP
+        own_h = cy + shelf_h
+        kids = children.get(st, []) if st != loose_key else []
+        for c in kids:
+            measure(c)
+        offs, kw, kh = pack_rows([sizes[c] for c in kids], max(target, own_w))
+        inner_w = max(own_w, kw, label_w if labels.get(st) else 0)
+        inner_h = own_h + (2 * VGAP if placed and kids else 0) + kh
+        kid_top = own_h + (2 * VGAP if placed and kids else 0)
+        layouts[st] = (placed, [(c, dx, kid_top + dy) for c, (dx, dy) in zip(kids, offs)])
+        sizes[st] = (inner_w + 2 * pad_x(st), pad_top(st) + inner_h + pad_bot(st))
+
+    band_rects: List[Tuple[Any, Tuple[int, int, int, int]]] = []
+
+    def place(st, x, y, w, h):
+        placed, kids = layouts[st]
+        for comp, dx, dy in placed:
+            for k in comp:
+                blocks[k].x += x + pad_x(st) + dx
+                blocks[k].y += y + pad_top(st) + dy
+        if st != loose_key:
+            band_rects.append((st, (x, y, x + w, y + h)))
+        # kids in one row share the row's height
+        row_h: Dict[int, int] = defaultdict(int)
+        for c, dx, dy in kids:
+            row_h[dy] = max(row_h[dy], sizes[c][1])
+        for c, dx, dy in kids:
+            place(c, x + pad_x(st) + dx, y + pad_top(st) + dy, sizes[c][0], row_h[dy])
+
+    roots = list(children.get(None, [])) + ([loose_key] if loose_key in comps_by_state else [])
+    for st in roots:
+        measure(st)
+    row_limit = max([target + 2 * BAND_PAD_X] + [sizes[st][0] for st in roots])
     rows: List[List[Any]] = []
     x = row_w = 0
-    for box in boxes:
-        if not rows or (x > 0 and x + box[1] > row_limit):
+    for st in roots:
+        if not rows or (x > 0 and x + sizes[st][0] > row_limit):
             rows.append([])
             x = 0
-        rows[-1].append((x, box))
-        x += box[1] + BAND_GAP
-    band_rects: List[Tuple[Any, Tuple[int, int, int, int]]] = []
+        rows[-1].append((x, st))
+        x += sizes[st][0] + BAND_GAP
     top = MARGIN
     for row in rows:
-        row_h = max(box[2] for _, box in row)
-        for bx, (st, bw, bh, placed) in row:
-            for comp, dx, dy in placed:
-                for k in comp:
-                    blocks[k].x += MARGIN + bx + BAND_PAD_X + dx
-                    blocks[k].y += top + pad_top(st) + dy
-            if st != loose_key:
-                band_rects.append((st, (MARGIN + bx, top, MARGIN + bx + bw, top + row_h)))
-            row_w = max(row_w, bx + bw)
+        row_h = max(sizes[st][1] for _, st in row)
+        for bx, st in row:
+            place(st, MARGIN + bx, top, sizes[st][0], row_h)
+            row_w = max(row_w, bx + sizes[st][0])
         top += row_h + BAND_GAP
     width = MARGIN + row_w + MARGIN
-    for bl in blocks.values():
-        for loc, (dx, dy) in zip(bl.members, bl.offsets):
-            loc["x"], loc["y"] = bl.x + dx, bl.y + dy
 
     # ---- compartments: bound-visualizations (when written), membranes and labels
     rect_of_state = dict(band_rects)
@@ -719,17 +872,87 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
             r = (extra_x, extra_y, extra_x + 200, extra_y + 80)
             extra_x += 240
         bv["x"], bv["y"], bv["width"], bv["height"] = r[0], r[1], str(r[2] - r[0]), str(r[3] - r[1])
-    height = (extra_y + 80 + MARGIN) if extra_x > MARGIN else (top - BAND_GAP + MARGIN)
+    height = (extra_y + 80 + MARGIN) if extra_x > MARGIN else ((top - BAND_GAP if rows else top) + MARGIN)
     width = max(width, extra_x + MARGIN)
     for s, (x0, y0, x1, y1) in band_rects:
-        items.setdefault("membrane-visualizations", []).append({
-            "id": new_id(), "path": _rounded_rect(x0, y0, x1, y1), "visualization-template-id": MEMBRANE_TEMPLATE,
-            "complete-membrane": True, "zindex": 6, "width": f"{x1 - x0}.0", "height": f"{y1 - y0}.0"})
+        tpl, gap = style(s)
+        lines = [] if tpl is None else [(x0, y0, x1, y1)] + ([(x0 + gap, y0 + gap, x1 - gap, y1 - gap)] if gap else [])
+        for (a0, b0, a1, b1) in lines:
+            items.setdefault("membrane-visualizations", []).append({
+                "id": new_id(), "path": _rounded_rect(a0, b0, a1, b1), "visualization-template-id": tpl,
+                "complete-membrane": True, "zindex": 6, "width": f"{a1 - a0}.0", "height": f"{b1 - b0}.0"})
+        d = inset(s)
         for j, part in enumerate(label_parts(labels[s]) if labels.get(s) else []):
             items.setdefault("label-locations", []).append({
                 "id": new_id(), "visualization-template-id": LABEL_TEMPLATE, "label-text": part,
-                "x": x0 + 12, "y": y0 + 4 + j * LABEL_STEP, "zindex": 20, "scale-x": f"{LABEL_SCALE}", "scale-y": f"{LABEL_SCALE}",
+                "x": x0 + d + 12, "y": y0 + d + 4 + j * LABEL_STEP, "zindex": 20, "scale-x": f"{LABEL_SCALE}", "scale-y": f"{LABEL_SCALE}",
                 "width": "200", "height": "15"})
+
+    # ---- transports across their membrane: a transporter (or a transport point) that serves transports only sits on
+    # the membrane line between its cargo compartments, on the side facing the outer cargo (PathBank's convention)
+    other_use = {k for pair in flow[:n_flow_before_transports] + flow[n_flow_after_transports:] for k in pair}
+    anc: Dict[Any, List[Any]] = {}
+    for st in bands:
+        chain, cur = [], st
+        while cur is not None:
+            chain.append(cur)
+            cur = parent.get(cur)
+        anc[st] = chain
+    fixed = [(bl.x, bl.y, bl.x + bl.w, bl.y + bl.h) for k, bl in blocks.items() if not bl.virtual]
+    fixed += [_label_rect(lb) for lb in items.get("label-locations", [])]
+    def crossing(si, so):
+        """The membrane a cargo in ``si`` crosses toward ``so``: the highest outlined box around ``si`` not holding ``so``."""
+        m = next((s for s in reversed(anc[si]) if s not in anc[so]), None)
+        return m if m in rect_of_state and style(m)[0] is not None else None
+
+    plans: Dict[Any, List[Any]] = defaultdict(list)  # hub -> [(membrane, top side, inner cargo block)]
+    for hub, cargo in transports:
+        sts = [(blocks[k].state, blocks[k], side) for k, side in cargo if blocks[k].state in anc]
+        lefts = [c for c in sts if c[2] == "Left"]
+        rights = [c for c in sts if c[2] != "Left"]
+        if not lefts or not rights or lefts[0][0] == rights[0][0]:
+            plans[hub].append(None)
+            continue
+        (sa, ba, _), (sb, bb, _) = lefts[0], rights[0]
+        opts = [(crossing(sa, sb), ba, bb), (crossing(sb, sa), bb, ba)]
+        mem, inner, outer = next(((m, i, o) for m, i, o in opts if m is not None), (None, None, None))
+        if mem is None:
+            plans[hub].append(None)
+            continue
+        r = rect_of_state[mem]
+        plans[hub].append((mem, outer.center()[1] < (r[1] + r[3]) / 2, inner))
+    for hub, plan in plans.items():
+        # a transporter shared by transports across different membranes stays where its group put it
+        if hub in other_use or None in plan or len({(m, t) for m, t, _ in plan}) != 1:
+            continue
+        mem, on_top, ba = plan[0]
+        x0, y0, x1, y1 = rect_of_state[mem]
+        gap = style(mem)[1]
+        hb = blocks[hub]
+        line_y = y0 + gap // 2 if on_top else y1 - gap // 2  # a double membrane: between its two lines
+        ny = int(line_y - hb.h / 2)
+        want = int(ba.center()[0] - hb.w / 2)
+        lo, hi = x0 + inset(mem) + 20, x1 - inset(mem) - 20 - hb.w
+        if hi < lo:
+            continue
+        own = (hb.x, hb.y, hb.x + hb.w, hb.y + hb.h)
+        for step in range(0, x1 - x0, 20):
+            hit = None
+            for nx in (want + step, want - step):
+                nx = max(lo, min(hi, nx))
+                r = (nx - 15, ny - 15, nx + hb.w + 15, ny + hb.h + 15)
+                if not any(not (r[2] <= f[0] or f[2] <= r[0] or r[3] <= f[1] or f[3] <= r[1]) for f in fixed if f != own):
+                    hit = nx
+                    break
+            if hit is not None:
+                if not hb.virtual:
+                    fixed.remove(own)
+                hb.x, hb.y = hit, ny
+                fixed.append((hb.x, hb.y, hb.x + hb.w, hb.y + hb.h))
+                break
+    for bl in blocks.values():
+        for loc, (dx, dy) in zip(bl.members, bl.offsets):
+            loc["x"], loc["y"] = bl.x + dx, bl.y + dy
     for loc in hidden_locs:  # not drawn; kept inside the canvas
         loc["x"] = max(0, min(int(loc.get("x") or 0), width - _dim(loc["width"])))
         loc["y"] = max(0, min(int(loc.get("y") or 0), height - _dim(loc["height"])))
