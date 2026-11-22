@@ -4,7 +4,7 @@ Branch `acc/verifier` (from main `fd814b8e`). Biology change: **merge waits for 
 Work dir (scripts, logs, answers, scores): `C:/t/acc-runs/`. Strategy it implements:
 `C:/t/strategy/accuracy/STRATEGY.md`.
 
-STATUS: default-off merge reviewed (R2 approve-with-nits, on acc/verifier). This branch acc/verifier-r2 fixes every "must fix before enabling" item (§ 11); flags still off; live 3x3 not yet re-run.
+STATUS: acc/verifier merged to main default-off (e17b78ba). Branch acc/verifier-r2: round 3 fixes (§ 12) done, flags off; VD-18 stays off (no gain); live 3x3 in progress.
 
 ## 1. What was built
 
@@ -314,7 +314,7 @@ frozen copy of main). No live run this round (unit and offline only).
 | finding | what changed (`service/reaction_verifier.py` unless noted) | test(s) |
 |---|---|---|
 | F3 summary drop | `summary_covered`: a summary is dropped only when the KEPT rows make every non-currency product from its non-currency substrates; currency (CO2, AMP, PPi, NAD, ATP...) neither stands in for a product nor carries the walk. A one-enzyme step (EntF) is dropped only if another kept row already makes enterobactin from its inputs, i.e. never lost. | `test_summary_dropped_only_when_kept_steps_make_its_product`, `test_summary_is_not_covered_through_a_co_product` (the R1 DHNA/CO2 scenario), `test_a_mislabelled_one_enzyme_step_is_never_dropped` (the R1 EntF/AMP scenario) |
-| F4 off-pathway drop | Omitted only when (a) the model's quote is verified in the paper, (b) the row is isolated: it shares no non-currency name with any other row, so it is never a first, middle or last step of what the other rows draw (currency never connects), (c) other rows remain. Otherwise flagged, never dropped. The LDH assay row (shares pyruvate) and ferric-enterobactin (shares enterobactin) are now flagged. | `test_off_pathway_isolated_row_with_a_verified_quote_is_omitted_and_reported`, `test_off_pathway_never_drops_the_first_or_last_step[0,3]`, `test_off_pathway_without_a_verified_quote_or_connected_by_a_real_name_is_only_flagged`, `test_off_pathway_never_empties_the_pathway` |
+| F4 off-pathway drop | [Round 3, R3 P6: now flag only, never dropped.] Was: omitted only when (a) the model's quote is verified in the paper, (b) the row is isolated: it shares no non-currency name with any other row, so it is never a first, middle or last step of what the other rows draw (currency never connects), (c) other rows remain. Otherwise flagged, never dropped. The LDH assay row (shares pyruvate) and ferric-enterobactin (shares enterobactin) are now flagged. | `test_off_pathway_isolated_row_with_a_verified_quote_is_omitted_and_reported`, `test_off_pathway_never_drops_the_first_or_last_step[0,3]`, `test_off_pathway_without_a_verified_quote_or_connected_by_a_real_name_is_only_flagged`, `test_off_pathway_never_empties_the_pathway` |
 | F5 typing guard | `retypable`: only an empty word or an unsigned Binding/Unspecified/Regulation word may get a sign; any word carrying a sign stem (inhibit, activat, repress, induc, negative, positive, ...) is signed whatever table it is (not) in, so `allosteric_inhibitor_of`, `inhibited_by`, `activated_by`, `negatively_regulates` are never flipped. `quote_unqualified`: the quote must occur in a paper sentence with no negation/loss word ("loss", "mutant", "not", "knockout", ...) before it that the quote left out. | `test_a_signed_word_is_never_flipped[8 words]`, `test_a_quote_that_drops_a_leading_negation_is_refused` (the R1 PIF1 case) |
 | F6 false edge from a contact | `states_effect`: a re-typing quote must state an effect (inhibit, activat, increas, decreas, reduc, degrad, stabiliz, ...), not only a contact. The live EntC/EntB "interact to form a dynamic channeling system" -> activation is now refused. (Record: unsigned words already export at main as Binding/Unspecified; corrected in § 6.) | `test_a_quote_that_states_no_effect_does_not_type_the_row`, `test_unsigned_row_gets_the_sign_its_after_effect_states` |
 | F7a unanchored merged step | The chain's own rows are joined first (no new names). A model's whole step is used only for a row through a generic intermediate, and only if it keeps every real (non-generic, non-currency) name of that row. A model "split" on a real row never replaces it (flagged). | `test_model_whole_step_must_keep_the_rows_real_names`, `test_model_split_on_a_real_row_never_replaces_it` |
@@ -329,8 +329,8 @@ frozen copy of main). No live run this round (unit and offline only).
 | R2 N4 | `rag/admission.py` `_SYMBOL_ACTOR`: an all-capitals symbol needs 3+ capitals and a digit (ALAS2, POR1, CHL27); CO2, NO2, SO4 are refused. | `test_flag_on_still_refuses` ("by CO2" x2, "by NO2") |
 
 **VD-18 PWML-level no-loss replay, flag on** (`scripts/vd18_admit.py`, `json/vd18adm-1.json`,
-`logs/vd18adm-1.log`). VD-18 changes nothing but the span check inside admission, so if the gate accepts
-the same candidates with the flag on, the merged payload and the PWML are the same. For every stored run
+`logs/vd18adm-1.log`). [Corrected in round 3, review R3 Q3: VD-18 does NOT change only the span check. It also reaches the typed-resolution proposals (`admit_candidates` second return, `propose_typed_resolutions` via `_precursor_resolution`) and the vision literature-extension span check; see § 12 for the extended replay.] If the gate accepts
+the same candidates with the flag on, the accepted reactions are the same. For every stored run
 that still has `rag_admission_report.json` + `stage1_payload.json` + `plan.json`, the replay rebuilds the
 gate's input (seed = in-scope Stage-1 payload, gaps = `detect_gaps` on it, candidates = every accepted and
 rejected record) and runs `admit_candidates` with the flag unset and set.
@@ -348,3 +348,84 @@ Still required before enabling any flag: the live 3x3 (baseline vs flags on) re-
 sign-off.
 
 **Round-2 gates, code `5bb5ad77`, every new flag unset, one queue hold, 0 surviving processes** (`C:/t/acc-runs/logs/gates3.log`): SMOKE 511 passed; golden-seam batch 2, c011 8, stage8 4, quarantine 24 passed (none edited); equivalence run 8, app 14, default 6; vision 357 + 1 skipped; web 83; lane 302 passed (verifier, VD-18, admission adversarial, relation recall, service extraction stage 1, transport sides, batch driver). Focused lane run: 63 passed (`logs/ut9.log`). Spend this round: $0 (no model calls); lane total $0.61 of $15.
+
+## 12. Round 3 (review R3), branch `acc/verifier-r2` (main e17b78ba merged in at a34309af)
+
+Code `4d623f2a`. Flags still OFF by default. Every change is unreachable with them unset, and the gates
+below ran with all four unset.
+
+| item | change | test(s) |
+|---|---|---|
+| P1 typing | `states_effect` matches whole effect word forms (inhibit/inhibits/inhibited, promote/promotes, reduce/reduced, up-/down-regulate ...), not stems. So "promoter", "reductase", "reduction", "inducible", "raised" and "accumulation" do not count as effects. | `test_contact_or_naming_words_are_not_effects` (5), `test_effect_words_are_effects` (6), `test_binding_to_a_promoter_stays_unsigned` |
+| P2 typing | `split_sentences` cuts only before a capital letter (or bracket), and never after an abbreviation (Fig., et al., e.g., spp. ...) or a single-letter genus initial ("E. coli"). A negation or loss word that the quote leaves out before it refuses the quote, even when the quote has its own negation. | `test_a_genus_initial_does_not_hide_the_negation_before_it` (the R3 "Deletion of fur in E. coli ..." case), `test_a_dropped_leading_loss_is_refused_even_when_the_quote_has_its_own_negation` |
+| P3 verifier | `Budget.take()` returns a per-attempt timeout and an attempt count whose worst case, computed by the client (`worst_case_call_seconds`, which prices attempts, backoff and SDK retries), fits the time left. So `MAX_SECONDS` = 600 is now a wall-clock bound across retries. `llm/client.chat_detailed` gained an optional `max_retries` parameter; its default is still `LLM_MAX_RETRIES`, so nothing changes for other callers. | `test_budget_is_a_wall_clock_bound_across_retries` |
+| P4 verifier | A rename or an added name never creates a second spelling of a compound the payload already names. Spellings are compared with case, punctuation and acid/-ate folded. If the payload already has a spelling, that spelling is used. A rename is refused when other rows keep the old name. This blocks the AMBIGUOUS_RENAME_TARGET shape. | `test_a_rename_never_leaves_two_spellings_of_one_compound` (the acid/-ate case, plus pyruvate → the payload's "pyruvic acid") |
+| P5 | Folding requires that, on each side, one row's currency is a subset of the other's. NAD vs NADP and ATP vs GTP are never folded, matching the Stage-1 ensemble rule. | `test_rows_differing_in_cofactor_are_not_folded` |
+| P6 | `off_pathway` only flags. It never drops a row, even an isolated one with a verified quote. | `test_off_pathway_only_flags_never_drops` (3), first/last step (2) |
+| P7 | Typing reads `interaction_type` before `relationship`, as the exporter does, and writes both. | `test_the_typing_word_is_read_as_the_exporter_reads_it` |
+| P8 | Recorded limit, not changed. `prune_lock_manifest` is a new read-modify-write of the shared `PROJECT_ROOT/tmp` manifest. It is safe only while the server runs one job at a time, which is the existing shared-tmp design. | |
+
+**VD-18 extended replay** (`scripts/vd18_admit2.py`, `json/vd18adm-3.json`, `logs/vd18adm-3.log`). It
+covers the paths R3 Q3 listed. On the 20 replayable runs it compares, with the flag off and on: (1) the
+accepted set and the AdmissionReport's typed-resolution proposals from `admit_candidates`; (2)
+`propose_typed_resolutions`, run for every gap against every distinct stored evidence span, since the
+retrieved chunks themselves are not stored. Separately, (3) it reruns the vision literature-extension
+span check (`validate_evidence_span` as `vision/extend/literature.check_reaction` calls it) on all 30
+stored V8 literature claims.
+
+| measure | result |
+|---|---|
+| flag-off replay reproduces the stored accepted sets | 20/20 runs |
+| accepted sets identical | 20/20 |
+| typed-resolution proposals identical | 20/20 (none produced in either arm: these runs have no typed gaps, so this path is untested rather than shown equal) |
+| `propose_typed_resolutions` on the stored spans identical | 20/20 (also none produced) |
+| literature-extension span check, 30 stored claims | 0 changed verdicts |
+| negative control (2 runs) | 0 differences |
+| gold-matching gains | **0** |
+
+**VD-18 stays OFF.** The replay finds no loss, but also no gain, and the orchestrator's rule needs at
+least one gold-matching gain. The typed-proposal path could not be tested on stored data.
+
+**Gates, code `4d623f2a`, all four flags unset, one queue hold, 0 surviving processes**
+(`logs/gates5.log`):
+
+| suite | result |
+|---|---|
+| SMOKE | 511 passed |
+| golden seams (batch, c011, stage8, quarantine) | 2 / 8 / 4 / 24 passed, none edited |
+| equivalence (run, app, default) | 8 / 14 / 6 passed |
+| vision | 370 passed, 1 skipped |
+| web | 83 passed |
+| lane | 320 passed |
+| client (own process) | 35 passed |
+
+The two `tests/test_llm_client_*` files fail when run in one process after the stage-1/batch tests. They
+fail the same way on the main-era tree (`logs/ut14.log`: 3 failed, auth error from a leaked client), so
+the gates run them in their own process. Lane unit run: 81 passed (`logs/ut11.log`).
+
+### Live 3x3 (review R3 section 4): IN PROGRESS
+
+Design:
+- One tree, `C:/t/acc-ver` at `4d623f2a`. BASE = all flags off; VT = verifier + typing, merge, VD-18 off.
+- Strict, DRAWS=3, deepseek-v4-flash, the same cached texts, interleaved, a 10-min gap and a PAUSE check
+  between legs. Batch limit 9000 s, wrapper 9600 s.
+- Driver: `C:/t/acc-runs/scripts/driver3.sh` (log `logs3_driver.out`). Output: `legs3/`, `logs3/`.
+  Scorer: `scripts/score3.py`.
+
+Papers:
+- **PMC12096016 enterobactin**: the verifier changes it most (EntB pyruvate, vague names, a summary
+  mislabel) and it has interactions.
+- **PMC5130987 chlorophyll**: the typing test bed (60+ interactions, many binding-vs-effect cases) and the
+  long-paper stress test for the 600 s cap.
+- **PMC13231680 negative control**: the 0-reaction gate and the false-signed-edge risk on an unrelated
+  paper.
+
+MK-7 and MenD are out: MK-7 timed out twice before, and MenD's split chain is covered offline.
+
+Legs done so far:
+- base1-PMC13231680: pass, **1 reaction** ("lipid A → lipopolysaccharide", a Stage-1 false positive at
+  baseline).
+- vt1-PMC13231680: Stage 1 empty, fail `no_reactions`, report present, 0 verifier calls.
+- base1-PMC12096016: done.
+
+Results per criterion go here when the 18 legs finish.
