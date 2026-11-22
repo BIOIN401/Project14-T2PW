@@ -4,7 +4,7 @@ Branch `acc/verifier` (from main `fd814b8e`). Biology change: **merge waits for 
 Work dir (scripts, logs, answers, scores): `C:/t/acc-runs/`. Strategy it implements:
 `C:/t/strategy/accuracy/STRATEGY.md`.
 
-STATUS: acc/verifier merged to main default-off (e17b78ba). Branch acc/verifier-r2: round 3 fixes (§ 12) done, flags off; VD-18 stays off (no gain); live 3x3 in progress.
+STATUS: round 4 fixes committed (38780ed0), gates pass with flags off; bigger live run (BASE vs verifier+typing) in progress (§ 13).
 
 ## 1. What was built
 
@@ -429,3 +429,62 @@ Legs done so far:
 - base1-PMC12096016: done.
 
 Results per criterion go here when the 18 legs finish.
+
+## 13. Round 4 (review R4), branch `acc/verifier-r2`
+
+Flags are still OFF by default; every change below is reachable only with a flag on.
+
+| item | change | test(s) |
+|---|---|---|
+| B1 second spelling (synonyms) | A renamed or added name that is not already a payload spelling is refused when it contains an abbreviation token: 2+ capitals in a token of at most 8 characters (DHB, DHB-AMP, CoA, SAM). Spelling alone cannot tell "DHB-AMP" is "2,3-dihydroxybenzoyl-AMP", and two spellings of one compound end the run (AMBIGUOUS_RENAME_TARGET). The payload's own exact spelling is still accepted. | `test_an_abbreviated_synonym_is_never_written_next_to_the_full_name` (the R4 DHB-AMP rename and a "DHB" addition; written to fail on 4d623f2a) |
+| N1 agent nouns | "inhibitor(s)", "inhibitory", "activator(s)" and "repressor(s)" state a sign again ("2,3-DHB is a competitive inhibitor of apo-EntB"). "promoter" and "reductase" stay excluded. | `test_effect_words_are_effects` (+4 sentences) |
+| N2 fail-open rate | `scripts/score3.py` reports, per paper, VT runs with the report missing, with a recorded verifier error (fail open), and with budget skips. | scorer |
+
+**Test-isolation ticket (open, outside the lane).** `tests/test_llm_client_request_timeout.py` and
+`tests/test_llm_client_empty_completion_retry.py` fail (3 tests) when run in one pytest process after the
+stage-1 / transport / batch-driver tests: a client patched or rebuilt by an earlier test leaks through, and
+the timeout tests see a real 401. Old main `fd814b8e` fails the same way (`C:/t/acc-runs/logs/ut14.log`).
+Every gate script of this lane runs the two files in their own process.
+
+**Criteria changes from R4**
+- Negative control: per run, reactions after the verifier ≤ before. Per paper, VT reaction count ≤ BASE.
+  The offline application on BASE's negative-control Stage-1 payload adds no row and no new signed edge.
+- Pre-existing Stage-1 finding, BASE arm: run base1-PMC13231680 extracted "lipid A → lipopolysaccharide"
+  from the negative-control paper with every flag off.
+- Hard gates added: no AMBIGUOUS_RENAME_TARGET caused by a verifier rename or addition. For typing: 0
+  changed rows hand-labelled binding/skip, 0 wrong sign, 0 already-signed rows changed, and type accuracy
+  ≥ BASE.
+
+**Offline re-application of the round-4 rules to the stored model answers** (no model cost; 18 Stage-1
+payloads, both samples `answers2` / `answers3`; `json/evalv_r4_2.json`, `json/evalv_r4_3.json`; final
+projection, policy merge, summed over legs):
+
+| paper | gold matches, base → verifier | precision | gold lost |
+|---|---|---|---|
+| PMC12096016 enterobactin (7 legs) | 32 → 33 / 34 | 0.783 → 0.878 / 0.907 | 0 |
+| PMC12421875 menaquinone (4 legs; 9 certified rows each) | 36 → 36 | 0.800 → 0.816 | 0 |
+| PMC12312563 MenD (2) | 2 → 2 | 0.25 → 0.40 | 0 |
+| PMC12657337 MK-7 (1) | 3 → 3 | 0.714 → 0.714 (off-pathway now flags only) | 0 |
+| PMC5130987 chlorophyll (2) | 16 → 16 | 0.415 → 0.400 / 0.415 | 0 |
+| PMC13231680 negative control (1) | 1 row → 1 row | | |
+
+Interaction typing on the same payloads (`json/ixr4_2`, `json/ixr4_3`, 184 judged rows): accuracy
+0.821 → 0.870 / 0.837. In both samples: 0 wrong signs, 0 changed rows labelled binding/skip, 0
+already-signed rows changed.
+
+**Live 3x3 on 4d623f2a: paused and folded into the bigger run.** The orchestrator decided to measure the
+round-4 code directly. driver3 stopped after 4 scored legs (kept as evidence, `json/score3.json`):
+
+| leg | result |
+|---|---|
+| base1-PMC13231680 | 1 reaction (the lipid A finding above) |
+| vt1-PMC13231680 | 0 reactions (Stage 1 empty), report present, 0 verifier calls |
+| base1-PMC12096016 | 5/5 gold matched, P 0.857 |
+| vt1-PMC12096016 | 5/5 gold matched, P 1.0; 2 verifier calls, 10.5 s; nothing omitted or folded; lock removals 0 = 0; no typing change; no error |
+
+The run then sat blocked for hours on free RAM (1.5 GB of 31 GB: the kernel zombie-process leak, which
+only a reboot clears).
+
+**Round-4 gates, code `38780ed0`, all four flags unset, one queue hold, 0 surviving processes** (`C:/t/acc-runs/logs/gates6.log`): SMOKE 511 passed; golden-seam 2/8/4/24 passed (none edited); equivalence 8/14/6; vision 370 + 1 skipped; web 83; lane 325 passed; client files in their own process 35 passed. Lane unit run 86 passed (`logs/ut15.log`); the new B1/N1 tests fail on 4d623f2a (5 failed, `logs/ut16.log`).
+
+**Bigger run (folds in the 3x3)**: `scripts/driver4.sh` on `C:/t/acc-ver` at `38780ed0`; BASE all flags off vs VT verifier + typing (merge, VD-18 off); 6 papers (negative control PMC13231680, MenD PMC12312563, enterobactin PMC12096016, sour taste PMC7059786 with its curated PW739181 interaction, menaquinone PMC12421875, chlorophyll PMC5130987) x 3 draws x 2 arms, interleaved, 10-min gaps, 9000 s legs; resume-safe after a reboot (skips scored legs, moves an interrupted leg aside, `logs4/inflight.txt`), kernel process objects and free RAM logged to `logs4/mem.log` before every leg, and it pauses itself (PAUSE) under 5 GB free. Scoring: `scripts/score4.py` per leg against the R4 criteria, plus the offline paired application on every BASE Stage-1 payload. Results go in a later section.
