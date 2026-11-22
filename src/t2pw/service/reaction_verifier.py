@@ -231,7 +231,9 @@ _EFFECT_WORDS = re.compile(
     r"destabiliz(?:e|es|ed|ing|ation)|abolish(?:es|ed|ing)?|up-?regulat(?:e|es|ed|ing|ion)|"
     r"down-?regulat(?:e|es|ed|ing|ion)|silenc(?:e|es|ed|ing)|prevent(?:s|ed|ing)?|attenuat(?:e|es|ed|ing|ion)|"
     r"impair(?:s|ed|ing)?|restor(?:e|es|ed|ing)|abrogat(?:e|es|ed|ing)|antagoniz(?:e|es|ed|ing)|"
-    r"diminish(?:es|ed|ing)?|boost(?:s|ed|ing)?)$")
+    r"diminish(?:es|ed|ing)?|boost(?:s|ed|ing)?|"
+    # agent nouns state the sign too ("a competitive inhibitor of EntB"; review R4 N1)
+    r"inhibitor(?:s|y)?|inhibitory|activator(?:s)?|repressor(?:s)?)$")
 
 
 def states_effect(quote: Any) -> bool:
@@ -525,6 +527,14 @@ def _payload_names(payload: Dict[str, Any], skip: Optional[Dict[str, Any]] = Non
     return out
 
 
+def _abbreviated(name: Any) -> bool:
+    """The name contains an abbreviation token (2+ capitals, at most 8 characters: DHB, DHB-AMP, CoA, SAM).
+    A synonym of a full name the payload already uses cannot be recognised from spelling alone (review R4
+    B1: "DHB-AMP" next to "2,3-dihydroxybenzoyl-AMP"), so such a name is only ever taken in the payload's
+    own exact spelling."""
+    return any(len(t) <= 8 and sum(c.isupper() for c in t) >= 2 for t in re.findall(r"[A-Za-z0-9]+", str(name or "")))
+
+
 def _one_spelling(name: str, known: Dict[str, str]) -> str:
     """The payload's own spelling when it already names this compound, else ``name`` (review R3 P4: never
     a second spelling of one compound, the AMBIGUOUS_RENAME_TARGET shape that ends a run)."""
@@ -545,7 +555,7 @@ def _apply_renames(row: Dict[str, Any], renames: Any, tw: str, payload: Optional
             continue
         if _spelling(new) in known:
             new = known[_spelling(new)]
-        elif _spelling(old) in others:
+        elif _spelling(old) in others or _abbreviated(new):  # R3 P4, R4 B1
             continue
         if _key(new) == _key(old):
             continue
@@ -621,6 +631,8 @@ def apply_verdicts(payload: Dict[str, Any], text: str, answers: Dict[int, Dict[s
                     names = a.get(field)
                     for n in [names] if isinstance(names, str) else (names or []):
                         if isinstance(n, str) and len(n.strip()) > 1 and _key(n) not in have and _in_text(n, tw):
+                            if _spelling(n) not in known and _abbreviated(n):  # R4 B1
+                                continue
                             n = _one_spelling(n.strip(), known)
                             if _key(n) in have:
                                 continue

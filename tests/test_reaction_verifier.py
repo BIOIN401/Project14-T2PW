@@ -264,7 +264,10 @@ def test_contact_or_naming_words_are_not_effects(quote):
     assert not V.states_effect(quote)
 
 
-@pytest.mark.parametrize("quote", ["HY5 promotes CHLH expression", "FLU inhibits GluTR", "loss of HY5 reduced CHLH",
+@pytest.mark.parametrize("quote", ["2,3-DHB is a competitive inhibitor of apo-EntB isochorismatase activity",
+                                   "FLU is a negative regulator and an inhibitory protein of GluTR",
+                                   "HY5 is an activator of CHLH", "Fur acts as a repressor of entC",
+                                   "HY5 promotes CHLH expression", "FLU inhibits GluTR", "loss of HY5 reduced CHLH",
                                    "GBP prevents degradation of GluTR1", "PIFs down-regulate CHLH", "expression was upregulated"])
 def test_effect_words_are_effects(quote):
     assert V.states_effect(quote)
@@ -316,10 +319,29 @@ def test_a_rename_never_leaves_two_spellings_of_one_compound():
 
 
 def test_rows_differing_in_cofactor_are_not_folded():
-    rows = [rx(["malate", "NAD+"], ["oxaloacetate", "NADH"]), rx(["malate", "X"], ["oxaloacetate", "NADPH"])]
-    out, rep = V.apply_verdicts(payload(rows), TEXT + " NADP+ is used.", {1: {"verdict": "vague", "rename": [
-        {"old": "X", "new": "NADP+"}]}}, "merge")
-    assert rep["merged"] == []
+    rows = [rx(["malate", "NAD+"], ["oxaloacetate", "NADH"]), rx(["malate", "NADP+"], ["oxaloacetate", "NADPH"])]
+    out, rep = V.apply_verdicts(payload(rows), TEXT + " A hydrogen ion is released.", {1: {
+        "verdict": "incomplete", "add_outputs": ["hydrogen ion"]}}, "merge")
+    assert rep["repaired"] == [1] and rep["merged"] == []
+
+
+def test_an_abbreviated_synonym_is_never_written_next_to_the_full_name():
+    """R4 B1: "DHB-AMP" is in the paper, but other rows say 2,3-dihydroxybenzoyl-AMP. Old code (4d623f2a)
+    renamed the row (the old name occurs in no other row and "dhbamp" folds to nothing in the payload)."""
+    text = TEXT + " DHB-AMP and DHB then react."
+    rows = [rx(["2,3-DHB", "ATP"], ["2,3-dihydroxybenzoyl-AMP"]),
+            rx(["2,3-DHB", "ATP"], ["activated 2,3-DHB"]),
+            rx(["2,3-dihydroxybenzoic acid"], ["x"])]
+    out, rep = V.apply_verdicts(payload(rows), text, {1: {"verdict": "vague", "rename": [
+        {"old": "activated 2,3-DHB", "new": "DHB-AMP"}]}}, "merge")
+    names = {n for r in out["processes"]["reactions"] for n in r["inputs"] + r["outputs"]}
+    assert "DHB-AMP" not in names and rep["repaired"] == []
+    out, rep = V.apply_verdicts(payload(rows), text, {2: {"verdict": "incomplete", "add_inputs": ["DHB"]}}, "merge")
+    assert "DHB" not in out["processes"]["reactions"][2]["inputs"]
+    # the payload's own exact spelling is still accepted
+    out, rep = V.apply_verdicts(payload(rows), text, {1: {"verdict": "vague", "rename": [
+        {"old": "activated 2,3-DHB", "new": "2,3-dihydroxybenzoyl-AMP"}]}}, "merge")
+    assert rep["merged"][0]["into"] == 0
 
 
 def test_budget_is_a_wall_clock_bound_across_retries():
