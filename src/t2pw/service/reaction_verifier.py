@@ -800,8 +800,17 @@ def verify_stage_one(payload: Dict[str, Any], text: str, pathway: Dict[str, Any]
                      interactions: bool = False, policy: Optional[str] = None,
                      chat_fn: Optional[Callable[..., Any]] = None) -> Tuple[Dict[str, Any], Dict[str, Any]]:
     """Return ``(payload, report)``; the same ``payload`` object comes back on error."""
+    import time
+
     report: Dict[str, Any] = {"flags": {ENV_FLAG: reactions, IX_FLAG: interactions}, "error": None}
     budget = Budget()
+    started = time.monotonic()
+    try:
+        from t2pw.llm.client import _resolve_model
+
+        report["model"] = _resolve_model(model_env_var=MODEL_ENV_VAR)
+    except Exception:  # noqa: BLE001 - audit only
+        report["model"] = None
     try:
         out = payload
         if reactions and _rows(payload, "reactions"):
@@ -817,6 +826,9 @@ def verify_stage_one(payload: Dict[str, Any], text: str, pathway: Dict[str, Any]
     except Exception as exc:  # noqa: BLE001 - fail open
         report["error"] = f"{type(exc).__name__}: {exc}"
         return payload, report
+    finally:  # measured, for the live criteria (at most MAX_CALLS calls, at most MAX_SECONDS)
+        report["calls"] = MAX_CALLS - budget.calls
+        report["seconds"] = round(time.monotonic() - started, 1)
 
 
 def omitted_lock_ids(report: Dict[str, Any]) -> List[str]:

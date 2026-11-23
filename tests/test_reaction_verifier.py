@@ -367,6 +367,7 @@ def test_budget_caps_calls_and_rows_past_it_stay_untouched(monkeypatch):
     rows = [rx(["a%d" % i], ["b%d" % i]) for i in range(95)]  # 4 chunks of 30
     out, rep = V.verify_stage_one(payload(rows), TEXT, {}, interactions=True)
     assert len(calls) == 2 and rep["calls_skipped_over_budget"] >= 1 and rep["error"] is None
+    assert rep["calls"] == 2 and rep["seconds"] >= 0 and "model" in rep
 
 
 def test_model_error_fails_open_and_flags_default_off(monkeypatch):
