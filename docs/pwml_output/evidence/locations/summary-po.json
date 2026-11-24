@@ -1,0 +1,180 @@
+{
+ "per_run": {
+  "0": {},
+  "10": {},
+  "102": {},
+  "138": {
+   "transport:organism_default": 2,
+   "reaction:organism_default": 8,
+   "compound_locations:organism_default": 11
+  },
+  "147": {
+   "reaction:organism_default": 1,
+   "compound_locations:organism_default": 2
+  },
+  "18": {
+   "reaction:organism_default": 5,
+   "compound_locations:organism_default": 8,
+   "protein_locations:organism_default": 2
+  },
+  "24": {
+   "reaction:organism_default": 4
+  },
+  "25": {
+   "compound_locations:organism_default": 6,
+   "protein_locations:organism_default": 1
+  },
+  "26": {
+   "compound_locations:organism_default": 3
+  },
+  "28": {
+   "reaction:organism_default": 4,
+   "compound_locations:organism_default": 5,
+   "protein_locations:organism_default": 5
+  },
+  "49": {
+   "reaction:organism_default": 4
+  },
+  "55": {
+   "reaction:organism_default": 2
+  },
+  "56": {
+   "reaction:organism_default": 1
+  },
+  "62": {
+   "reaction:organism_default": 1,
+   "compound_locations:organism_default": 8,
+   "protein_locations:organism_default": 2
+  },
+  "76": {},
+  "78": {},
+  "84": {
+   "reaction:organism_default": 4
+  },
+  "89": {
+   "reaction:organism_default": 1,
+   "compound_locations:organism_default": 4,
+   "protein_locations:organism_default": 2
+  },
+  "s-lipid-a": {},
+  "s-menaquinone": {
+   "transport:organism_default": 1
+  },
+  "s-sour-taste": {}
+ },
+ "kinds": {
+  "transport:organism_default": 3,
+  "reaction:organism_default": 35,
+  "compound_locations:organism_default": 47,
+  "protein_locations:organism_default": 12
+ },
+ "llm": [],
+ "hint_states": [
+  {
+   "run": "0",
+   "evidence": "Expected compartments: cytoplasm",
+   "location": "cytoplasm",
+   "state": "E. coli cytoplasm"
+  },
+  {
+   "run": "76",
+   "evidence": "Expected compartments: cytoplasm, inner membrane (IM), periplasm, outer membrane (OM)",
+   "location": "inner membrane (IM)",
+   "state": "E. coli inner membrane state"
+  },
+  {
+   "run": "76",
+   "evidence": "Expected compartments: cytoplasm, inner membrane (IM), periplasm, outer membrane (OM)",
+   "location": "outer membrane (OM)",
+   "state": "E. coli outer membrane state"
+  },
+  {
+   "run": "s-menaquinone",
+   "evidence": "Expected compartments: cytoplasm",
+   "location": "cytoplasm",
+   "state": "cytoplasmic state"
+  }
+ ],
+ "same_place_left": [
+  {
+   "run": "10",
+   "from": "__auto_state__",
+   "to": "__auto_state__",
+   "transport": "OTOP1-mediated H+ permeation"
+  },
+  {
+   "run": "102",
+   "from": "E. coli cytoplasmic state",
+   "to": "E. coli cytoplasmic state",
+   "transport": "enterobactin secretion"
+  },
+  {
+   "run": "26",
+   "from": "__auto_state__",
+   "to": "__auto_state__",
+   "transport": "ferric-enterobactin import"
+  },
+  {
+   "run": "78",
+   "from": "cytoplasm",
+   "to": "cytoplasm",
+   "transport": "enterobactin secretion"
+  },
+  {
+   "run": "s-sour-taste",
+   "from": "__auto_state__",
+   "to": "__auto_state__",
+   "transport": "OTOP1-mediated H+ permeation"
+  }
+ ],
+ "merged_states": [
+  {
+   "run": "138",
+   "into": "Streptomyces tubercidicus cytoplasm",
+   "into_location": "cytoplasm",
+   "location": "cell",
+   "placeholder": true,
+   "state": "__auto_state__"
+  },
+  {
+   "run": "s-lipid-a",
+   "into": "inner membrane cytoplasmic leaflet",
+   "into_location": "cytoplasmic leaflet of inner membrane",
+   "location": "cytoplasmic leaflet of the inner membrane",
+   "placeholder": false,
+   "state": "cytoplasmic leaflet of IM state"
+  },
+  {
+   "run": "s-lipid-a",
+   "into": "inner membrane periplasmic leaflet",
+   "into_location": "periplasmic leaflet of inner membrane",
+   "location": "periplasmic leaflet of the inner membrane",
+   "placeholder": false,
+   "state": "periplasmic leaflet of IM state"
+  },
+  {
+   "run": "s-lipid-a",
+   "into": "inner membrane cytoplasmic leaflet",
+   "into_location": "cytoplasmic leaflet of inner membrane",
+   "location": "inner membrane cytoplasmic leaflet",
+   "placeholder": false,
+   "state": "E. coli inner membrane cytoplasmic leaflet"
+  },
+  {
+   "run": "s-lipid-a",
+   "into": "inner membrane periplasmic leaflet",
+   "into_location": "periplasmic leaflet of inner membrane",
+   "location": "inner membrane periplasmic leaflet",
+   "placeholder": false,
+   "state": "E. coli inner membrane periplasmic leaflet"
+  },
+  {
+   "run": "s-menaquinone",
+   "into": "Lactococcus lactis intracellular state",
+   "into_location": "intracellular",
+   "location": "cytoplasm",
+   "placeholder": false,
+   "state": "cytoplasmic state"
+  }
+ ]
+}

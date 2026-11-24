@@ -12,6 +12,8 @@ from xml.sax.saxutils import escape
 
 from PIL import ImageFont
 
+from t2pw.vision.currency import CURRENCY, is_currency  # noqa: F401  one list with checks/layout_metrics
+
 
 def _font(size):
     """Text-width measuring font. The prototype used Segoe UI; layout widths depend on it, so output is only
@@ -211,6 +213,14 @@ def build(ir):
         return n
 
     P = ir.get("processes", {})
+    pw_name = ((ir.get("pathway") or {}).get("name") or "").lower()
+    uses = Counter((x["entity_type"], x["entity_key"], cof(r.get("biological_state_key")))
+                   for r in P.get("reactions", []) for x in {(y["entity_type"], y["entity_key"]): y for y in r["left"] + r["right"]}.values())
+    # transport cargo keeps its single drawing in each compartment it moves between: a local copy would cut the link
+    # between the transport and the reactions that use what it delivers (H+ pumped into the matrix, then used there)
+    cargo = {(el["entity_type"], el["entity_key"], cof(el.get(side)))
+             for t in P.get("transports", []) for el in t.get("transport_elements", [])
+             for side in ("left_biological_state_key", "right_biological_state_key")}
     sigs = defaultdict(list)
     # reactions
     msig = {}
@@ -239,8 +249,17 @@ def build(ir):
         J.merge_note = ""
         msig[ms] = J
         J.proc = r
-        subs = [inst(x["entity_type"], x["entity_key"], ck) for x in r["left"]]
-        prods = [inst(x["entity_type"], x["entity_key"], ck) for x in r["right"]]
+        # currency molecules (H+, water, ATP, CoA ...) get a local copy per reaction, as curated maps draw them
+        def cur(x):  # CoA in a CoA pathway is the story, not currency
+            nm = (ent.get(("compound", x["entity_key"])) or {}).get("name") or ""
+            return (x["entity_type"] == "compound" and is_currency(nm) and nm.strip().lower() not in pw_name
+                    and uses[(x["entity_type"], x["entity_key"], ck)] > 1  # only a hub needs local copies
+                    and (x["entity_type"], x["entity_key"], ck) not in cargo)
+        subs = [inst(x["entity_type"], x["entity_key"], ck, ("cur", r["key"]) if cur(x) else None) for x in r["left"]]
+        prods = [inst(x["entity_type"], x["entity_key"], ck, ("cur", r["key"]) if cur(x) else None) for x in r["right"]]
+        for n in subs + prods:
+            if n is not None and len(n.id) == 4 and n.id[3][0] == "cur":
+                n.cur = True
         # I2: one enzyme drawing per catalysed reaction (suffix = the reaction key), so it sits beside its reaction
         enz = [inst(x["entity_type"], x["entity_key"], ck, r["key"]) for x in r.get("enzymes", [])]
         subs, prods = [n for n in subs if n], [n for n in prods if n]
@@ -344,7 +363,7 @@ def finalize_comps(m):
 
 
 # --------------------------------------------------------------------------- layering
-def assign_layers(m):
+def assign_layers(m, style=None):
     nodes = list(m.nodes.values())
     cons = []  # (u, v, gap)
     proc_kinds = ("sub", "prod", "xin", "xout", "act", "inh", "cat")
@@ -370,7 +389,21 @@ def assign_layers(m):
             continue
         if e.kind in ("assoc", "enz") and (e.a.sat is not None or e.b.sat is not None):
             continue
-        cons.append((e.a, e.b, 1))
+        # a transport is drawn straight across the membrane: cargo, transport and cargo copy share one column
+        cons.append((e.a, e.b, 0 if e.kind in ("xin", "xout") and style != "spine" else 1))  # spine pins the chain on one row
+    # copies of one molecule in two compartments with no transport between them: the copy nothing produces is drawn
+    # no further left than a produced copy, so a downstream step continues the flow instead of restarting at the left
+    has_in = {v.id for u, v, g in cons}
+    cargo = {x.id for e in m.edges if e.kind in ("xin", "xout") for x in (e.a, e.b)}
+    copies = defaultdict(list)
+    for n in nodes:
+        if n.kind != "junction" and not getattr(n, "cur", False) and len(n.id) == 3:
+            copies[(n.et, n.ent)].append(n)
+    for cs in copies.values():
+        made = [c for c in cs if c.id in has_in]
+        for c in cs:
+            if made and c.id not in has_in and c.id not in cargo and c.comp != made[0].comp:
+                cons.append((made[0], c, 0))
     adj = defaultdict(list)
     indeg = Counter()
     # break cycles by DFS back-edge removal (deterministic order)
@@ -400,28 +433,97 @@ def assign_layers(m):
     for n in nodes:
         if state.get(n.id) is None:
             dfs(n)
-    # longest path layering
-    preds = defaultdict(list)
-    for u, v, g in keep:
-        preds[v.id].append((u, g))
-    layer = {}
-
-    def L(n):
-        if n.id in layer:
-            return layer[n.id]
-        layer[n.id] = 0
-        best = 0
-        for u, g in preds[n.id]:
-            best = max(best, L(u) + g)
-        layer[n.id] = best
-        return best
-
     import sys
     sys.setrecursionlimit(10000)
-    for n in nodes:
-        L(n)
+
+    def longest(keep):
+        preds = defaultdict(list)
+        for u, v, g in keep:
+            preds[v.id].append((u, g))
+        layer = {}
+
+        def L(n):
+            if n.id in layer:
+                return layer[n.id]
+            layer[n.id] = 0
+            best = 0
+            for u, g in preds[n.id]:
+                best = max(best, L(u) + g)
+            layer[n.id] = best
+            return best
+
+        for n in nodes:
+            L(n)
+        return layer
+
+    layer = longest(keep)
+    # two transports in one membrane band must not share a column (their straight lines would lie on top of each other)
+    def reaches(a, b, out):
+        todo, done = [a.id], set()
+        while todo:
+            x = todo.pop()
+            if x == b.id:
+                return True
+            if x not in done:
+                done.add(x)
+                todo += [v.id for v in out.get(x, ())]
+        return False
+
+    for _ in range(8):
+        seen, extra = {}, []
+        out = defaultdict(list)
+        for u, v, g in keep:
+            out[u.id].append(v)
+        for n in sorted((n for n in nodes if n.kind == "junction" and n.jkind == "transport" and n.comp is not None),
+                        key=lambda n: (layer[n.id], str(n.id))):
+            k = (name_tokens(m.comps[n.comp]["name"]) if n.comp in m.comps else n.comp, layer[n.id])  # spellings share a lane
+            if k in seen:
+                # these edges come after cycle breaking: never close a cycle. When n already leads to the transport
+                # seen first (chained transports through one membrane), order them the way the flow runs instead.
+                extra.append((n, seen[k], 1) if reaches(n, seen[k], out) else (seen[k], n, 1))
+                out[extra[-1][0].id].append(extra[-1][1])
+            seen[k] = n
+        if not extra:
+            break
+        keep += extra
+        layer = longest(keep)
+    # sources hang off the step that uses them: a node whose every input is such a source, and that feeds exactly one
+    # node, is drawn just before it instead of in column 0
+    succ, pred_of = defaultdict(list), defaultdict(list)
+    for u, v, g in keep:
+        succ[u.id].append((v, g))
+        pred_of[v.id].append(u)
+    indeg = Counter(v.id for u, v, g in keep)
+    topo, queue = [], [n for n in nodes if not indeg[n.id]]
+    while queue:
+        n = queue.pop(0)
+        topo.append(n)
+        for v, g in succ[n.id]:
+            indeg[v.id] -= 1
+            if not indeg[v.id]:
+                queue.append(v)
+    pulled = {}
+    for n in topo:  # a pure source with several users goes just before the first of them
+        pulled[n.id] = bool(succ[n.id]) and (not pred_of[n.id] or len(succ[n.id]) == 1 and all(pulled.get(p.id) for p in pred_of[n.id]))
+    for n in reversed(topo):
+        if pulled[n.id]:
+            layer[n.id] = max(layer[n.id], min(layer[v.id] - g for v, g in succ[n.id]))
     for n in nodes:
         n.layer = layer[n.id]
+        n.stub_of = None
+    # side substrates (a source used only by this step, e.g. a cofactor or a local currency copy) are short stubs beside
+    # their step, in its column, on a side its enzymes leave free
+    src = {n.id for n in nodes if not pred_of[n.id]}
+    for j in nodes:
+        if j.kind != "junction" or j.jkind != "reaction":
+            continue
+        side = [s for s in j.subs if s.id in src and len(succ[s.id]) == 1 and s.kind == "compound"]
+        main = [s for s in j.subs if s not in side] or [s for s in side if not getattr(s, "cur", False)][:1] or side[:1]
+        slots = {0: 2, 1: 1}.get(len(j.enz), 0)
+        j.stubs = [s for s in side if s not in main][:slots]
+        for s in j.stubs:
+            s.stub_of = j
+            s.layer = j.layer
     for _ in range(3):
         for n in nodes:
             if n.sat is not None:
@@ -580,7 +682,7 @@ def path_d(pts, rad=9):
 
 
 # --------------------------------------------------------------------------- regions / layout
-ROWGAP, COLGAP = 16, 40
+ROWGAP, COLGAP, TIERGAP = 22, 56, 40  # DRAW-RENDERER: more room so arrows run straight (was 16, 40)
 
 
 class Region:
@@ -650,7 +752,7 @@ def make_pills(m, ent_lookup):
     pass
 
 
-def layout(m, style):
+def layout(m, style, tiers=1, order="flow"):
     """Returns canvas dict with regions, boxes, size. Mutates node x,y."""
     place_transports(m, style)
     # attach transporter pill nodes
@@ -670,7 +772,7 @@ def layout(m, style):
                 m.nodes[pn.id] = pn
                 n.pillnodes.append(pn)
                 m.edges.append(Edge(pn, n, "cat"))
-    assign_layers(m)
+    assign_layers(m, style)
     # transporter pills share the layer of their junction
     for n in m.nodes.values():
         if n.kind == "junction" and n.jkind == "transport":
@@ -679,9 +781,9 @@ def layout(m, style):
     # reaction junction compartments / enzymes stay with their reaction compartment
     # collect region membership
     if style == "spine":
-        return layout_spine(m)
+        return layout_spine(m, tiers)
     if style == "bands":
-        return layout_bands(m)
+        return layout_bands(m, tiers, order)
     return layout_cell(m)
 
 
@@ -795,6 +897,10 @@ def region_rows(m, nodes, pred_list, pinned=()):
             if z.id in rs and z.id not in done and len(z.cat_of) == 1:
                 seq.append(z)
                 done.add(z.id)
+        for z in getattr(n, "stubs", []) if n.kind == "junction" else []:
+            if z.id in rs and z.id not in done:
+                seq.append(z)
+                done.add(z.id)
     order = seq
     occ = set()
     for n in nodes:
@@ -811,8 +917,12 @@ def region_rows(m, nodes, pred_list, pinned=()):
         pref = None
         att = getattr(n, "attached", None)
         sat = getattr(n, "sat", None)
+        stub = getattr(n, "stub_of", None)
         if att is not None and att.row is not None and att.id in rs:
             pref = att.row + alt(att.pillnodes.index(n))
+        elif stub is not None and stub.row is not None and stub.id in rs:
+            taken = {alt(k) for k in range(len(stub.enz))}
+            pref = stub.row + [d for d in (1, -1, 2, -2, 3, -3) if d not in taken][stub.stubs.index(n)]
         elif sat is not None and sat.row is not None and sat.id in rs:
             pref = sat.row + alt(sat_count[sat.id])
             sat_count[sat.id] += 1
@@ -840,7 +950,7 @@ def finish_region(reg, rowh, pad_top, pad_bot):
     return reg.h
 
 
-def layout_bands(m):
+def layout_bands(m, tiers=1, order="flow"):
     pred = prep_edges(m)
     used = compartments_with_content(m)
     regs = {}
@@ -876,29 +986,136 @@ def layout_bands(m):
             first.setdefault(j.comp, k)
         main = max(cnt, key=lambda c: (cnt[c], -first[c]))
     def fkey(r):
-        if not flow:
+        if not flow or order == "anat":  # anat: outside to inside, so a transport crosses into the neighbouring band
             return (0, 0, okey(r))
         return (0 if r.key == main else 1 if r.key in flow else 2, flow.get(r.key, 0) if r.key != main else 0, okey(r))
-    bands = sorted(regs.values(), key=fkey)
-    for r in bands:
-        region_rows(m, r.nodes, pred)
+    # DRAW-RENDERER (PO-approved display grouping): spellings of one compartment share a lane, and the leaflets of one
+    # membrane (or near-synonyms such as cytoplasm / intracellular) are lanes of one band. Every verbatim name stays on
+    # the drawing and in each node's data-comp; nothing is merged in the data.
+    lanes, band_of = {}, {}
+    for r in sorted(regs.values(), key=fkey):
+        if r.kind == "iface":
+            lk = fk = r.key
+        else:
+            c = m.comps[r.key]
+            lk, fk = (name_tokens(c["name"]), c["group"]), (display_family(c["name"], c["role"]), c["group"])
+        if lk not in lanes:
+            lanes[lk] = Region(lk, r.label, r.role, r.sub, kind=r.kind)
+            lanes[lk].names, lanes[lk].ranks = [], []
+            band_of[lk] = fk
+        L = lanes[lk]
+        L.nodes = L.nodes + r.nodes
+        L.names.append(r.label)
+        L.ranks.append(okey(r))
+    groups = {}
+    for lk, L in lanes.items():  # bands keep the flow order of their first lane
+        groups.setdefault(band_of[lk], []).append(L)
+    bands = []
+    for fk, ls in groups.items():
+        ls.sort(key=lambda L: min(L.ranks))
+        bands.append(dict(key=fk, lanes=ls, role=ls[0].role, kind=ls[0].kind))
+    for b in bands:
+        for L in b["lanes"]:
+            region_rows(m, L.nodes, pred)
     rowh = max(n.h for n in m.nodes.values()) + ROWGAP
     GUT = 190
-    cx, colspan = scope_columns([r.nodes for r in bands], GUT + 50)
-    for n in m.nodes.values():
-        n.x = cx[n.layer]
-    W = GUT + 50 + colspan + 60
+    alln = [n for b in bands for L in b["lanes"] for n in L.nodes]
+    tier, span = place_tiers(alln, tiers, GUT + 50)
+    W = GUT + 50 + span + 60
     y = 20
-    for r in bands:
-        finish_region(r, rowh, 22 if r.role == "membrane" else 14, 22 if r.role == "membrane" else 14)
-        r.h = max(r.h, 70 if r.kind != "iface" else 56)
-        r.x, r.y, r.w = 0, y, W
-        for n in r.nodes:
-            n.y = r.y + (r.h - r.nrows * rowh) / 2 + (n.row - r.minrow + 0.5) * rowh
-        y += r.h
+    m.bands, m.regions = [], []
+    for t in range(tiers):  # a wrapped drawing repeats only the bands that hold something in that tier
+        y += TIERGAP if t else 0
+        for b0 in bands:
+            ls = []
+            for L0 in b0["lanes"]:
+                ns = [n for n in L0.nodes if tier[n.layer] == t]
+                if ns:
+                    L = Region(L0.key, L0.label, L0.role, L0.sub, kind=L0.kind)
+                    L.names, L.nodes = L0.names, ns
+                    ls.append(L)
+            if not ls:
+                continue
+            b = dict(b0, lanes=ls, y=y, tier=t)
+            multi, mem = len(ls) > 1, b["role"] == "membrane"
+            for k, L in enumerate(ls):
+                top = 22 if mem and k == 0 else 14 if not multi else 8
+                bot = 22 if mem and k == len(ls) - 1 else 14 if not multi else 8
+                finish_region(L, rowh, top, bot)
+                L.text = lane_text(L, GUT - 36)
+                L.h = max(L.h, (70 if L.kind != "iface" else 56) if not multi else 40, 16 * len(L.text) + top + bot)
+                L.x, L.y, L.w = 0, y, W
+                for n in L.nodes:
+                    n.y = L.y + (L.h - L.nrows * rowh) / 2 + (n.row - L.minrow + 0.5) * rowh
+                y += L.h
+            b["h"] = y - b["y"]
+            m.bands.append(b)
+            m.regions += ls
     H = y + 20
-    m.regions = bands
-    return dict(W=W, H=H, kind="bands", gut=GUT)
+    return dict(W=W, H=H, kind="bands", gut=GUT, tiers=tiers, order=order)
+
+
+def place_tiers(nodes, tiers, x0):
+    """Shared columns for ``nodes`` from x0; with tiers > 1 the columns are cut into that many consecutive runs of about
+    equal width, stacked top to bottom as a snake (every second run reads right to left, so a run ends above the start
+    of the next one, as curated maps wrap long chains). Sets n.x; returns ({layer: tier}, widest run)."""
+    colw = {}
+    for n in nodes:
+        colw[n.layer] = max(colw.get(n.layer, 0), n.w)
+    layers = sorted(colw)
+    total = sum(colw[L] + COLGAP for L in layers) or 1
+    tier, acc = {}, 0.0
+    for L in layers:
+        tier[L] = min(tiers - 1, int((acc + (colw[L] + COLGAP) / 2) * tiers / total))
+        acc += colw[L] + COLGAP
+    cx, span = {}, 0.0
+    for t in range(tiers):
+        x = x0
+        mine = [L for L in layers if tier[L] == t]
+        for L in mine:
+            cx[L] = x + colw[L] / 2
+            x += colw[L] + COLGAP
+        w = x - COLGAP - x0 if mine else 0
+        if t % 2:
+            for L in mine:
+                cx[L] = x0 + w - (cx[L] - x0)
+        span = max(span, w)
+    for n in nodes:
+        n.x = cx[n.layer]
+    return tier, span
+
+
+LEAF_WORDS = {"leaflet", "periplasmic", "cytoplasmic", "cytosolic", "exoplasmic", "luminal", "lumenal", "extracellular",
+              "intracellular", "side", "face"}
+STOP_WORDS = {"of", "the", "a", "an"}
+SYNONYM_FAMILY = {"cytoplasm": "cytoplasm", "cytosol": "cytoplasm", "intracellular": "cytoplasm", "cytoplasmic": "cytoplasm",
+                  "intracellular space": "cytoplasm", "extracellular": "extracellular", "extracellular space": "extracellular",
+                  "extracellular region": "extracellular", "extracellular medium": "extracellular", "medium": "extracellular"}
+
+
+def name_tokens(name):
+    """Order-free spelling key: 'periplasmic leaflet of the inner membrane' == 'inner membrane periplasmic leaflet'."""
+    return frozenset(w for w in re.findall(r"[a-z0-9]+", (name or "").lower()) if w not in STOP_WORDS)
+
+
+def display_family(name, role):
+    """Which band a compartment is drawn in: a membrane's leaflets join the membrane; known near-synonyms join."""
+    n = re.sub(r"\s+", " ", (name or "").strip().lower())
+    if n in SYNONYM_FAMILY:
+        return ("syn", SYNONYM_FAMILY[n])
+    if role == "membrane":
+        return ("mem", frozenset(name_tokens(n) - LEAF_WORDS) or name_tokens(n))
+    return ("lane", name_tokens(n))
+
+
+def lane_text(L, maxw):
+    """Gutter lines of one lane: its first name, then every other spelling ('= …'), then the cell type."""
+    out = [(l, "blabel") for l in wrap(L.names[0], maxw, 3)[0]]
+    for nm in L.names[1:]:
+        out += [(l, "bsub") for l in wrap("= " + nm, maxw, 3)[0]]
+    if L.sub:
+        out += [(l, "bsub") for l in wrap(L.sub, maxw, 2)[0]]
+    return out
 
 
 def layout_cell(m):
@@ -957,11 +1174,13 @@ def layout_cell(m):
     top.sort(key=lambda r: (rank_of(r), r.label))
     top_span = lay_scope(top, 40) if top else 0
     cellinfo = []
+    joint = False
     for g in sorted(cells, key=lambda g: min(n.layer for r in cells[g] for n in r.nodes) if any(r.nodes for r in cells[g]) else 0):
         rs = cells[g]
         stack = sorted([r for r in rs if r.role != "organelle"], key=lambda r: (rank_of(r), r.label))
         orgs = sorted([r for r in rs if r.role == "organelle"], key=lambda r: r.label)
-        span = lay_scope(stack, 0) if stack else 0
+        joint = len(cells) == 1 and bool(top)  # one cell: the outside strip shares its columns, so transports run straight
+        span = lay_scope(stack + (top if joint else []), 0) if stack or joint else 0
         # organelles: own scope each
         info = dict(name=g, stack=stack, orgs=orgs, span=span)
         cellinfo.append(info)
@@ -990,7 +1209,7 @@ def layout_cell(m):
         cw = inner_w
         # shift stack columns
         ox = xcur + (cw - info["span"]) / 2
-        for r in stack:
+        for r in stack + (top if joint else []):
             for n in r.nodes:
                 n.x += ox
         yy = y_cells + 46
@@ -1023,7 +1242,7 @@ def layout_cell(m):
         xcur += cw + 36
         maxh_cells = max(maxh_cells, yy - y_cells + 8)
     # extracellular strip regions widen to canvas
-    W = max(xcur + 10, 40 + top_span + 60, 400)
+    W = max(xcur + 10, 40 + (0 if joint else top_span) + 60, 400)
     for r in top:
         r.x, r.w = 0, W
     H = y_cells + maxh_cells + 30 if cellinfo else y + 20
@@ -1034,7 +1253,7 @@ def layout_cell(m):
 
 
 # ---- spine
-def layout_spine(m):
+def layout_spine(m, tiers=1):
     pred = prep_edges(m)
     nodes = list(m.nodes.values())
     J = [n for n in nodes if n.kind == "junction"]
@@ -1061,25 +1280,38 @@ def layout_spine(m):
                 p.row = 0
                 pin.add(p.id)
     if chain:
-        for n in (ins[chain[0].id][:1] + outs[chain[-1].id][:1]):
+        for n in ([x for x in ins[chain[0].id] if getattr(x, "stub_of", None) is None][:1] + outs[chain[-1].id][:1]):
             n.row = 0
             pin.add(n.id)
+    # no repeated captions: the compartment most molecules are in is named once, in the main-chain label; only
+    # molecules elsewhere carry a caption
+    cnt = Counter(n.comp for n in nodes if n.kind != "junction" and n.comp in m.comps)
+    m.main_comp = max(cnt, key=lambda c: (cnt[c], str(c))) if cnt else None
     for n in nodes:
-        n.chip = m.comps[n.comp]["name"] if (n.kind != "junction" and n.comp in m.comps) else None
+        n.chip = m.comps[n.comp]["name"] if (n.kind != "junction" and n.comp in m.comps and n.comp != m.main_comp) else None
         if n.chip:
             n.h += 14
             n.w = max(n.w, tw(n.chip, True) + 10)
     region_rows(m, nodes, pred, pinned=pin)
     rowh = max(n.h for n in nodes) + ROWGAP
-    cx, span = scope_columns([nodes], 100)
-    minr = min(n.row for n in nodes)
-    for n in nodes:
-        n.x = cx[n.layer]
-        n.y = 46 + (n.row - minr + 0.5) * rowh
+    tier, span = place_tiers(nodes, tiers, 100)
+    y, spine_rows = 46, []
+    for t in range(tiers):
+        ns = [n for n in nodes if tier[n.layer] == t]
+        if not ns:
+            continue
+        y += TIERGAP if spine_rows else 0
+        lo, hi = min(min(n.row for n in ns), 0), max(max(n.row for n in ns), 0)
+        for n in ns:
+            n.y = y + (n.row - lo + 0.5) * rowh
+        if any(j in ns for j in chain):
+            spine_rows.append(y + (0 - lo + 0.5) * rowh)
+        y += (hi - lo + 1) * rowh
     W = 100 + span + 70
-    H = 46 + (max(n.row for n in nodes) - minr + 1) * rowh + 30
+    H = y + 30
     m.regions = []
-    return dict(W=W, H=H, kind="spine", rowh=rowh, minr=minr, spine_row=(0 - minr + 0.5) * rowh + 46, spine_x=(cx[chain[0].layer] if chain else 0))
+    return dict(W=W, H=H, kind="spine", rowh=rowh, spine_rows=spine_rows, tiers=tiers,
+                main_comp=m.comps[m.main_comp]["name"] if m.main_comp else "")
 
 
 def main_chain(m):
@@ -1180,22 +1412,34 @@ def draw_view(m, lay, vcls):
     # regions
     if style == "bands":
         gut = lay["gut"]
-        for r in m.regions:
-            out.append(f'<g class="band {r.role}" data-comp="{escape(r.label)}"><rect class="bg" x="0" y="{r.y:.1f}" width="{r.w:.1f}" height="{r.h:.1f}"/>')
-            if r.role == "membrane":
-                out.append(f'<rect x="0" y="{r.y:.1f}" width="{r.w:.1f}" height="14" fill="url(#lipidTop)"/>')
-                out.append(f'<rect x="0" y="{r.y + r.h - 14:.1f}" width="{r.w:.1f}" height="14" fill="url(#lipidBot)"/>')
-            out.append(f'<line class="sep" x1="0" x2="{r.w:.1f}" y1="{r.y:.1f}" y2="{r.y:.1f}"/>')
-            lines, _ = wrap(r.label, gut - 36, 3)
-            ty = r.y + r.h / 2 - (len(lines) - 1) * 8 - (7 if r.sub else 0)
-            for i, l in enumerate(lines):
-                out.append(f'<text class="blabel" x="18" y="{ty + i * 16:.1f}">{escape(l)}</text>')
-            if r.sub:
-                sl, _ = wrap(r.sub, gut - 36, 2)
-                for i, l in enumerate(sl):
-                    out.append(f'<text class="bsub" x="18" y="{ty + len(lines) * 16 + 2 + i * 13:.1f}">{escape(l)}</text>')
-            out.append(f'<text class="brole" x="{gut - 14:.0f}" y="{r.y + 14:.1f}" text-anchor="end">{ROLE_LABEL.get(r.role, "")}</text>' if False else "")
+
+        def labels(L, y0, h):
+            ty = y0 + h / 2 - (len(L.text) - 1) * 8 + 4
+            return "".join(f'<text class="{c}" x="18" y="{ty + i * 16:.1f}">{escape(l)}</text>' for i, (l, c) in enumerate(L.text))
+
+        for b in m.bands:
+            ls, y0, h = b["lanes"], b["y"], b["h"]
+            mt = membrane_type(" ".join(n for L in ls for n in L.names))
+            out.append(f'<g class="band {b["role"]}{" " + mt if mt else ""}" data-comp="{escape(ls[0].names[0])}">'
+                       f'<rect class="bg" x="0" y="{y0:.1f}" width="{W:.1f}" height="{h:.1f}"/>')
+            if b["role"] == "membrane":
+                out.append(f'<rect x="0" y="{y0:.1f}" width="{W:.1f}" height="14" fill="url(#lipidTop)"/>')
+                out.append(f'<rect x="0" y="{y0 + h - 14:.1f}" width="{W:.1f}" height="14" fill="url(#lipidBot)"/>')
+            elif mt in DOUBLE:  # nucleus, mitochondrion, plastid: an envelope of two membranes
+                for yy in (y0 + 2, y0 + 6, y0 + h - 6, y0 + h - 2):
+                    out.append(f'<line class="mline2" x1="0" x2="{W:.1f}" y1="{yy:.1f}" y2="{yy:.1f}"/>')
+            elif mt:
+                for yy in (y0 + 2, y0 + h - 2):
+                    out.append(f'<line class="mline1" x1="0" x2="{W:.1f}" y1="{yy:.1f}" y2="{yy:.1f}"/>')
+            out.append(f'<line class="sep" x1="0" x2="{W:.1f}" y1="{y0:.1f}" y2="{y0:.1f}"/>')
+            if len(ls) == 1:
+                out.append(labels(ls[0], y0, h))
             out.append("</g>")
+            if len(ls) > 1:
+                for k, L in enumerate(ls):
+                    out.append(f'<g class="lane" data-comp="{escape(L.names[0])}"><rect class="bg" x="0" y="{L.y:.1f}" width="{W:.1f}" height="{L.h:.1f}"/>'
+                               + (f'<line class="lanesep" x1="{gut}" x2="{W:.1f}" y1="{L.y:.1f}" y2="{L.y:.1f}"/>' if k else "")
+                               + labels(L, L.y, L.h) + "</g>")
         out.append(f'<line class="gutline" x1="{gut}" x2="{gut}" y1="0" y2="{lay.get("Hc", H):.0f}"/>')
     elif style == "cell":
         for r in [x for x in m.regions if x.role in ("extra", "auto")]:
@@ -1206,9 +1450,12 @@ def draw_view(m, lay, vcls):
             if r.role in ("extra", "auto"):
                 continue
             if r.role == "organelle":
-                out.append(f'<rect class="orgblob" x="{r.x:.1f}" y="{r.y:.1f}" width="{r.w:.1f}" height="{r.h:.1f}" rx="26"/>')
+                mt = membrane_type(r.label)
+                out.append(f'<rect class="orgblob {mt}" x="{r.x:.1f}" y="{r.y:.1f}" width="{r.w:.1f}" height="{r.h:.1f}" rx="26"/>')
+                if mt in DOUBLE:
+                    out.append(f'<rect class="orgline2 {mt}" x="{r.x + 4:.1f}" y="{r.y + 4:.1f}" width="{r.w - 8:.1f}" height="{r.h - 8:.1f}" rx="22"/>')
             elif r.role == "membrane":
-                out.append(f'<g class="band membrane"><rect class="bg" x="{r.x:.1f}" y="{r.y:.1f}" width="{r.w:.1f}" height="{r.h:.1f}"/>'
+                out.append(f'<g class="band membrane {membrane_type(r.label)}"><rect class="bg" x="{r.x:.1f}" y="{r.y:.1f}" width="{r.w:.1f}" height="{r.h:.1f}"/>'
                            f'<rect x="{r.x:.1f}" y="{r.y:.1f}" width="{r.w:.1f}" height="14" fill="url(#lipidTop)"/>'
                            f'<rect x="{r.x:.1f}" y="{r.y + r.h - 14:.1f}" width="{r.w:.1f}" height="14" fill="url(#lipidBot)"/></g>')
             elif r.role == "iface":
@@ -1230,10 +1477,12 @@ def draw_view(m, lay, vcls):
                 out.append(f'<text class="rlabel ifacelbl" x="{r.x + 22:.1f}" y="{r.y + r.h / 2 - 5:.1f}">{escape(r.label)}</text>')
     else:
         ch = getattr(m, "chain", [])
-        if ch:
-            sy = lay["spine_row"]
+        for k, sy in enumerate(lay["spine_rows"] if ch else []):
             out.append(f'<rect class="spine" x="0" y="{sy - lay["rowh"] / 2:.1f}" width="{W:.1f}" height="{lay["rowh"]:.1f}"/>')
-            out.append(f'<text class="spinelbl" x="10" y="{sy - lay["rowh"] / 2 + 14:.1f}">main chain</text>')
+            if k == 0:
+                out.append(f'<text class="spinelbl" x="10" y="{sy - lay["rowh"] / 2 + 14:.1f}">main chain</text>')
+        if lay.get("main_comp"):  # named once here instead of under every molecule
+            out.append(f'<text class="spinecomp" x="10" y="20">all in {escape(lay["main_comp"])} unless labelled</text>')
     # edges
     out.append('<g class="edges">')
     for e in m.edges:
@@ -1274,6 +1523,7 @@ def draw_view(m, lay, vcls):
             bw = tw(e.badge, True) + 10
             out.append(f'<g class="badge"><rect x="{mid[0] - bw / 2:.1f}" y="{mid[1] - 8:.1f}" width="{bw:.1f}" height="16" rx="8"/><text x="{mid[0]:.1f}" y="{mid[1] + 3.5:.1f}" text-anchor="middle">{escape(e.badge)}</text></g>')
     out.append("</g>")
+    out.append(hops_svg(m, lay))
     # nodes
     out.append('<g class="nodes">')
     for n in nodes:
@@ -1285,6 +1535,61 @@ def draw_view(m, lay, vcls):
 
 
 PROC_KINDS = ("sub", "prod", "xin", "xout", "cat")
+HOP = 5
+
+
+def _bg_at(m, lay, x, y):
+    """CSS class of the background under (x, y), so a line bridge's gap is painted in the colour it sits on."""
+    if lay["kind"] == "bands":
+        for b in m.bands:
+            if b["y"] <= y <= b["y"] + b["h"]:
+                return f'g-{b["role"]} ' + membrane_type(" ".join(n for L in b["lanes"] for n in L.names))
+        return ""
+    if lay["kind"] == "spine":
+        return "g-spine" if any(abs(y - sy) <= lay["rowh"] / 2 for sy in lay["spine_rows"]) else ""
+    best = None
+    for r in m.regions:
+        if r.role != "iface" and r.x <= x <= r.x + r.w and r.y <= y <= r.y + r.h and (best is None or r.w * r.h < best.w * best.h):
+            best = r
+    if best is not None:
+        return f"g-{best.role} " + (membrane_type(best.label) if best.role in ("organelle", "membrane") else "")
+    return "g-cell" if any(c["x"] <= x <= c["x"] + c["w"] and c["y"] <= y <= c["y"] + c["h"] for c in m.cell_boxes) else ""
+
+
+def hops_svg(m, lay):
+    """'Speed bumps': where a horizontal line still crosses a vertical one, the horizontal line bridges over it.
+    Drawn as an overlay; the edge paths (and every metric read from them) are unchanged."""
+    H, V = [], []
+    for e in m.edges:
+        for (x0, y0), (x1, y1) in zip(e.pts or [], (e.pts or [])[1:]):
+            if abs(y0 - y1) < 0.5 and abs(x0 - x1) > 0.5:
+                H.append((min(x0, x1), max(x0, x1), y0, e))
+            elif abs(x0 - x1) < 0.5 and abs(y0 - y1) > 0.5:
+                V.append((min(y0, y1), max(y0, y1), x0, e))
+    out = []
+    for hx0, hx1, hy, he in H:
+        for vy0, vy1, vx, ve in V:
+            if he is not ve and hx0 + HOP + 1 < vx < hx1 - HOP - 1 and vy0 + HOP < hy < vy1 - HOP:
+                bg = _bg_at(m, lay, vx, hy)
+                out.append(f'<path class="hopgap {bg}" d="M{vx - HOP - 1:.1f},{hy:.1f} L{vx + HOP + 1:.1f},{hy:.1f}"/>'
+                           f'<path class="hopv k-{ve.kind}" d="M{vx:.1f},{hy - 4:.1f} L{vx:.1f},{hy + 4:.1f}"/>'
+                           f'<path class="hop k-{he.kind}" d="M{vx - HOP:.1f},{hy:.1f} A{HOP},{HOP} 0 0 1 {vx + HOP:.1f},{hy:.1f}"/>')
+    return '<g class="hops">' + "".join(out) + "</g>"
+
+# membrane / compartment type -> CSS class (colour); DOUBLE = envelopes of two membranes. Nucleus words only: the
+# bacterial nucleoid and the nucleolus have no membrane.
+MTYPES = (("mt-er", ("endoplasmic", "reticulum", " er ", "sarcoplasmic")), ("mt-golgi", ("golgi",)),
+          ("mt-mito", ("mitochond",)), ("mt-nuc", ("nucleus", "nuclear", "nucleoplasm")), ("mt-plastid", ("chloroplast", "plastid", "thylakoid", "stroma")),
+          ("mt-vac", ("vacuol", "tonoplast")), ("mt-lyso", ("lysosom", "endosom")), ("mt-perox", ("peroxisom", "glyoxysom")),
+          ("mt-outer", ("outer membrane",)), ("mt-plasma", ("plasma membrane", "cell membrane", "apical", "basolateral")))
+DOUBLE = ("mt-mito", "mt-nuc", "mt-plastid")
+
+
+def membrane_type(names):
+    n = " " + re.sub(r"[^a-z]+", " ", (names or "").lower()) + " "
+    if "thylakoid" in n:  # the thylakoid is a single membrane inside the plastid
+        return "mt-plastid1"
+    return next((c for c, keys in MTYPES if any(k in n for k in keys)), "")
 
 
 def cross_caption(m, j):
@@ -1339,7 +1644,7 @@ def node_svg(n, style, m=None):
     cx0 = y - h / 2 + body_h / 2
     shape = ""
     if n.kind == "compound":
-        cl = "n compound" + (" small" if n.cls in ("ion", "cofactor") else "")
+        cl = "n compound" + (" small" if n.cls in ("ion", "cofactor") else "") + (" cur" if getattr(n, "cur", False) else "")
         shape = f'<rect x="{x - w / 2:.1f}" y="{by:.1f}" width="{w:.1f}" height="{body_h:.1f}" rx="{body_h / 2:.1f}"/>'
     elif n.kind == "protein":
         cl = "n protein"
@@ -1497,6 +1802,8 @@ def _sym(kind, x, y):
     """Small legend drawing, left edge x, vertical centre y."""
     if kind == "compound":
         return f'<g class="n compound"><rect x="{x}" y="{y - 7}" width="26" height="14" rx="7"/></g>'
+    if kind == "cur":
+        return f'<g class="n compound cur"><rect x="{x}" y="{y - 7}" width="26" height="14" rx="7"/></g>'
     if kind == "protein":
         return f'<g class="n protein"><rect x="{x}" y="{y - 7}" width="26" height="14" rx="3"/></g>'
     if kind == "complex":
@@ -1559,6 +1866,8 @@ def legend_plan(m, lay):
         items.append(("merged", "×N in data = N identical steps drawn once"))
     if any(n.note for n in m.nodes.values() if n.kind == "junction") or any(e.badge for e in m.edges):
         items.append(("same", "same as R# = same molecules, listed as a separate step"))
+    if any(getattr(n, "cur", False) for n in m.nodes.values()):
+        items.append(("cur", "dashed = local copy of a common molecule (H+, water, ATP ...)"))
     if lay["kind"] == "spine" and "transport" in jk:
         items.append(("xcap", "compartments a transport joins"))
     rows, x, y, row_h = [], 16, 0, LEG_ROW
@@ -1617,7 +1926,7 @@ def legend_svg(m, lay):
     return "".join(out)
 
 
-def render(ir, style, ident, hide_reg=True):
+def render(ir, style, ident, hide_reg=True, tiers=1, order="flow"):
     """Returns (svg, model of the default view, layout of the default view).
     With regulation links present (and some reaction or transport to show) the default view hides them; the SVG holds a
     second, complete view that the 'Show regulation links' button switches on. model.full / model.lay_full hold that view."""
@@ -1644,18 +1953,18 @@ def render(ir, style, ident, hide_reg=True):
         mf.view, mc.view = "full", "core"
     else:
         mc.view = "plain"
-    layc = layout(mc, style)
+    layc = layout(mc, style, tiers, order)
     legend_plan(mc, layc)
     views = [draw_view(mc, layc, "view-core")]
     layf = None
     if mf is not None:
-        layf = layout(mf, style)
+        layf = layout(mf, style, tiers, order)
         legend_plan(mf, layf)
         views.append(draw_view(mf, layf, "view-full"))
     mc.full, mc.lay_full = mf, layf
     W, H = layc["W"], layc["H"]
     hid = mc.reg or {"keys": []}
-    attrs = f'data-style="{style}" data-core="{W:.0f} {H:.0f}"'
+    attrs = f'data-style="{style}" data-tiers="{layc.get("tiers", 1)}" data-order="{layc.get("order", "")}" data-core="{W:.0f} {H:.0f}"'
     if layf:
         attrs += f' data-full="{layf["W"]:.0f} {layf["H"]:.0f}" data-hidden="{" ".join(hid["keys"])}"'
     svg = (f'<svg xmlns="http://www.w3.org/2000/svg" class="dg" viewBox="0 0 {W:.0f} {H:.0f}" width="{W:.0f}" height="{H:.0f}" '
