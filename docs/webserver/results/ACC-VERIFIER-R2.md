@@ -85,4 +85,17 @@ Lane record: `docs/pwml_output/ACCURACY.md` §11-§14d.
 - Test isolation: `test_llm_client_empty_completion_retry.py` before `test_llm_client_request_timeout.py` fails 3 tests
   (leaked client state; same on old main). Gate scripts run them in a separate process, timeout file first.
 - The main merge carries the stale conform test until webserver/refactor next merges into main.
+- **The deploy tree fails two golden tests; this is a test problem, not a product bug.** The full gate run on
+  `C:/t/t2pw-server` had 2 failures in `test_streamlit_quarantine_boundary.py`, the same 2 tests each time:
+  `test_a_refinement_that_adds_an_unexportable_process_still_exports_the_core` and
+  `test_research_mode_keeps_the_unmapped_candidate_and_does_not_block`. They pass at the same source in the clean
+  worktree.
+  - **Cause:** the server tree's `.env` makes the PathBank DB reachable. `PathBankDbResolver.from_env()` refills the
+    host the test blanks (test line 437). The DB then maps `OPC-8:0` to its IUPAC name, which collides with
+    `compounds#6` (`AMBIGUOUS_REFERENCE`).
+  - **Bisection:** copying every outputs/, tmp/, data/ cache, `clean_model_cache` and `rag_index` file into the clean
+    tree did not reproduce the failure. The culprit files are identical at `c889d336`, so it predates this merge.
+  - **Follow-up:** give these tests an offline-DB guard (monkeypatch the `PATHBANK_DB_*` variables away).
+  - **Real jobs:** they canonicalize against the DB by design. `run_pathway` clears quarantine artifacts at the start
+    of each job (`service/pathway.py:256`, `:344`), and it only logs a warning if clearing fails.
 - Worktrees for the PO to remove: `C:/t/acc-old`, `C:/t/acc-ver5`, `C:/t/merge-acc2`, `C:/t/ws-acc-check`.
