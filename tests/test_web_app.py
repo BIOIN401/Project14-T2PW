@@ -512,7 +512,8 @@ def test_vendored_scripts_are_self_hosted(site):
         r = site.client.get(f"/static/js/{name}")
         assert r.status_code == 200 and "javascript" in r.headers["content-type"], name
     submit_js = (js / "submit.js").read_text(encoding="utf-8")
-    assert "data-add-pathway" in submit_js and "eval(" not in submit_js
+    assert "data-add-pathway" in submit_js and "removePathway" in submit_js
+    assert "renumberAll" in submit_js and "eval(" not in submit_js
     nav_js = (js / "nav.js").read_text(encoding="utf-8")
     assert "data-nav-toggle" in nav_js and "Escape" in nav_js and "eval(" not in nav_js
 
