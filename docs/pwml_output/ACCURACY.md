@@ -488,3 +488,80 @@ only a reboot clears).
 **Round-4 gates, code `38780ed0`, all four flags unset, one queue hold, 0 surviving processes** (`C:/t/acc-runs/logs/gates6.log`): SMOKE 511 passed; golden-seam 2/8/4/24 passed (none edited); equivalence 8/14/6; vision 370 + 1 skipped; web 83; lane 325 passed; client files in their own process 35 passed. Lane unit run 86 passed (`logs/ut15.log`); the new B1/N1 tests fail on 4d623f2a (5 failed, `logs/ut16.log`).
 
 **Bigger run (folds in the 3x3)**: `scripts/driver4.sh` on `C:/t/acc-ver` at `38780ed0`; BASE all flags off vs VT verifier + typing (merge, VD-18 off); 6 papers (negative control PMC13231680, MenD PMC12312563, enterobactin PMC12096016, sour taste PMC7059786 with its curated PW739181 interaction, menaquinone PMC12421875, chlorophyll PMC5130987) x 3 draws x 2 arms, interleaved, 10-min gaps, 9000 s legs; resume-safe after a reboot (skips scored legs, moves an interrupted leg aside, `logs4/inflight.txt`), kernel process objects and free RAM logged to `logs4/mem.log` before every leg, and it pauses itself (PAUSE) under 5 GB free. Scoring: `scripts/score4.py` per leg against the R4 criteria, plus the offline paired application on every BASE Stage-1 payload. Results go in a later section.
+
+## 14. Bigger run on Gemma (`google/gemma-4-31b-it`, both arms, code `82bda3b6`), and two fixes it found
+
+PO direction: users run Gemma, so the bigger run measures Gemma end to end (Stage 1 to verifier) in both
+arms. `scripts/driver4g.sh` on `C:/t/acc-ver` at `82bda3b6`; BASE all flags off vs VT (verifier + typing,
+merge, VD-18 off); 6 papers x 3 draws x 2 arms, interleaved, 5-min gaps, 9000 s legs. The deepseek
+legs already run under driver4 are kept as evidence (`json/score4_deepseek.json`). Model confirmed
+in every VT report (`model: google/gemma-4-31b-it`).
+
+**Status: 35 of 36 legs scored. PAUSED_LOW_RAM before vt3-PMC5130987 (free 3.9 GB, 123k kernel
+process objects, the zombie-process leak); `C:/t/acc-runs/PAUSE` exists; restart `driver4g.sh` after a
+reboot and it runs only that leg.** Scores: `json/score4g.json`, table `scripts/summ4g.py`.
+
+| paper | arm | PWML | gold matched (runs per id) | mean P | VT verifier: max calls / max s, errors | R4 verdict |
+|---|---|---|---|---|---|---|
+| PMC13231680 negative control | base | 2/3 (base1: no reactions) | - | - | | |
+| | vt | 3/3 | - | - | 1 / 9.1 s, 0 | pass: 0 rows in every run, VT ≤ BASE |
+| PMC12312563 MenD | base | 3/3 | R1 3 | 0.35 | | |
+| | vt | 3/3 | R1 2 | 0.22 | 2 / 338 s, 1 fail-open | **fail** live (R1 2 < 3; see F-G1); lock check fails on vt3 (F-G1) |
+| PMC12096016 enterobactin | base | 3/3 | R1 3, R2 1, R3 3, R5 3 | 0.64 | | |
+| | vt | **1/3** | R1 2, R2 1, R3 2, R4 1, R5 2 | 0.68 | 2 / 15 s, 0 | **fail**: VT no-PWML 2 > BASE 0; EntF row omitted on vt3 (F-G2) |
+| PMC7059786 sour taste | base | 3/3 | 0 rows; interaction 0/1 | - | | |
+| | vt | 3/3 | 0 rows; interaction 0/1 | - | 2 / 5 s, 0 | pass (no change) |
+| PMC12421875 menaquinone | base | 3/3 | R1-R9: 3,3,2,2,2,2,2,3,3 | 0.82 | | |
+| | vt | 3/3 | identical | 0.81 | 2 / 18 s, 0 | pass |
+| PMC5130987 chlorophyll | base | 2/3 (base1: AMBIGUOUS_REFERENCE "tRNA Glu", flags off) | 7 ids x 2 | 0.41 | | |
+| | vt (2 of 3) | 2/2 | 7 ids, R2146840 once | 0.36 | 2 / 17 s, 0 | open (vt3 pending); the verifier changed no row in vt1/vt2 |
+
+Every VT run: report present, at most 2 of 6 calls, at most 338 s of 600, no AMBIGUOUS_RENAME_TARGET, 0
+typing changes. Fail-open rate: MenD 1/3, every other paper 0/3.
+
+**Offline paired application** (`scripts/ask4g_run.sh`, Gemma as verifier, on all 18 BASE Stage-1
+payloads; `answers4g/`, `json/evalv_g4_r4.json`, `json/evalv_g4_r5.json`; merge policy):
+
+| paper | gold matches base → verifier (Stage 1, summed over 3 legs) | gold lost |
+|---|---|---|
+| enterobactin | 10 → 11 | 0 |
+| MenD | 3 → 3 (P 0.63 → 1.00) | 0 |
+| menaquinone | 22 → 22 | 0 |
+| chlorophyll | 24 → 24 | 0 |
+| negative control | 0 rows → 0 rows, no signed edge | |
+| sour taste | 0 → 0 | 0 |
+
+Typing replay on the same payloads: 0 rows changed (Gemma proposes no retypable change), so typing
+accuracy equals BASE. One offline typing call failed with invalid JSON (base1-PMC12312563, 229 s).
+
+**F-G1 (fixed in `84205bd5`): a failed typing call discarded the finished reaction step, but its lock
+prune still ran.** vt3-PMC12312563: the typing reply was invalid JSON (`Invalid \uXXXX escape`, 335 s).
+`verify_stage_one` failed open and returned the original payload, yet the hook pruned the 3 lock-manifest
+entries of rows the reaction step had omitted (rows kept, entries gone). The reaction step would have
+appended the whole MenD step (R1), which this Stage-1 draw lacked. Fix: fail-open per step; the payload
+of the last finished step comes back, so `report["reactions"]` and the prune always match the payload.
+Test `test_failed_typing_call_keeps_the_finished_reaction_step_and_its_lock_prune`. The scorer now
+checks that every pruned lock id is really gone from the payload (`pruned_but_present`).
+
+**F-G2 (fixed in `32620fde`): a summary was "covered" through a co-substrate and a row the model
+called wrong.** vt3-PMC12096016: the real EntF step (DHB-AMP + L-serine → enterobactin, gold R5) was
+called a summary and omitted, because L-serine reached enterobactin through "DHB + L-serine →
+enterobactin", a row the verifier itself judged not_stated. Fix: each product must be reachable from
+EACH substrate, and rows judged not_stated / off_pathway never count as coverage. Test
+`test_a_co_substrate_or_a_wrong_row_never_covers_a_summary` (old rules drop the row, new keep it).
+Offline re-application on every cached answer set (Gemma `answers4g`, deepseek `answers2`, `answers3`):
+identical to the R4 rules, 0 gold lost. Lane unit run: 88 passed (`logs/ut-cover.log`).
+
+**F-G3 (open, outside the lane): Gemma runs die downstream when "2,3-dihydroxybenzoyl-AMP" is in play.**
+VT enterobactin produced no PWML twice. vt1: Stage 1 itself named the compound "2,3-dihydroxybenzoyl-AMP"
+(the verifier changed no row) and post_audit stopped on an entity with an empty name. vt3: the verifier
+renamed "activated 2,3-DHB" to "2,3-dihydroxybenzoyl-AMP" (vague repair, quote in the paper) and a
+RAG-added EntF row used the same name; two unresolved registry shells with that name reached the
+exporter (PWML_IR_DUPLICATE_NAMED_ROW). All 3 Gemma BASE runs used "activated 2,3-DHB" and passed.
+Under deepseek, 4 of the 5 earlier legs with the full name produced PWML. So the trigger is the full name under Gemma's
+downstream (gap resolver / RAG), and the verifier's rename can supply it. Options for the PO: (a) leave
+renames on and fix the duplicate-shell path in the pipeline (biology code, outside this lane); (b) make
+the vague rename flag-only under Gemma, giving up its precision gain; (c) refuse a rename whose new name
+is already a registry name (cheap, untested live).
+
+**Spend:** Gemma legs + offline asks $1.98 (`logs4g/*.usage.jsonl`, `logs/ask4g-*.usage.jsonl`).
