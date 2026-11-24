@@ -761,3 +761,42 @@ job (`rag_admission_report.json`: accepted 0). It then survives audit, gap fill 
 removes it again.
 
 **Gates9, code `d5d0ec95`, all four flags unset, one queue hold, 0 surviving processes** (`C:/t/acc-runs/logs/gates9.log`): SMOKE 511 passed; golden-seam 2/8/4/24 passed (none edited); equivalence 8/14/6; vision 370 + 1 skipped; web 83; lane 330; client files in their own process 35.
+
+### 15a. Review R6 (REJECT of `d5d0ec95`) and the fix (`f26c7f17`)
+
+- **B1 (new in d5d0ec95, gold-loss path).** The fold target was looked up by `_spelling`, which dropped
+  every non-ASCII letter: alpha- and beta-carotene shared one key, so a rename to beta-carotene folded the
+  LCYB row into the alpha-carotene row and the step was lost. Now a refused rename folds only onto an
+  existing name whose `reference_key` equals the proposed name's (that spelling is used); if only the
+  spelling key matched, the rename is refused without a fold, as on 1a52fb55.
+- **B2 (on main 1a52fb55, live on the server).** `_one_spelling` rewrote an added co-substrate to the
+  payload spelling with the same Greek-less key: "β-alanine" went into the row as "alanine", reported as
+  repaired. `_spelling` is now `reference_key` plus the acid/-ate fold, so it keeps Greek letters (spelled),
+  digits, `+` and `:` and is never coarser than `reference_key`. Every caller checked: `_payload_names`
+  (now also keyed by `reference_key` for the fold target), `_one_spelling` (additions), the F-G3 refusal
+  and fold lookup, the R3 P4 old-name check, and the R4 B1 abbreviation check, all inside
+  `reaction_verifier.py`. Side effect, by design: "NAD+" and "NAD" no longer share a spelling key.
+- **N1.** The orphan-entity scan now reads every string of every in-scope process row except its own name
+  and its prose (evidence, lineage, verifier record), so enzymes, transporters and cargo count, plus every
+  `protein_complexes` component.
+- **Nit.** The F-G3 refusal test's docstring names `test_both_spellings_of_ente_and_entf_fold_to_one_each`
+  as the test covering the four-row vt3 shape.
+
+Tests: `test_a_greek_letter_never_folds_or_collapses_one_compound_into_another` (alpha/beta-carotene in
+ASCII and in Greek letters), `test_an_added_beta_alanine_is_not_written_as_alanine` (Greek letter and
+spelled), `test_an_old_name_still_used_as_an_enzyme_or_complex_component_keeps_its_entity` (and the entity
+goes when nothing names it). Lane unit run on the fix: 94 passed (`logs/ut-r6b.log`). The same file on
+`d5d0ec95` (`C:/t/acc-r6base`): 3 failed, exactly those three (`logs/ut-r6b-old-d5d.log`). On `1a52fb55`
+(`C:/t/acc-r3base`): 6 failed, the β-alanine and Greek-letter and N1 tests plus the three r3 fold tests
+(`logs/ut-r6b-old-1a5.log`). The ASCII "beta-alanine" case passes on the old code too (the old key kept the
+spelled word); the collapse needs the Greek letter.
+
+Offline replay on the fixed code (answers2, answers3, answers4g, server item-4; `json/evalv_r6_*.json`):
+0 gold lost on every paper; the same 14 new folds over 1a52fb55 (2 → 8, 1 → 7, 1 → 1, 0 → 2) and no
+action differs from d5d0ec95 on any payload. Name check (`scripts/namecheck.py`, every rename and addition
+written, policy merge): 30 names written, 5 of them companion-fold renames (the EntF rows carrying the
+rename the model proposed on their EntE row), **0 whose `reference_key` differs from the model's proposed
+name**, on both d5d0ec95 and the fix. The corpus has no Greek-letter pair, so the replay cannot exercise
+B1 or B2; the unit tests do.
+
+**Gates10, code `f26c7f17`, all four flags unset, one queue hold, 0 surviving processes** (`C:/t/acc-runs/logs/gates10.log`): SMOKE 511 passed; golden-seam 2/8/4/24 passed (none edited); equivalence 8/14/6; vision 370 + 1 skipped; web 83; lane 333; client files in their own process 35.
