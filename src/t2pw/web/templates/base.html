@@ -31,7 +31,12 @@
         <span class="brand__name">{{ site_name }}</span>
         <span class="brand__tagline">Text to PathWhiz</span>
       </a>
-      <nav class="site-nav" aria-label="Main">
+      <button type="button" class="nav-toggle" data-nav-toggle
+              aria-expanded="false" aria-controls="site-nav">
+        <span class="nav-toggle__bars" aria-hidden="true"></span>
+        <span class="visually-hidden">Menu</span>
+      </button>
+      <nav class="site-nav" id="site-nav" aria-label="Main">
         <ul>
           <li>
             <a href="/submit"{% if active_nav == "submit" %} aria-current="page"{% endif %}>Submit</a>
@@ -43,12 +48,18 @@
             <a href="/help"{% if active_nav == "tutorial" %} aria-current="page"{% endif %}>Tutorial</a>
           </li>
           <li class="nav-dropdown{% if active_nav == "about" %} is-active{% endif %}">
-            <details{% if active_nav == "about" %} open{% endif %}>
-              <summary>About</summary>
-              <ul class="nav-dropdown__menu">
-                <li><a href="/about"{% if active_nav == "about" %} aria-current="page"{% endif %}>About T2PW</a></li>
-                <li><a href="/about#cite">How to cite</a></li>
-                <li><a href="/examples">Examples</a></li>
+            <details>
+              <summary aria-haspopup="menu">About</summary>
+              <ul class="nav-dropdown__menu" role="menu">
+                <li role="none">
+                  <a role="menuitem" href="/about"{% if active_nav == "about" %} aria-current="page"{% endif %}>About T2PW</a>
+                </li>
+                <li role="none">
+                  <a role="menuitem" href="/about#cite">How to cite</a>
+                </li>
+                <li role="none">
+                  <a role="menuitem" href="/examples">Examples</a>
+                </li>
               </ul>
             </details>
           </li>
@@ -73,6 +84,7 @@
       {%- endblock %}
     </div>
   </footer>
+  <script src="{{ static_url }}/js/nav.js" defer></script>
   {%- block scripts %}{% endblock %}
 </body>
 </html>

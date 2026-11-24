@@ -80,12 +80,14 @@ def test_base_renders_with_defaults():
     assert '<html lang="en">' in html  # no data-theme: follow the system
     assert '<main id="main"' in html and 'href="#main"' in html
     assert 'href="/static/css/tokens.css"' in html and 'href="/static/css/site.css"' in html
-    nav = re.search(r'<nav class="site-nav" aria-label="Main">(.*?)</nav>', html, re.S).group(1)
+    nav = re.search(r'<nav class="site-nav"[^>]*>(.*?)</nav>', html, re.S).group(1)
     assert ">Submit</a>" in nav and ">History</a>" in nav and ">Tutorial</a>" in nav
-    assert "<summary>About</summary>" in nav
+    assert "<summary" in nav and ">About</summary>" in nav
     assert 'href="/submit"' in nav and 'href="/history"' in nav
     assert 'href="/about"' in nav and 'href="/examples"' in nav
     assert "aria-current" not in nav
+    assert 'data-nav-toggle' in html and 'id="site-nav"' in html
+    assert 'open' not in re.search(r"<details[^>]*>", html).group(0)
     assert "Citation placeholder" in html and "Lab credit placeholder" in html
 
 
@@ -309,13 +311,18 @@ def test_no_script_no_external_urls():
     texts["rendered styleguide"] = _render("styleguide.html")
     texts["rendered base"] = _render("base.html", theme="dark")
     for name, text in texts.items():
-        if name == "layout.html":
+        if name == "base.html":
+            # Site chrome: self-hosted nav.js (mobile menu + About dropdown).
+            assert text.count("<script") == 1 and 'src="{{ static_url }}/js/nav.js"' in text, name
+        elif name == "layout.html":
             # W6 carve-out: the page layout carries exactly one script, the vendored htmx tag.
             assert text.count("<script") == 1 and text.count(HTMX_TAG) == 1, name
         elif name == "submit.html":
             # Submit overrides scripts: vendored htmx plus the pathway-add helper.
             assert text.count("<script") == 2
             assert HTMX_TAG in text and 'src="/static/js/submit.js"' in text
+        elif name in ("rendered base", "rendered styleguide"):
+            assert text.count("<script") == 1 and "/js/nav.js" in text, name
         else:
             assert not re.search(r"<script", text, re.I), name
         if name == "landing.html":

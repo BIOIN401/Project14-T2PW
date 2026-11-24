@@ -152,6 +152,63 @@ svg {
   padding-bottom: var(--space-3);
 }
 
+.nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin: 0;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.nav-toggle:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.nav-toggle__bars,
+.nav-toggle__bars::before,
+.nav-toggle__bars::after {
+  display: block;
+  width: 1.15rem;
+  height: 2px;
+  background: currentColor;
+  border-radius: 1px;
+}
+
+.nav-toggle__bars {
+  position: relative;
+}
+
+.nav-toggle__bars::before,
+.nav-toggle__bars::after {
+  content: "";
+  position: absolute;
+  left: 0;
+}
+
+.nav-toggle__bars::before { top: -6px; }
+.nav-toggle__bars::after { top: 6px; }
+
+.nav-toggle[aria-expanded="true"] .nav-toggle__bars {
+  background: transparent;
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle__bars::before {
+  top: 0;
+  transform: rotate(45deg);
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle__bars::after {
+  top: 0;
+  transform: rotate(-45deg);
+}
+
 .brand {
   display: inline-flex;
   align-items: baseline;
@@ -267,6 +324,41 @@ svg {
 .nav-dropdown__menu a[aria-current="page"] {
   color: #9d4485;
   background: #fff9e5;
+}
+
+/* Mobile: with JS, collapse behind the hamburger; without JS, keep a wrapping row. */
+@media (max-width: 48rem) {
+  .js .nav-toggle {
+    display: inline-flex;
+    margin-left: auto;
+  }
+
+  .js .site-nav {
+    display: none;
+    flex-basis: 100%;
+    width: 100%;
+    padding: var(--space-2) 0 var(--space-3);
+    border-top: 1px solid rgba(255, 255, 255, 0.22);
+  }
+
+  .js .site-nav.is-open {
+    display: block;
+  }
+
+  .js .site-nav > ul {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-1);
+  }
+
+  .js .nav-dropdown__menu {
+    position: static;
+    right: auto;
+    top: auto;
+    min-width: 0;
+    margin-top: var(--space-1);
+    box-shadow: none;
+  }
 }
 
 .site-main {

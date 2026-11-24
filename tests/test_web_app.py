@@ -136,10 +136,12 @@ def test_submit_form_controls(site):
     assert 'hx-get="/organisms"' in html
     assert html.count('name="pdfs_') == 5 and 'enctype="multipart/form-data"' in html
     assert "20 to 60 minutes" in html
-    assert html.count('<script') == 2
+    assert html.count('<script') == 3
+    assert 'src="/static/js/nav.js"' in html
     assert 'src="/static/js/htmx.min.js"' in html and 'src="/static/js/submit.js"' in html
     assert 'data-add-pathway' in html and html.count('data-pathway="1"') == 1
     assert 'hidden' in html  # pathways 2–5 start collapsed
+    assert 'data-nav-toggle' in html
     assert "<datalist" in html and len(html) < 40_000, "the organism list must not be inlined"
 
 
@@ -452,14 +454,14 @@ def test_hostile_input_is_escaped_everywhere(site):
         html = site.client.get(url).text
         assert "&lt;script&gt;alert(1)" in html, url
         assert "<script>alert" not in html and "<img src=x" not in html, url
-        assert html.count("<script") == (1 if "<html" in html else 0)
+        assert html.count("<script") == (2 if "<html" in html else 0)  # nav.js + htmx
     redisplayed = site.submit(site.form(name_1=HOSTILE, organism_1=HOSTILE)).text
     assert "<script>alert" not in redisplayed and "<img src=x" not in redisplayed
-    assert redisplayed.count("<script") == 2  # htmx + submit.js on the form page
+    assert redisplayed.count("<script") == 3  # nav.js + htmx + submit.js
     assert '"><img' not in redisplayed
     site.run_to(sid, dict(status="error", failure_kind="llm", message=HOSTILE, warnings=[HOSTILE]))
     result = site.client.get(f"/job/{sid}/0").text
-    assert "<img src=x" not in result and result.count("<script") == 1
+    assert "<img src=x" not in result and result.count("<script") == 2
 
 
 def test_job_urls_are_unguessable_tokens(site):
@@ -503,14 +505,24 @@ def test_create_app_has_no_side_effects(tmp_path):
 
 def test_vendored_scripts_are_self_hosted(site):
     js = Path(__file__).resolve().parents[1] / "src" / "t2pw" / "web" / "static" / "js"
-    assert sorted(p.name for p in js.iterdir()) == ["htmx.min.js", "submit.js"]
+    assert sorted(p.name for p in js.iterdir()) == ["htmx.min.js", "nav.js", "submit.js"]
     head = (js / "htmx.min.js").read_text(encoding="utf-8")[:600]
     assert "htmx 2.0.4" in head and "Zero-Clause BSD" in head
-    for name in ("htmx.min.js", "submit.js"):
+    for name in ("htmx.min.js", "nav.js", "submit.js"):
         r = site.client.get(f"/static/js/{name}")
         assert r.status_code == 200 and "javascript" in r.headers["content-type"], name
     submit_js = (js / "submit.js").read_text(encoding="utf-8")
     assert "data-add-pathway" in submit_js and "eval(" not in submit_js
+    nav_js = (js / "nav.js").read_text(encoding="utf-8")
+    assert "data-nav-toggle" in nav_js and "Escape" in nav_js and "eval(" not in nav_js
+
+
+def test_about_dropdown_is_closed_by_default_even_on_about(site):
+    html = site.client.get("/about").text
+    details = re.search(r'<li class="nav-dropdown is-active">\s*<details([^>]*)>', html)
+    assert details is not None
+    assert "open" not in details.group(1)
+    assert 'data-nav-toggle' in html and 'aria-controls="site-nav"' in html
 
 
 def test_templates_and_static_ship_as_package_data():
