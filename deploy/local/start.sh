@@ -25,6 +25,10 @@ export T2PW_RATE_KEY_SECRET="$(cat "$D/rate_key_secret")"
 export T2PW_RATE_LIMIT=${T2PW_RATE_LIMIT:-2} T2PW_MAX_QUEUED=${T2PW_MAX_QUEUED:-5}
 # PO ruling 2026-11-19: the server runs 3 Stage-1 extraction draws (code default is 1).
 export T2PW_EXTRACTION_DRAWS=${T2PW_EXTRACTION_DRAWS:-3}
+# PO ruling 2026-11-24: reaction verifier ON for web jobs (accuracy lane R5 conditions: Gemma 4 31B only, re-measure on a model change; typing and VD-18 off; single worker; verifier report kept per job).
+export T2PW_LLM_MODEL=${T2PW_LLM_MODEL:-google/gemma-4-31b-it}
+export T2PW_REACTION_VERIFIER=1
+unset T2PW_INTERACTION_TYPING T2PW_VD18_SPAN_TEMPLATES T2PW_VERIFIER_GRANULARITY
 cd "$R"
 stamp=$(date +%Y%m%d-%H%M%S)
 
