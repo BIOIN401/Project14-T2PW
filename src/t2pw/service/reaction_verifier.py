@@ -799,7 +799,9 @@ def apply_types(payload: Dict[str, Any], text: str, answers: Dict[int, Dict[str,
 def verify_stage_one(payload: Dict[str, Any], text: str, pathway: Dict[str, Any], *, reactions: bool = True,
                      interactions: bool = False, policy: Optional[str] = None,
                      chat_fn: Optional[Callable[..., Any]] = None) -> Tuple[Dict[str, Any], Dict[str, Any]]:
-    """Return ``(payload, report)``; the same ``payload`` object comes back on error."""
+    """Return ``(payload, report)``. Fail-open per step: on error the payload as of the last finished step comes
+    back (the same ``payload`` object if the reaction step did not finish), so ``report["reactions"]`` exists
+    exactly when its decisions are in the returned payload, and the hook prunes the lock manifest only for those."""
     import time
 
     report: Dict[str, Any] = {"flags": {ENV_FLAG: reactions, IX_FLAG: interactions}, "error": None}
@@ -825,7 +827,7 @@ def verify_stage_one(payload: Dict[str, Any], text: str, pathway: Dict[str, Any]
         return out, report
     except Exception as exc:  # noqa: BLE001 - fail open
         report["error"] = f"{type(exc).__name__}: {exc}"
-        return payload, report
+        return out, report  # a failed typing call keeps the finished reaction step (Gemma run 3 pruned locks, kept rows)
     finally:  # measured, for the live criteria (at most MAX_CALLS calls, at most MAX_SECONDS)
         report["calls"] = MAX_CALLS - budget.calls
         report["seconds"] = round(time.monotonic() - started, 1)

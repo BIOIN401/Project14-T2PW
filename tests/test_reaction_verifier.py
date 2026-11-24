@@ -382,6 +382,30 @@ def test_model_error_fails_open_and_flags_default_off(monkeypatch):
     assert out is p and "provider down" in rep["error"]
 
 
+def test_failed_typing_call_keeps_the_finished_reaction_step_and_its_lock_prune(tmp_path, monkeypatch):
+    """Gemma run 3 (vt3-PMC12312563): the typing reply was bad JSON; the whole payload was discarded but the
+    omitted rows' locks were still pruned. Now the reaction step stands and manifest and payload agree."""
+    def fake_ask(system, user, chat_fn, stage, limit=None):
+        if "interaction" in stage:
+            raise ValueError("Invalid \\uXXXX escape")
+        return {"rows": [{"id": 4, "verdict": "summary"}]}
+    monkeypatch.setattr(V, "_ask", fake_ask)
+    monkeypatch.setenv(V.ENV_FLAG, "1")
+    monkeypatch.setenv(V.IX_FLAG, "1")
+    rows = [dict(r, locked_reaction_id="rxn_lock_00%d" % i) for i, r in enumerate(CHAIN)]
+    rows.append(rx(["chorismate"], ["2,3-dihydro-2,3-dihydroxybenzoate"], lock="rxn_lock_009"))
+    (tmp_path / "locked_reaction_manifest.json").write_text(
+        json.dumps([{"locked_reaction_id": r["locked_reaction_id"]} for r in rows]), encoding="utf-8")
+    state = {}
+    out = V.apply_to_stage_one(payload(rows, [{"entity_1": "a", "entity_2": "b", "relationship": ""}]), TEXT, state,
+                               tmp_path / "diag", {}, "task", manifest_dir=tmp_path)
+    rep = state[V.REPORT_STATE_KEY]
+    assert "Invalid" in rep["error"] and rep["reactions"]["omitted"] == [4]
+    assert out["processes"]["reactions"][4]["scope_membership"] == "out_of_scope"
+    left = json.loads((tmp_path / "locked_reaction_manifest.json").read_text(encoding="utf-8"))
+    assert len(left) == 4 and rep["lock_manifest_entries_removed"] == 1
+
+
 def test_hook_prunes_the_lock_manifest_and_hands_the_report_to_the_run(tmp_path, monkeypatch):
     def fake_ask(system, user, chat_fn, stage, limit=None):
         return {"rows": [{"id": 4, "verdict": "summary"}]}
