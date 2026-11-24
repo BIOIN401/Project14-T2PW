@@ -1,0 +1,1813 @@
+{
+ "base1-PMC12096016": {
+  "arm": "base",
+  "paper": "PMC12096016",
+  "text_chars": 43667,
+  "status": "pass",
+  "message": "strict run completed; pathway.review_required.pwml is 96245 bytes",
+  "pwml": [
+   "pathway.review_required.pwml"
+  ],
+  "ambiguous_rename": false,
+  "final": {
+   "recall": 0.6,
+   "precision": 0.6667,
+   "matched": [
+    "R1",
+    "R3",
+    "R5"
+   ],
+   "rows": 6,
+   "tp_rows": 4,
+   "fps": [
+    {
+     "label": "isochorismate -> 2,3-dihydro-2,3-dihydroxybenzoate",
+     "cls": "partial_match",
+     "evidence": "not_in_paper"
+    },
+    {
+     "label": "2,3-dihydroxybenzoic acid + ATP -> activated 2,3-DHB",
+     "cls": "unsupported",
+     "evidence": "verbatim_in_paper"
+    }
+   ],
+   "n_gold": 5
+  },
+  "final_path": "C:\\t\\acc-runs\\legs4g\\base1-PMC12096016\\2026-11-23_1233\\papers\\PMC12096016\\strict\\final_mapped.json",
+  "stage1_path": "C:\\t\\acc-runs\\legs4g\\base1-PMC12096016\\2026-11-23_1233\\papers\\PMC12096016\\strict\\stage1_payload.json",
+  "cost": 0.0443
+ },
+ "base1-PMC12312563": {
+  "arm": "base",
+  "paper": "PMC12312563",
+  "text_chars": 44972,
+  "status": "pass",
+  "message": "strict run completed; pathway.review_required.pwml is 50948 bytes",
+  "pwml": [
+   "pathway.review_required.pwml"
+  ],
+  "ambiguous_rename": false,
+  "final": {
+   "recall": 1.0,
+   "precision": 0.4,
+   "matched": [
+    "R1"
+   ],
+   "rows": 5,
+   "tp_rows": 2,
+   "fps": [
+    {
+     "label": "α-ketoglutarate + thiamine diphosphate -> intermediate I",
+     "cls": "unsupported",
+     "evidence": "verbatim_in_paper"
+    },
+    {
+     "label": "intermediate I + isochorismate -> intermediate II",
+     "cls": "unsupported",
+     "evidence": "verbatim_in_paper"
+    },
+    {
+     "label": "intermediate II -> 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
+     "cls": "unsupported",
+     "evidence": "verbatim_in_paper"
+    }
+   ],
+   "n_gold": 1
+  },
+  "final_path": "C:\\t\\acc-runs\\legs4g\\base1-PMC12312563\\2026-11-23_1120\\papers\\PMC12312563\\strict\\final_mapped.json",
+  "stage1_path": "C:\\t\\acc-runs\\legs4g\\base1-PMC12312563\\2026-11-23_1120\\papers\\PMC12312563\\strict\\stage1_payload.json",
+  "cost": 0.0348
+ },
+ "base1-PMC12421875": {
+  "arm": "base",
+  "paper": "PMC12421875",
+  "text_chars": 62985,
+  "status": "pass",
+  "message": "strict run completed; pathway.review_required.pwml is 65239 bytes",
+  "pwml": [
+   "pathway.review_required.pwml"
+  ],
+  "ambiguous_rename": false,
+  "final": {
+   "recall": 0.4444,
+   "precision": 0.6667,
+   "matched": [
+    "R1",
+    "R2",
+    "R8",
+    "R9"
+   ],
+   "rows": 6,
+   "tp_rows": 4,
+   "fps": [
+    {
+     "label": "chorismate -> DHNA",
+     "cls": "paper_stated_summary",
+     "evidence": "verbatim_in_paper"
+    },
+    {
+     "label": "isochorismate -> DHNA",
+     "cls": "unsupported",
+     "evidence": "dump_only"
+    }
+   ],
+   "n_gold": 9
+  },
+  "final_path": "C:\\t\\acc-runs\\legs4g\\base1-PMC12421875\\2026-11-23_1431\\papers\\PMC12421875\\strict\\final_mapped.json",
+  "stage1_path": "C:\\t\\acc-runs\\legs4g\\base1-PMC12421875\\2026-11-23_1431\\papers\\PMC12421875\\strict\\stage1_payload.json",
+  "cost": 0.0537
+ },
+ "base1-PMC13231680": {
+  "arm": "base",
+  "paper": "PMC13231680",
+  "text_chars": 62007,
+  "status": "fail",
+  "message": "Audit and DB mapping stopped at the post_audit stage boundary: Every entity row must have a non-empty name.",
+  "pwml": [],
+  "ambiguous_rename": false,
+  "stage1_path": "C:\\t\\acc-runs\\legs4g\\base1-PMC13231680\\2026-11-23_0014\\papers\\PMC13231680\\strict\\stage1_payload.json",
+  "cost": 0.0333
+ },
+ "base1-PMC5130987": {
+  "arm": "base",
+  "paper": "PMC5130987",
+  "text_chars": 100209,
+  "status": "error",
+  "message": "Post-pipeline conversion failed: AMBIGUOUS_REFERENCE: the name 'tRNA Glu' is also carried by ['nucleic_acids#0']; a reference to it cannot be unambiguously redi",
+  "pwml": [],
+  "ambiguous_rename": false,
+  "stage1_path": "C:\\t\\acc-runs\\legs4g\\base1-PMC5130987\\2026-11-23_1538\\papers\\PMC5130987\\strict\\stage1_payload.json",
+  "cost": 0.1217
+ },
+ "base1-PMC7059786": {
+  "arm": "base",
+  "paper": "PMC7059786",
+  "text_chars": 35999,
+  "status": "pass",
+  "message": "strict run completed; pathway.review_required.pwml is 27831 bytes",
+  "pwml": [
+   "pathway.review_required.pwml"
+  ],
+  "ambiguous_rename": false,
+  "final": {
+   "recall": null,
+   "precision": null,
+   "matched": [],
+   "rows": 0,
+   "tp_rows": 0,
+   "fps": [],
+   "n_gold": 0,
+   "gold_interactions": 1,
+   "gold_interactions_recalled": 0,
+   "gold_interactions_weak": 0
+  },
+  "final_path": "C:\\t\\acc-runs\\legs4g\\base1-PMC7059786\\2026-11-23_1350\\papers\\PMC7059786\\strict\\final_mapped.json",
+  "stage1_path": "C:\\t\\acc-runs\\legs4g\\base1-PMC7059786\\2026-11-23_1350\\papers\\PMC7059786\\strict\\stage1_payload.json",
+  "cost": 0.0478
+ },
+ "base2-PMC12096016": {
+  "arm": "base",
+  "paper": "PMC12096016",
+  "text_chars": 43667,
+  "status": "pass",
+  "message": "strict run completed; pathway.review_required.pwml is 110218 bytes",
+  "pwml": [
+   "pathway.review_required.pwml"
+  ],
+  "ambiguous_rename": false,
+  "final": {
+   "recall": 0.8,
+   "precision": 0.5714,
+   "matched": [
+    "R1",
+    "R2",
+    "R3",
+    "R5"
+   ],
+   "rows": 7,
+   "tp_rows": 4,
+   "fps": [
+    {
+     "label": "2,3-dihydroxybenzoic acid + Adenosine triphosphate -> activated 2,3-DHB",
+     "cls": "unsupported",
+     "evidence": "verbatim_in_paper"
+    },
+    {
+     "label": "isochorismate -> 2,3-dihydro-2,3-dihydroxybenzoate",
+     "cls": "partial_match",
+     "evidence": "not_in_paper"
+    },
+    {
+     "label": "Pyruvic acid + NADH -> lactate + NAD+",
+     "cls": "paper_stated_off_pathway",
+     "evidence": "verbatim_in_paper"
+    }
+   ],
+   "n_gold": 5
+  },
+  "final_path": "C:\\t\\acc-runs\\legs4g\\base2-PMC12096016\\2026-11-23_1906\\papers\\PMC12096016\\strict\\final_mapped.json",
+  "stage1_path": "C:\\t\\acc-runs\\legs4g\\base2-PMC12096016\\2026-11-23_1906\\papers\\PMC12096016\\strict\\stage1_payload.json",
+  "cost": 0.0458
+ },
+ "base2-PMC12312563": {
+  "arm": "base",
+  "paper": "PMC12312563",
+  "text_chars": 44972,
+  "status": "pass",
+  "message": "strict run completed; pathway.review_required.pwml is 49939 bytes",
+  "pwml": [
+   "pathway.review_required.pwml"
+  ],
+  "ambiguous_rename": false,
+  "final": {
+   "recall": 1.0,
+   "precision": 0.4,
+   "matched": [
+    "R1"
+   ],
+   "rows": 5,
+   "tp_rows": 2,
+   "fps": [
+    {
+     "label": "Oxoglutaric acid -> intermediate I",
+     "cls": "unsupported",
+     "evidence": "verbatim_in_paper"
+    },
+    {
+     "label": "intermediate I + isochorismate -> intermediate II",
+     "cls": "unsupported",
+     "evidence": "verbatim_in_paper"
+    },
+    {
+     "label": "intermediate II -> 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
+     "cls": "unsupported",
+     "evidence": "verbatim_in_paper"
+    }
+   ],
+   "n_gold": 1
+  },
+  "final_path": "C:\\t\\acc-runs\\legs4g\\base2-PMC12312563\\2026-11-23_1829\\papers\\PMC12312563\\strict\\final_mapped.json",
+  "stage1_path": "C:\\t\\acc-runs\\legs4g\\base2-PMC12312563\\2026-11-23_1829\\papers\\PMC12312563\\strict\\stage1_payload.json",
+  "cost": 0.0624
+ },
+ "base2-PMC12421875": {
+  "arm": "base",
+  "paper": "PMC12421875",
+  "text_chars": 62985,
+  "status": "pass",
+  "message": "strict run completed; pathway.review_required.pwml is 101812 bytes",
+  "pwml": [
+   "pathway.review_required.pwml"
+  ],
+  "ambiguous_rename": false,
+  "final": {
+   "recall": 1.0,
+   "precision": 0.9,
+   "matched": [
+    "R1",
+    "R2",
+    "R3",
+    "R4",
+    "R5",
+    "R6",
+    "R7",
+    "R8",
+    "R9"
+   ],
+   "rows": 10,
+   "tp_rows": 9,
+   "fps": [
+    {
+     "label": "chorismate -> 1,4-dihydroxy-2-naphthoic acid",
+     "cls": "paper_stated_summary",
+     "evidence": "dump_only"
+    }
+   ],
+   "n_gold": 9
+  },
+  "final_path": "C:\\t\\acc-runs\\legs4g\\base2-PMC12421875\\2026-11-23_1953\\papers\\PMC12421875\\strict\\final_mapped.json",
+  "stage1_path": "C:\\t\\acc-runs\\legs4g\\base2-PMC12421875\\2026-11-23_1953\\papers\\PMC12421875\\strict\\stage1_payload.json",
+  "cost": 0.0589
+ },
+ "base2-PMC13231680": {
+  "arm": "base",
+  "paper": "PMC13231680",
+  "text_chars": 62007,
+  "status": "pass",
+  "message": "strict run completed; pathway.review_required.pwml is 13285 bytes",
+  "pwml": [
+   "pathway.review_required.pwml"
+  ],
+  "ambiguous_rename": false,
+  "final": {
+   "recall": null,
+   "precision": null,
+   "matched": [],
+   "rows": 0,
+   "tp_rows": 0,
+   "fps": [],
+   "n_gold": 0
+  },
+  "final_path": "C:\\t\\acc-runs\\legs4g\\base2-PMC13231680\\2026-11-23_1811\\papers\\PMC13231680\\strict\\final_mapped.json",
+  "stage1_path": "C:\\t\\acc-runs\\legs4g\\base2-PMC13231680\\2026-11-23_1811\\papers\\PMC13231680\\strict\\stage1_payload.json",
+  "cost": 0.0289
+ },
+ "base2-PMC5130987": {
+  "arm": "base",
+  "paper": "PMC5130987",
+  "text_chars": 100209,
+  "status": "pass",
+  "message": "strict run completed; pathway.review_required.pwml is 308137 bytes",
+  "pwml": [
+   "pathway.review_required.pwml"
+  ],
+  "ambiguous_rename": false,
+  "final": {
+   "recall": 0.5833,
+   "precision": 0.3889,
+   "matched": [
+    "PW_R2146839",
+    "PW_R2146840",
+    "PW_R2146841",
+    "PW_R2146842",
+    "PW_R2146843",
+    "PW_R2146844",
+    "PW_R2146855"
+   ],
+   "rows": 18,
+   "tp_rows": 7,
+   "fps": [
+    {
+     "label": "L-Glutamyl-tRNA -> (S)-4-Amino-5-oxopentanoate",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "(S)-4-Amino-5-oxopentanoate -> 5-aminolevulinic acid",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "protoporphyrin IX + Adenosine triphosphate -> Magnesium protoporphyrin",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "Magnesium protoporphyrin + S-adenosyl L-methionine -> Magnesium protoporphyrin monomethyl ester",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "Divinylprotochlorophyllide -> 3,8-divinyl-chlorophyllide",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "3,8-divinyl-chlorophyllide -> 3-vinyl Chlide a",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "3-vinyl Chlide a -> chlorophyll a",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "protoporphyrin IX + Mg 2 + Adenosine triphosphate -> Magnesium protoporphyrin",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "Magnesium protoporphyrin monomethyl ester -> Divinylprotochlorophyllide",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "protoporphyrin IX + Fe 2 -> protoheme",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "L-Glutamic acid -> L-Glutamyl-tRNA",
+     "cls": "no_gold_match"
+    }
+   ],
+   "n_gold": 12,
+   "check_recalled": 7
+  },
+  "final_path": "C:\\t\\acc-runs\\legs4g\\base2-PMC5130987\\2026-11-23_2100\\papers\\PMC5130987\\strict\\final_mapped.json",
+  "stage1_path": "C:\\t\\acc-runs\\legs4g\\base2-PMC5130987\\2026-11-23_2100\\papers\\PMC5130987\\strict\\stage1_payload.json",
+  "cost": 0.1077
+ },
+ "base2-PMC7059786": {
+  "arm": "base",
+  "paper": "PMC7059786",
+  "text_chars": 35999,
+  "status": "pass",
+  "message": "strict run completed; pathway.review_required.pwml is 7209 bytes",
+  "pwml": [
+   "pathway.review_required.pwml"
+  ],
+  "ambiguous_rename": false,
+  "final": {
+   "recall": null,
+   "precision": null,
+   "matched": [],
+   "rows": 0,
+   "tp_rows": 0,
+   "fps": [],
+   "n_gold": 0,
+   "gold_interactions": 1,
+   "gold_interactions_recalled": 0,
+   "gold_interactions_weak": 0
+  },
+  "final_path": "C:\\t\\acc-runs\\legs4g\\base2-PMC7059786\\2026-11-23_1935\\papers\\PMC7059786\\strict\\final_mapped.json",
+  "stage1_path": "C:\\t\\acc-runs\\legs4g\\base2-PMC7059786\\2026-11-23_1935\\papers\\PMC7059786\\strict\\stage1_payload.json",
+  "cost": 0.0427
+ },
+ "base3-PMC12096016": {
+  "arm": "base",
+  "paper": "PMC12096016",
+  "text_chars": 43667,
+  "status": "pass",
+  "message": "strict run completed; pathway.review_required.pwml is 90066 bytes",
+  "pwml": [
+   "pathway.review_required.pwml"
+  ],
+  "ambiguous_rename": false,
+  "final": {
+   "recall": 0.6,
+   "precision": 0.6667,
+   "matched": [
+    "R1",
+    "R3",
+    "R5"
+   ],
+   "rows": 6,
+   "tp_rows": 4,
+   "fps": [
+    {
+     "label": "isochorismate -> 2,3-dihydro-2,3-dihydroxybenzoate",
+     "cls": "partial_match",
+     "evidence": "not_in_paper"
+    },
+    {
+     "label": "2,3-dihydroxybenzoic acid + Adenosine triphosphate -> activated 2,3-DHB",
+     "cls": "unsupported",
+     "evidence": "verbatim_in_paper"
+    }
+   ],
+   "n_gold": 5
+  },
+  "final_path": "C:\\t\\acc-runs\\legs4g\\base3-PMC12096016\\2026-11-24_0004\\papers\\PMC12096016\\strict\\final_mapped.json",
+  "stage1_path": "C:\\t\\acc-runs\\legs4g\\base3-PMC12096016\\2026-11-24_0004\\papers\\PMC12096016\\strict\\stage1_payload.json",
+  "cost": 0.0402
+ },
+ "base3-PMC12312563": {
+  "arm": "base",
+  "paper": "PMC12312563",
+  "text_chars": 44972,
+  "status": "pass",
+  "message": "strict run completed; pathway.review_required.pwml is 40042 bytes",
+  "pwml": [
+   "pathway.review_required.pwml"
+  ],
+  "ambiguous_rename": false,
+  "final": {
+   "recall": 1.0,
+   "precision": 0.25,
+   "matched": [
+    "R1"
+   ],
+   "rows": 4,
+   "tp_rows": 1,
+   "fps": [
+    {
+     "label": "Oxoglutaric acid -> intermediate I",
+     "cls": "unsupported",
+     "evidence": "verbatim_in_paper"
+    },
+    {
+     "label": "intermediate I + isochorismate -> intermediate II",
+     "cls": "unsupported",
+     "evidence": "verbatim_in_paper"
+    },
+    {
+     "label": "intermediate II -> 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
+     "cls": "unsupported",
+     "evidence": "verbatim_in_paper"
+    }
+   ],
+   "n_gold": 1
+  },
+  "final_path": "C:\\t\\acc-runs\\legs4g\\base3-PMC12312563\\2026-11-23_2330\\papers\\PMC12312563\\strict\\final_mapped.json",
+  "stage1_path": "C:\\t\\acc-runs\\legs4g\\base3-PMC12312563\\2026-11-23_2330\\papers\\PMC12312563\\strict\\stage1_payload.json",
+  "cost": 0.0413
+ },
+ "base3-PMC12421875": {
+  "arm": "base",
+  "paper": "PMC12421875",
+  "text_chars": 62985,
+  "status": "pass",
+  "message": "strict run completed; pathway.review_required.pwml is 101812 bytes",
+  "pwml": [
+   "pathway.review_required.pwml"
+  ],
+  "ambiguous_rename": false,
+  "final": {
+   "recall": 1.0,
+   "precision": 0.9,
+   "matched": [
+    "R1",
+    "R2",
+    "R3",
+    "R4",
+    "R5",
+    "R6",
+    "R7",
+    "R8",
+    "R9"
+   ],
+   "rows": 10,
+   "tp_rows": 9,
+   "fps": [
+    {
+     "label": "chorismate -> 1,4-dihydroxy-2-naphthoic acid",
+     "cls": "paper_stated_summary",
+     "evidence": "dump_only"
+    }
+   ],
+   "n_gold": 9
+  },
+  "final_path": "C:\\t\\acc-runs\\legs4g\\base3-PMC12421875\\2026-11-24_0108\\papers\\PMC12421875\\strict\\final_mapped.json",
+  "stage1_path": "C:\\t\\acc-runs\\legs4g\\base3-PMC12421875\\2026-11-24_0108\\papers\\PMC12421875\\strict\\stage1_payload.json",
+  "cost": 0.0555
+ },
+ "base3-PMC13231680": {
+  "arm": "base",
+  "paper": "PMC13231680",
+  "text_chars": 62007,
+  "status": "pass",
+  "message": "strict run completed; pathway.review_required.pwml is 14001 bytes",
+  "pwml": [
+   "pathway.review_required.pwml"
+  ],
+  "ambiguous_rename": false,
+  "final": {
+   "recall": null,
+   "precision": null,
+   "matched": [],
+   "rows": 0,
+   "tp_rows": 0,
+   "fps": [],
+   "n_gold": 0
+  },
+  "final_path": "C:\\t\\acc-runs\\legs4g\\base3-PMC13231680\\2026-11-23_2312\\papers\\PMC13231680\\strict\\final_mapped.json",
+  "stage1_path": "C:\\t\\acc-runs\\legs4g\\base3-PMC13231680\\2026-11-23_2312\\papers\\PMC13231680\\strict\\stage1_payload.json",
+  "cost": 0.0299
+ },
+ "base3-PMC5130987": {
+  "arm": "base",
+  "paper": "PMC5130987",
+  "text_chars": 100209,
+  "status": "pass",
+  "message": "strict run completed; pathway.review_required.pwml is 240118 bytes",
+  "pwml": [
+   "pathway.review_required.pwml"
+  ],
+  "ambiguous_rename": false,
+  "final": {
+   "recall": 0.5833,
+   "precision": 0.4375,
+   "matched": [
+    "PW_R2146839",
+    "PW_R2146840",
+    "PW_R2146841",
+    "PW_R2146842",
+    "PW_R2146843",
+    "PW_R2146844",
+    "PW_R2146855"
+   ],
+   "rows": 16,
+   "tp_rows": 7,
+   "fps": [
+    {
+     "label": "L-Glutamyl-tRNA -> Glu 1-semialdehyde",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "Glu 1-semialdehyde -> 5-aminolevulinic acid",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "protoporphyrin IX + Mg 2 + Adenosine triphosphate -> Magnesium protoporphyrin",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "Magnesium protoporphyrin + S-adenosyl L-methionine -> Magnesium protoporphyrin monomethyl ester",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "Magnesium protoporphyrin monomethyl ester -> Divinylprotochlorophyllide",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "Divinylprotochlorophyllide -> 3,8-divinyl-chlorophyllide",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "3,8-divinyl-chlorophyllide -> 3-vinyl Chlide a",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "3-vinyl Chlide a -> chlorophyll a",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "protoporphyrin IX + Fe 2 -> protoheme",
+     "cls": "no_gold_match"
+    }
+   ],
+   "n_gold": 12,
+   "check_recalled": 7
+  },
+  "final_path": "C:\\t\\acc-runs\\legs4g\\base3-PMC5130987\\2026-11-24_0229\\papers\\PMC5130987\\strict\\final_mapped.json",
+  "stage1_path": "C:\\t\\acc-runs\\legs4g\\base3-PMC5130987\\2026-11-24_0229\\papers\\PMC5130987\\strict\\stage1_payload.json",
+  "cost": 0.0966
+ },
+ "base3-PMC7059786": {
+  "arm": "base",
+  "paper": "PMC7059786",
+  "text_chars": 35999,
+  "status": "pass",
+  "message": "strict run completed; pathway.review_required.pwml is 33296 bytes",
+  "pwml": [
+   "pathway.review_required.pwml"
+  ],
+  "ambiguous_rename": false,
+  "final": {
+   "recall": null,
+   "precision": null,
+   "matched": [],
+   "rows": 0,
+   "tp_rows": 0,
+   "fps": [],
+   "n_gold": 0,
+   "gold_interactions": 1,
+   "gold_interactions_recalled": 0,
+   "gold_interactions_weak": 0
+  },
+  "final_path": "C:\\t\\acc-runs\\legs4g\\base3-PMC7059786\\2026-11-24_0029\\papers\\PMC7059786\\strict\\final_mapped.json",
+  "stage1_path": "C:\\t\\acc-runs\\legs4g\\base3-PMC7059786\\2026-11-24_0029\\papers\\PMC7059786\\strict\\stage1_payload.json",
+  "cost": 0.0444
+ },
+ "vt1-PMC12096016": {
+  "arm": "vt",
+  "paper": "PMC12096016",
+  "text_chars": 43667,
+  "status": "fail",
+  "message": "Audit and DB mapping stopped at the post_audit stage boundary: Every entity row must have a non-empty name.",
+  "pwml": [],
+  "ambiguous_rename": false,
+  "stage1_path": "C:\\t\\acc-runs\\legs4g\\vt1-PMC12096016\\2026-11-23_1322\\papers\\PMC12096016\\strict\\stage1_payload.json",
+  "report_present": true,
+  "verifier": {
+   "error": null,
+   "omitted": [],
+   "folded": [],
+   "repaired": [],
+   "flagged": [
+    4,
+    6
+   ],
+   "lock_ids_gone": 0,
+   "lock_manifest_entries_removed": 0,
+   "skipped_calls": 0,
+   "typing_changed": [],
+   "typing_rows": [],
+   "calls": 2,
+   "seconds": 6.2,
+   "model": "google/gemma-4-31b-it",
+   "pruned_but_present": []
+  },
+  "cost": 0.0552,
+  "verifier_calls": 2,
+  "verifier_wall_s": 5.9
+ },
+ "vt1-PMC12312563": {
+  "arm": "vt",
+  "paper": "PMC12312563",
+  "text_chars": 44972,
+  "status": "pass",
+  "message": "strict run completed; pathway.review_required.pwml is 45628 bytes",
+  "pwml": [
+   "pathway.review_required.pwml"
+  ],
+  "ambiguous_rename": false,
+  "final": {
+   "recall": 1.0,
+   "precision": 0.25,
+   "matched": [
+    "R1"
+   ],
+   "rows": 4,
+   "tp_rows": 1,
+   "fps": [
+    {
+     "label": "α-ketoglutarate + thiamine diphosphate -> intermediate I",
+     "cls": "unsupported",
+     "evidence": "verbatim_in_paper"
+    },
+    {
+     "label": "intermediate I + isochorismate -> intermediate II",
+     "cls": "unsupported",
+     "evidence": "verbatim_in_paper"
+    },
+    {
+     "label": "intermediate II -> 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
+     "cls": "unsupported",
+     "evidence": "verbatim_in_paper"
+    }
+   ],
+   "n_gold": 1
+  },
+  "final_path": "C:\\t\\acc-runs\\legs4g\\vt1-PMC12312563\\2026-11-23_1200\\papers\\PMC12312563\\strict\\final_mapped.json",
+  "stage1_path": "C:\\t\\acc-runs\\legs4g\\vt1-PMC12312563\\2026-11-23_1200\\papers\\PMC12312563\\strict\\stage1_payload.json",
+  "report_present": true,
+  "verifier": {
+   "error": null,
+   "omitted": [],
+   "folded": [],
+   "repaired": [],
+   "flagged": [
+    0
+   ],
+   "lock_ids_gone": 0,
+   "lock_manifest_entries_removed": 0,
+   "skipped_calls": 0,
+   "typing_changed": [],
+   "typing_rows": [],
+   "calls": 2,
+   "seconds": 4.6,
+   "model": "google/gemma-4-31b-it",
+   "pruned_but_present": []
+  },
+  "cost": 0.0352,
+  "verifier_calls": 2,
+  "verifier_wall_s": 4.3
+ },
+ "vt1-PMC12421875": {
+  "arm": "vt",
+  "paper": "PMC12421875",
+  "text_chars": 62985,
+  "status": "pass",
+  "message": "strict run completed; pathway.review_required.pwml is 106031 bytes",
+  "pwml": [
+   "pathway.review_required.pwml"
+  ],
+  "ambiguous_rename": false,
+  "final": {
+   "recall": 1.0,
+   "precision": 0.8182,
+   "matched": [
+    "R1",
+    "R2",
+    "R3",
+    "R4",
+    "R5",
+    "R6",
+    "R7",
+    "R8",
+    "R9"
+   ],
+   "rows": 11,
+   "tp_rows": 9,
+   "fps": [
+    {
+     "label": "chorismate -> 1,4-dihydroxy-2-naphthoic acid",
+     "cls": "paper_stated_summary",
+     "evidence": "dump_only"
+    },
+    {
+     "label": "isochorismate -> 1,4-dihydroxy-2-naphthoic acid",
+     "cls": "unsupported",
+     "evidence": "verbatim_in_paper"
+    }
+   ],
+   "n_gold": 9
+  },
+  "final_path": "C:\\t\\acc-runs\\legs4g\\vt1-PMC12421875\\2026-11-23_1500\\papers\\PMC12421875\\strict\\final_mapped.json",
+  "stage1_path": "C:\\t\\acc-runs\\legs4g\\vt1-PMC12421875\\2026-11-23_1500\\papers\\PMC12421875\\strict\\stage1_payload.json",
+  "report_present": true,
+  "verifier": {
+   "error": null,
+   "omitted": [],
+   "folded": [],
+   "repaired": [],
+   "flagged": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    11,
+    12
+   ],
+   "lock_ids_gone": 0,
+   "lock_manifest_entries_removed": 0,
+   "skipped_calls": 0,
+   "typing_changed": [],
+   "typing_rows": [],
+   "calls": 2,
+   "seconds": 5.7,
+   "model": "google/gemma-4-31b-it",
+   "pruned_but_present": []
+  },
+  "cost": 0.0618,
+  "verifier_calls": 2,
+  "verifier_wall_s": 6.9
+ },
+ "vt1-PMC13231680": {
+  "arm": "vt",
+  "paper": "PMC13231680",
+  "text_chars": 62007,
+  "status": "pass",
+  "message": "strict run completed; pathway.review_required.pwml is 17062 bytes",
+  "pwml": [
+   "pathway.review_required.pwml"
+  ],
+  "ambiguous_rename": false,
+  "final": {
+   "recall": null,
+   "precision": null,
+   "matched": [],
+   "rows": 0,
+   "tp_rows": 0,
+   "fps": [],
+   "n_gold": 0
+  },
+  "final_path": "C:\\t\\acc-runs\\legs4g\\vt1-PMC13231680\\2026-11-23_0029\\papers\\PMC13231680\\strict\\final_mapped.json",
+  "stage1_path": "C:\\t\\acc-runs\\legs4g\\vt1-PMC13231680\\2026-11-23_0029\\papers\\PMC13231680\\strict\\stage1_payload.json",
+  "report_present": true,
+  "verifier": {
+   "error": null,
+   "omitted": [],
+   "folded": [],
+   "repaired": null,
+   "flagged": null,
+   "lock_ids_gone": 0,
+   "lock_manifest_entries_removed": 0,
+   "skipped_calls": 0,
+   "typing_changed": [],
+   "typing_rows": [],
+   "calls": 1,
+   "seconds": 9.1,
+   "model": "google/gemma-4-31b-it",
+   "pruned_but_present": []
+  },
+  "cost": 0.0592,
+  "verifier_calls": 1,
+  "verifier_wall_s": 8.7
+ },
+ "vt1-PMC5130987": {
+  "arm": "vt",
+  "paper": "PMC5130987",
+  "text_chars": 100209,
+  "status": "pass",
+  "message": "strict run completed; pathway.review_required.pwml is 238663 bytes",
+  "pwml": [
+   "pathway.review_required.pwml"
+  ],
+  "ambiguous_rename": false,
+  "final": {
+   "recall": 0.5833,
+   "precision": 0.3889,
+   "matched": [
+    "PW_R2146839",
+    "PW_R2146840",
+    "PW_R2146841",
+    "PW_R2146842",
+    "PW_R2146843",
+    "PW_R2146844",
+    "PW_R2146855"
+   ],
+   "rows": 18,
+   "tp_rows": 7,
+   "fps": [
+    {
+     "label": "L-Glutamic acid + tRNA(Glu) -> Glu 1-semialdehyde",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "Glu 1-semialdehyde -> 5-aminolevulinic acid",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "protoporphyrin IX + Adenosine triphosphate -> Magnesium protoporphyrin",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "Magnesium protoporphyrin + S-adenosyl L-methionine -> Magnesium protoporphyrin monomethyl ester",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "Divinylprotochlorophyllide -> 3,8-divinyl-chlorophyllide",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "3,8-divinyl-chlorophyllide -> 3-vinyl Chlide a",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "Glu-tRNA Glu -> Glu 1-semialdehyde",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "Magnesium protoporphyrin monomethyl ester -> Divinylprotochlorophyllide",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "Divinylprotochlorophyllide -> 3,8-divinyl-chlorophyllide",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "3-vinyl Chlide a + geranylgeraniol -> chlorophyll a",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "protoporphyrin IX -> protoheme",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "protoporphyrin IX -> heme",
+     "cls": "no_gold_match"
+    }
+   ],
+   "n_gold": 12,
+   "check_recalled": 7
+  },
+  "final_path": "C:\\t\\acc-runs\\legs4g\\vt1-PMC5130987\\2026-11-23_1659\\papers\\PMC5130987\\strict\\final_mapped.json",
+  "stage1_path": "C:\\t\\acc-runs\\legs4g\\vt1-PMC5130987\\2026-11-23_1659\\papers\\PMC5130987\\strict\\stage1_payload.json",
+  "report_present": true,
+  "verifier": {
+   "error": null,
+   "omitted": [],
+   "folded": [],
+   "repaired": [],
+   "flagged": [],
+   "lock_ids_gone": 0,
+   "lock_manifest_entries_removed": 0,
+   "skipped_calls": 0,
+   "typing_changed": [],
+   "typing_rows": [],
+   "calls": 2,
+   "seconds": 9.4,
+   "model": "google/gemma-4-31b-it",
+   "pruned_but_present": []
+  },
+  "cost": 0.1087,
+  "verifier_calls": 2,
+  "verifier_wall_s": 10.5
+ },
+ "vt1-PMC7059786": {
+  "arm": "vt",
+  "paper": "PMC7059786",
+  "text_chars": 35999,
+  "status": "pass",
+  "message": "strict run completed; pathway.review_required.pwml is 14375 bytes",
+  "pwml": [
+   "pathway.review_required.pwml"
+  ],
+  "ambiguous_rename": false,
+  "final": {
+   "recall": null,
+   "precision": null,
+   "matched": [],
+   "rows": 0,
+   "tp_rows": 0,
+   "fps": [],
+   "n_gold": 0,
+   "gold_interactions": 1,
+   "gold_interactions_recalled": 0,
+   "gold_interactions_weak": 0
+  },
+  "final_path": "C:\\t\\acc-runs\\legs4g\\vt1-PMC7059786\\2026-11-23_1421\\papers\\PMC7059786\\strict\\final_mapped.json",
+  "stage1_path": "C:\\t\\acc-runs\\legs4g\\vt1-PMC7059786\\2026-11-23_1421\\papers\\PMC7059786\\strict\\stage1_payload.json",
+  "report_present": true,
+  "verifier": {
+   "error": null,
+   "omitted": [],
+   "folded": [],
+   "repaired": [],
+   "flagged": [],
+   "lock_ids_gone": 0,
+   "lock_manifest_entries_removed": 0,
+   "skipped_calls": 0,
+   "typing_changed": [],
+   "typing_rows": [],
+   "calls": 2,
+   "seconds": 5.0,
+   "model": "google/gemma-4-31b-it",
+   "pruned_but_present": []
+  },
+  "cost": 0.0363,
+  "verifier_calls": 2,
+  "verifier_wall_s": 3.1
+ },
+ "vt2-PMC12096016": {
+  "arm": "vt",
+  "paper": "PMC12096016",
+  "text_chars": 43667,
+  "status": "pass",
+  "message": "strict run completed; pathway.review_required.pwml is 100497 bytes",
+  "pwml": [
+   "pathway.review_required.pwml"
+  ],
+  "ambiguous_rename": false,
+  "final": {
+   "recall": 0.6,
+   "precision": 0.5,
+   "matched": [
+    "R1",
+    "R3",
+    "R5"
+   ],
+   "rows": 6,
+   "tp_rows": 3,
+   "fps": [
+    {
+     "label": "isochorismate -> 2,3-dihydro-2,3-dihydroxybenzoate",
+     "cls": "partial_match",
+     "evidence": "not_in_paper"
+    },
+    {
+     "label": "2,3-dihydroxybenzoic acid + Adenosine triphosphate -> activated 2,3-DHB",
+     "cls": "unsupported",
+     "evidence": "verbatim_in_paper"
+    },
+    {
+     "label": "Pyruvic acid + NADH -> lactate + NAD+",
+     "cls": "paper_stated_off_pathway",
+     "evidence": "verbatim_in_paper"
+    }
+   ],
+   "n_gold": 5
+  },
+  "final_path": "C:\\t\\acc-runs\\legs4g\\vt2-PMC12096016\\2026-11-23_1919\\papers\\PMC12096016\\strict\\final_mapped.json",
+  "stage1_path": "C:\\t\\acc-runs\\legs4g\\vt2-PMC12096016\\2026-11-23_1919\\papers\\PMC12096016\\strict\\stage1_payload.json",
+  "report_present": true,
+  "verifier": {
+   "error": null,
+   "omitted": [],
+   "folded": [],
+   "repaired": [],
+   "flagged": [],
+   "lock_ids_gone": 0,
+   "lock_manifest_entries_removed": 0,
+   "skipped_calls": 0,
+   "typing_changed": [],
+   "typing_rows": [],
+   "calls": 2,
+   "seconds": 4.1,
+   "model": "google/gemma-4-31b-it",
+   "pruned_but_present": []
+  },
+  "cost": 0.0445,
+  "verifier_calls": 2,
+  "verifier_wall_s": 4.5
+ },
+ "vt2-PMC12312563": {
+  "arm": "vt",
+  "paper": "PMC12312563",
+  "text_chars": 44972,
+  "status": "pass",
+  "message": "strict run completed; pathway.review_required.pwml is 49844 bytes",
+  "pwml": [
+   "pathway.review_required.pwml"
+  ],
+  "ambiguous_rename": false,
+  "final": {
+   "recall": 1.0,
+   "precision": 0.4,
+   "matched": [
+    "R1"
+   ],
+   "rows": 5,
+   "tp_rows": 2,
+   "fps": [
+    {
+     "label": "α-ketoglutarate -> intermediate I",
+     "cls": "unsupported",
+     "evidence": "verbatim_in_paper"
+    },
+    {
+     "label": "intermediate I + isochorismate -> intermediate II",
+     "cls": "unsupported",
+     "evidence": "verbatim_in_paper"
+    },
+    {
+     "label": "intermediate II -> 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
+     "cls": "unsupported",
+     "evidence": "verbatim_in_paper"
+    }
+   ],
+   "n_gold": 1
+  },
+  "final_path": "C:\\t\\acc-runs\\legs4g\\vt2-PMC12312563\\2026-11-23_1855\\papers\\PMC12312563\\strict\\final_mapped.json",
+  "stage1_path": "C:\\t\\acc-runs\\legs4g\\vt2-PMC12312563\\2026-11-23_1855\\papers\\PMC12312563\\strict\\stage1_payload.json",
+  "report_present": true,
+  "verifier": {
+   "error": null,
+   "omitted": [],
+   "folded": [],
+   "repaired": [],
+   "flagged": [
+    0
+   ],
+   "lock_ids_gone": 0,
+   "lock_manifest_entries_removed": 0,
+   "skipped_calls": 0,
+   "typing_changed": [],
+   "typing_rows": [],
+   "calls": 2,
+   "seconds": 5.8,
+   "model": "google/gemma-4-31b-it",
+   "pruned_but_present": []
+  },
+  "cost": 0.0416,
+  "verifier_calls": 2,
+  "verifier_wall_s": 3.5
+ },
+ "vt2-PMC12421875": {
+  "arm": "vt",
+  "paper": "PMC12421875",
+  "text_chars": 62985,
+  "status": "pass",
+  "message": "strict run completed; pathway.review_required.pwml is 63029 bytes",
+  "pwml": [
+   "pathway.review_required.pwml"
+  ],
+  "ambiguous_rename": false,
+  "final": {
+   "recall": 0.4444,
+   "precision": 0.8,
+   "matched": [
+    "R1",
+    "R2",
+    "R8",
+    "R9"
+   ],
+   "rows": 5,
+   "tp_rows": 4,
+   "fps": [
+    {
+     "label": "chorismate -> DHNA",
+     "cls": "paper_stated_summary",
+     "evidence": "verbatim_in_paper"
+    }
+   ],
+   "n_gold": 9
+  },
+  "final_path": "C:\\t\\acc-runs\\legs4g\\vt2-PMC12421875\\2026-11-23_2028\\papers\\PMC12421875\\strict\\final_mapped.json",
+  "stage1_path": "C:\\t\\acc-runs\\legs4g\\vt2-PMC12421875\\2026-11-23_2028\\papers\\PMC12421875\\strict\\stage1_payload.json",
+  "report_present": true,
+  "verifier": {
+   "error": null,
+   "omitted": [],
+   "folded": [],
+   "repaired": [],
+   "flagged": [
+    4,
+    5
+   ],
+   "lock_ids_gone": 0,
+   "lock_manifest_entries_removed": 0,
+   "skipped_calls": 0,
+   "typing_changed": [],
+   "typing_rows": [],
+   "calls": 2,
+   "seconds": 7.3,
+   "model": "google/gemma-4-31b-it",
+   "pruned_but_present": []
+  },
+  "cost": 0.0559,
+  "verifier_calls": 2,
+  "verifier_wall_s": 6.0
+ },
+ "vt2-PMC13231680": {
+  "arm": "vt",
+  "paper": "PMC13231680",
+  "text_chars": 62007,
+  "status": "pass",
+  "message": "strict run completed; pathway.review_required.pwml is 13285 bytes",
+  "pwml": [
+   "pathway.review_required.pwml"
+  ],
+  "ambiguous_rename": false,
+  "final": {
+   "recall": null,
+   "precision": null,
+   "matched": [],
+   "rows": 0,
+   "tp_rows": 0,
+   "fps": [],
+   "n_gold": 0
+  },
+  "final_path": "C:\\t\\acc-runs\\legs4g\\vt2-PMC13231680\\2026-11-23_1820\\papers\\PMC13231680\\strict\\final_mapped.json",
+  "stage1_path": "C:\\t\\acc-runs\\legs4g\\vt2-PMC13231680\\2026-11-23_1820\\papers\\PMC13231680\\strict\\stage1_payload.json",
+  "report_present": true,
+  "verifier": {
+   "error": null,
+   "omitted": [],
+   "folded": [],
+   "repaired": null,
+   "flagged": null,
+   "lock_ids_gone": 0,
+   "lock_manifest_entries_removed": 0,
+   "skipped_calls": 0,
+   "typing_changed": [],
+   "typing_rows": [],
+   "calls": 1,
+   "seconds": 3.2,
+   "model": "google/gemma-4-31b-it",
+   "pruned_but_present": []
+  },
+  "cost": 0.032,
+  "verifier_calls": 1,
+  "verifier_wall_s": 2.9
+ },
+ "vt2-PMC5130987": {
+  "arm": "vt",
+  "paper": "PMC5130987",
+  "text_chars": 100209,
+  "status": "pass",
+  "message": "strict run completed; pathway.review_required.pwml is 256666 bytes",
+  "pwml": [
+   "pathway.review_required.pwml"
+  ],
+  "ambiguous_rename": false,
+  "final": {
+   "recall": 0.5,
+   "precision": 0.3333,
+   "matched": [
+    "PW_R2146839",
+    "PW_R2146841",
+    "PW_R2146842",
+    "PW_R2146843",
+    "PW_R2146844",
+    "PW_R2146855"
+   ],
+   "rows": 18,
+   "tp_rows": 6,
+   "fps": [
+    {
+     "label": "L-Glutamyl-tRNA -> (S)-4-Amino-5-oxopentanoate",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "(S)-4-Amino-5-oxopentanoate -> 5-aminolevulinic acid",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "protoporphyrin IX + Adenosine triphosphate -> Magnesium protoporphyrin",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "Magnesium protoporphyrin + S-adenosyl L-methionine -> Magnesium protoporphyrin monomethyl ester",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "Magnesium protoporphyrin monomethyl ester -> Divinylprotochlorophyllide",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "Divinylprotochlorophyllide -> 3,8-divinyl-chlorophyllide",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "3,8-divinyl-chlorophyllide -> 3-vinyl Chlide a",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "3-vinyl Chlide a -> chlorophyll a",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "L-Glutamic acid + tRNA(Glu) -> (S)-4-Amino-5-oxopentanoate",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "L-Glutamyl-tRNA -> (S)-4-Amino-5-oxopentanoate",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "protoporphyrin IX + Mg 2 + Adenosine triphosphate -> Magnesium protoporphyrin",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "protoporphyrin IX + Fe 2 -> protoheme",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "Proto IX + Mg 2 -> Magnesium protoporphyrin",
+     "cls": "no_gold_match"
+    }
+   ],
+   "n_gold": 12,
+   "check_recalled": 6
+  },
+  "final_path": "C:\\t\\acc-runs\\legs4g\\vt2-PMC5130987\\2026-11-23_2211\\papers\\PMC5130987\\strict\\final_mapped.json",
+  "stage1_path": "C:\\t\\acc-runs\\legs4g\\vt2-PMC5130987\\2026-11-23_2211\\papers\\PMC5130987\\strict\\stage1_payload.json",
+  "report_present": true,
+  "verifier": {
+   "error": null,
+   "omitted": [],
+   "folded": [],
+   "repaired": [],
+   "flagged": [],
+   "lock_ids_gone": 0,
+   "lock_manifest_entries_removed": 0,
+   "skipped_calls": 0,
+   "typing_changed": [],
+   "typing_rows": [],
+   "calls": 2,
+   "seconds": 16.8,
+   "model": "google/gemma-4-31b-it",
+   "pruned_but_present": []
+  },
+  "cost": 0.1088,
+  "verifier_calls": 2,
+  "verifier_wall_s": 21.1
+ },
+ "vt2-PMC7059786": {
+  "arm": "vt",
+  "paper": "PMC7059786",
+  "text_chars": 35999,
+  "status": "pass",
+  "message": "strict run completed; pathway.review_required.pwml is 11837 bytes",
+  "pwml": [
+   "pathway.review_required.pwml"
+  ],
+  "ambiguous_rename": false,
+  "final": {
+   "recall": null,
+   "precision": null,
+   "matched": [],
+   "rows": 0,
+   "tp_rows": 0,
+   "fps": [],
+   "n_gold": 0,
+   "gold_interactions": 1,
+   "gold_interactions_recalled": 0,
+   "gold_interactions_weak": 0
+  },
+  "final_path": "C:\\t\\acc-runs\\legs4g\\vt2-PMC7059786\\2026-11-23_1944\\papers\\PMC7059786\\strict\\final_mapped.json",
+  "stage1_path": "C:\\t\\acc-runs\\legs4g\\vt2-PMC7059786\\2026-11-23_1944\\papers\\PMC7059786\\strict\\stage1_payload.json",
+  "report_present": true,
+  "verifier": {
+   "error": null,
+   "omitted": [],
+   "folded": [],
+   "repaired": [],
+   "flagged": [],
+   "lock_ids_gone": 0,
+   "lock_manifest_entries_removed": 0,
+   "skipped_calls": 0,
+   "typing_changed": [],
+   "typing_rows": [],
+   "calls": 2,
+   "seconds": 4.6,
+   "model": "google/gemma-4-31b-it",
+   "pruned_but_present": []
+  },
+  "cost": 0.0425,
+  "verifier_calls": 2,
+  "verifier_wall_s": 4.9
+ },
+ "vt3-PMC12096016": {
+  "arm": "vt",
+  "paper": "PMC12096016",
+  "text_chars": 43667,
+  "status": "fail",
+  "message": "PWML export failed: PWML_IR_DUPLICATE_NAMED_ROW: 2 rows at /entities/compounds share the PWML exporter name key '23dihydroxybenzoylamp': '2,3-dihydroxybenzoyl-A",
+  "pwml": [],
+  "ambiguous_rename": false,
+  "final": {
+   "recall": 1.0,
+   "precision": 0.8571,
+   "matched": [
+    "R1",
+    "R2",
+    "R3",
+    "R4",
+    "R5"
+   ],
+   "rows": 7,
+   "tp_rows": 6,
+   "fps": [
+    {
+     "label": "Pyruvic acid + NADH -> lactate + NAD+",
+     "cls": "paper_stated_off_pathway",
+     "evidence": "verbatim_in_paper"
+    }
+   ],
+   "n_gold": 5
+  },
+  "final_path": "C:\\t\\acc-runs\\legs4g\\vt3-PMC12096016\\2026-11-24_0016\\papers\\PMC12096016\\strict\\final_mapped.json",
+  "stage1_path": "C:\\t\\acc-runs\\legs4g\\vt3-PMC12096016\\2026-11-24_0016\\papers\\PMC12096016\\strict\\stage1_payload.json",
+  "report_present": true,
+  "verifier": {
+   "error": null,
+   "omitted": [
+    4,
+    6
+   ],
+   "folded": [
+    5,
+    7
+   ],
+   "repaired": [
+    1,
+    3
+   ],
+   "flagged": [
+    8
+   ],
+   "lock_ids_gone": 4,
+   "lock_manifest_entries_removed": 4,
+   "skipped_calls": 0,
+   "typing_changed": [],
+   "typing_rows": [],
+   "calls": 2,
+   "seconds": 15.3,
+   "model": "google/gemma-4-31b-it",
+   "pruned_but_present": [],
+   "gone_matching_gold": [
+    "R2",
+    "R4",
+    "R5"
+   ]
+  },
+  "cost": 0.0478,
+  "verifier_calls": 2,
+  "verifier_wall_s": 24.4
+ },
+ "vt3-PMC12312563": {
+  "arm": "vt",
+  "paper": "PMC12312563",
+  "text_chars": 44972,
+  "status": "pass",
+  "message": "strict run completed; pathway.review_required.pwml is 43517 bytes",
+  "pwml": [
+   "pathway.review_required.pwml"
+  ],
+  "ambiguous_rename": false,
+  "final": {
+   "recall": 0.0,
+   "precision": 0.0,
+   "matched": [],
+   "rows": 4,
+   "tp_rows": 0,
+   "fps": [
+    {
+     "label": "Oxoglutaric acid -> intermediate I",
+     "cls": "unsupported",
+     "evidence": "verbatim_in_paper"
+    },
+    {
+     "label": "intermediate I + isochorismate -> intermediate II",
+     "cls": "unsupported",
+     "evidence": "verbatim_in_paper"
+    },
+    {
+     "label": "intermediate II -> 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
+     "cls": "unsupported",
+     "evidence": "verbatim_in_paper"
+    },
+    {
+     "label": "Oxoglutaric acid + thiamine diphosphate -> intermediate I + thiamine diphosphate",
+     "cls": "unsupported",
+     "evidence": "verbatim_in_paper"
+    }
+   ],
+   "n_gold": 1
+  },
+  "final_path": "C:\\t\\acc-runs\\legs4g\\vt3-PMC12312563\\2026-11-23_2341\\papers\\PMC12312563\\strict\\final_mapped.json",
+  "stage1_path": "C:\\t\\acc-runs\\legs4g\\vt3-PMC12312563\\2026-11-23_2341\\papers\\PMC12312563\\strict\\stage1_payload.json",
+  "report_present": true,
+  "verifier": {
+   "error": "JSONDecodeError: Invalid \\uXXXX escape: line 1 column 32105 (char 32104)",
+   "omitted": [
+    0,
+    1,
+    3
+   ],
+   "folded": [],
+   "repaired": [],
+   "flagged": [
+    2
+   ],
+   "lock_ids_gone": 3,
+   "lock_manifest_entries_removed": 3,
+   "skipped_calls": null,
+   "typing_changed": null,
+   "typing_rows": [],
+   "calls": 2,
+   "seconds": 338.4,
+   "model": "google/gemma-4-31b-it",
+   "pruned_but_present": [
+    "rxn_lock_001",
+    "rxn_lock_002",
+    "rxn_lock_003"
+   ],
+   "gone_matching_gold": []
+  },
+  "cost": 0.049,
+  "verifier_calls": 2,
+  "verifier_wall_s": 334.8
+ },
+ "vt3-PMC12421875": {
+  "arm": "vt",
+  "paper": "PMC12421875",
+  "text_chars": 62985,
+  "status": "pass",
+  "message": "strict run completed; pathway.review_required.pwml is 105991 bytes",
+  "pwml": [
+   "pathway.review_required.pwml"
+  ],
+  "ambiguous_rename": false,
+  "final": {
+   "recall": 1.0,
+   "precision": 0.8182,
+   "matched": [
+    "R1",
+    "R2",
+    "R3",
+    "R4",
+    "R5",
+    "R6",
+    "R7",
+    "R8",
+    "R9"
+   ],
+   "rows": 11,
+   "tp_rows": 9,
+   "fps": [
+    {
+     "label": "chorismate -> DHNA",
+     "cls": "paper_stated_summary",
+     "evidence": "dump_only"
+    },
+    {
+     "label": "isochorismate -> DHNA",
+     "cls": "unsupported",
+     "evidence": "dump_only"
+    }
+   ],
+   "n_gold": 9
+  },
+  "final_path": "C:\\t\\acc-runs\\legs4g\\vt3-PMC12421875\\2026-11-24_0144\\papers\\PMC12421875\\strict\\final_mapped.json",
+  "stage1_path": "C:\\t\\acc-runs\\legs4g\\vt3-PMC12421875\\2026-11-24_0144\\papers\\PMC12421875\\strict\\stage1_payload.json",
+  "report_present": true,
+  "verifier": {
+   "error": null,
+   "omitted": [],
+   "folded": [],
+   "repaired": [],
+   "flagged": [
+    10,
+    12
+   ],
+   "lock_ids_gone": 0,
+   "lock_manifest_entries_removed": 0,
+   "skipped_calls": 0,
+   "typing_changed": [],
+   "typing_rows": [],
+   "calls": 2,
+   "seconds": 18.2,
+   "model": "google/gemma-4-31b-it",
+   "pruned_but_present": []
+  },
+  "cost": 0.0593,
+  "verifier_calls": 2,
+  "verifier_wall_s": 30.6
+ },
+ "vt3-PMC13231680": {
+  "arm": "vt",
+  "paper": "PMC13231680",
+  "text_chars": 62007,
+  "status": "pass",
+  "message": "strict run completed; pathway.review_required.pwml is 17093 bytes",
+  "pwml": [
+   "pathway.review_required.pwml"
+  ],
+  "ambiguous_rename": false,
+  "final": {
+   "recall": null,
+   "precision": null,
+   "matched": [],
+   "rows": 0,
+   "tp_rows": 0,
+   "fps": [],
+   "n_gold": 0
+  },
+  "final_path": "C:\\t\\acc-runs\\legs4g\\vt3-PMC13231680\\2026-11-23_2321\\papers\\PMC13231680\\strict\\final_mapped.json",
+  "stage1_path": "C:\\t\\acc-runs\\legs4g\\vt3-PMC13231680\\2026-11-23_2321\\papers\\PMC13231680\\strict\\stage1_payload.json",
+  "report_present": true,
+  "verifier": {
+   "error": null,
+   "omitted": [],
+   "folded": [],
+   "repaired": null,
+   "flagged": null,
+   "lock_ids_gone": 0,
+   "lock_manifest_entries_removed": 0,
+   "skipped_calls": 0,
+   "typing_changed": [],
+   "typing_rows": [],
+   "calls": 1,
+   "seconds": 2.2,
+   "model": "google/gemma-4-31b-it",
+   "pruned_but_present": []
+  },
+  "cost": 0.0318,
+  "verifier_calls": 1,
+  "verifier_wall_s": 1.8
+ },
+ "vt3-PMC5130987": {
+  "arm": "vt",
+  "paper": "PMC5130987",
+  "text_chars": 100209,
+  "status": "pass",
+  "message": "strict run completed; pathway.review_required.pwml is 279298 bytes",
+  "pwml": [
+   "pathway.review_required.pwml"
+  ],
+  "ambiguous_rename": false,
+  "final": {
+   "recall": 0.6667,
+   "precision": 0.4444,
+   "matched": [
+    "PW_R2146839",
+    "PW_R2146840",
+    "PW_R2146841",
+    "PW_R2146842",
+    "PW_R2146843",
+    "PW_R2146844",
+    "PW_R2146850",
+    "PW_R2146855"
+   ],
+   "rows": 18,
+   "tp_rows": 8,
+   "fps": [
+    {
+     "label": "L-Glutamyl-tRNA -> (S)-4-Amino-5-oxopentanoate",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "(S)-4-Amino-5-oxopentanoate -> 5-aminolevulinic acid",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "Mg-Proto IX + S-adenosyl L-methionine -> Magnesium protoporphyrin monomethyl ester",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "Magnesium protoporphyrin monomethyl ester -> Divinylprotochlorophyllide",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "Divinylprotochlorophyllide -> 3,8-divinyl-chlorophyllide",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "3,8-divinyl-chlorophyllide -> 3-vinyl Chlide a",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "3-vinyl Chlide a -> chlorophyll a",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "protoporphyrin IX + Adenosine triphosphate -> Mg-Proto IX",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "Divinylprotochlorophyllide -> 3,8-divinyl-chlorophyllide",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "L-Glutamic acid + tRNA(Glu) -> (S)-4-Amino-5-oxopentanoate",
+     "cls": "no_gold_match"
+    },
+    {
+     "label": "protoporphyrin IX + Fe 2 -> protoheme",
+     "cls": "no_gold_match"
+    }
+   ],
+   "n_gold": 12,
+   "check_recalled": 8
+  },
+  "final_path": "C:\\t\\acc-runs\\legs4g\\vt3-PMC5130987\\2026-11-24_1052\\papers\\PMC5130987\\strict\\final_mapped.json",
+  "stage1_path": "C:\\t\\acc-runs\\legs4g\\vt3-PMC5130987\\2026-11-24_1052\\papers\\PMC5130987\\strict\\stage1_payload.json",
+  "report_present": true,
+  "verifier": {
+   "error": null,
+   "omitted": [],
+   "folded": [],
+   "repaired": [],
+   "flagged": [],
+   "lock_ids_gone": 0,
+   "lock_manifest_entries_removed": 0,
+   "skipped_calls": 0,
+   "typing_changed": [],
+   "typing_rows": [],
+   "calls": 2,
+   "seconds": 16.9,
+   "model": "google/gemma-4-31b-it",
+   "pruned_but_present": []
+  },
+  "cost": 0.111,
+  "verifier_calls": 2,
+  "verifier_wall_s": 17.2
+ },
+ "vt3-PMC7059786": {
+  "arm": "vt",
+  "paper": "PMC7059786",
+  "text_chars": 35999,
+  "status": "pass",
+  "message": "strict run completed; pathway.review_required.pwml is 10744 bytes",
+  "pwml": [
+   "pathway.review_required.pwml"
+  ],
+  "ambiguous_rename": false,
+  "final": {
+   "recall": null,
+   "precision": null,
+   "matched": [],
+   "rows": 0,
+   "tp_rows": 0,
+   "fps": [],
+   "n_gold": 0,
+   "gold_interactions": 1,
+   "gold_interactions_recalled": 0,
+   "gold_interactions_weak": 0
+  },
+  "final_path": "C:\\t\\acc-runs\\legs4g\\vt3-PMC7059786\\2026-11-24_0058\\papers\\PMC7059786\\strict\\final_mapped.json",
+  "stage1_path": "C:\\t\\acc-runs\\legs4g\\vt3-PMC7059786\\2026-11-24_0058\\papers\\PMC7059786\\strict\\stage1_payload.json",
+  "report_present": true,
+  "verifier": {
+   "error": null,
+   "omitted": [],
+   "folded": [],
+   "repaired": [],
+   "flagged": [],
+   "lock_ids_gone": 0,
+   "lock_manifest_entries_removed": 0,
+   "skipped_calls": 0,
+   "typing_changed": [],
+   "typing_rows": [],
+   "calls": 2,
+   "seconds": 4.2,
+   "model": "google/gemma-4-31b-it",
+   "pruned_but_present": []
+  },
+  "cost": 0.0465,
+  "verifier_calls": 2,
+  "verifier_wall_s": 3.8
+ },
+ "_per_paper_verifier": {
+  "PMC12096016": {
+   "vt_runs": 3,
+   "report_missing": 0,
+   "fail_open": 0,
+   "budget_skips": 0,
+   "fail_open_rate": 0.0
+  },
+  "PMC12312563": {
+   "vt_runs": 3,
+   "report_missing": 0,
+   "fail_open": 1,
+   "budget_skips": 0,
+   "fail_open_rate": 0.333
+  },
+  "PMC12421875": {
+   "vt_runs": 3,
+   "report_missing": 0,
+   "fail_open": 0,
+   "budget_skips": 0,
+   "fail_open_rate": 0.0
+  },
+  "PMC13231680": {
+   "vt_runs": 3,
+   "report_missing": 0,
+   "fail_open": 0,
+   "budget_skips": 0,
+   "fail_open_rate": 0.0
+  },
+  "PMC5130987": {
+   "vt_runs": 3,
+   "report_missing": 0,
+   "fail_open": 0,
+   "budget_skips": 0,
+   "fail_open_rate": 0.0
+  },
+  "PMC7059786": {
+   "vt_runs": 3,
+   "report_missing": 0,
+   "fail_open": 0,
+   "budget_skips": 0,
+   "fail_open_rate": 0.0
+  }
+ }
+}

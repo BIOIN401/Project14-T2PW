@@ -1,0 +1,100 @@
+HEAD fb3391293f5f43e7eaed918db2b299cf87d57388
+STATUS_BEGIN
+STATUS_END
+FLAGS_LISTED_ABOVE_SHOULD_BE_NONE
+== tree C:/t/ws-acc-check
+HEAD fb3391293f5f43e7eaed918db2b299cf87d57388
+STATUS_BEGIN
+STATUS_END
+== smoke
+........................................................................ [ 84%]
+........................................................................ [ 98%]
+.......                                                                  [100%]
+511 passed in 52.47s
+EXIT_smoke=0
+== g-batch
+T2PW: C:\t\ws-acc-check\src\t2pw\__init__.py
+..                                                                       [100%]
+2 passed in 6.22s
+EXIT_g-batch=0
+== g-c011
+T2PW: C:\t\ws-acc-check\src\t2pw\__init__.py
+........                                                                 [100%]
+8 passed in 45.64s
+EXIT_g-c011=0
+== g-stage8
+T2PW: C:\t\ws-acc-check\src\t2pw\__init__.py
+....                                                                     [100%]
+4 passed in 0.53s
+EXIT_g-stage8=0
+== g-quar
+T2PW: C:\t\ws-acc-check\src\t2pw\__init__.py
+........................                                                 [100%]
+24 passed in 38.36s
+EXIT_g-quar=0
+== eq-run
+T2PW: C:\t\ws-acc-check\src\t2pw\__init__.py
+........                                                                 [100%]
+8 passed in 60.33s (0:01:00)
+EXIT_eq-run=0
+== eq-app
+T2PW: C:\t\ws-acc-check\src\t2pw\__init__.py
+..............                                                           [100%]
+14 passed in 57.13s
+EXIT_eq-app=0
+== eq-default
+T2PW: C:\t\ws-acc-check\src\t2pw\__init__.py
+......                                                                   [100%]
+6 passed in 29.58s
+EXIT_eq-default=0
+== vision
+........................................................................ [ 77%]
+........................................................................ [ 97%]
+..........s                                                              [100%]
+370 passed, 1 skipped in 15.22s
+EXIT_vision=0
+== web
+T2PW: C:\t\ws-acc-check\src\t2pw\__init__.py
+........................................................................ [ 86%]
+...........                                                              [100%]
+83 passed in 5.75s
+EXIT_web=0
+SUITE_DONE
+== focused: lane tests + rag + final_payload + pwml
+........................................................................ [ 93%]
+........................................................................ [ 99%]
+.......                                                                  [100%]
+1158 passed, 1 skipped in 30.44s
+== llm client files, own process
+T2PW: C:\t\ws-acc-check\src\t2pw\__init__.py
+...................................                                      [100%]
+35 passed in 0.54s
+MERGE_GATES_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ fb3391293f5f43e7eaed918db2b299cf87d57388  [git, worktree dirty=True]
+label                   : ws-acc-check
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/vis-runs/ws_acc_check_inner.sh
+cwd                     : C:\t\ws-acc-check
+root PID / process group: 219196 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 7200 s
+duration                : 355.71 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 91  216456:bash.exe, 219712:bash.exe, 212512:git.exe, 218328:bash.exe, 204808:bash.exe, 212596:bash.exe, 218344:bash.exe, 208924:bash.exe, 213612:bash.exe, 218388:tail.exe, 219328:python.exe, 219992:python.exe, 220444:python.exe, 220540:python.exe, 220664:python.exe, 215936:python.exe, 221148:python.exe, 220164:python.exe, 220720:python.exe, 222676:git.exe, 219548:python.exe, 222412:bash.exe, 222484:python.exe, 212248:bash.exe, 219304:python.exe, 222480:python.exe, 221528:git.exe, 221936:python.exe, 222716:python.exe, 222288:python.exe, 223172:python.exe, 92900:git.exe, 220524:python.exe, 221256:python.exe, 216144:python.exe, 216864:python.exe, 220484:python.exe, 223216:python.exe, 204592:python.exe, 215876:python.exe, 220092:python.exe, 222712:python.exe, 214548:python.exe, 216964:python.exe, 96676:bash.exe, 215404:bash.exe, 221804:python.exe, 205788:python.exe, 223436:bash.exe, 223468:python.exe, 223496:python.exe, 224096:bash.exe, 219928:python.exe, 220596:python.exe, 218152:python.exe, 222636:python.exe, 99204:bash.exe, 222896:python.exe, 223576:python.exe, 217924:bash.exe, 220336:python.exe, 220652:python.exe, 224728:python.exe, 224744:bash.exe, 224752:python.exe, 223276:git.exe, 224608:python.exe, 224636:python.exe, 224940:python.exe, 225020:python.exe, 225640:bash.exe, 225664:bash.exe, 225672:python.exe, 225684:python.exe, 226028:python.exe, 226048:python.exe, 207900:python.exe, 225388:python.exe, 225552:python.exe, 199776:python.exe, 226060:python.exe, 224964:bash.exe, 225008:bash.exe, 225308:bash.exe, 225324:bash.exe, 225332:tail.exe, 225596:python.exe, 225632:python.exe, 215668:bash.exe, 226156:python.exe, 226224:python.exe
+descendants terminated  : 91  92900, 96676, 99204, 199776, 204592, 204808, 205788, 207900, 208924, 212248, 212512, 212596, 213612, 214548, 215404, 215668, 215876, 215936, 216144, 216456, 216864, 216964, 217924, 218152, 218328, 218344, 218388, 219304, 219328, 219548, 219712, 219928, 219992, 220092, 220164, 220336, 220444, 220484, 220524, 220540, 220596, 220652, 220664, 220720, 221148, 221256, 221528, 221804, 221936, 222288, 222412, 222480, 222484, 222636, 222676, 222712, 222716, 222896, 223172, 223216, 223276, 223436, 223468, 223496, 223576, 224096, 224608, 224636, 224728, 224744, 224752, 224940, 224964, 225008, 225020, 225308, 225324, 225332, 225388, 225552, 225596, 225632, 225640, 225664, 225672, 225684, 226028, 226048, 226060, 226156, 226224
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-runs/logs/ws-acc-check.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
+BW_EXIT=0

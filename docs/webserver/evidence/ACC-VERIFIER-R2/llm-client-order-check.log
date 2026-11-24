@@ -1,0 +1,37 @@
+== m-timeout-first 1a52fb55 order: tests/test_llm_client_request_timeout.py tests/test_llm_client_empty_completion_retry.py
+35 passed in 0.53s
+== m-retry-first 1a52fb55 order: tests/test_llm_client_empty_completion_retry.py tests/test_llm_client_request_timeout.py
+3 failed, 32 passed in 0.45s
+== main-retry-first e17b78ba order: tests/test_llm_client_empty_completion_retry.py tests/test_llm_client_request_timeout.py
+3 failed, 32 passed in 0.52s
+== m-timeout-alone 1a52fb55 order: tests/test_llm_client_request_timeout.py
+6 passed in 0.38s
+ORDER_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 8d9787881b076bb09ef767125d38d529ae2a4158  [git, worktree dirty=True]
+label                   : client-order
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/vis-runs/client_order_inner.sh
+cwd                     : C:\t\merge-acc2
+root PID / process group: 200128 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 4.32 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 16  200148:bash.exe, 200172:bash.exe, 200276:bash.exe, 200308:python.exe, 200320:python.exe, 200584:bash.exe, 200616:python.exe, 200640:python.exe, 190472:bash.exe, 199704:python.exe, 199728:python.exe, 199972:bash.exe, 199996:git.exe, 200016:bash.exe, 200048:python.exe, 200076:python.exe
+descendants terminated  : 16  190472, 199704, 199728, 199972, 199996, 200016, 200048, 200076, 200148, 200172, 200276, 200308, 200320, 200584, 200616, 200640
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-runs/logs/client-order.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
+BW_EXIT=0
