@@ -701,3 +701,102 @@ that actually proposes re-typings, with a live arm where changes occur and are s
   only such flags set (rows 4 and 6). The BASE occurrence on the negative control makes a causal link
   unlikely, but the ticket should confirm whether those records enter any downstream prompt, and if so,
   whether stripping them before Stage 2 changes the outcome.
+
+## 15. Round r3 (branch `acc/verifier-r3`, from main `1a52fb55`): fold where F-G3 refuses
+
+**Evidence: the first live server job with the verifier on** (Gemma, `T2PW_EXTRACTION_DRAWS=3`;
+`C:/t/t2pw-server-data/work/item-4/attempt-1/out/`, PMID 40400396, enterobactin). The 3-draw union kept
+EntE and EntF twice: rows 3 and 4 through "activated 2,3-DHB", rows 6 and 7 through
+"2,3-dihydroxybenzoyl-AMP". The verifier called row 3 vague and proposed the second spelling; F-G3 refused
+the rename onto an existing name, so both pairs reached the PWML.
+
+**Change (`d5d0ec95`, flag-gated, `_fold_onto_existing`).** A rename F-G3 refuses because its target already
+exists becomes a fold when the renamed row would be identical to another live row: the same participants on
+each side by `reference_key`, cofactors included. The row is renamed to the payload's own spelling, its
+enzymes join the twin, and it is omitted. Every other live row still using the old name (action kept or
+flagged) gets the same rename only if it then folds the same way; otherwise it is left as it is. The old
+name's entity row is dropped only when no remaining process row (reactions in scope, interactions,
+transports) names it; otherwise every entity stays. Folded rows report their lock id like any fold, so the
+lock-manifest prune matches the payload (F-G1 rule).
+
+Tests (`tests/test_reaction_verifier.py`):
+- `test_both_spellings_of_ente_and_entf_fold_to_one_each`: the server shape through `apply_to_stage_one`;
+  both pairs fold to one each, the old entity goes, the manifest loses exactly rxn_lock_005 and rxn_lock_007.
+- `test_a_refused_rename_does_not_fold_onto_a_row_that_differs`: different cofactor (GTP), extra participant
+  (diphosphate): nothing folds or renames.
+- `test_a_fold_keeps_the_old_name_while_another_row_still_uses_it`: EntE folds, EntF (no twin) stays with
+  the old name, and the old entity stays.
+- Two existing tests updated to the new rule: `test_a_rename_onto_another_entitys_name_is_refused` (the
+  refusal case now has no twin row, so nothing folds; still fails on 4eb9cd22, which renamed), and the last
+  clause of `test_an_abbreviated_synonym_is_never_written_next_to_the_full_name` (the vague row now folds into
+  its twin instead of staying; no new spelling is written either way).
+- Lane unit run 91 passed (`C:/t/acc-runs/logs/ut-r3b.log`). The same test file on `1a52fb55`: 3 failed
+  (the two positive fold tests and the updated clause), the negative cases pass there as they should
+  (`logs/ut-r3b-old.log`, tree `C:/t/acc-r3base`).
+
+**Offline replay, `1a52fb55` rules vs r3 rules, policy merge, 0 gold lost on every set**
+(`json/evalv_r3base_*.json`, `json/evalv_r3_*.json`, `scripts/foldcount.py`):
+
+| answer set | payloads | folded rows 1a52fb55 → r3 | new folds | enterobactin precision, final (stage 1) |
+|---|---|---|---|---|
+| deepseek `answers2` | 18 | 2 → 8 | 6 (3 legs, EntE + EntF each) | 0.844 → 0.878 (0.867 → 0.923) |
+| deepseek `answers3` | 18 | 1 → 7 | 6 (same 3 legs) | 0.867 → 0.902 (0.889 → 0.949) |
+| Gemma `answers4g` | 18 | 1 → 1 | 0 | unchanged |
+| server job item-4 | 1 | 0 → 2 | 2 (rows 3, 4) | 0.75 → 0.833 (0.857 → 1.0) |
+
+Every new fold is the EntE/EntF pair through "activated 2,3-DHB". The r3 rule gets back the deepseek
+enterobactin precision F-G3 had cost (§14a: 0.878 / 0.907 before F-G3; now 0.878 / 0.902), without a
+rename onto an existing name surviving. The server job is replayed with the PMC12096016 text of a lane leg (the job fetched the same
+paper by PMID); its Stage-1 payload is the pre-verifier payload because the verifier changed no row there.
+
+**Finding, outside the lane (reported, not changed): the lactate row is a Stage-2 re-addition.** In the
+server job, Stage 1 extracted "LDH reaction: pyruvate + NADH → lactate + NAD" (the paper's assay) and its
+out-of-scope filter marked it `out_of_scope` (stage1 row 5). The verifier only reads in-scope rows, so it
+never saw it. `service/extraction.py` drops out-of-scope rows before Stage 2
+(`filter_out_of_scope_reactions`), and the row is back in `merged_payload.json` (the pre-audit payload, row 7)
+with no scope, no lineage and an enzyme marked `"provenance": "inferred"`, confidence 0.95: the Stage-2
+inference shape (`pwml_infer` prompt, merged by `pipeline.merge_additions`). RAG admitted nothing in that
+job (`rag_admission_report.json`: accepted 0). It then survives audit, gap fill and curator into
+`final_mapped.json` and the PWML. So Stage 2 re-adds a reaction Stage 1 had ruled out of scope, and no later stage in this job's artifacts
+removes it again.
+
+**Gates9, code `d5d0ec95`, all four flags unset, one queue hold, 0 surviving processes** (`C:/t/acc-runs/logs/gates9.log`): SMOKE 511 passed; golden-seam 2/8/4/24 passed (none edited); equivalence 8/14/6; vision 370 + 1 skipped; web 83; lane 330; client files in their own process 35.
+
+### 15a. Review R6 (REJECT of `d5d0ec95`) and the fix (`f26c7f17`)
+
+- **B1 (new in d5d0ec95, gold-loss path).** The fold target was looked up by `_spelling`, which dropped
+  every non-ASCII letter: alpha- and beta-carotene shared one key, so a rename to beta-carotene folded the
+  LCYB row into the alpha-carotene row and the step was lost. Now a refused rename folds only onto an
+  existing name whose `reference_key` equals the proposed name's (that spelling is used); if only the
+  spelling key matched, the rename is refused without a fold, as on 1a52fb55.
+- **B2 (on main 1a52fb55, live on the server).** `_one_spelling` rewrote an added co-substrate to the
+  payload spelling with the same Greek-less key: "β-alanine" went into the row as "alanine", reported as
+  repaired. `_spelling` is now `reference_key` plus the acid/-ate fold, so it keeps Greek letters (spelled),
+  digits, `+` and `:` and is never coarser than `reference_key`. Every caller checked: `_payload_names`
+  (now also keyed by `reference_key` for the fold target), `_one_spelling` (additions), the F-G3 refusal
+  and fold lookup, the R3 P4 old-name check, and the R4 B1 abbreviation check, all inside
+  `reaction_verifier.py`. Side effect, by design: "NAD+" and "NAD" no longer share a spelling key.
+- **N1.** The orphan-entity scan now reads every string of every in-scope process row except its own name
+  and its prose (evidence, lineage, verifier record), so enzymes, transporters and cargo count, plus every
+  `protein_complexes` component.
+- **Nit.** The F-G3 refusal test's docstring names `test_both_spellings_of_ente_and_entf_fold_to_one_each`
+  as the test covering the four-row vt3 shape.
+
+Tests: `test_a_greek_letter_never_folds_or_collapses_one_compound_into_another` (alpha/beta-carotene in
+ASCII and in Greek letters), `test_an_added_beta_alanine_is_not_written_as_alanine` (Greek letter and
+spelled), `test_an_old_name_still_used_as_an_enzyme_or_complex_component_keeps_its_entity` (and the entity
+goes when nothing names it). Lane unit run on the fix: 94 passed (`logs/ut-r6b.log`). The same file on
+`d5d0ec95` (`C:/t/acc-r6base`): 3 failed, exactly those three (`logs/ut-r6b-old-d5d.log`). On `1a52fb55`
+(`C:/t/acc-r3base`): 6 failed, the β-alanine and Greek-letter and N1 tests plus the three r3 fold tests
+(`logs/ut-r6b-old-1a5.log`). The ASCII "beta-alanine" case passes on the old code too (the old key kept the
+spelled word); the collapse needs the Greek letter.
+
+Offline replay on the fixed code (answers2, answers3, answers4g, server item-4; `json/evalv_r6_*.json`):
+0 gold lost on every paper; the same 14 new folds over 1a52fb55 (2 → 8, 1 → 7, 1 → 1, 0 → 2) and no
+action differs from d5d0ec95 on any payload. Name check (`scripts/namecheck.py`, every rename and addition
+written, policy merge): 30 names written, 5 of them companion-fold renames (the EntF rows carrying the
+rename the model proposed on their EntE row), **0 whose `reference_key` differs from the model's proposed
+name**, on both d5d0ec95 and the fix. The corpus has no Greek-letter pair, so the replay cannot exercise
+B1 or B2; the unit tests do.
+
+**Gates10, code `f26c7f17`, all four flags unset, one queue hold, 0 surviving processes** (`C:/t/acc-runs/logs/gates10.log`): SMOKE 511 passed; golden-seam 2/8/4/24 passed (none edited); equivalence 8/14/6; vision 370 + 1 skipped; web 83; lane 333; client files in their own process 35.

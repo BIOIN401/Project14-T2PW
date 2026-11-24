@@ -1,0 +1,31 @@
+T2PW: C:\t\fix-noname\src\t2pw\__init__.py
+......................................................................   [100%]
+70 passed in 2.20s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 1bb0f3e408cbb4531001d32a97ef4f4e7e7c5c46  [git, worktree dirty=True]
+label                   : fixnoname-unit-fix
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe C:/t/fix-noname/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/fix-noname -q --basetemp=C:/t/vis-runs/bt/fixnoname/u-fix1 tests/test_fix_noname_post_audit.py tests/test_apply_audit_patch_lineage.py tests/test_apply_audit_patch_lock_policy.py tests/test_apply_audit_patch_referential_integrity.py tests/test_curation_patch_transaction.py tests/test_orch769d_audit_patch_rebase.py
+cwd                     : C:\t\fix-noname
+root PID / process group: 257776 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 600 s
+duration                : 3.39 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  257788:python.exe
+descendants terminated  : 1  257788
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-runs/logs/fixnoname-unit-fix.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=FIX  acquired=True  released=True
+pre-existing (reported, NEVER killed): 12
+================================================
+BW_EXIT=0

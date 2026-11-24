@@ -1,0 +1,93 @@
+T2PW: C:\t\fix-noname\src\t2pw\__init__.py
+.......FF..                                                              [100%]
+================================== FAILURES ===================================
+____ test_ops_written_for_refused_content_are_refused_with_it[row_replace] ____
+
+first = {'confidence': 0.97, 'evidence': 'species lookup returned id 1', 'op': 'replace', 'path': '/entities/compounds/0', ...}
+
+    @pytest.mark.parametrize(
+        "first",
+        [
+            # Review N1 (transient_row_replace_then_name_plus_other): a row replaced by an id-only
+            # row and then named. The re-run refused the replace but put the name on the OLD row.
+            _op("replace", "/entities/compounds/0", {"hmdb_id": "HX"}),
+            # The insert twin: rebasing already sends the name to the old row in the first pass.
+            _op("add", "/entities/compounds/0", {"hmdb_id": "HX"}),
+        ],
+        ids=["row_replace", "row_insert"],
+    )
+    def test_ops_written_for_refused_content_are_refused_with_it(first: dict) -> None:
+        """No row may end up with mixed identity: an old row under a new name, or with new ids."""
+        source = _lipid_a_payload()
+        ops = [first, _op("add", "/entities/compounds/0/name", "lipid X"), NAMELESS_APPEND]
+        patched, report = apply_patch_with_policy(source, ops)
+    
+        validate_post_audit(patched)
+>       assert patched["entities"]["compounds"] == source["entities"]["compounds"]
+E       assert [{'name': 'li...yr-UDP-GlcN'}] == [{'name': 'li...yr-UDP-GlcN'}]
+E         
+E         At index 0 diff: {'name': 'lipid X', 'provenance_lineage': [{'stage': 'audit_repair', 'origin': 'audit_modified', 'support': 'unsupported', 'paper_explicit': 'not_evaluated', 'reason': "an accepted audit patch 'add' operation produced this row's content; it matched no row in this container immediately before the operation", 'review_required': False, 'uncertainty': 'audit repair is a model-proposed change accepted on a confidence threshold; this stage holds no resolvable source record for it', 'sources': []}]} != {'name': 'lipid A'}
+E         Use -v to get more diff
+
+tests\test_fix_noname_post_audit.py:128: AssertionError
+____ test_ops_written_for_refused_content_are_refused_with_it[row_insert] _____
+
+first = {'confidence': 0.97, 'evidence': 'species lookup returned id 1', 'op': 'add', 'path': '/entities/compounds/0', ...}
+
+    @pytest.mark.parametrize(
+        "first",
+        [
+            # Review N1 (transient_row_replace_then_name_plus_other): a row replaced by an id-only
+            # row and then named. The re-run refused the replace but put the name on the OLD row.
+            _op("replace", "/entities/compounds/0", {"hmdb_id": "HX"}),
+            # The insert twin: rebasing already sends the name to the old row in the first pass.
+            _op("add", "/entities/compounds/0", {"hmdb_id": "HX"}),
+        ],
+        ids=["row_replace", "row_insert"],
+    )
+    def test_ops_written_for_refused_content_are_refused_with_it(first: dict) -> None:
+        """No row may end up with mixed identity: an old row under a new name, or with new ids."""
+        source = _lipid_a_payload()
+        ops = [first, _op("add", "/entities/compounds/0/name", "lipid X"), NAMELESS_APPEND]
+        patched, report = apply_patch_with_policy(source, ops)
+    
+        validate_post_audit(patched)
+>       assert patched["entities"]["compounds"] == source["entities"]["compounds"]
+E       assert [{'name': 'li...yr-UDP-GlcN'}] == [{'name': 'li...yr-UDP-GlcN'}]
+E         
+E         At index 0 diff: {'name': 'lipid X', 'provenance_lineage': [{'stage': 'audit_repair', 'origin': 'audit_modified', 'support': 'unsupported', 'paper_explicit': 'not_evaluated', 'reason': "an accepted audit patch 'add' operation produced this row's content; it matched no row in this container immediately before the operation", 'review_required': False, 'uncertainty': 'audit repair is a model-proposed change accepted on a confidence threshold; this stage holds no resolvable source record for it', 'sources': []}]} != {'name': 'lipid A'}
+E         Use -v to get more diff
+
+tests\test_fix_noname_post_audit.py:128: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_fix_noname_post_audit.py::test_ops_written_for_refused_content_are_refused_with_it[row_replace]
+FAILED tests/test_fix_noname_post_audit.py::test_ops_written_for_refused_content_are_refused_with_it[row_insert]
+2 failed, 9 passed in 1.48s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 1bb0f3e408cbb4531001d32a97ef4f4e7e7c5c46  [git, worktree dirty=True]
+label                   : fixnoname-n1-base
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe C:/t/fix-noname/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/fix-noname -q --basetemp=C:/t/vis-runs/bt/fixnoname/n1-base tests/test_fix_noname_post_audit.py
+cwd                     : C:\t\fix-noname
+root PID / process group: 306908 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 600 s
+duration                : 2.38 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  306892:python.exe
+descendants terminated  : 1  306892
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-runs/logs/fixnoname-n1-base.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=FIX  acquired=True  released=True
+pre-existing (reported, NEVER killed): 12
+================================================
+BW_EXIT=1

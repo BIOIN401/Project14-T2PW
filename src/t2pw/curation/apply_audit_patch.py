@@ -1259,6 +1259,47 @@ def committed_change_count(report: Any) -> int:
     return 0 if transaction.get("committed") is False else legacy
 
 
+ENTITY_NAME_REQUIRED_REASON_PREFIX = "entity_name_required"
+
+
+def _nameless_entity_counts(payload: Any) -> Dict[str, int]:
+    """Per /entities bucket, how many rows have no usable name.
+
+    The same test the post_audit contract aborts on (``str(name or "").strip()``
+    is empty): a missing, null, blank or falsy name.
+    """
+    counts: Dict[str, int] = {}
+    for bucket, rows in _safe_dict(_safe_dict(payload).get("entities")).items():
+        if not isinstance(rows, list):
+            continue
+        nameless = sum(1 for row in rows if isinstance(row, dict) and not str(row.get("name") or "").strip())
+        if nameless:
+            counts[str(bucket)] = nameless
+    return counts
+
+
+def _nameless_entity_rejection(before: Dict[str, Any], after: Dict[str, Any]) -> Optional[str]:
+    """Why ``after`` may not be accepted: it has a nameless entity row ``before`` did not.
+
+    FIX-NONAME. Under Gemma 4 31B a curation patch (audit or gap-resolver
+    enrichment) left an entity row with no name -- a whole-row replace or insert
+    carrying only an identifier, or a blanked ``/name`` -- and the run aborted at
+    the post_audit contract. Refusing the op keeps the row exactly as it was: a
+    blanked name keeps its prior name, a nameless row is never added.
+    """
+    before_counts = _nameless_entity_counts(before)
+    grown = sorted(
+        bucket for bucket, count in _nameless_entity_counts(after).items() if count > before_counts.get(bucket, 0)
+    )
+    if not grown:
+        return None
+    return (
+        f"{ENTITY_NAME_REQUIRED_REASON_PREFIX}: op would leave an entity row with no name in "
+        + ", ".join(f"/entities/{bucket}" for bucket in grown)
+        + "; refused, the payload keeps its prior rows."
+    )
+
+
 def _batch_rollback_reason(
     source_payload: Dict[str, Any],
     working: Dict[str, Any],
@@ -2763,8 +2804,12 @@ def apply_patch_with_policy(
     stage: str = "patch_application",
     applied_log_path: str | Path | None = None,
     rejected_log_path: str | Path | None = None,
+    _require_entity_names: bool = False,
 ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
     working = deepcopy(source_payload)
+    # Applied values are inserted by reference and then stamped with lineage, so
+    # this pass may mutate the caller's ops. A FIX-NONAME re-run starts from these.
+    pristine_ops = deepcopy(patch_ops) if not _require_entity_names else patch_ops
     accepted: List[Dict[str, Any]] = []
     rejected: List[Dict[str, Any]] = []
     applied_log_records: List[Dict[str, Any]] = []
@@ -2777,6 +2822,12 @@ def apply_patch_with_policy(
     pending_entity_names = _pending_entity_name_norms(patch_ops)
     # Index shifts made by accepted ops so far; see "Index rebasing" above.
     shifts: Dict[Tuple[str, ...], List[Tuple[str, int]]] = {}
+    # FIX-NONAME re-run only: (pre-patch path tokens, op index) of ops the name
+    # guard refused. A later op under one of these paths was written for the
+    # content the refused op would have put there; applied to the old content it
+    # would give an old row a new name or new ids (a row with mixed identity),
+    # so it is refused with it.
+    refused_name_paths: List[Tuple[Tuple[str, ...], int]] = []
 
     for idx, raw_op in enumerate(patch_ops):
         if not isinstance(raw_op, dict):
@@ -2786,6 +2837,23 @@ def apply_patch_with_policy(
             continue
         # Accept both the internal format (op/evidence) and the enrichment format (action/reason)
         op = _normalize_patch_op(raw_op)
+        if refused_name_paths:
+            try:
+                op_tokens = tuple(_decode_pointer(str(op.get("path", ""))))
+            except Exception:  # noqa: BLE001 - an unparseable path is the policy's to reject
+                op_tokens = ()
+            owner = next(
+                (j for tokens, j in refused_name_paths if len(op_tokens) > len(tokens) and op_tokens[: len(tokens)] == tokens),
+                None,
+            )
+            if owner is not None:
+                reason = (
+                    f"{ENTITY_NAME_REQUIRED_REASON_PREFIX}: {op.get('path')} addresses content written by "
+                    f"op {owner}, which was refused for leaving an entity row with no name."
+                )
+                rejected.append({"index": idx, "reason": reason, "op": op})
+                rejected_log_records.append(_patch_log_record(stage, op, reason))
+                continue
         # `op` stays as written (pre-patch indices) for the policy and the records;
         # `live_op` addresses the same row in `working`. They are one object unless
         # an earlier accepted op moved this op's row.
@@ -2842,6 +2910,16 @@ def apply_patch_with_policy(
                 rejected.append(record)
                 rejected_log_records.append(_patch_log_record(stage, op, integrity_rejection))
                 continue
+            name_rejection = _nameless_entity_rejection(working, next_working) if _require_entity_names else None
+            if name_rejection is not None:
+                record["reason"] = name_rejection
+                rejected.append(record)
+                rejected_log_records.append(_patch_log_record(stage, op, name_rejection))
+                try:
+                    refused_name_paths.append((tuple(_decode_pointer(str(op.get("path", "")))), idx))
+                except Exception:  # noqa: BLE001 - it was applied, so it parsed; never fail the batch here
+                    pass
+                continue
             # Read-only, and computed against the pre-op payload while it is
             # still addressable. The records themselves land last, after this
             # op's own logging, so nothing that decides or reports on this op --
@@ -2865,6 +2943,26 @@ def apply_patch_with_policy(
     # been handed back yet, so a failure here can still undo the entire batch.
     rollback_reason, orphaned_references = _batch_rollback_reason(source_payload, working)
     committed = rollback_reason is None
+    # FIX-NONAME. Judged on what this batch would hand back, so a batch that
+    # ends with every entity named -- a blank-then-rename pair, or a batch that
+    # rolls back anyway -- is applied exactly as before. Only a committed result
+    # with a new nameless row is re-run with the per-op name guard. Nothing has
+    # left this function yet: the first pass wrote only to copies, and the logs
+    # are written below.
+    if committed and not _require_entity_names and _nameless_entity_rejection(source_payload, working) is not None:
+        return apply_patch_with_policy(
+            source_payload,
+            pristine_ops,
+            connectivity_confidence_threshold=connectivity_confidence_threshold,
+            major_topology_confidence_threshold=major_topology_confidence_threshold,
+            enforce_major_topology_threshold=enforce_major_topology_threshold,
+            locked_manifest=locked_manifest,
+            stage=stage,
+            applied_log_path=applied_log_path,
+            rejected_log_path=rejected_log_path,
+            _require_entity_names=True,
+        )
+
     if not committed:
         logger.warning("apply_patch_with_policy: %s", rollback_reason)
         working = deepcopy(source_payload)

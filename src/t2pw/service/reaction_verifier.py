@@ -513,23 +513,28 @@ def _chain_steps(split_rows: Sequence[Tuple[int, Dict[str, Any]]]) -> Dict[int, 
 
 
 def _spelling(name: Any) -> str:
-    """One key for spellings of one compound: case, punctuation, and acid / -ate (-ous acid / -ite) folded."""
-    k = re.sub(r"[^a-z0-9]+", "", str(name or "").casefold())
-    return re.sub(r"ousacid$", "ite", re.sub(r"icacid$", "ate", k))
+    """One key for spellings of one compound: the exporter's reference key (case, punctuation, hyphens
+    dropped; Greek letters spelled, digits, + and : kept), with acid / -ate (-ous acid / -ite) folded. Never
+    coarser than reference_key on letters (review R6 B2: the old key dropped Greek letters, so an added
+    "beta-alanine" was written as the payload's "alanine")."""
+    from t2pw.pipeline.name_keys import reference_key
+
+    return re.sub(r"ousacid$", "ite", re.sub(r"icacid$", "ate", reference_key(name)))
 
 
-def _payload_names(payload: Dict[str, Any], skip: Optional[Dict[str, Any]] = None, registry: bool = True) -> Dict[str, str]:
-    """spelling key -> the spelling the payload already uses (every participant of every other row, and
-    every registry entity)."""
+def _payload_names(payload: Dict[str, Any], skip: Optional[Dict[str, Any]] = None, registry: bool = True,
+                   key: Callable[[Any], str] = _spelling) -> Dict[str, str]:
+    """``key`` (spelling key by default) -> the spelling the payload already uses (every participant of every
+    other row, and every registry entity)."""
     out: Dict[str, str] = {}
     for r in _rows(payload, "reactions"):
         if isinstance(r, dict) and r is not skip:
             for n in _names(r.get("inputs")) + _names(r.get("outputs")):
-                out.setdefault(_spelling(n), n)
+                out.setdefault(key(n), n)
     for bucket in (payload.get("entities") or {}).values() if registry else ():
         for e in bucket if isinstance(bucket, list) else []:
             if _name(e):
-                out.setdefault(_spelling(_name(e)), _name(e))
+                out.setdefault(key(_name(e)), _name(e))
     return out
 
 
@@ -547,12 +552,15 @@ def _one_spelling(name: str, known: Dict[str, str]) -> str:
     return known.get(_spelling(name), name)
 
 
-def _apply_renames(row: Dict[str, Any], renames: Any, tw: str, payload: Optional[Dict[str, Any]] = None) -> List[List[str]]:
+def _apply_renames(row: Dict[str, Any], renames: Any, tw: str, payload: Optional[Dict[str, Any]] = None,
+                   refused: Optional[List[List[str]]] = None) -> List[List[str]]:
     """Rename participants of ``row`` in place, only to names that occur in the paper, only to a name no
     other entity or row of the payload carries (spelling key or the exporter's reference key; Gemma F-G3:
     "activated 2,3-DHB" -> "2,3-dihydroxybenzoyl-AMP" next to an existing "2,3-dihydroxybenzoyl-AMP" ended
     the run with PWML_IR_DUPLICATE_NAMED_ROW), and only when the old name occurs in no other row (R3 P4).
-    Names this pass already added count, so two repairs cannot meet on one name. -> [[old, new]]."""
+    Names this pass already added count, so two repairs cannot meet on one name. -> [[old, new]].
+    A rename refused because its target already exists goes to ``refused`` as [old, the payload's own
+    spelling of the target], for :func:`_fold_onto_existing`."""
     from t2pw.pipeline.name_keys import reference_key
 
     known = _payload_names(payload or {}, skip=row)
@@ -564,6 +572,11 @@ def _apply_renames(row: Dict[str, Any], renames: Any, tw: str, payload: Optional
         if not (isinstance(old, str) and isinstance(new, str) and len(new.strip()) > 1 and _in_text(new, tw)):
             continue
         if _spelling(new) in known or reference_key(new) in taken - {reference_key(old)}:  # F-G3
+            # fold only onto a name with the proposed name's reference key (review R6 B1: never onto a name
+            # that only shares the coarser spelling key); otherwise refuse, as before
+            same = _payload_names(payload or {}, skip=row, key=reference_key).get(reference_key(new))
+            if refused is not None and same is not None and reference_key(new) != reference_key(old):
+                refused.append([old, same])
             continue
         if _spelling(old) in others or _abbreviated(new):  # R3 P4, R4 B1
             continue
@@ -578,6 +591,92 @@ def _apply_renames(row: Dict[str, Any], renames: Any, tw: str, payload: Optional
                         row[side][j] = new.strip()
                     done.append([old, new.strip()])
     return done
+
+
+def _fold_onto_existing(out: Dict[str, Any], rows: List[Any], rep: Dict[str, Any],
+                        pending: Sequence[Tuple[int, str, str]]) -> None:
+    """A rename F-G3 refused (the target name already exists) becomes a fold when the renamed row would be
+    identical to another live row: the same participants on each side by the exporter's reference key,
+    cofactors included. The row is renamed, its enzymes join the twin, and it is omitted. Every other live
+    row still using the old name gets the same rename only if it then folds the same way; it is otherwise
+    left as it is. The old name's entity row goes only when no remaining process row names it. A folded
+    row's lock id is reported like any other fold, so the manifest prune matches the payload (F-G1).
+    First live server job (item-4): the 3-draw union kept EntE and EntF twice, once with "activated
+    2,3-DHB" and once with "2,3-dihydroxybenzoyl-AMP"."""
+    from t2pw.pipeline.name_keys import reference_key as rk
+
+    recs = {rec["index"]: rec for rec in rep["rows"]}
+
+    def live(j: int) -> bool:
+        return isinstance(rows[j], dict) and str(rows[j].get("scope_membership") or "").strip().casefold() != "out_of_scope"
+
+    def sides(row: Dict[str, Any], old: str = "", new: str = "") -> Tuple:
+        swap = lambda n: rk(new) if old and rk(n) == rk(old) else rk(n)  # noqa: E731
+        return tuple(tuple(sorted(swap(n) for n in _names(row.get(s)))) for s in ("inputs", "outputs"))
+
+    def twin(j: int, old: str, new: str) -> Optional[int]:
+        k = sides(rows[j], old, new)
+        return next((q for q in range(len(rows)) if q != j and live(q) and sides(rows[q]) == k), None)
+
+    def fold(j: int, q: int, old: str, new: str) -> None:
+        r, keep = rows[j], rows[q]
+        for side in ("inputs", "outputs"):
+            for n, item in enumerate(r.get(side) or []):
+                if rk(_name(item)) == rk(old):
+                    if isinstance(item, dict):
+                        item[next(k for k in ("name", "entity", "compound", "protein") if k in item)] = new
+                    else:
+                        r[side][n] = new
+        have = {_key(e) for e in _enzymes(keep)}
+        for e in r.get("enzymes") or []:
+            n = e.get("protein") or e.get("protein_complex") or e.get("name") if isinstance(e, dict) else e
+            if n and _key(n) not in have:
+                keep.setdefault("enzymes", []).append(copy.deepcopy(e))
+                have.add(_key(n))
+        _omit(r)
+        rep["merged"].append({"index": j, "into": q, "name": r.get("name"), "renamed": [old, new]})
+        if j in recs:
+            recs[j].update(action="folded_into_%d" % q, renamed=[[old, new]])
+
+    prose = {"evidence", "provenance_lineage", "lineage", "verifier", "reason", "quote", "type_evidence"}
+
+    def strings(x: Any) -> List[str]:
+        if isinstance(x, str):
+            return [x]
+        if isinstance(x, dict):
+            return [s for k, v in x.items() if k not in prose for s in strings(v)]
+        if isinstance(x, list):
+            return [s for v in x for s in strings(v)]
+        return []
+
+    for i, old, new in pending:
+        q = twin(i, old, new) if live(i) else None
+        if q is None:
+            continue
+        fold(i, q, old, new)
+        for j in range(len(rows)):
+            if (j != i and live(j) and (recs.get(j) or {}).get("action") in ("kept", "flagged")
+                    and rk(old) in {rk(n) for n in _names(rows[j].get("inputs")) + _names(rows[j].get("outputs"))}):
+                q2 = twin(j, old, new)
+                if q2 is not None:
+                    fold(j, q2, old, new)
+        procs = out.get("processes") if isinstance(out.get("processes"), dict) else {}
+        # every string of every in-scope process row (participants, enzymes, transporters, cargo, interaction
+        # ends...) except its own name and prose, and every complex component (review R6 N1)
+        refs = [s for kind, rws in procs.items() for row in (rws if isinstance(rws, list) else [])
+                if isinstance(row, dict) and not (kind == "reactions"
+                        and str(row.get("scope_membership") or "").strip().casefold() == "out_of_scope")
+                for s in strings({k: v for k, v in row.items() if k != "name"})]
+        refs += [s for c in ((out.get("entities") or {}).get("protein_complexes") or []) if isinstance(c, dict)
+                 for s in strings(c.get("components"))]
+        still = any(rk(s) == rk(old) for s in refs)
+        if not still:
+            for bucket, ents in (out.get("entities") or {}).items():
+                if isinstance(ents, list):
+                    kept = [e for e in ents if rk(_name(e)) != rk(old)]
+                    if len(kept) != len(ents):
+                        out["entities"][bucket] = kept
+                        rep.setdefault("entities_dropped", []).append(old)
 
 
 def _currency_compatible(a: Dict[str, Any], b: Dict[str, Any]) -> bool:
@@ -619,6 +718,7 @@ def apply_verdicts(payload: Dict[str, Any], text: str, answers: Dict[int, Dict[s
     plain = [(i, r) for i, r in live if verdict[i] not in ("summary", "split", "not_stated", "off_pathway")]
     new_rows: List[Dict[str, Any]] = []
     chain_done: set = set()
+    pending: List[Tuple[int, str, str]] = []  # renames F-G3 refused onto an existing name
 
     for i, r in live:
         a = answers.get(i) or {}
@@ -634,7 +734,9 @@ def apply_verdicts(payload: Dict[str, Any], text: str, answers: Dict[int, Dict[s
             # A participant that is wrong rather than missing comes as a rename (the model may give one with
             # either verdict, R1 F7c); a missing co-product comes as an addition. Every name must be the
             # paper's own.
-            done = _apply_renames(r, a.get("rename"), tw, out)
+            refused: List[List[str]] = []
+            done = _apply_renames(r, a.get("rename"), tw, out, refused)
+            pending.extend((i, old, new) for old, new in refused)
             added = []
             if v == "incomplete":
                 known = _payload_names(out)
@@ -714,6 +816,7 @@ def apply_verdicts(payload: Dict[str, Any], text: str, answers: Dict[int, Dict[s
                 _omit(r)
             rec["action"] = act
 
+    _fold_onto_existing(out, rows, rep, pending)
     # A row the verifier changed (or a whole step it appended) that is now identical to another row is
     # folded into it. Duplicates the verifier did not make are left to the stages that own them.
     changed = {rec["index"] for rec in rep["rows"] if rec["action"] == "repaired"}
