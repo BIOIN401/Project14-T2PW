@@ -616,3 +616,40 @@ PMC13231680 is wrong: that run aborted the same way.
   `reconstructed_from_process_participant`, one `inferred`); whether that pair is related is open.
 - **Frequency:** Gemma 2 of 35 legs (1 BASE, 1 VT; `legs4g`). Deepseek 0 of 19 legs (`legs` 5,
   `legs3` 4, `legs4` 10).
+
+### 14c. After the reboot: gates8, the last Gemma leg, and the focused re-measure on the fixed code
+
+**gates8, code `e72c2759` (HEAD `4d29c4bf`), all four flags unset, one queue hold, 0 surviving processes**
+(`C:/t/acc-runs/logs/gates8.log`): SMOKE 511 passed; golden-seam 2/8/4/24 passed (the four golden files
+are unchanged since `e17b78ba`); equivalence 8/14/6; vision 370 + 1 skipped; web 83; lane 327; client
+files in their own process 35.
+
+**Bigger run complete (36/36).** vt3-PMC5130987 on `82bda3b6`: PWML, 8 chlorophyll gold rows matched,
+2 verifier calls, 17 s, nothing omitted, folded or repaired. Chlorophyll is now VT 3/3 PWML vs BASE 2/3
+(base1 aborted with flags off), no verifier-caused change in any run.
+
+**Focused re-measure on the fixed code** (`C:/t/acc-ver5` at `4d29c4bf`; `scripts/driver5g.sh`, same
+Gemma setup, guard and 5-min gaps; enterobactin + MenD x 3 draws x 2 arms, interleaved; scored with
+`scripts/score5g.py`, which adds the lock-consistency check; `json/score5g.json`):
+
+| paper | arm | PWML | gold matched (runs per id) | mean P | VT verifier |
+|---|---|---|---|---|---|
+| PMC12096016 enterobactin | base | 3/3 | R1 3, R2 2, R3 3, R4 3, R5 3 | 0.730 | |
+| | vt | **3/3** | **R1-R5 all 3/3** | **0.869** | ≤2 calls, ≤10 s, 0 errors |
+| PMC12312563 MenD | base | 3/3 | R1 3 | 0.328 | |
+| | vt | 3/3 | R1 3 | 0.328 | ≤2 calls, ≤8 s, 0 errors |
+
+R4 criteria, every VT run: report present, model `google/gemma-4-31b-it`; fail-open rate 0/3 on both
+papers; no budget skip; lock-manifest removals equal omitted + folded lock ids, and no pruned lock id is
+still in the payload (`pruned_but_present` empty); no AMBIGUOUS_RENAME_TARGET; no rename at all (F-G3);
+0 typing changes; VT no-PWML 0 = BASE 0. Gold matched VT ≥ BASE on both papers (enterobactin 15 vs 14,
+MenD 3 vs 3).
+
+The scorer's "omitted/folded row matching gold" flag fired once: vt1-PMC12096016 folded row 5
+(isochorismate → 2,3-dihydro-2,3-dihydroxybenzoate + pyruvate, R2) into row 1, which the verifier had just
+completed with the same pyruvate co-product (addition, not a rename). The two rows were identical, and R2
+is matched in that run's final output, so no gold is lost. vt3-PMC12312563 omitted the three partial MenD
+rows through generic intermediates and appended the whole step; R1 matched.
+
+**Spend:** last Gemma leg $0.11, re-measure $0.51 (`logs5g/*.usage.jsonl`). Running total for the
+lane since the $10 cap: about $3.42.
