@@ -80,10 +80,12 @@ def test_incomplete_may_correct_a_wrong_participant():
 def test_a_rename_onto_another_entitys_name_is_refused():
     """Gemma F-G3, the vt3-PMC12096016 shape: the registry and other rows already carry
     "2,3-dihydroxybenzoyl-AMP"; renaming "activated 2,3-DHB" onto it ended the run downstream with
-    PWML_IR_DUPLICATE_NAMED_ROW. Written to fail on 4eb9cd22 (which renamed and folded the row)."""
+    PWML_IR_DUPLICATE_NAMED_ROW. Written to fail on 4eb9cd22 (which renamed and folded the row). Since r3
+    no row here is the renamed row's twin (no EntE row with the full name), so nothing folds either. The
+    original four-row vt3 shape (with that EntE twin) is covered by
+    test_both_spellings_of_ente_and_entf_fold_to_one_each."""
     rows = [rx(["2,3-dihydroxybenzoic acid", "ATP"], ["activated 2,3-DHB"], name="2,3-DHB adenylation"),
             rx(["activated 2,3-DHB", "L-serine"], ["enterobactin"], name="enterobactin synthesis"),
-            rx(["2,3-dihydroxybenzoic acid", "ATP"], ["2,3-dihydroxybenzoyl-AMP"], name="EntE reaction"),
             rx(["2,3-dihydroxybenzoyl-AMP", "L-serine"], ["enterobactin"], name="EntF reaction")]
     for new in ("2,3-dihydroxybenzoyl-AMP", "2,3-Dihydroxybenzoyl AMP"):  # exact, and the same reference key
         out, rep = V.apply_verdicts(payload(rows), TEXT + " " + new + ".", {0: {"verdict": "vague", "rename": [
@@ -98,6 +100,115 @@ def test_a_rename_onto_another_entitys_name_is_refused():
     before = {reference_key(e["name"]) for e in payload(rows)["entities"]["compounds"]}
     assert {reference_key(e["name"]) for e in out["entities"]["compounds"]} == before
     assert len(out["entities"]["compounds"]) == len(payload(rows)["entities"]["compounds"])
+
+
+# -- r3: a refused rename folds when the renamed row is another row's twin (first server job, item-4) ----
+VAGUE_DHB = {1: {"verdict": "vague", "rename": [{"old": "activated 2,3-DHB", "new": "2,3-dihydroxybenzoyl-AMP"}]}}
+
+
+def ent_rows(entf_twin=True, ente=("2,3-dihydroxybenzoic acid", "ATP"), ente_out=("activated 2,3-DHB",)):
+    rows = [rx(["chorismate"], ["isochorismate"], lock="rxn_lock_003", name="EntC"),
+            rx(list(ente), list(ente_out), lock="rxn_lock_005", name="EntE reaction"),
+            rx(["activated 2,3-DHB", "L-serine"], ["enterobactin"], lock="rxn_lock_007", name="EntF reaction"),
+            rx(["2,3-dihydroxybenzoic acid", "ATP"], ["2,3-dihydroxybenzoyl-AMP"], lock="rxn_lock_004", name="EntE")]
+    if entf_twin:
+        rows.append(rx(["2,3-dihydroxybenzoyl-AMP", "L-serine"], ["enterobactin"], lock="rxn_lock_006", name="EntF"))
+    return rows
+
+
+def test_both_spellings_of_ente_and_entf_fold_to_one_each(tmp_path, monkeypatch):
+    """The server job's 3-draw union: EntE and EntF twice, once through "activated 2,3-DHB", once through
+    "2,3-dihydroxybenzoyl-AMP". The vague EntE row's rename is refused (F-G3) but its renamed form is the other
+    EntE row, so it folds; the EntF row using the old name folds the same way; the old name's entity goes; the
+    manifest loses exactly the two folded locks. Fails on 1a52fb55 (nothing folded there)."""
+    monkeypatch.setattr(V, "_ask", lambda system, user, chat_fn, stage, limit=None: {
+        "rows": [dict(VAGUE_DHB[1], id=1)]})
+    monkeypatch.setenv(V.ENV_FLAG, "1")
+    monkeypatch.delenv(V.IX_FLAG, raising=False)
+    rows = ent_rows()
+    (tmp_path / "locked_reaction_manifest.json").write_text(
+        json.dumps([{"locked_reaction_id": r["locked_reaction_id"]} for r in rows]), encoding="utf-8")
+    state = {}
+    out = V.apply_to_stage_one(payload(rows), TEXT, state, tmp_path / "diag", {}, "task", manifest_dir=tmp_path)
+    rep = state[V.REPORT_STATE_KEY]
+    got = out["processes"]["reactions"]
+    assert [r["name"] for r in live(got)] == ["EntC", "EntE", "EntF"]
+    assert {(m["index"], m["into"]) for m in rep["reactions"]["merged"]} == {(1, 3), (2, 4)}
+    assert {e["protein"] for e in got[3]["enzymes"]} == {"EntE", "EntE reaction"}
+    assert not any(e["name"] == "activated 2,3-DHB" for e in out["entities"]["compounds"])
+    left = [e["locked_reaction_id"] for e in json.loads((tmp_path / "locked_reaction_manifest.json").read_text(encoding="utf-8"))]
+    assert left == ["rxn_lock_003", "rxn_lock_004", "rxn_lock_006"] and rep["lock_manifest_entries_removed"] == 2
+    assert not {r.get("locked_reaction_id") for r in live(got)} & {"rxn_lock_005", "rxn_lock_007"}
+
+
+def test_a_refused_rename_does_not_fold_onto_a_row_that_differs():
+    """Negative cases: a different cofactor, or an extra participant, means no twin: nothing folds or renames."""
+    for kw in ({"ente": ("2,3-dihydroxybenzoic acid", "GTP")},
+               {"ente_out": ("activated 2,3-DHB", "diphosphate")}):
+        rows, rep, _ = run(ent_rows(**kw), VAGUE_DHB)
+        assert rep["merged"] == [] and len(live(rows)) == 5, kw
+        assert "activated 2,3-DHB" in rows[1]["outputs"] and "activated 2,3-DHB" in rows[2]["inputs"], kw
+
+
+def test_a_fold_keeps_the_old_name_while_another_row_still_uses_it():
+    """The EntE row folds, but the EntF row using the old name has no twin: it stays as it is, and so does the
+    old name's entity. Fails on 1a52fb55 (nothing folded there)."""
+    rows, rep, out = run(ent_rows(entf_twin=False), VAGUE_DHB)
+    assert rep["merged"] == [{"index": 1, "into": 3, "name": "EntE reaction",
+                              "renamed": ["activated 2,3-DHB", "2,3-dihydroxybenzoyl-AMP"]}]
+    assert rows[2]["inputs"] == ["activated 2,3-DHB", "L-serine"] and rows[2]["scope_membership"] == "core"
+    assert any(e["name"] == "activated 2,3-DHB" for e in out["entities"]["compounds"])
+    assert "entities_dropped" not in rep
+
+
+def test_a_greek_letter_never_folds_or_collapses_one_compound_into_another():
+    """Review R6 B1: the old spelling key dropped Greek letters, so a rename to beta-carotene resolved to the
+    payload's alpha-carotene and the LCYB step folded into the LCYE row (fails on d5d0ec95). Now beta-carotene
+    is a different name: the LCYB row is renamed to it and both steps stay."""
+    for alpha, beta in (("alpha-carotene", "beta-carotene"), ("\u03b1-carotene", "\u03b2-carotene")):
+        text = TEXT + " Lycopene is cyclised to %s by LCYE and to %s by LCYB." % (alpha, beta)
+        rows = [rx(["lycopene"], [alpha], name="LCYE"), rx(["lycopene"], ["cyclic carotenoid"], name="LCYB")]
+        out, rep = V.apply_verdicts(payload(rows), text, {1: {"verdict": "vague", "rename": [
+            {"old": "cyclic carotenoid", "new": beta}]}}, "merge")
+        got = out["processes"]["reactions"]
+        assert rep["merged"] == [] and len(live(got)) == 2, alpha
+        assert got[0]["outputs"] == [alpha] and got[1]["outputs"] == [beta], alpha
+        assert {e["protein"] for e in got[0]["enzymes"]} == {"LCYE"}, alpha
+
+
+def test_an_added_beta_alanine_is_not_written_as_alanine():
+    """Review R6 B2 (on main 1a52fb55 and d5d0ec95 too): an added co-substrate was rewritten to the payload
+    spelling with the same Greek-less key, so beta-alanine went into the row as "alanine"."""
+    for beta in ("β-alanine", "beta-alanine"):  # the Greek letter itself (fails on 1a52fb55 and d5d0ec95), and spelled
+        text = TEXT + " Pantoate and %s are joined by PanC. Alanine is made elsewhere." % beta
+        rows = [rx(["pyruvate"], ["alanine"], name="AlaT"), rx(["pantoate", "ATP"], ["pantothenate"], name="PanC")]
+        out, rep = V.apply_verdicts(payload(rows), text, {1: {"verdict": "incomplete", "add_inputs": [beta]}}, "merge")
+        assert out["processes"]["reactions"][1]["inputs"] == ["pantoate", "ATP", beta] and rep["repaired"] == [1], beta
+
+
+def test_an_old_name_still_used_as_an_enzyme_or_complex_component_keeps_its_entity():
+    """Review R6 N1: after a fold, the old name's entity goes only when nothing names it any more; an enzyme
+    of another row or a protein-complex component still does."""
+    def shape():
+        rows = [rx(["EntB", "ATP"], ["holo-EntB"], name="EntD"),
+                rx(["apo-EntB", "ATP"], ["holo-EntB"], name="EntD (apo)"),
+                rx(["isochorismate"], ["2,3-dihydro-2,3-dihydroxybenzoate"], name="isochorismatase")]
+        return rows, {1: {"verdict": "vague", "rename": [{"old": "apo-EntB", "new": "EntB"}]}}
+
+    rows, ans = shape()
+    rows[2]["enzymes"] = [{"protein": "apo-EntB"}]
+    out, rep = V.apply_verdicts(payload(rows), TEXT, ans, "merge")
+    assert [(m["index"], m["into"]) for m in rep["merged"]] == [(1, 0)]
+    assert any(e["name"] == "apo-EntB" for e in out["entities"]["compounds"]) and "entities_dropped" not in rep
+    rows, ans = shape()
+    p = payload(rows)
+    p["entities"]["protein_complexes"] = [{"name": "EntB complex", "components": ["apo-EntB", "EntF"]}]
+    out, rep = V.apply_verdicts(p, TEXT, ans, "merge")
+    assert [(m["index"], m["into"]) for m in rep["merged"]] == [(1, 0)]
+    assert any(e["name"] == "apo-EntB" for e in out["entities"]["compounds"]) and "entities_dropped" not in rep
+    rows, ans = shape()  # nothing else names it: the entity goes
+    out, rep = V.apply_verdicts(payload(rows), TEXT, ans, "merge")
+    assert rep["entities_dropped"] and not any(e["name"] == "apo-EntB" for e in out["entities"]["compounds"])
 
 
 def test_rename_to_a_name_not_in_the_paper_is_refused():
@@ -366,10 +477,12 @@ def test_an_abbreviated_synonym_is_never_written_next_to_the_full_name():
     assert "DHB-AMP" not in names and rep["repaired"] == []
     out, rep = V.apply_verdicts(payload(rows), text, {2: {"verdict": "incomplete", "add_inputs": ["DHB"]}}, "merge")
     assert "DHB" not in out["processes"]["reactions"][2]["inputs"]
-    # F-G3: not even the payload's own exact spelling (another entity's name)
+    # F-G3: never a rename onto the payload's own exact spelling (another entity's name); since r3 the row
+    # folds instead, because renamed it is row 0's twin: no new spelling is written, the row goes
     out, rep = V.apply_verdicts(payload(rows), text, {1: {"verdict": "vague", "rename": [
         {"old": "activated 2,3-DHB", "new": "2,3-dihydroxybenzoyl-AMP"}]}}, "merge")
-    assert rep["merged"] == [] and rep["repaired"] == []
+    assert rep["repaired"] == [] and [(m["index"], m["into"]) for m in rep["merged"]] == [(1, 0)]
+    assert out["processes"]["reactions"][1]["scope_membership"] == "out_of_scope"
 
 
 def test_budget_is_a_wall_clock_bound_across_retries():

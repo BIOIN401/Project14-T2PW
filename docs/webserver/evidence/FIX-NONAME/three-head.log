@@ -1,0 +1,44 @@
+HEAD 336f91794cbe6ab50ebd3ea007cc2a886af2e945 src-diff-vs-HEAD: 
+== c075
+E   AssertionError: the armed pass changed over the corpus (118 artifacts). unexpected: [('PMC12096016', 'strict', "Pantetheine 4'-phosphate")]; no longer caught: []
+    assert {('PMC1209601...uccinyl-CoA')} == {('PMC1218015...uccinyl-CoA')}
+C:\t\fix-noname\tests\test_c075_source_support_armed.py:879: AssertionError: the armed pass changed over the corpus (118 artifacts). unexpected: [('PMC12096016', 'strict', "Pantetheine 4'-phosphate")]; no longer caught: []
+1 failed in 1.03s
+EXIT_c075=1
+== orch762
+1 passed in 2.18s
+EXIT_orch762=0
+== a7
+E   AssertionError: assert ['curation/pa...ion/serve.py'] == ['curation/pa...y_curator.py']
+C:\t\fix-noname\tests\test_curator_offline_mode.py:233: AssertionError: assert ['curation/pa...ion/serve.py'] == ['curation/pa...y_curator.py']
+1 failed in 1.03s
+EXIT_a7=1
+THREE_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 1bb0f3e408cbb4531001d32a97ef4f4e7e7c5c46  [git, worktree dirty=True]
+label                   : fixnoname-three-head
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/vis-runs/scratch/fixnoname/three.sh fixnoname-three-head
+cwd                     : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 272104 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 2000 s
+duration                : 6.97 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 8  280320:bash.exe, 289360:bash.exe, 255664:bash.exe, 281476:git.exe, 282360:bash.exe, 289068:bash.exe, 293024:bash.exe, 293100:head.exe
+descendants terminated  : 8  255664, 280320, 281476, 282360, 289068, 289360, 293024, 293100
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-runs/logs/fixnoname-three-head.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=FIX  acquired=True  released=True
+pre-existing (reported, NEVER killed): 12
+================================================
+BW_EXIT=0

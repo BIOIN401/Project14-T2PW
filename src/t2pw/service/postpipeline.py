@@ -289,6 +289,14 @@ def _record_mapped_failure_snapshot(
                         if isinstance(issue, dict) and issue.get("code")
                     }
                 ),
+                # FIX-NONAME: WHICH row failed, not only which code. The pointer
+                # names bucket and index; the detail is the contract's bounded row
+                # digest. Two Gemma post_audit aborts were undiagnosable without it.
+                "failing_issues": [
+                    {key: issue[key] for key in ("code", "pointer", "bucket", "detail") if key in issue}
+                    for issue in _safe_list(report_dict.get("errors"))[:10]
+                    if isinstance(issue, dict)
+                ],
             }
         )
     except Exception:  # noqa: BLE001

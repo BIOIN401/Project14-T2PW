@@ -1,0 +1,100 @@
+HEAD 1a52fb55d3bbc8d12a5337c705e95b329e1631c6
+STATUS_BEGIN
+STATUS_END
+FLAGS_LISTED_ABOVE_SHOULD_BE_NONE
+== tree C:/t/merge-acc2
+HEAD 1a52fb55d3bbc8d12a5337c705e95b329e1631c6
+STATUS_BEGIN
+STATUS_END
+== smoke
+........................................................................ [ 84%]
+........................................................................ [ 98%]
+.......                                                                  [100%]
+511 passed in 52.60s
+EXIT_smoke=0
+== g-batch
+T2PW: C:\t\merge-acc2\src\t2pw\__init__.py
+..                                                                       [100%]
+2 passed in 6.23s
+EXIT_g-batch=0
+== g-c011
+T2PW: C:\t\merge-acc2\src\t2pw\__init__.py
+........                                                                 [100%]
+8 passed in 45.45s
+EXIT_g-c011=0
+== g-stage8
+T2PW: C:\t\merge-acc2\src\t2pw\__init__.py
+....                                                                     [100%]
+4 passed in 0.36s
+EXIT_g-stage8=0
+== g-quar
+T2PW: C:\t\merge-acc2\src\t2pw\__init__.py
+........................                                                 [100%]
+24 passed in 38.46s
+EXIT_g-quar=0
+== eq-run
+T2PW: C:\t\merge-acc2\src\t2pw\__init__.py
+........                                                                 [100%]
+8 passed in 60.74s (0:01:00)
+EXIT_eq-run=0
+== eq-app
+T2PW: C:\t\merge-acc2\src\t2pw\__init__.py
+..............                                                           [100%]
+14 passed in 58.91s
+EXIT_eq-app=0
+== eq-default
+T2PW: C:\t\merge-acc2\src\t2pw\__init__.py
+......                                                                   [100%]
+6 passed in 30.13s
+EXIT_eq-default=0
+== vision
+........................................................................ [ 77%]
+........................................................................ [ 97%]
+..........s                                                              [100%]
+370 passed, 1 skipped in 16.42s
+EXIT_vision=0
+== web
+T2PW: C:\t\merge-acc2\src\t2pw\__init__.py
+........................................................................ [ 86%]
+...........                                                              [100%]
+83 passed in 5.40s
+EXIT_web=0
+SUITE_DONE
+== focused: lane tests + rag + final_payload + pwml
+tests\test_rag_seed_entity_reimport.py:570: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_rag_seed_entity_reimport.py::test_the_orchestrator_passes_the_merge_base_to_conform
+1 failed, 1157 passed, 1 skipped in 29.38s
+== llm client files, own process
+FAILED tests/test_llm_client_request_timeout.py::test_d_a_timeout_is_never_filed_as_an_empty_completion
+FAILED tests/test_llm_client_request_timeout.py::test_d_a_budget_spent_on_timeouts_is_not_the_empty_string_exit
+3 failed, 32 passed in 0.47s
+MERGE_GATES_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 8d9787881b076bb09ef767125d38d529ae2a4158  [git, worktree dirty=True]
+label                   : merge-acc2-gates
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/vis-runs/merge_acc2_inner.sh
+cwd                     : C:\t\merge-acc2
+root PID / process group: 193704 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 7200 s
+duration                : 358.51 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 93  195928:bash.exe, 196160:git.exe, 196568:bash.exe, 196056:bash.exe, 196060:bash.exe, 196352:bash.exe, 195224:git.exe, 195680:bash.exe, 188568:python.exe, 195368:python.exe, 195892:bash.exe, 181752:python.exe, 191616:python.exe, 191648:python.exe, 195988:python.exe, 196016:python.exe, 196172:python.exe, 195900:python.exe, 196412:python.exe, 193860:git.exe, 197128:bash.exe, 197160:python.exe, 197172:python.exe, 196772:python.exe, 196892:bash.exe, 196924:python.exe, 191724:git.exe, 196616:git.exe, 181328:python.exe, 197492:python.exe, 194124:python.exe, 197488:python.exe, 197572:git.exe, 180060:python.exe, 188704:python.exe, 193152:python.exe, 196776:python.exe, 196460:python.exe, 196528:python.exe, 193812:python.exe, 195044:python.exe, 195128:python.exe, 195240:python.exe, 191948:python.exe, 194912:python.exe, 190172:python.exe, 196808:python.exe, 197476:bash.exe, 187284:bash.exe, 187652:bash.exe, 190040:python.exe, 190240:tail.exe, 197548:python.exe, 192332:python.exe, 196716:python.exe, 197180:bash.exe, 193428:python.exe, 194664:python.exe, 23960:python.exe, 184160:bash.exe, 188200:bash.exe, 190820:python.exe, 194616:tail.exe, 196072:python.exe, 196300:bash.exe, 197676:python.exe, 194336:bash.exe, 196884:bash.exe, 198176:bash.exe, 198188:python.exe, 197940:python.exe, 196816:python.exe, 198592:python.exe, 194868:python.exe, 196936:python.exe, 191816:bash.exe, 198608:python.exe, 198628:python.exe, 197280:python.exe, 198204:python.exe, 194236:python.exe, 198036:python.exe, 197884:python.exe, 198048:python.exe, 197308:python.exe, 197836:python.exe, 180392:bash.exe, 198340:bash.exe, 158596:python.exe, 196968:python.exe, 197732:bash.exe, 198168:python.exe, 199384:python.exe
+descendants terminated  : 93  23960, 158596, 180060, 180392, 181328, 181752, 184160, 187284, 187652, 188200, 188568, 188704, 190040, 190172, 190240, 190820, 191616, 191648, 191724, 191816, 191948, 192332, 193152, 193428, 193812, 193860, 194124, 194236, 194336, 194616, 194664, 194868, 194912, 195044, 195128, 195224, 195240, 195368, 195680, 195892, 195900, 195928, 195988, 196016, 196056, 196060, 196072, 196160, 196172, 196300, 196352, 196412, 196460, 196528, 196568, 196616, 196716, 196772, 196776, 196808, 196816, 196884, 196892, 196924, 196936, 196968, 197128, 197160, 197172, 197180, 197280, 197308, 197476, 197488, 197492, 197548, 197572, 197676, 197732, 197836, 197884, 197940, 198036, 198048, 198168, 198176, 198188, 198204, 198340, 198592, 198608, 198628, 199384
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-runs/logs/merge-acc2-gates.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
+BW_EXIT=0
