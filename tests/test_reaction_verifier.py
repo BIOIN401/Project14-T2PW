@@ -68,8 +68,10 @@ def test_incomplete_with_a_string_adds_the_name_not_its_letters():
 
 
 def test_incomplete_may_correct_a_wrong_participant():
-    """R1 F7c: the live DHB-ate row. A wrong name is replaced (rename), not kept next to the right one.
-    F-G3: only to a name no other entity carries (and, R4 B1, with no abbreviation token such as AMP)."""
+    """R1 F7c: a wrong name is replaced (rename), not kept next to the right one, but since F-G3 only onto a
+    name no other entity carries (and, R4 B1, with no abbreviation token such as AMP). The live case R1 F7c
+    came from (DHB-ate renamed onto the existing 2,3-dihydroxybenzoyl-AMP) is now REFUSED: that row stays
+    as Stage 1 wrote it (action "kept"; the report records the model's verdict and rename)."""
     rows, rep, _ = run([rx(["isochorismate"], ["pyruvate"], name="EntB")],
                        {0: {"verdict": "incomplete", "rename": [{"old": "pyruvate", "new": "2,3-dihydro-2,3-dihydroxybenzoate"}]}})
     assert rows[0]["outputs"] == ["2,3-dihydro-2,3-dihydroxybenzoate"] and rep["repaired"] == [0]
