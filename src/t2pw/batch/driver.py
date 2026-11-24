@@ -1770,6 +1770,11 @@ def _add_common_artifacts(at: Any, artifacts: Dict[str, Any], out: Dict[str, Any
     """Stage-1 and merged payloads, whenever the app got far enough to store them."""
 
     _add_diagnostic_artifacts(at, out)
+    # T2PW_REACTION_VERIFIER / T2PW_INTERACTION_TYPING (default off): the verifier's full report, kept with
+    # the run. Absent when both flags are off, so the artifact set is unchanged then.
+    verifier = _ss(at, "reaction_verifier_report")
+    if isinstance(verifier, dict) and verifier:
+        out["reaction_verifier_report.json"] = _json_text(verifier)
     stage_one = _ss(at, "stage_one")
     if isinstance(stage_one, dict) and stage_one:
         out["stage1_payload.json"] = _json_text(stage_one)

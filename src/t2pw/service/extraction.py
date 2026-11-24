@@ -734,7 +734,8 @@ def run_stage_one(
         stage_one = _transport_sides.apply_to_stage_one(stage_one, text, state, diagnostics_dir)
     from t2pw.service import reaction_verifier as _verifier  # T2PW_REACTION_VERIFIER / T2PW_INTERACTION_TYPING, default off
     if _verifier.enabled() or _verifier.typing_enabled():
-        stage_one = _verifier.apply_to_stage_one(stage_one, text, state, diagnostics_dir, pathway_context, user_task_context)
+        stage_one = _verifier.apply_to_stage_one(stage_one, text, state, diagnostics_dir, pathway_context,
+                                                 user_task_context, manifest_dir=paths.PROJECT_ROOT / "tmp")
     if _boundary.reconstruction:
         reporter.info(
             f"Reconstructed {_boundary.reconstruction.get('shell_count', 0)} unresolved "

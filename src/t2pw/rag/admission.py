@@ -749,10 +749,10 @@ _ATTACHED_ACTOR = (
 )
 #: One protein symbol, case-sensitive even inside an IGNORECASE template: a bacterial
 #: Xxx[A-Z] name with an optional digit (EntC, MenF, LpxK, HemA1) or an all-capitals
-#: symbol WITH a digit (ALAS2, HEMA1, CHL27). An all-capitals word without a digit is
-#: refused: NADH, HPLC, NMR, ATP are reagents and methods, not catalysts. Used only by
-#: the VD-18 templates.
-_SYMBOL_ACTOR = r"(?-i:[A-Z][a-z]{2}[A-Z]\d?|[A-Z]{2,}\d+[A-Za-z]?)"
+#: symbol of 3+ capitals WITH a digit (ALAS2, HEMA1, CHL27, POR1). An all-capitals word
+#: without a digit is refused (NADH, HPLC, NMR, ATP are reagents and methods), and so is a
+#: two-capital formula (CO2, NO2, SO4; review R2 N4). Used only by the VD-18 templates.
+_SYMBOL_ACTOR = r"(?-i:[A-Z][a-z]{2}[A-Z]\d?|[A-Z]{3,}\d+[A-Za-z]?)"
 
 #: VD-18 switch, default OFF. With it unset the parser walks exactly main's template
 #: list (:data:`_ALL_PROSE_PATTERNS`); the VD-18 templates are added only when it is on.
