@@ -565,3 +565,54 @@ the vague rename flag-only under Gemma, giving up its precision gain; (c) refuse
 is already a registry name (cheap, untested live).
 
 **Spend:** Gemma legs + offline asks $1.98 (`logs4g/*.usage.jsonl`, `logs/ask4g-*.usage.jsonl`).
+
+### 14a. F-G3 option (c), implemented in `e72c2759` (orchestrator decision)
+
+- A rename is refused when its target is already carried by another entity or row of the payload, by the
+  spelling key or by `t2pw.pipeline.name_keys.reference_key`, the key the exporter's duplicate-named-row
+  check groups on (`pwml.ir._norm`). Names the same pass already added count ("will exist").
+- `_add_compound` (additions, merged whole steps) dedupes on `reference_key`, so the verifier never writes
+  a second entity row on the exporter's key. Additions of a name that already exists are NOT refused (the
+  row references the existing entity; accepted by the orchestrator), so the EntB pyruvate co-product
+  repair stays.
+- New test `test_a_rename_onto_another_entitys_name_is_refused` (the vt3-PMC12096016 shape, exact name and
+  a reference-key variant, plus an addition that must not create a second entity) fails on `4eb9cd22`.
+- **Three lane tests rewritten** because they asserted the now-banned rename onto an existing name:
+  `test_incomplete_may_correct_a_wrong_participant` (now renames pyruvate to a name no entity carries),
+  `test_vague_rename_then_fold_into_the_identical_row` (replaced by the new test above), and the last
+  clause of `test_an_abbreviated_synonym_is_never_written_next_to_the_full_name` (now asserts refusal).
+  With R4 B1 still in place, a rename target with an abbreviation token (AMP, CoA) is now always refused:
+  the old exact-spelling path that bypassed B1 is gone.
+- **Cost, offline re-application (final projection, merge, 0 gold lost everywhere):** enterobactin
+  precision on deepseek answers 0.878 → 0.844 (`answers2`) and 0.907 → 0.867 (`answers3`), from losing
+  the rename-then-fold of duplicate EntE rows; every other paper unchanged; Gemma `answers4g` unchanged.
+  `json/evalv_fg3_{2,3,4g}.json`. Lane unit run 88 passed (`logs/ut-fg3b.log`); new tests on 4eb9cd22: 2
+  failed (`logs/ut-fg3b-old.log`).
+
+### 14b. Ticket (outside the lane, for the PO; not fixed here): Gemma runs abort at post_audit on a nameless entity row
+
+**Correction to F-G3 above:** this is not tied to "2,3-dihydroxybenzoyl-AMP". The BASE arm (every flag
+off) hit the same abort on the negative control, and the 14 table's "base1: no reactions" for
+PMC13231680 is wrong: that run aborted the same way.
+
+| run | arm | paper | failing step |
+|---|---|---|---|
+| vt1-PMC12096016 | VT (the verifier changed no row; it flagged rows 4 and 6 only) | enterobactin | post_audit |
+| base1-PMC13231680 | BASE, flags off | negative control | post_audit |
+
+- **Failing step:** `t2pw.pipeline.stage_contracts.validate_post_audit` (effect `abort`), error
+  `entity_missing_name` "Every entity row must have a non-empty name." (stage_contracts.py:657), reported
+  as "Audit and DB mapping stopped at the post_audit stage boundary". `mapped_failure_snapshot.json`
+  records `failing_codes: ["entity_missing_name"]`.
+- **Where the nameless row comes from:** not Stage 1 and not the verifier. `stage1_payload.json` and
+  `merged_payload.json` of both runs have no entity with an empty name, so the row is created between
+  merged_payload and the post_audit boundary (audit loop / gap resolver / DB mapping). The run folder
+  does not persist the contract's `row_digest` or pointer, so the bucket and index are not recoverable
+  from the artifacts: an observability gap worth fixing with the ticket.
+- **Repro payloads:** `C:/t/acc-runs/legs4g/vt1-PMC12096016/2026-11-23_1322/papers/PMC12096016/strict/`
+  and `C:/t/acc-runs/legs4g/base1-PMC13231680/2026-11-23_0014/papers/PMC13231680/strict/`
+  (`stage1_payload.json`, `merged_payload.json`, `mapped_failure_snapshot.json`, `LEG_TRACE.jsonl`).
+  vt1 also carries two compound rows named "2,3-dihydroxybenzoyl-AMP" in merged_payload (one
+  `reconstructed_from_process_participant`, one `inferred`); whether that pair is related is open.
+- **Frequency:** Gemma 2 of 35 legs (1 BASE, 1 VT; `legs4g`). Deepseek 0 of 19 legs (`legs` 5,
+  `legs3` 4, `legs4` 10).
