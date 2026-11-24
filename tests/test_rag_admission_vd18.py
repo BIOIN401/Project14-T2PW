@@ -25,6 +25,10 @@ NEGATIVE = [
     ("conversion of chorismate to isochorismate was measured by HPLC", ["chorismate"], ["isochorismate"], []),
     ("conversion of chorismate to isochorismate by HPLC", ["chorismate"], ["isochorismate"], ["HPLC"]),
     ("oxidation of NADH to NAD by NMR", ["NADH"], ["NAD"], []),
+    # two-capital formulas are not catalysts (review R2 N4)
+    ("reduction of protochlorophyllide to chlorophyllide by CO2", ["protochlorophyllide"], ["chlorophyllide"], []),
+    ("reduction of protochlorophyllide to chlorophyllide by CO2", ["protochlorophyllide"], ["chlorophyllide"], ["CO2"]),
+    ("oxidation of nitrite to nitrate by NO2", ["nitrite"], ["nitrate"], []),
     # a span cut inside the catalyst name
     ("activation of DHB to DHB-AMP by Ent", ["DHB"], ["DHB-AMP"], ["Ent"]),
     # negated
