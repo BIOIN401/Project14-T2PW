@@ -392,8 +392,9 @@ def ask_reactions(payload: Dict[str, Any], text: str, pathway: Dict[str, Any],
 
 def summary_covered(row: Dict[str, Any], kept: Sequence[Tuple[int, Dict[str, Any]]]) -> bool:
     """True only when the kept rows themselves make EVERY non-currency product of ``row`` from its
-    non-currency substrates: each product is an output of some kept row and is reachable from the row's
-    substrates through kept rows, walking non-currency names only. A co-product (CO2, AMP, PPi) can
+    non-currency substrates: each product is an output of some kept row and is reachable from EACH of the
+    row's substrates through kept rows, walking non-currency names only (a co-substrate alone, such as
+    L-serine, cannot cover it: Gemma run 3). A co-product (CO2, AMP, PPi) can
     neither stand in for a product nor carry the walk, so dropping a covered summary loses nothing the
     kept rows do not already state (review R1 F3). A real one-enzyme step (EntF: DHB-AMP + L-serine ->
     enterobactin) is dropped only if another kept row already makes enterobactin from DHB-AMP."""
@@ -404,13 +405,16 @@ def summary_covered(row: Dict[str, Any], kept: Sequence[Tuple[int, Dict[str, Any
     for _, r in kept:
         for a in _core(r.get("inputs")):
             edges.setdefault(a, set()).update(_core(r.get("outputs")))
-    seen, todo = set(), list(src)
-    while todo:
-        for nxt in edges.get(todo.pop(), ()):
-            if nxt not in seen:
-                seen.add(nxt)
-                todo.append(nxt)
-    return dst <= seen
+    for s in src:
+        seen, todo = set(), [s]
+        while todo:
+            for nxt in edges.get(todo.pop(), ()):
+                if nxt not in seen:
+                    seen.add(nxt)
+                    todo.append(nxt)
+        if not dst <= seen:
+            return False
+    return True
 
 
 def _lineage(row: Dict[str, Any], reason: str) -> None:
@@ -604,7 +608,9 @@ def apply_verdicts(payload: Dict[str, Any], text: str, answers: Dict[int, Dict[s
         if verdict[i] != "off_pathway" and any(_generic(n) for n in _names(r.get("inputs")) + _names(r.get("outputs"))):
             verdict[i] = "split"
     chains = _chain_steps([(i, r) for i, r in live if verdict[i] == "split"])
-    plain = [(i, r) for i, r in live if verdict[i] not in ("summary", "split")]
+    # a row the model judged wrong (not stated, off pathway) stays in the payload but can never be the
+    # coverage that drops another row (Gemma run 3: DHB + serine -> enterobactin "covered" the real EntF step)
+    plain = [(i, r) for i, r in live if verdict[i] not in ("summary", "split", "not_stated", "off_pathway")]
     new_rows: List[Dict[str, Any]] = []
     chain_done: set = set()
 

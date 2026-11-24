@@ -208,6 +208,17 @@ def test_a_mislabelled_one_enzyme_step_is_never_dropped():
     assert rows[5]["scope_membership"] == "core"
 
 
+def test_a_co_substrate_or_a_wrong_row_never_covers_a_summary():
+    """Gemma run 3 (vt3-PMC12096016): the real EntF step was called a summary and dropped because L-serine
+    reached enterobactin through a wrong row (DHB + L-serine -> enterobactin) the model itself called not stated."""
+    adenyl = rx(["2,3-DHB", "ATP"], ["2,3-dihydroxybenzoyl-AMP"], name="EntE")
+    wrong = rx(["2,3-DHB", "L-serine"], ["enterobactin"], name="EntF?")
+    entf = rx(["2,3-dihydroxybenzoyl-AMP", "L-serine"], ["enterobactin"], name="EntF")
+    for wrong_verdict in ("not_stated", "ok"):
+        rows, rep, _ = run([adenyl, wrong, entf], {1: {"verdict": wrong_verdict}, 2: {"verdict": "summary"}}, "merge")
+        assert rows[2]["scope_membership"] == "core" and 2 in rep["flagged"], wrong_verdict
+
+
 # -- interaction typing (R1 F5, F6) --------------------------------------------------------------------
 Q_PIF = "Loss of function of PIF1 caused increased expression of CHLH"
 
