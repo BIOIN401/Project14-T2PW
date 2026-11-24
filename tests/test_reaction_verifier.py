@@ -68,19 +68,34 @@ def test_incomplete_with_a_string_adds_the_name_not_its_letters():
 
 
 def test_incomplete_may_correct_a_wrong_participant():
-    """R1 F7c: the live DHB-ate row. A wrong name is replaced (rename), not kept next to the right one."""
-    rows, rep, _ = run([rx(["2,3-DHB", "ATP"], ["2,3-dihydroxybenzoyl-AMP"], name="EntE"),
-                        rx(["2,3-DHB", "ATP"], ["pyruvate"], name="EntE2")],
-                       {1: {"verdict": "incomplete", "rename": [{"old": "pyruvate", "new": "2,3-dihydroxybenzoyl-AMP"}]}})
-    assert len(live(rows)) == 1 and rep["merged"][0]["into"] == 0
+    """R1 F7c: the live DHB-ate row. A wrong name is replaced (rename), not kept next to the right one.
+    F-G3: only to a name no other entity carries (and, R4 B1, with no abbreviation token such as AMP)."""
+    rows, rep, _ = run([rx(["isochorismate"], ["pyruvate"], name="EntB")],
+                       {0: {"verdict": "incomplete", "rename": [{"old": "pyruvate", "new": "2,3-dihydro-2,3-dihydroxybenzoate"}]}})
+    assert rows[0]["outputs"] == ["2,3-dihydro-2,3-dihydroxybenzoate"] and rep["repaired"] == [0]
 
 
-def test_vague_rename_then_fold_into_the_identical_row():
-    rows, rep, _ = run([rx(["2,3-DHB", "ATP"], ["2,3-dihydroxybenzoyl-AMP"], name="EntE"),
-                        rx(["2,3-DHB", "ATP"], ["activated 2,3-DHB"], name="EntE2")],
-                       {1: {"verdict": "vague", "rename": [{"old": "activated 2,3-DHB", "new": "2,3-dihydroxybenzoyl-AMP"}]}})
-    assert len(live(rows)) == 1 and rep["merged"] == [{"index": 1, "into": 0, "name": "EntE2"}]
-    assert {e["protein"] for e in rows[0]["enzymes"]} == {"EntE", "EntE2"}
+def test_a_rename_onto_another_entitys_name_is_refused():
+    """Gemma F-G3, the vt3-PMC12096016 shape: the registry and other rows already carry
+    "2,3-dihydroxybenzoyl-AMP"; renaming "activated 2,3-DHB" onto it ended the run downstream with
+    PWML_IR_DUPLICATE_NAMED_ROW. Written to fail on 4eb9cd22 (which renamed and folded the row)."""
+    rows = [rx(["2,3-dihydroxybenzoic acid", "ATP"], ["activated 2,3-DHB"], name="2,3-DHB adenylation"),
+            rx(["activated 2,3-DHB", "L-serine"], ["enterobactin"], name="enterobactin synthesis"),
+            rx(["2,3-dihydroxybenzoic acid", "ATP"], ["2,3-dihydroxybenzoyl-AMP"], name="EntE reaction"),
+            rx(["2,3-dihydroxybenzoyl-AMP", "L-serine"], ["enterobactin"], name="EntF reaction")]
+    for new in ("2,3-dihydroxybenzoyl-AMP", "2,3-Dihydroxybenzoyl AMP"):  # exact, and the same reference key
+        out, rep = V.apply_verdicts(payload(rows), TEXT + " " + new + ".", {0: {"verdict": "vague", "rename": [
+            {"old": "activated 2,3-DHB", "new": new}]}}, "merge")
+        assert out["processes"]["reactions"][0]["outputs"] == ["activated 2,3-DHB"] and rep["repaired"] == [], new
+        assert rep["merged"] == []
+    # an added name that only differs by the reference key never becomes a second entity row
+    from t2pw.pipeline.name_keys import reference_key
+
+    out, rep = V.apply_verdicts(payload(rows), TEXT + " 2,3-Dihydroxybenzoyl AMP.", {1: {
+        "verdict": "incomplete", "add_inputs": ["2,3-Dihydroxybenzoyl AMP"]}}, "merge")
+    before = {reference_key(e["name"]) for e in payload(rows)["entities"]["compounds"]}
+    assert {reference_key(e["name"]) for e in out["entities"]["compounds"]} == before
+    assert len(out["entities"]["compounds"]) == len(payload(rows)["entities"]["compounds"])
 
 
 def test_rename_to_a_name_not_in_the_paper_is_refused():
@@ -349,10 +364,10 @@ def test_an_abbreviated_synonym_is_never_written_next_to_the_full_name():
     assert "DHB-AMP" not in names and rep["repaired"] == []
     out, rep = V.apply_verdicts(payload(rows), text, {2: {"verdict": "incomplete", "add_inputs": ["DHB"]}}, "merge")
     assert "DHB" not in out["processes"]["reactions"][2]["inputs"]
-    # the payload's own exact spelling is still accepted
+    # F-G3: not even the payload's own exact spelling (another entity's name)
     out, rep = V.apply_verdicts(payload(rows), text, {1: {"verdict": "vague", "rename": [
         {"old": "activated 2,3-DHB", "new": "2,3-dihydroxybenzoyl-AMP"}]}}, "merge")
-    assert rep["merged"][0]["into"] == 0
+    assert rep["merged"] == [] and rep["repaired"] == []
 
 
 def test_budget_is_a_wall_clock_bound_across_retries():

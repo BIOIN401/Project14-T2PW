@@ -427,9 +427,11 @@ def _lineage(row: Dict[str, Any], reason: str) -> None:
 
 
 def _add_compound(payload: Dict[str, Any], name: str, reason: str) -> None:
+    from t2pw.pipeline.name_keys import reference_key  # the exporter's duplicate-named-row key (pwml.ir._norm)
+
     ents = payload.setdefault("entities", {})
-    known = {_key(_name(e)) for bucket in ents.values() if isinstance(bucket, list) for e in bucket}
-    if _key(name) in known:
+    known = {reference_key(_name(e)) for bucket in ents.values() if isinstance(bucket, list) for e in bucket}
+    if reference_key(name) in known:
         return
     row = {"name": name, "class": "compound", "confidence": 1.0, "provenance": "extracted"}
     _lineage(row, reason)
@@ -546,20 +548,24 @@ def _one_spelling(name: str, known: Dict[str, str]) -> str:
 
 
 def _apply_renames(row: Dict[str, Any], renames: Any, tw: str, payload: Optional[Dict[str, Any]] = None) -> List[List[str]]:
-    """Rename participants of ``row`` in place, only to names that occur in the paper. A rename is applied
-    only when the new name is one the payload already uses (its spelling is kept) or the old name occurs in
-    no other row (so no row keeps the old spelling next to the new one); otherwise it is refused (R3 P4).
-    -> [[old, new]]."""
+    """Rename participants of ``row`` in place, only to names that occur in the paper, only to a name no
+    other entity or row of the payload carries (spelling key or the exporter's reference key; Gemma F-G3:
+    "activated 2,3-DHB" -> "2,3-dihydroxybenzoyl-AMP" next to an existing "2,3-dihydroxybenzoyl-AMP" ended
+    the run with PWML_IR_DUPLICATE_NAMED_ROW), and only when the old name occurs in no other row (R3 P4).
+    Names this pass already added count, so two repairs cannot meet on one name. -> [[old, new]]."""
+    from t2pw.pipeline.name_keys import reference_key
+
     known = _payload_names(payload or {}, skip=row)
     others = _payload_names(payload or {}, skip=row, registry=False)
+    taken = {reference_key(n) for n in known.values()}
     done = []
     for ren in renames if isinstance(renames, list) else []:
         old, new = (ren.get("old"), ren.get("new")) if isinstance(ren, dict) else (None, None)
         if not (isinstance(old, str) and isinstance(new, str) and len(new.strip()) > 1 and _in_text(new, tw)):
             continue
-        if _spelling(new) in known:
-            new = known[_spelling(new)]
-        elif _spelling(old) in others or _abbreviated(new):  # R3 P4, R4 B1
+        if _spelling(new) in known or reference_key(new) in taken - {reference_key(old)}:  # F-G3
+            continue
+        if _spelling(old) in others or _abbreviated(new):  # R3 P4, R4 B1
             continue
         if _key(new) == _key(old):
             continue
