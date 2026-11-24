@@ -1170,6 +1170,7 @@ def build_report(
             for row in map(_dict, _list(processes.get("transports")))
             if _compartment(row, "from_biological_state", "to_biological_state")
         ],
+        "inferred_locations": _inferred_locations(_dict(payload.get("final_payload_locations"))),
         "ir_source": ir_source if PWML_IR_FILENAME in artifacts else NOT_RECORDED,
         "quarantined": quarantined,
         "removed_entities": removed_entities,
@@ -1362,6 +1363,20 @@ def _compartment(row: Mapping[str, Any], *fields: str) -> str:
     return f"{where} [{source}: {reason}]"
 
 
+def _inferred_locations(record: Mapping[str, Any]) -> List[str]:
+    """Lane loc/assign: every place the paper record did not state and the location step inferred (organism default, LLM
+    quote), every state whose only evidence is the Stage-0 hint, and every transport left with one place at both ends."""
+    side = lambda f: "state" if f == "biological_state" else f.split("_")[0]  # noqa: E731
+    lines = [f"{_text(e.get('kind'))} {_text(e.get('name')) or NOT_RECORDED}: {side(_text(e.get('field')))} -> "
+             f"'{_text(e.get('to_state'))}' [inferred: {_text(e.get('inferred'))}: {_text(e.get('reason'))}]"
+             for e in map(_dict, _list(record.get("inferred")))]
+    lines += [f"state {_text(e.get('state'))}: location '{_text(e.get('location'))}' [evidence is only the Stage-0 hint: "
+              f"{_text(e.get('evidence'))}]" for e in map(_dict, _list(record.get("hint_states")))]
+    lines += [f"transport {_text(e.get('transport'))}: both ends are one place ('{_text(e.get('from'))}' / "
+              f"'{_text(e.get('to'))}') [review]" for e in map(_dict, _list(record.get("same_place_left")))]
+    return lines
+
+
 def _evidence(quotes: List[str]) -> List[str]:
     return ["Evidence:", *([f'  {i}. "{q}"' for i, q in enumerate(quotes, 1)] or [f"  {NOT_RECORDED}"])]
 
@@ -1469,6 +1484,9 @@ def render_text(report: Mapping[str, Any]) -> str:
     if report.get("transport_compartments"):  # absent section when every transport side is stated
         lines += [*_section(f"TRANSPORT SIDES NOT STATED IN THE PAPER RECORD ({len(report['transport_compartments'])})"),
                   *(f"- {line}" for line in report["transport_compartments"]), ""]
+    if report.get("inferred_locations"):  # absent section when nothing was inferred: other reports keep their bytes
+        lines += [*_section(f"INFERRED LOCATIONS ({len(report['inferred_locations'])})"),
+                  *(f"- {line}" for line in report["inferred_locations"]), ""]
     if report["borrowed_identities"]:  # absent section when nothing is borrowed: other reports keep their bytes
         lines += [*_section(borrowed_identities_title(report)), *(f"- {line}" for line in report["borrowed_identities"]), ""]
     quarantined = report["quarantined"]

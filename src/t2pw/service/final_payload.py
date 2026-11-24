@@ -323,6 +323,14 @@ def maybe_apply_final_id_fill(payload: Dict[str, Any], pathway_context: Any = No
                                                        organism_hint=fill_meta(pathway_context, state).get("organism") or "")
     except Exception as exc:
         report["compartments"] = {"error": f"{type(exc).__name__}: {exc}"}
+    # Lane loc/assign: flagged inferred locations (organism default, LLM quote), after L7, before L8; never raises.
+    try:
+        from t2pw.service.final_payload_locations import assign_locations
+        report["locations"] = assign_locations(payload, state, cache=kw.get("cache"), chat_fn=chat_fn,
+                                               fetcher=shared.get("fetcher"), today=kw.get("today"),
+                                               organism_hint=fill_meta(pathway_context, state).get("organism") or "")
+    except Exception as exc:
+        report["locations"] = {"error": f"{type(exc).__name__}: {exc}"}
     # D-W24 (6, 7c), L8: evidence checks, last: after L7's compartment estimate, whose rows it checks, offline; never raises.
     try:
         from t2pw.service.final_payload_evidence import check_evidence

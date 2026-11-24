@@ -747,6 +747,16 @@ _ACTOR_PARENTHETICAL = r"\([^()]{1,60}\)"
 _ATTACHED_ACTOR = (
     rf"[A-Za-z][\w\-/]*(?:\s+(?:{_ACTOR_PARENTHETICAL}|[\w\-/]+)){{0,5}}?"
 )
+#: One protein symbol, case-sensitive even inside an IGNORECASE template: a bacterial
+#: Xxx[A-Z] name with an optional digit (EntC, MenF, LpxK, HemA1) or an all-capitals
+#: symbol of 3+ capitals WITH a digit (ALAS2, HEMA1, CHL27, POR1). An all-capitals word
+#: without a digit is refused (NADH, HPLC, NMR, ATP are reagents and methods), and so is a
+#: two-capital formula (CO2, NO2, SO4; review R2 N4). Used only by the VD-18 templates.
+_SYMBOL_ACTOR = r"(?-i:[A-Z][a-z]{2}[A-Z]\d?|[A-Z]{3,}\d+[A-Za-z]?)"
+
+#: VD-18 switch, default OFF. With it unset the parser walks exactly main's template
+#: list (:data:`_ALL_PROSE_PATTERNS`); the VD-18 templates are added only when it is on.
+VD18_ENV_FLAG = "T2PW_VD18_SPAN_TEMPLATES"
 
 #: Templates added by C-061 (and extended by C-118), kept OUT of
 #: :data:`_PROSE_PATTERNS` so that constant stays byte-identical, and tried LAST
@@ -826,11 +836,58 @@ _EXTRA_PROSE_PATTERNS: Tuple[Tuple[str, re.Pattern], ...] = (
     ),
 )
 
+#: VD-18 (acc/verifier lane), behind :data:`VD18_ENV_FLAG` (default off). Two shapes
+#: measured in the stored admission reports as sole-blocker ``roles_unassignable``
+#: refusals of a true pathway step ("activation of DHB to DHB-AMP by EntE"). Like D-095
+#: they bind the catalyst ONLY from an explicit ``by`` attached to the same
+#: nominalization and keep both participant groups free of ``.;,()``; unlike D-095 the
+#: catalyst must be a protein symbol (:data:`_SYMBOL_ACTOR`), so "by NADH" / "by HPLC"
+#: is never read as a catalyst. A copula form ("X is first converted to Y by EntC") was
+#: tried and removed: it equally reads other-pathway chemistry ("acetyl-Pi is then
+#: converted to acetate by AckA"). What the parser cannot do is judge pathway
+#: membership: "conversion of A to B by AckA" is read here exactly as main's D-095
+#: template already reads "conversion of A to B, catalyzed by AckA"; refusing
+#: off-pathway chemistry stays the job of the pathway and connection rules.
+_VD18_PROSE_PATTERNS: Tuple[Tuple[str, re.Pattern], ...] = (
+    (
+        # "activation of DHB to DHB-AMP by EntE" / "isomerization of chorismate to
+        # isochorismate by EntC": a nominalization with "of A to B by E". The head noun
+        # is a closed list of single-step conversions; "condensation"/"formation" (the
+        # nominalized-SUBJECT shape F-179 blocks, and product-only phrases) are not in it.
+        "nominalized_of_to_by",
+        re.compile(
+            rf"\b{_NOT_NEGATED}(?:activation|isomeri[sz]ation|conversion|reduction|oxidation)\s+of\s+"
+            rf"(?P<lhs>[^.;,()]+?)\s+(?:in)?to\s+(?P<rhs>[^.;,()]+?)\s+by\s+"
+            rf"(?P<enz>{_SYMBOL_ACTOR})\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        # "the EntC-catalyzed isomerization of chorismate to isochorismate".
+        "catalyzed_nominalization_of_to",
+        re.compile(
+            rf"(?P<enz>{_SYMBOL_ACTOR})[\-‐‑\s]catal(?:yz|ys)ed\s+"
+            rf"(?:activation|isomeri[sz]ation|conversion|reduction|oxidation)\s+of\s+"
+            rf"(?P<lhs>[^.;,()]+?)\s+(?:in)?to\s+(?P<rhs>[^.;,()]+?)\s*(?=[.,;()]|$)",
+            re.IGNORECASE,
+        ),
+    ),
+)
+
 #: What the parser actually walks. Priority order is preserved exactly: every
 #: historical template is tried, in its historical order, before any new one.
 _ALL_PROSE_PATTERNS: Tuple[Tuple[str, re.Pattern], ...] = (
     _PROSE_PATTERNS + _EXTRA_PROSE_PATTERNS
 )
+
+
+def _prose_patterns() -> Tuple[Tuple[str, re.Pattern], ...]:
+    """:data:`_ALL_PROSE_PATTERNS`, plus the VD-18 templates (last) when :data:`VD18_ENV_FLAG` is on."""
+    import os
+
+    if os.environ.get(VD18_ENV_FLAG, "").strip().casefold() in ("1", "true", "yes"):
+        return _ALL_PROSE_PATTERNS + _VD18_PROSE_PATTERNS
+    return _ALL_PROSE_PATTERNS
 
 #: Clause connectors. Text before one of these on the substrate side, or after one
 #: on the product side, belongs to a different clause and is dropped — this is what
@@ -1551,7 +1608,7 @@ def parse_span_relations(span: str) -> List[SpanRelation]:
 
     out: List[SpanRelation] = []
     seen: Set[Tuple[Any, ...]] = set()
-    for name, pattern in _ALL_PROSE_PATTERNS:
+    for name, pattern in _prose_patterns():
         for match in _pattern_matches(pattern, body, first_only=False):
             relation = _relation_from_match(name, match, body)
             if relation is None:
@@ -1606,7 +1663,7 @@ def parse_span_relation(span: str) -> Optional[SpanRelation]:
                 pattern="arrow",
             )
 
-    for name, pattern in _ALL_PROSE_PATTERNS:
+    for name, pattern in _prose_patterns():
         for match in _pattern_matches(pattern, body, first_only=True):
             relation = _relation_from_match(name, match, body)
             if relation is None:

@@ -534,7 +534,17 @@ def test_reactions_are_unaffected_by_the_entity_guard():
 # 6 — the wiring. A guard the only caller does not use is not a fix.
 # ---------------------------------------------------------------------------
 def test_the_orchestrator_passes_the_merge_base_to_conform():
-    """The S3 seam must hand conform the SAME object it hands ``merge_additions``.
+    """The S3 seam must hand conform the SAME object it hands the merge as its base.
+
+    Where the call lives: since the R2 refactor (0941cd5d) the single production call
+    is ``rag_round_merge`` in ``src/t2pw/service/rag_orchestration.py``, no longer
+    ``streamlit_app.py``. The merge there is ``merge_site(graph, envelope, ctx)``;
+    ``merge_site`` is the app's ``merge_additions`` statement, injected so the C-060a
+    AST lift of that statement in ``streamlit_app.py`` still finds it. So the check
+    reads every module under ``src/t2pw``: exactly one call of
+    ``conform_rag_additions_for_merge`` (docstring mentions, e.g. in
+    ``rag/synthesize.py``, are not calls), and its second argument must be the same
+    name as ``merge_site``'s first argument (the merge base).
 
     ``seed_payload`` defaults to ``None``, which is the pre-fix behaviour, so a
     caller that forgets it gets a green conform module and a merged payload with
@@ -546,29 +556,29 @@ def test_the_orchestrator_passes_the_merge_base_to_conform():
     production until the second argument was added. Every unit test in this file
     passes the base explicitly, so none of them can catch that.
 
-    Checked against the SOURCE rather than by running the orchestrator, because
-    importing ``streamlit_app`` executes a Streamlit script. The assertion is
-    stronger than "two arguments were passed": the name given to conform must be
-    the same name given to ``merge_additions`` as its base. Passing the Stage-1
+    Checked against the SOURCE rather than by running the orchestrator. The
+    assertion is stronger than "two arguments were passed": passing the Stage-1
     seed there instead would type-check, run, and quietly let back every entity
     that Stage 2 registered and Stage 1 did not ('lipid IV_A precursor',
     'Kdo-lipid A precursor', 'tetra-acylated disaccharide intermediate' in that
     same run).
     """
-    tree = ast.parse(APP_PATH.read_text(encoding="utf-8"))
+    name = "conform_rag_additions_for_merge"
 
-    def _calls(name: str) -> List[ast.Call]:
-        return [
-            node
-            for node in ast.walk(tree)
-            if isinstance(node, ast.Call)
-            and isinstance(node.func, ast.Name)
-            and node.func.id == name
-        ]
+    def _is_call(node: ast.AST, fname: str) -> bool:
+        return isinstance(node, ast.Call) and (
+            (isinstance(node.func, ast.Name) and node.func.id == fname)
+            or (isinstance(node.func, ast.Attribute) and node.func.attr == fname)
+        )
 
-    conform_calls = _calls("conform_rag_additions_for_merge")
-    assert len(conform_calls) == 1, "the S3 seam is the only caller; found %d" % len(conform_calls)
-    call = conform_calls[0]
+    found = []  # (path, tree, call)
+    for path in sorted((SRC / "t2pw").rglob("*.py")):
+        tree = ast.parse(path.read_text(encoding="utf-8"))
+        found.extend((path, tree, n) for n in ast.walk(tree) if _is_call(n, name))
+    assert len(found) == 1, "the S3 seam is the only caller; found %s" % [
+        (str(p.relative_to(SRC)), n.lineno) for p, _, n in found
+    ]
+    _, tree, call = found[0]
 
     base_arg: Any = None
     if len(call.args) > 1:
@@ -589,14 +599,15 @@ def test_the_orchestrator_passes_the_merge_base_to_conform():
 
     merge_call = next(
         node
-        for node in _calls("merge_additions")
-        if len(node.args) > 1
+        for node in ast.walk(tree)
+        if _is_call(node, "merge_site")
+        and len(node.args) > 1
         and isinstance(node.args[1], ast.Name)
         and node.args[1].id == envelope_name
     )
     assert isinstance(merge_call.args[0], ast.Name)
     assert merge_call.args[0].id == base_arg.id, (
-        "conform was given %r but merge_additions merges into %r -- the guard can "
+        "conform was given %r but the merge merges into %r -- the guard can "
         "only remove a duplicate it can see in the actual base"
         % (base_arg.id, merge_call.args[0].id)
     )

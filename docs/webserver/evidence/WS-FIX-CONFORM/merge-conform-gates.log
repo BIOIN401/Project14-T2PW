@@ -1,0 +1,94 @@
+HEAD 81af9b728820758039c7da37c8a324bbd201482f
+STATUS_BEGIN
+STATUS_END
+== tree C:/t/merge-conform
+HEAD 81af9b728820758039c7da37c8a324bbd201482f
+STATUS_BEGIN
+STATUS_END
+== smoke
+........................................................................ [ 84%]
+........................................................................ [ 98%]
+.......                                                                  [100%]
+511 passed in 54.10s
+EXIT_smoke=0
+== g-batch
+T2PW: C:\t\merge-conform\src\t2pw\__init__.py
+..                                                                       [100%]
+2 passed in 6.49s
+EXIT_g-batch=0
+== g-c011
+T2PW: C:\t\merge-conform\src\t2pw\__init__.py
+........                                                                 [100%]
+8 passed in 46.05s
+EXIT_g-c011=0
+== g-stage8
+T2PW: C:\t\merge-conform\src\t2pw\__init__.py
+....                                                                     [100%]
+4 passed in 0.43s
+EXIT_g-stage8=0
+== g-quar
+T2PW: C:\t\merge-conform\src\t2pw\__init__.py
+........................                                                 [100%]
+24 passed in 38.65s
+EXIT_g-quar=0
+== eq-run
+T2PW: C:\t\merge-conform\src\t2pw\__init__.py
+........                                                                 [100%]
+8 passed in 60.73s (0:01:00)
+EXIT_eq-run=0
+== eq-app
+T2PW: C:\t\merge-conform\src\t2pw\__init__.py
+..............                                                           [100%]
+14 passed in 57.77s
+EXIT_eq-app=0
+== eq-default
+T2PW: C:\t\merge-conform\src\t2pw\__init__.py
+......                                                                   [100%]
+6 passed in 29.89s
+EXIT_eq-default=0
+== vision
+........................................................................ [ 77%]
+........................................................................ [ 97%]
+..........s                                                              [100%]
+370 passed, 1 skipped in 15.71s
+EXIT_vision=0
+== web
+T2PW: C:\t\merge-conform\src\t2pw\__init__.py
+........................................................................ [ 86%]
+...........                                                              [100%]
+83 passed in 5.83s
+EXIT_web=0
+SUITE_DONE
+== focused
+T2PW: C:\t\merge-conform\src\t2pw\__init__.py
+..............                                                           [100%]
+14 passed in 1.88s
+MERGE_GATES_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f89b3f7887180ae71200fd299a0adec087cfda72  [git, worktree dirty=True]
+label                   : merge-conform-gates
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/vis-runs/merge_conform_inner.sh
+cwd                     : c:\t\merge-conform
+root PID / process group: 486388 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 3600 s
+duration                : 330.93 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 93  486740:bash.exe, 486820:bash.exe, 480396:bash.exe, 486364:git.exe, 486512:bash.exe, 486880:bash.exe, 487164:bash.exe, 487240:bash.exe, 485188:git.exe, 487052:bash.exe, 487524:bash.exe, 487548:bash.exe, 487556:python.exe, 487568:python.exe, 487596:tail.exe, 484380:python.exe, 487880:python.exe, 483888:python.exe, 487960:python.exe, 487992:python.exe, 488096:python.exe, 488160:python.exe, 488180:python.exe, 488088:git.exe, 485396:python.exe, 486368:bash.exe, 486732:python.exe, 482804:python.exe, 485872:bash.exe, 486024:bash.exe, 486032:python.exe, 488252:tail.exe, 481852:git.exe, 487600:git.exe, 483208:git.exe, 483844:python.exe, 488036:python.exe, 484624:python.exe, 487616:python.exe, 482988:git.exe, 483800:python.exe, 485904:python.exe, 485720:python.exe, 488068:python.exe, 482700:python.exe, 485824:python.exe, 487412:python.exe, 488184:python.exe, 485760:python.exe, 486324:python.exe, 485504:python.exe, 486224:python.exe, 473916:bash.exe, 485620:python.exe, 485992:python.exe, 485596:bash.exe, 485852:python.exe, 488128:python.exe, 483088:bash.exe, 484836:python.exe, 485624:python.exe, 482612:python.exe, 485500:python.exe, 486008:python.exe, 487536:python.exe, 487684:bash.exe, 485348:bash.exe, 482764:python.exe, 486276:python.exe, 485480:bash.exe, 485444:bash.exe, 485800:bash.exe, 487772:python.exe, 483244:python.exe, 483080:git.exe, 473436:python.exe, 484504:python.exe, 481104:python.exe, 485928:python.exe, 488536:bash.exe, 488560:bash.exe, 488568:python.exe, 488580:python.exe, 488844:python.exe, 488864:python.exe, 489140:python.exe, 489160:python.exe, 488796:python.exe, 489128:python.exe, 489164:python.exe, 489304:bash.exe, 485476:python.exe, 489364:python.exe
+descendants terminated  : 93  473436, 473916, 480396, 481104, 481852, 482612, 482700, 482764, 482804, 482988, 483080, 483088, 483208, 483244, 483800, 483844, 483888, 484380, 484504, 484624, 484836, 485188, 485348, 485396, 485444, 485476, 485480, 485500, 485504, 485596, 485620, 485624, 485720, 485760, 485800, 485824, 485852, 485872, 485904, 485928, 485992, 486008, 486024, 486032, 486224, 486276, 486324, 486364, 486368, 486512, 486732, 486740, 486820, 486880, 487052, 487164, 487240, 487412, 487524, 487536, 487548, 487556, 487568, 487596, 487600, 487616, 487684, 487772, 487880, 487960, 487992, 488036, 488068, 488088, 488096, 488128, 488160, 488180, 488184, 488252, 488536, 488560, 488568, 488580, 488796, 488844, 488864, 489128, 489140, 489160, 489164, 489304, 489364
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-runs/logs/merge-conform-gates.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=orchestrator  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
+BW_EXIT=0
