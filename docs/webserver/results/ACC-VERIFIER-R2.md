@@ -69,6 +69,32 @@ Lane record: `docs/pwml_output/ACCURACY.md` §11-§14d.
 - **Untested combination.** The server runs 3 extraction draws (`T2PW_EXTRACTION_DRAWS=3`). The lane measured the
   verifier on single-draw legs. The first-job spot-check covers this.
 
+### First server job spot-check (2026-11-24)
+
+Server restarted on `deploy/local` `9d44d705`. Before the start, a yes/no-only check showed `.env` sets none of the four
+lane flags and no `T2PW_LLM_MODEL`.
+
+Test job: enterobactin (PMID 40400396, E. coli), submitted through the real form with curator consent off. Job
+`0868dae8…` ran in `work/item-4/attempt-1`: about 8 min, PWML produced, outcome "needs review" (strict-mode contract
+finding).
+
+- **Verifier report:** present, with `T2PW_REACTION_VERIFIER` true and typing false. 1 call, 7.5 s, model
+  `google/gemma-4-31b-it`, no error. Nothing was omitted, repaired, flagged or merged.
+- **Model:** every LLM record in the job names Gemma 4 31B, apart from 2 entries with an empty model field (as in the
+  lane runs).
+- **Gold:** all 5 steps (EntC, EntB, EntA, EntE, EntF) are present.
+- **Three extra rows:**
+  - EntE and EntF each appear twice, once with "activated 2,3-DHB" and once with "2,3-dihydroxybenzoyl-AMP". This is the
+    union of the 3 extraction draws. The verifier called the first spelling "vague" and named the second, but F-G3
+    refuses a rename onto an existing name, so both rows stay.
+  - A pyruvate + NADH -> lactate row (the known false positive) is absent from the verifier's rows. It was added after
+    the verifier ran, so the verifier could not judge it.
+  - None of the three is caused by the verifier; they are the same with it off.
+- **Follow-up (lane, flag-gated):**
+  - When a "vague" row's proposed name already exists on a row with otherwise identical participants, fold the vague row
+    into that row and drop its orphan entity, instead of keeping both.
+  - Check which later stage adds the lactate row.
+
 ## Dead ends and failures
 
 - The first live 3×3 ran on deepseek and stalled on the host memory leak. Superseded by the Gemma run (PO: users run Gemma).
