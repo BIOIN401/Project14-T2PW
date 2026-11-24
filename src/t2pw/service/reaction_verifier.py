@@ -513,23 +513,28 @@ def _chain_steps(split_rows: Sequence[Tuple[int, Dict[str, Any]]]) -> Dict[int, 
 
 
 def _spelling(name: Any) -> str:
-    """One key for spellings of one compound: case, punctuation, and acid / -ate (-ous acid / -ite) folded."""
-    k = re.sub(r"[^a-z0-9]+", "", str(name or "").casefold())
-    return re.sub(r"ousacid$", "ite", re.sub(r"icacid$", "ate", k))
+    """One key for spellings of one compound: the exporter's reference key (case, punctuation, hyphens
+    dropped; Greek letters spelled, digits, + and : kept), with acid / -ate (-ous acid / -ite) folded. Never
+    coarser than reference_key on letters (review R6 B2: the old key dropped Greek letters, so an added
+    "beta-alanine" was written as the payload's "alanine")."""
+    from t2pw.pipeline.name_keys import reference_key
+
+    return re.sub(r"ousacid$", "ite", re.sub(r"icacid$", "ate", reference_key(name)))
 
 
-def _payload_names(payload: Dict[str, Any], skip: Optional[Dict[str, Any]] = None, registry: bool = True) -> Dict[str, str]:
-    """spelling key -> the spelling the payload already uses (every participant of every other row, and
-    every registry entity)."""
+def _payload_names(payload: Dict[str, Any], skip: Optional[Dict[str, Any]] = None, registry: bool = True,
+                   key: Callable[[Any], str] = _spelling) -> Dict[str, str]:
+    """``key`` (spelling key by default) -> the spelling the payload already uses (every participant of every
+    other row, and every registry entity)."""
     out: Dict[str, str] = {}
     for r in _rows(payload, "reactions"):
         if isinstance(r, dict) and r is not skip:
             for n in _names(r.get("inputs")) + _names(r.get("outputs")):
-                out.setdefault(_spelling(n), n)
+                out.setdefault(key(n), n)
     for bucket in (payload.get("entities") or {}).values() if registry else ():
         for e in bucket if isinstance(bucket, list) else []:
             if _name(e):
-                out.setdefault(_spelling(_name(e)), _name(e))
+                out.setdefault(key(_name(e)), _name(e))
     return out
 
 
@@ -567,8 +572,10 @@ def _apply_renames(row: Dict[str, Any], renames: Any, tw: str, payload: Optional
         if not (isinstance(old, str) and isinstance(new, str) and len(new.strip()) > 1 and _in_text(new, tw)):
             continue
         if _spelling(new) in known or reference_key(new) in taken - {reference_key(old)}:  # F-G3
-            if refused is not None and reference_key(new) != reference_key(old):
-                same = known.get(_spelling(new)) or next(n for n in known.values() if reference_key(n) == reference_key(new))
+            # fold only onto a name with the proposed name's reference key (review R6 B1: never onto a name
+            # that only shares the coarser spelling key); otherwise refuse, as before
+            same = _payload_names(payload or {}, skip=row, key=reference_key).get(reference_key(new))
+            if refused is not None and same is not None and reference_key(new) != reference_key(old):
                 refused.append([old, same])
             continue
         if _spelling(old) in others or _abbreviated(new):  # R3 P4, R4 B1
@@ -631,11 +638,13 @@ def _fold_onto_existing(out: Dict[str, Any], rows: List[Any], rep: Dict[str, Any
         if j in recs:
             recs[j].update(action="folded_into_%d" % q, renamed=[[old, new]])
 
+    prose = {"evidence", "provenance_lineage", "lineage", "verifier", "reason", "quote", "type_evidence"}
+
     def strings(x: Any) -> List[str]:
         if isinstance(x, str):
             return [x]
         if isinstance(x, dict):
-            return [s for v in x.values() for s in strings(v)]
+            return [s for k, v in x.items() if k not in prose for s in strings(v)]
         if isinstance(x, list):
             return [s for v in x for s in strings(v)]
         return []
@@ -652,11 +661,15 @@ def _fold_onto_existing(out: Dict[str, Any], rows: List[Any], rep: Dict[str, Any
                 if q2 is not None:
                     fold(j, q2, old, new)
         procs = out.get("processes") if isinstance(out.get("processes"), dict) else {}
-        still = any(rk(s) == rk(old) for kind, rws in procs.items() for row in (rws if isinstance(rws, list) else [])
-                    if isinstance(row, dict) and not (kind == "reactions"
-                            and str(row.get("scope_membership") or "").strip().casefold() == "out_of_scope")
-                    for s in strings(row.get("inputs")) + strings(row.get("outputs")) + strings(row.get("entity_1"))
-                    + strings(row.get("entity_2")) + strings(row.get("cargo")) + strings(row.get("elements_with_states")))
+        # every string of every in-scope process row (participants, enzymes, transporters, cargo, interaction
+        # ends...) except its own name and prose, and every complex component (review R6 N1)
+        refs = [s for kind, rws in procs.items() for row in (rws if isinstance(rws, list) else [])
+                if isinstance(row, dict) and not (kind == "reactions"
+                        and str(row.get("scope_membership") or "").strip().casefold() == "out_of_scope")
+                for s in strings({k: v for k, v in row.items() if k != "name"})]
+        refs += [s for c in ((out.get("entities") or {}).get("protein_complexes") or []) if isinstance(c, dict)
+                 for s in strings(c.get("components"))]
+        still = any(rk(s) == rk(old) for s in refs)
         if not still:
             for bucket, ents in (out.get("entities") or {}).items():
                 if isinstance(ents, list):
