@@ -104,6 +104,33 @@ def test_blank_then_rename_in_one_batch_is_applied_exactly_as_before() -> None:
     assert report["rejected"] == []
 
 
+NAMELESS_APPEND = _op("add", "/entities/protein_complexes/-", {"complex_name": "x", "components": []})
+
+
+@pytest.mark.parametrize(
+    "first",
+    [
+        # Review N1 (transient_row_replace_then_name_plus_other): a row replaced by an id-only
+        # row and then named. The re-run refused the replace but put the name on the OLD row.
+        _op("replace", "/entities/compounds/0", {"hmdb_id": "HX"}),
+        # The insert twin: rebasing already sends the name to the old row in the first pass.
+        _op("add", "/entities/compounds/0", {"hmdb_id": "HX"}),
+    ],
+    ids=["row_replace", "row_insert"],
+)
+def test_ops_written_for_refused_content_are_refused_with_it(first: dict) -> None:
+    """No row may end up with mixed identity: an old row under a new name, or with new ids."""
+    source = _lipid_a_payload()
+    ops = [first, _op("add", "/entities/compounds/0/name", "lipid X"), NAMELESS_APPEND]
+    patched, report = apply_patch_with_policy(source, ops)
+
+    validate_post_audit(patched)
+    assert patched["entities"]["compounds"] == source["entities"]["compounds"]
+    assert patched["entities"]["protein_complexes"] == []
+    assert [r["index"] for r in report["rejected"]] == [0, 1, 2]
+    assert all(r["reason"].startswith("entity_name_required") for r in report["rejected"])
+
+
 def test_preexisting_nameless_row_does_not_block_unrelated_ops() -> None:
     source = _lipid_a_payload()
     source["entities"]["compounds"].append({"hmdb_id": "HMDB0000001"})

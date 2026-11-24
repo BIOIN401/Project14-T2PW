@@ -2822,6 +2822,12 @@ def apply_patch_with_policy(
     pending_entity_names = _pending_entity_name_norms(patch_ops)
     # Index shifts made by accepted ops so far; see "Index rebasing" above.
     shifts: Dict[Tuple[str, ...], List[Tuple[str, int]]] = {}
+    # FIX-NONAME re-run only: (pre-patch path tokens, op index) of ops the name
+    # guard refused. A later op under one of these paths was written for the
+    # content the refused op would have put there; applied to the old content it
+    # would give an old row a new name or new ids (a row with mixed identity),
+    # so it is refused with it.
+    refused_name_paths: List[Tuple[Tuple[str, ...], int]] = []
 
     for idx, raw_op in enumerate(patch_ops):
         if not isinstance(raw_op, dict):
@@ -2831,6 +2837,23 @@ def apply_patch_with_policy(
             continue
         # Accept both the internal format (op/evidence) and the enrichment format (action/reason)
         op = _normalize_patch_op(raw_op)
+        if refused_name_paths:
+            try:
+                op_tokens = tuple(_decode_pointer(str(op.get("path", ""))))
+            except Exception:  # noqa: BLE001 - an unparseable path is the policy's to reject
+                op_tokens = ()
+            owner = next(
+                (j for tokens, j in refused_name_paths if len(op_tokens) > len(tokens) and op_tokens[: len(tokens)] == tokens),
+                None,
+            )
+            if owner is not None:
+                reason = (
+                    f"{ENTITY_NAME_REQUIRED_REASON_PREFIX}: {op.get('path')} addresses content written by "
+                    f"op {owner}, which was refused for leaving an entity row with no name."
+                )
+                rejected.append({"index": idx, "reason": reason, "op": op})
+                rejected_log_records.append(_patch_log_record(stage, op, reason))
+                continue
         # `op` stays as written (pre-patch indices) for the policy and the records;
         # `live_op` addresses the same row in `working`. They are one object unless
         # an earlier accepted op moved this op's row.
@@ -2892,6 +2915,10 @@ def apply_patch_with_policy(
                 record["reason"] = name_rejection
                 rejected.append(record)
                 rejected_log_records.append(_patch_log_record(stage, op, name_rejection))
+                try:
+                    refused_name_paths.append((tuple(_decode_pointer(str(op.get("path", "")))), idx))
+                except Exception:  # noqa: BLE001 - it was applied, so it parsed; never fail the batch here
+                    pass
                 continue
             # Read-only, and computed against the pre-op payload while it is
             # still addressable. The records themselves land last, after this
