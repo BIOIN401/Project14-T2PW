@@ -653,3 +653,51 @@ rows through generic intermediates and appended the whole step; R1 matched.
 
 **Spend:** last Gemma leg $0.11, re-measure $0.51 (`logs5g/*.usage.jsonl`). Running total for the
 lane since the $10 cap: about $3.42.
+
+### 14d. Review R5 (APPROVE): what changes in the record
+
+**R1 F7c withdrawn for renames onto existing names.** The live repair R1 F7c was written for (the EntE
+row whose product Stage 1 wrote as the wrong compound, renamed onto the existing
+"2,3-dihydroxybenzoyl-AMP") is now refused by F-G3, and also by R4 B1 (the AMP token). That row stays as
+Stage 1 wrote it; the report keeps the model's verdict and proposed rename. A rename still applies onto a
+name no other entity carries. The test docstring says so (`a6f6e6e0`).
+
+**Fold criterion, refined by R5.** A fold (a row folded into an identical or currency-compatible row)
+counts as a gold loss only when the gold reaction it matched is then unmatched in that run's output. The
+one flagged fold (vt1-PMC12096016, row 5 into row 1, both R2) left R2 matched, so it is not a loss.
+
+**Conditions for enabling the verifier (`T2PW_REACTION_VERIFIER=1`), from R5:**
+- Only with the measured model, Gemma 4 31B (`google/gemma-4-31b-it`). The verifier uses the Stage-1
+  model (`OPENROUTER_EXTRACTION_MODEL`), so a server model change means re-running the 5g-style
+  re-measure first.
+- Only on code at or after `e72c2759`, with `T2PW_VERIFIER_GRANULARITY` unset (merge), and
+  `T2PW_INTERACTION_TYPING` and `T2PW_VD18_SPAN_TEMPLATES` off.
+- The server keeps its single worker (`web/retry.py` "the single worker"): the lock manifest lives in a
+  shared `tmp/`, so the verifier's manifest pruning (R3 P8) depends on one job at a time.
+- `reaction_verifier_report.json` is kept in every job folder, and the first server jobs are
+  spot-checked for omitted rows.
+- PO sign-off: the hard rule is met on this evidence, but n = 3 per arm per paper is small and Gemma Stage
+  1 is noisy (BASE enterobactin R2 was 1/3 in 4g and 2/3 in 5g).
+
+**Interaction typing: merged OFF, not to be enabled on Gemma.** Gemma proposed no re-typing in 24 live
+VT legs (18 bigger run, 6 re-measure) and none offline, so the R4 typing zeros hold only because nothing changed. On Gemma it costs an
+extra call per job and one typing call ran 335 s and returned invalid JSON. Revisit only with a model
+that actually proposes re-typings, with a live arm where changes occur and are scored against
+`ix_labels.json`.
+
+**VD-18:** off, unchanged.
+
+**Additions to the §14b ticket (outside the lane, for the PO):**
+- **Flags-off chlorophyll abort, AMBIGUOUS_REFERENCE "tRNA Glu".** base1-PMC5130987 (BASE, every flag
+  off), `C:/t/acc-runs/legs4g/base1-PMC5130987/2026-11-23_1538/papers/PMC5130987/strict/`: post_pipeline
+  conversion stopped in `t2pw.pwml.prefreeze_resolution` (PrefreezeResolutionError) with
+  "AMBIGUOUS_REFERENCE: the name 'tRNA Glu' is also carried by ['nucleic_acids#0']; a reference to it
+  cannot be unambiguously redirected to 'tRNA(Glu)'" (`mapped_failure_snapshot.json`, `RESULT.txt`).
+  Gemma: 1 of 6 chlorophyll legs (BASE); the 3 VT chlorophyll legs passed. No deepseek chlorophyll leg
+  ran live in this lane. Pre-existing, not the verifier.
+- **Check: do verifier records on flagged rows reach downstream LLM stages?** A flagged row (summary,
+  split, not_stated, off_pathway) carries a `verifier` record (verdict, reason, model_quote) in the
+  payload, and the audit loop and curator see the payload. vt1-PMC12096016 aborted at post_audit with
+  only such flags set (rows 4 and 6). The BASE occurrence on the negative control makes a causal link
+  unlikely, but the ticket should confirm whether those records enter any downstream prompt, and if so,
+  whether stripping them before Stage 2 changes the outcome.
