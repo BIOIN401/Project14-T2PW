@@ -1,7 +1,8 @@
 # FIX-NONAME: Gemma runs abort at post_audit with `entity_missing_name`
 
 Branch `fix/post-audit-empty-name`, cut from `main` 1a52fb55. Biology-code fix approved by the PO.
-Code commit `336f9179` (code and tests). This record is a separate docs-only commit. Evidence: `docs/webserver/evidence/FIX-NONAME/`.
+Code commits `336f9179` (fix and tests) and `051b8057` (review N1, section 9). This record is
+kept in separate docs-only commits. Evidence: `docs/webserver/evidence/FIX-NONAME/`.
 
 ## 1. Symptom
 
@@ -150,3 +151,51 @@ quarantine. The prefreeze refusal itself is D-034/D-035 fail-closed policy and w
    resolve to a DB-mapped compound would resolve to an unmapped nucleic acid.
 3. A refused id-only species replace also drops the id the model found. A merge (keep the name,
    add the fields) would keep it, but that is a new repair, not a guard, and is not part of this fix.
+
+## 9. Review (APPROVE WITH NOTES) and the N1 tightening
+
+Review: `C:/t/fix-noname-review/REVIEW.md`, edge cases in `edge.py` / `edge.json` there.
+
+**N1, fixed in `051b8057`.** In the name-guard re-run, every op was judged on its own. Take the batch
+`replace /entities/compounds/0 {"hmdb_id": "HX"}`, `add /entities/compounds/0/name "lipid X"`, plus a separate
+nameless op. The re-run refused the replace but applied the name to the OLD row 0. Row 0 kept its old
+identifiers under a new name (case `transient_row_replace_then_name_plus_other`).
+
+Change (`apply_audit_patch.py`, re-run only): when the name guard refuses an op, its pre-patch path is
+remembered. Any later op whose pre-patch path lies strictly under that path is refused with it, with reason
+`entity_name_required: <path> addresses content written by op N, which was refused ...`. The first pass,
+and every batch that never reaches the re-run, is unchanged.
+
+Why this rule and not "refuse only ops on rows still nameless after the first pass":
+
+- That rule can still produce a row with mixed identity. Insert a nameless row at
+  `/entities/compounds/0`, then `add /entities/compounds/0/name`. In the first pass, rebasing sends the
+  name to the old row (now at index 1) and the inserted row stays nameless. Refusing only the insert
+  would then apply the name to the old row 0 unrebased: the old row renamed.
+- With the prefix rule, the dependent name op is refused too, and the row stays exactly as it arrived.
+- An op under a refused path was written for content that never arrived. Refusing it is the only choice
+  that cannot give an old row a new name or new ids.
+- The cost is that a transient replace-then-name inside a batch that also holds a separate nameless op
+  is not applied. On 1a52fb55 that whole batch aborted at post_audit, so nothing that used to ship is lost.
+
+Tests: `test_ops_written_for_refused_content_are_refused_with_it[row_replace|row_insert]`.
+
+| check | result | log |
+|---|---|---|
+| new test file on 336f9179 (src stashed) | 2 failed (both new cases: `compounds` differs, the old row was renamed), 9 passed | `n1-unit-base-336f9179.log` |
+| new test file + 5 patch-module test files on `051b8057` | 72 passed | `n1-gates.log` |
+| replay on `051b8057` vs 1a52fb55 | llm_patch 80/80 identical (base reproduces recorded output 80/80), gap_patch 6/6, det_patch 119/119; gemma_shape 119 differ, all allowed (base aborts, fix passes); 0 not-allowed; 0 name rejections on real patches | `n1-gates.log`, `out_fix_n1.json` |
+| SMOKE on `051b8057`, clean tree | 511 passed | `n1-gates.log` |
+
+All runs went through the queue with per-step timeouts, 0 survivors.
+
+**Open notes from the review (not acted on):**
+
+- **N2.** The root cause is inferred, not reproduced. The two real Gemma patches were not persisted,
+  and no stored real patch exercises the re-run path, so that path is proven only on synthetic shapes.
+  Open question 8.1 (persist at least the rejected ops) decides whether the first live refusals can be checked.
+- **N3.** The guard also applies to the other callers of `apply_patch_with_policy`: `pathway_curator`
+  (runs after post_audit, `postpipeline.py:1378`) and `focused_repair`. Their patches were not replayed.
+  Any change there moves the result toward the pre-op state, so the reviewer rates it low risk, but untested.
+- **N4.** `failing_issues` (`postpipeline.py:295`) stores the contract's row digest in
+  `mapped_failure_snapshot.json`. It is bounded by `bound_mapping`, but no test pins the snapshot's keys exactly.
