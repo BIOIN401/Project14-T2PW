@@ -1,0 +1,86 @@
+== tree C:/t/fix-noname
+HEAD 336f91794cbe6ab50ebd3ea007cc2a886af2e945
+STATUS_BEGIN
+STATUS_END
+== smoke
+........................................................................ [ 84%]
+........................................................................ [ 98%]
+.......                                                                  [100%]
+511 passed in 50.81s
+EXIT_smoke=0
+== g-batch
+T2PW: C:\t\fix-noname\src\t2pw\__init__.py
+..                                                                       [100%]
+2 passed in 6.31s
+EXIT_g-batch=0
+== g-c011
+T2PW: C:\t\fix-noname\src\t2pw\__init__.py
+........                                                                 [100%]
+8 passed in 43.35s
+EXIT_g-c011=0
+== g-stage8
+T2PW: C:\t\fix-noname\src\t2pw\__init__.py
+....                                                                     [100%]
+4 passed in 0.37s
+EXIT_g-stage8=0
+== g-quar
+T2PW: C:\t\fix-noname\src\t2pw\__init__.py
+........................                                                 [100%]
+24 passed in 37.65s
+EXIT_g-quar=0
+== eq-run
+T2PW: C:\t\fix-noname\src\t2pw\__init__.py
+........                                                                 [100%]
+8 passed in 60.80s (0:01:00)
+EXIT_eq-run=0
+== eq-app
+T2PW: C:\t\fix-noname\src\t2pw\__init__.py
+..............                                                           [100%]
+14 passed in 56.91s
+EXIT_eq-app=0
+== eq-default
+T2PW: C:\t\fix-noname\src\t2pw\__init__.py
+......                                                                   [100%]
+6 passed in 29.60s
+EXIT_eq-default=0
+== vision
+........................................................................ [ 77%]
+........................................................................ [ 97%]
+..........s                                                              [100%]
+370 passed, 1 skipped in 14.67s
+EXIT_vision=0
+== web
+T2PW: C:\t\fix-noname\src\t2pw\__init__.py
+........................................................................ [ 86%]
+...........                                                              [100%]
+83 passed in 6.22s
+EXIT_web=0
+SUITE_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 1bb0f3e408cbb4531001d32a97ef4f4e7e7c5c46  [git, worktree dirty=True]
+label                   : fixnoname-suite2
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/vis-runs/suite2.sh C:/t/fix-noname fixnoname
+cwd                     : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 261076 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 3000 s
+duration                : 318.79 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 81  239296:bash.exe, 263404:bash.exe, 261684:bash.exe, 262876:git.exe, 264980:python.exe, 265016:python.exe, 265112:bash.exe, 258400:python.exe, 262484:python.exe, 260980:python.exe, 262752:python.exe, 263672:python.exe, 264228:python.exe, 227836:python.exe, 261556:python.exe, 265796:git.exe, 261760:tail.exe, 266172:bash.exe, 266196:bash.exe, 266204:python.exe, 266228:python.exe, 252084:python.exe, 258552:python.exe, 261592:bash.exe, 265624:git.exe, 264996:git.exe, 249068:git.exe, 265428:python.exe, 265936:python.exe, 265228:python.exe, 265824:python.exe, 242312:python.exe, 244228:python.exe, 264832:python.exe, 264856:python.exe, 263604:python.exe, 262308:python.exe, 245084:python.exe, 260848:python.exe, 250020:python.exe, 266096:python.exe, 264208:python.exe, 265800:python.exe, 264280:python.exe, 264464:bash.exe, 265460:python.exe, 68628:python.exe, 182300:bash.exe, 261312:python.exe, 260232:python.exe, 264504:bash.exe, 266732:python.exe, 243172:python.exe, 268244:python.exe, 262088:bash.exe, 266136:python.exe, 266500:bash.exe, 267564:python.exe, 270048:bash.exe, 270080:python.exe, 270104:python.exe, 241780:bash.exe, 268632:python.exe, 269120:python.exe, 269872:bash.exe, 262324:git.exe, 269468:python.exe, 269672:python.exe, 260684:python.exe, 268324:python.exe, 262764:python.exe, 270132:bash.exe, 270296:python.exe, 270488:python.exe, 270508:python.exe, 271156:python.exe, 271176:python.exe, 270976:python.exe, 271020:python.exe, 265036:python.exe, 270760:python.exe
+descendants terminated  : 81  68628, 182300, 227836, 239296, 241780, 242312, 243172, 244228, 245084, 249068, 250020, 252084, 258400, 258552, 260232, 260684, 260848, 260980, 261312, 261556, 261592, 261684, 261760, 262088, 262308, 262324, 262484, 262752, 262764, 262876, 263404, 263604, 263672, 264208, 264228, 264280, 264464, 264504, 264832, 264856, 264980, 264996, 265016, 265036, 265112, 265228, 265428, 265460, 265624, 265796, 265800, 265824, 265936, 266096, 266136, 266172, 266196, 266204, 266228, 266500, 266732, 267564, 268244, 268324, 268632, 269120, 269468, 269672, 269872, 270048, 270080, 270104, 270132, 270296, 270488, 270508, 270760, 270976, 271020, 271156, 271176
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-runs/logs/fixnoname-suite2.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=FIX  acquired=True  released=True
+pre-existing (reported, NEVER killed): 12
+================================================
+BW_EXIT=0

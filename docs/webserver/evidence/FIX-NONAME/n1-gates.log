@@ -1,0 +1,69 @@
+HEAD 051b8057e06bcdb1ab083875ce58b948ec7607f3 src-diff-vs-HEAD: 
+== unit
+T2PW: C:\t\fix-noname\src\t2pw\__init__.py
+........................................................................ [100%]
+72 passed in 1.80s
+EXIT_unit=0
+== replay
+cases 443
+EXIT_replay=0
+det_patch    identical                          119
+det_patch    total                              119
+gap_patch    identical                          6
+gap_patch    total                              6
+gemma_shape  base_post_audit_fail               119
+gemma_shape  differs_allowed                    119
+gemma_shape  total                              119
+input        total                              119
+llm_patch    base_reproduces_recorded_output    80
+llm_patch    identical                          80
+llm_patch    total                              80
+not-allowed diffs: 0
+('det_patch', 'fix_name_rejections', 0) 119
+('gap_patch', 'fix_name_rejections', 0) 6
+('gemma_fix', 'ok', 'name_rejections>=1') 119
+('input', 'legs3/', 'final_mapped.json', 'ok') 3
+('input', 'legs3/', 'merged_payload.json', 'ok') 4
+('input', 'legs4/', 'final_mapped.json', 'ok') 9
+('input', 'legs4/', 'merged_payload.json', 'ok') 10
+('input', 'legs4g/', 'final_mapped.json', 'ok') 33
+('input', 'legs4g/', 'merged_payload.json', 'ok') 36
+('input', 'legs5g/', 'final_mapped.json', 'ok') 12
+('input', 'legs5g/', 'merged_payload.json', 'ok') 12
+('llm_patch', 'fix_name_rejections', 0) 80
+== smoke
+== smoke
+........................................................................ [ 84%]
+........................................................................ [ 98%]
+.......                                                                  [100%]
+511 passed in 49.46s
+EXIT_smoke=0
+N1_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 1bb0f3e408cbb4531001d32a97ef4f4e7e7c5c46  [git, worktree dirty=True]
+label                   : fixnoname-n1-gates
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/vis-runs/scratch/fixnoname/n1gates.sh
+cwd                     : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 305464 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 3000 s
+duration                : 60.18 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 7  297312:bash.exe, 304984:bash.exe, 306864:bash.exe, 307672:bash.exe, 308280:python.exe, 308284:python.exe, 309068:bash.exe
+descendants terminated  : 7  297312, 304984, 306864, 307672, 308280, 308284, 309068
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-runs/logs/fixnoname-n1-gates.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=FIX  acquired=True  released=True
+pre-existing (reported, NEVER killed): 12
+================================================
+BW_EXIT=0
