@@ -1,0 +1,37 @@
+STASHED at 5bf9d552 status=[]
+tests\test_batch_preflight.py:616: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_curator_offline_mode.py::test_a7_flag_is_read_in_exactly_one_module
+FAILED tests/test_batch_preflight.py::test_the_message_names_the_problem_the_interpreter_and_the_cure
+2 failed in 1.37s
+POPPED
+ M src/t2pw/llm/client.py
+?? tests/test_obs_raw_llm_responses.py
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e4941825c9fc0fcf963d62168096557664af03c3  [git, worktree dirty=True]
+label                   : base
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/vis-runs/scratch/obsraw/base.sh
+cwd                     : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 458724 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 600 s
+duration                : 4.58 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 16  456764:bash.exe, 458560:bash.exe, 453608:git.exe, 458688:git.exe, 455004:git.exe, 456784:git.exe, 447992:bash.exe, 458480:git.exe, 458548:bash.exe, 458644:git.exe, 458240:python.exe, 458256:python.exe, 458324:bash.exe, 457632:git.exe, 458612:bash.exe, 396240:bash.exe
+descendants terminated  : 16  396240, 447992, 453608, 455004, 456764, 456784, 457632, 458240, 458256, 458324, 458480, 458548, 458560, 458612, 458644, 458688
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-runs/logs/obsraw-base.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=obsraw  acquired=True  released=True
+pre-existing (reported, NEVER killed): 13
+================================================
+BW_EXIT=0

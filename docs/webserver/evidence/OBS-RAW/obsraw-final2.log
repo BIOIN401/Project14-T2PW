@@ -1,0 +1,49 @@
+== test_obs_raw_llm_responses
+T2PW: C:\t\obs-raw\src\t2pw\__init__.py
+............                                                             [100%]
+12 passed in 0.37s
+== test_llm_call_logging
+T2PW: C:\t\obs-raw\src\t2pw\__init__.py
+.............                                                            [100%]
+13 passed in 1.34s
+== test_llm_call_cap
+T2PW: C:\t\obs-raw\src\t2pw\__init__.py
+............................                                             [100%]
+28 passed in 8.64s
+== test_llm_client_request_timeout
+T2PW: C:\t\obs-raw\src\t2pw\__init__.py
+......                                                                   [100%]
+6 passed in 0.77s
+== test_llm_client_empty_completion_retry
+T2PW: C:\t\obs-raw\src\t2pw\__init__.py
+.............................                                            [100%]
+29 passed in 0.26s
+FINAL_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e4941825c9fc0fcf963d62168096557664af03c3  [git, worktree dirty=True]
+label                   : final2
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/vis-runs/scratch/obsraw/final2.sh
+cwd                     : C:\t\obs-raw
+root PID / process group: 556344 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 1200 s
+duration                : 15.96 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 18  536948:mkdir.exe, 552464:bash.exe, 554236:bash.exe, 544020:python.exe, 546508:python.exe, 552696:bash.exe, 544196:bash.exe, 552052:python.exe, 555732:python.exe, 522592:python.exe, 547952:bash.exe, 555364:python.exe, 557872:bash.exe, 557908:python.exe, 557920:python.exe, 557160:bash.exe, 554320:python.exe, 557424:python.exe
+descendants terminated  : 18  522592, 536948, 544020, 544196, 546508, 547952, 552052, 552464, 552696, 554236, 554320, 555364, 555732, 557160, 557424, 557872, 557908, 557920
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-runs/logs/obsraw-final2.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=obsraw  acquired=True  released=True
+pre-existing (reported, NEVER killed): 13
+================================================
+BW_EXIT=0

@@ -1,0 +1,88 @@
+== tree C:/t/obs-raw
+HEAD 5bf9d552ba6bafbd87778c023b7b0a7319bdf966
+STATUS_BEGIN
+ M src/t2pw/llm/client.py
+?? tests/test_obs_raw_llm_responses.py
+STATUS_END
+== smoke
+........................................................................ [ 84%]
+........................................................................ [ 98%]
+.......                                                                  [100%]
+511 passed in 53.10s
+EXIT_smoke=0
+== g-batch
+T2PW: C:\t\obs-raw\src\t2pw\__init__.py
+..                                                                       [100%]
+2 passed in 6.37s
+EXIT_g-batch=0
+== g-c011
+T2PW: C:\t\obs-raw\src\t2pw\__init__.py
+........                                                                 [100%]
+8 passed in 45.07s
+EXIT_g-c011=0
+== g-stage8
+T2PW: C:\t\obs-raw\src\t2pw\__init__.py
+....                                                                     [100%]
+4 passed in 0.35s
+EXIT_g-stage8=0
+== g-quar
+T2PW: C:\t\obs-raw\src\t2pw\__init__.py
+........................                                                 [100%]
+24 passed in 38.24s
+EXIT_g-quar=0
+== eq-run
+T2PW: C:\t\obs-raw\src\t2pw\__init__.py
+........                                                                 [100%]
+8 passed in 60.54s (0:01:00)
+EXIT_eq-run=0
+== eq-app
+T2PW: C:\t\obs-raw\src\t2pw\__init__.py
+..............                                                           [100%]
+14 passed in 57.54s
+EXIT_eq-app=0
+== eq-default
+T2PW: C:\t\obs-raw\src\t2pw\__init__.py
+......                                                                   [100%]
+6 passed in 29.99s
+EXIT_eq-default=0
+== vision
+........................................................................ [ 77%]
+........................................................................ [ 97%]
+..........s                                                              [100%]
+370 passed, 1 skipped in 15.10s
+EXIT_vision=0
+== web
+T2PW: C:\t\obs-raw\src\t2pw\__init__.py
+........................................................................ [ 86%]
+...........                                                              [100%]
+83 passed in 5.72s
+EXIT_web=0
+SUITE_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e4941825c9fc0fcf963d62168096557664af03c3  [git, worktree dirty=True]
+label                   : suite2
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/vis-runs/suite2.sh C:/t/obs-raw obsraw-suite2
+cwd                     : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 458708 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 5400 s
+duration                : 323.28 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 82  453132:bash.exe, 458152:bash.exe, 457804:bash.exe, 458736:git.exe, 456360:python.exe, 458364:bash.exe, 458392:python.exe, 459716:python.exe, 459736:python.exe, 453900:python.exe, 459760:python.exe, 445492:python.exe, 459116:python.exe, 459544:python.exe, 459652:python.exe, 458336:git.exe, 458236:git.exe, 460044:bash.exe, 460076:python.exe, 460100:python.exe, 446812:bash.exe, 459780:python.exe, 459796:python.exe, 459864:git.exe, 460420:git.exe, 457160:python.exe, 459808:python.exe, 457024:python.exe, 460312:python.exe, 455556:git.exe, 452620:python.exe, 454980:python.exe, 394960:python.exe, 421192:python.exe, 449160:python.exe, 458396:python.exe, 433896:python.exe, 459936:python.exe, 456044:python.exe, 459296:python.exe, 455432:python.exe, 460600:python.exe, 459924:python.exe, 459940:python.exe, 460784:bash.exe, 454592:python.exe, 457776:python.exe, 460232:bash.exe, 395780:tail.exe, 448408:python.exe, 457304:bash.exe, 459984:bash.exe, 460136:python.exe, 459920:python.exe, 461472:python.exe, 457960:bash.exe, 455580:python.exe, 459276:python.exe, 463080:bash.exe, 463112:python.exe, 463136:python.exe, 451032:bash.exe, 431500:python.exe, 458504:python.exe, 461832:bash.exe, 462500:tail.exe, 463804:bash.exe, 387740:git.exe, 462720:python.exe, 459812:python.exe, 463596:python.exe, 448820:python.exe, 463600:python.exe, 463760:bash.exe, 455260:python.exe, 461788:python.exe, 454940:python.exe, 462636:python.exe, 459668:python.exe, 460912:python.exe, 456684:python.exe, 463712:python.exe
+descendants terminated  : 82  387740, 394960, 395780, 421192, 431500, 433896, 445492, 446812, 448408, 448820, 449160, 451032, 452620, 453132, 453900, 454592, 454940, 454980, 455260, 455432, 455556, 455580, 456044, 456360, 456684, 457024, 457160, 457304, 457776, 457804, 457960, 458152, 458236, 458336, 458364, 458392, 458396, 458504, 458736, 459116, 459276, 459296, 459544, 459652, 459668, 459716, 459736, 459760, 459780, 459796, 459808, 459812, 459864, 459920, 459924, 459936, 459940, 459984, 460044, 460076, 460100, 460136, 460232, 460312, 460420, 460600, 460784, 460912, 461472, 461788, 461832, 462500, 462636, 462720, 463080, 463112, 463136, 463596, 463600, 463712, 463760, 463804
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-runs/logs/obsraw-suite2.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=obsraw  acquired=True  released=True
+pre-existing (reported, NEVER killed): 13
+================================================
+BW_EXIT=0
