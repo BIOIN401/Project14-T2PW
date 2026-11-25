@@ -46,8 +46,17 @@ non-JSON arguments is kept verbatim; the shared cap (reply 8 + arguments 8 + 5 u
 Gate for this change (new file + client files only, `suite2` skipped by instruction, `obsraw-final.log`): new test file
 10 passed, `test_llm_client_request_timeout` 6 passed, `test_llm_client_empty_completion_retry` 29 passed, surviving 0.
 
+## Review fixes (F1, F9, F3)
+- F3: the per-trace restart flag is set only after a good write, so a failed first write cannot make later lines
+  append to an old run's file in a reused folder. Test: first write fails, old file appears, next line replaces it.
+- F1: a test calls `_keep_raw` with an error holding a key-shaped string and asserts `[redacted:openai_style_key]`
+  is in the line and the key is not (it fails if `redact()` is removed).
+- F9: the fake key is built at runtime (`"sk-" + "or-v1-" + ...`), no key-shaped literal in the source.
+Gate (`obsraw-final2.log`, own processes): new file 12 passed, `test_llm_call_logging` 13, `test_llm_call_cap` 28,
+`test_llm_client_request_timeout` 6, `test_llm_client_empty_completion_retry` 29; surviving 0.
+
 ## Tests
-`tests/test_obs_raw_llm_responses.py`, 10 tests (8 below plus the 2 tool-call tests): flag off writes nothing; flag on one line per call with the
+`tests/test_obs_raw_llm_responses.py`, 12 tests (8 below plus 2 tool-call tests and 2 from the review fixes): flag off writes nothing; flag on one line per call with the
 fields and the unstripped reply; tool loop covered and leg trace unchanged; empty attempt line; no secret or
 provider field (key in env not in file); truncation marker; fresh file per activation; failing write does not raise.
 
