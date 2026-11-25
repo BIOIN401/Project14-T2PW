@@ -13,8 +13,8 @@ from pathlib import Path
 
 tree, outp = sys.argv[1], sys.argv[2]
 sys.path.insert(0, str(Path(tree) / "src"))
-sys.path.insert(0, "C:/t/acc-runs/scripts")
-import accscore as S  # noqa: E402
+sys.path.insert(0, "C:/t/vis-runs/scratch/s2scope")
+import accscore_heme as S  # noqa: E402  (copy of acc-runs/scripts/accscore.py, heme matched)
 from t2pw.pipeline.cofactor_policy import PathwayContext  # noqa: E402
 from t2pw.pipeline.pipeline import _reaction_io_key  # noqa: E402
 from t2pw.service.extraction import drop_stage_two_scope_repeats, step_signature  # noqa: E402

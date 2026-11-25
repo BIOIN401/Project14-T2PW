@@ -1,0 +1,196 @@
+HEAD fbf8cbd7d14f5e77dba84c5a08f667e8c11e8a28
+STATUS_BEGIN
+ M out/enrichment_dump.json
+ M outputs/pathway.pwml
+ M tmp/draft_graph.json
+ M tmp/qa_report.json
+ M tmp/reaction_summary.txt
+?? docs/webserver/evidence/FIX-S2SCOPE/oos_rows.json
+?? docs/webserver/evidence/FIX-S2SCOPE/replay_heme.json
+STATUS_END
+== plain
+........................................................................ [ 85%]
+........................................................................ [ 96%]
+......................                                                   [100%]
+670 passed in 60.30s (0:01:00)
+EXIT_plain=0
+== test_batch_driver_run_pathway
+T2PW: C:\t\fix-s2scope\src\t2pw\__init__.py
+.........................                                                [100%]
+25 passed in 1.79s
+EXIT_test_batch_driver_run_pathway=0
+== test_service_extraction
+T2PW: C:\t\fix-s2scope\src\t2pw\__init__.py
+.............................                                            [100%]
+29 passed in 3.98s
+EXIT_test_service_extraction=0
+== test_service_extraction_stage0
+T2PW: C:\t\fix-s2scope\src\t2pw\__init__.py
+....................                                                     [100%]
+20 passed in 2.23s
+EXIT_test_service_extraction_stage0=0
+== test_service_extraction_stage1
+T2PW: C:\t\fix-s2scope\src\t2pw\__init__.py
+......................                                                   [100%]
+22 passed in 3.65s
+EXIT_test_service_extraction_stage1=0
+== test_service_extraction_stage2
+T2PW: C:\t\fix-s2scope\src\t2pw\__init__.py
+............................                                             [100%]
+28 passed in 3.24s
+EXIT_test_service_extraction_stage2=0
+== test_service_post_run
+T2PW: C:\t\fix-s2scope\src\t2pw\__init__.py
+..........................................                               [100%]
+42 passed in 4.52s
+EXIT_test_service_post_run=0
+== test_batch_preflight
+tests\test_batch_preflight.py:616: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_batch_preflight.py::test_the_message_names_the_problem_the_interpreter_and_the_cure
+1 failed, 32 passed, 4 skipped in 8.99s
+EXIT_test_batch_preflight=1
+== test_batch_research_gate_fail_open
+T2PW: C:\t\fix-s2scope\src\t2pw\__init__.py
+..............                                                           [100%]
+14 passed in 4.65s
+EXIT_test_batch_research_gate_fail_open=0
+== test_c052_prefreeze_report_at_the_streamlit_seams
+T2PW: C:\t\fix-s2scope\src\t2pw\__init__.py
+.............                                                            [100%]
+13 passed in 3.10s
+EXIT_test_c052_prefreeze_report_at_the_streamlit_seams=0
+== test_c082_post_pipeline_seam
+T2PW: C:\t\fix-s2scope\src\t2pw\__init__.py
+.                                                                        [100%]
+1 passed in 3.24s
+EXIT_test_c082_post_pipeline_seam=0
+== test_c083_inner_timeout_row
+T2PW: C:\t\fix-s2scope\src\t2pw\__init__.py
+............                                                             [100%]
+12 passed in 0.25s
+EXIT_test_c083_inner_timeout_row=0
+== test_orch759a_fold_app_path
+T2PW: C:\t\fix-s2scope\src\t2pw\__init__.py
+..                                                                       [100%]
+2 passed in 4.73s
+EXIT_test_orch759a_fold_app_path=0
+== test_orch759b_recorder_reattach
+T2PW: C:\t\fix-s2scope\src\t2pw\__init__.py
+.......                                                                  [100%]
+7 passed in 11.14s
+EXIT_test_orch759b_recorder_reattach=0
+== test_orch759d_app_timeout
+T2PW: C:\t\fix-s2scope\src\t2pw\__init__.py
+....                                                                     [100%]
+4 passed in 2.16s
+EXIT_test_orch759d_app_timeout=0
+== test_service_driver_bridge
+T2PW: C:\t\fix-s2scope\src\t2pw\__init__.py
+.....................................                                    [100%]
+37 passed in 0.59s
+EXIT_test_service_driver_bridge=0
+COVER_DONE
+== tree C:/t/fix-s2scope
+HEAD fbf8cbd7d14f5e77dba84c5a08f667e8c11e8a28
+STATUS_BEGIN
+ M docs/webserver/evidence/FIX-S2SCOPE/scripts/replay.py
+ M docs/webserver/results/FIX-S2SCOPE.md
+ M out/enrichment_dump.json
+ M outputs/pathway.pwml
+ M tmp/draft_graph.json
+ M tmp/qa_report.json
+ M tmp/reaction_summary.txt
+?? docs/webserver/evidence/FIX-S2SCOPE/drops_by_biological_state.txt
+?? docs/webserver/evidence/FIX-S2SCOPE/oos_rows.json
+?? docs/webserver/evidence/FIX-S2SCOPE/oos_rows_summary.txt
+?? docs/webserver/evidence/FIX-S2SCOPE/replay_heme.json
+?? docs/webserver/evidence/FIX-S2SCOPE/review1_replay_heme_oosdump.log
+?? docs/webserver/evidence/FIX-S2SCOPE/scripts/accscore_heme.py
+?? docs/webserver/evidence/FIX-S2SCOPE/scripts/biox.py
+?? docs/webserver/evidence/FIX-S2SCOPE/scripts/oosdump.py
+?? docs/webserver/evidence/FIX-S2SCOPE/scripts/oossum.py
+?? docs/webserver/evidence/FIX-S2SCOPE/scripts/review1.sh
+STATUS_END
+== smoke
+........................................................................ [ 84%]
+........................................................................ [ 98%]
+.......                                                                  [100%]
+511 passed in 50.52s
+EXIT_smoke=0
+== g-batch
+T2PW: C:\t\fix-s2scope\src\t2pw\__init__.py
+..                                                                       [100%]
+2 passed in 6.38s
+EXIT_g-batch=0
+== g-c011
+T2PW: C:\t\fix-s2scope\src\t2pw\__init__.py
+........                                                                 [100%]
+8 passed in 45.32s
+EXIT_g-c011=0
+== g-stage8
+T2PW: C:\t\fix-s2scope\src\t2pw\__init__.py
+....                                                                     [100%]
+4 passed in 0.37s
+EXIT_g-stage8=0
+== g-quar
+T2PW: C:\t\fix-s2scope\src\t2pw\__init__.py
+........................                                                 [100%]
+24 passed in 39.45s
+EXIT_g-quar=0
+== eq-run
+T2PW: C:\t\fix-s2scope\src\t2pw\__init__.py
+........                                                                 [100%]
+8 passed in 61.41s (0:01:01)
+EXIT_eq-run=0
+== eq-app
+T2PW: C:\t\fix-s2scope\src\t2pw\__init__.py
+..............                                                           [100%]
+14 passed in 57.54s
+EXIT_eq-app=0
+== eq-default
+T2PW: C:\t\fix-s2scope\src\t2pw\__init__.py
+......                                                                   [100%]
+6 passed in 29.97s
+EXIT_eq-default=0
+== vision
+........................................................................ [ 77%]
+........................................................................ [ 97%]
+..........s                                                              [100%]
+370 passed, 1 skipped in 15.19s
+EXIT_vision=0
+== web
+T2PW: C:\t\fix-s2scope\src\t2pw\__init__.py
+........................................................................ [ 86%]
+...........                                                              [100%]
+83 passed in 5.73s
+EXIT_web=0
+SUITE_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e4941825c9fc0fcf963d62168096557664af03c3  [git, worktree dirty=True]
+label                   : gates2
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/vis-runs/scratch/s2scope/gates.sh
+cwd                     : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 656592 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 9000 s
+duration                : 459.85 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 114  656616:bash.exe, 656676:bash.exe, 656732:bash.exe, 656648:bash.exe, 656748:bash.exe, 651172:bash.exe, 657068:git.exe, 652396:bash.exe, 657604:tail.exe, 658152:bash.exe, 655664:tail.exe, 657632:bash.exe, 568248:timeout.exe, 650304:bash.exe, 654988:bash.exe, 657728:bash.exe, 657772:bash.exe, 657780:timeout.exe, 649496:bash.exe, 650208:bash.exe, 657184:timeout.exe, 658664:bash.exe, 658684:tail.exe, 655356:bash.exe, 656232:bash.exe, 657388:timeout.exe, 654596:bash.exe, 650464:bash.exe, 655040:tail.exe, 658236:bash.exe, 656044:bash.exe, 656652:bash.exe, 645412:bash.exe, 658592:bash.exe, 658996:bash.exe, 658500:python.exe, 659424:python.exe, 656752:python.exe, 657660:python.exe, 654780:python.exe, 657624:python.exe, 645408:python.exe, 647332:python.exe, 655828:python.exe, 655932:python.exe, 657968:git.exe, 658568:git.exe, 654548:bash.exe, 659216:python.exe, 659288:bash.exe, 654208:python.exe, 659996:bash.exe, 660028:python.exe, 660064:python.exe, 659172:git.exe, 660252:git.exe, 657428:python.exe, 660236:python.exe, 658964:python.exe, 660432:python.exe, 660436:git.exe, 659756:python.exe, 656632:python.exe, 655508:python.exe, 659864:python.exe, 659768:python.exe, 659884:python.exe, 658416:python.exe, 659344:python.exe, 658832:python.exe, 660088:python.exe, 645584:python.exe, 658704:python.exe, 657060:python.exe, 659140:bash.exe, 660272:python.exe, 656604:bash.exe, 656724:python.exe, 657284:bash.exe, 659748:python.exe, 661204:bash.exe, 661236:python.exe, 661248:python.exe, 369600:python.exe, 654776:python.exe, 659596:python.exe, 659672:python.exe, 660172:bash.exe, 660264:bash.exe, 660848:tail.exe, 662080:bash.exe, 662112:python.exe, 662148:python.exe, 655792:ls.exe, 657848:bash.exe, 655616:bash.exe, 661536:python.exe, 661624:python.exe, 661600:git.exe, 658596:python.exe, 662444:python.exe, 661284:python.exe, 662100:python.exe, 651776:python.exe, 653500:python.exe, 662084:bash.exe, 653468:python.exe, 661552:python.exe, 654080:python.exe, 661532:python.exe, 658216:python.exe, 658460:python.exe, 661460:python.exe, 662448:python.exe
+descendants terminated  : 114  369600, 568248, 645408, 645412, 645584, 647332, 649496, 650208, 650304, 650464, 651172, 651776, 652396, 653468, 653500, 654080, 654208, 654548, 654596, 654776, 654780, 654988, 655040, 655356, 655508, 655616, 655664, 655792, 655828, 655932, 656044, 656232, 656604, 656616, 656632, 656648, 656652, 656676, 656724, 656732, 656748, 656752, 657060, 657068, 657184, 657284, 657388, 657428, 657604, 657624, 657632, 657660, 657728, 657772, 657780, 657848, 657968, 658152, 658216, 658236, 658416, 658460, 658500, 658568, 658592, 658596, 658664, 658684, 658704, 658832, 658964, 658996, 659140, 659172, 659216, 659288, 659344, 659424, 659596, 659672, 659748, 659756, 659768, 659864, 659884, 659996, 660028, 660064, 660088, 660172, 660236, 660252, 660264, 660272, 660432, 660436, 660848, 661204, 661236, 661248, 661284, 661460, 661532, 661536, 661552, 661600, 661624, 662080, 662084, 662100, 662112, 662148, 662444, 662448
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-runs/logs/s2scope-gates2.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=s2scope  acquired=True  released=True
+pre-existing (reported, NEVER killed): 13
+================================================
+BW_EXIT=0

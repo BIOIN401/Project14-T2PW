@@ -2,7 +2,11 @@
 
 Branch `fix/stage2-respect-scope`, cut from `main` `5bf9d552`. Biology-path fix approved by the PO
 ("whatever makes it best") under the standing rule: never worsen text-to-PWML results; if no-loss
-cannot be shown, the fix stays off. Code commit `ec611e4d` (code and tests). This record and the
+cannot be shown, the fix stays off. Code commits `ec611e4d` (code and tests) and `fbf8cbd7` (review F3: fail open).
+
+**Status after review R1 (REJECT of the no-loss claim): the flag must NOT be enabled as is.** With the
+chlorophyll gold's heme step matched, the rule deletes a curated gold reaction in all 5 scored
+chlorophyll runs (sections 3.1 and 11). The code is inert with the flag off. This record and the
 evidence (`docs/webserver/evidence/FIX-S2SCOPE/`) are in separate docs-only commits.
 
 ## 1. Symptom
@@ -92,7 +96,40 @@ matches), and (b) the run's `final_mapped.json` scored with and without the rows
 signature (gold lost = the difference; final rows are matched with the evaluator's `strict_key`,
 because mapping renames "pyruvate" to "Pyruvic acid").
 
-### 3.1 Final rule (`replay.json`)
+### 3.1 Final rule, heme matched (`replay_heme.json`): gold lost 5
+
+Scored with `scripts/accscore_heme.py`, a copy of `C:/t/acc-runs/scripts/accscore.py` (the original
+is unchanged) that adds "Protoheme" and "Protoheme IX" to Heme, and "Fe 2", "Fe2", "Fe(2+)" and
+"ferrous iron" to Fe2+, in PW_R2146849 (ferrochelatase: Protoporphyrin IX + Fe2+ -> H+ + Heme,
+CHEBI:17627; protoheme IX is heme b). The original scorer missed that gold step because "protoheme"
+is not a gold alias and Stage-2 cleaning splits "Fe2+" into "Fe 2" (review F1).
+
+runs scanned 74, with an out-of-scope Stage-1 row 23, drops 16, dropped rows matching gold 6, gold lost 5
+
+| paper | run | Stage-2 row dropped | Stage-1 row (index) | gold matched by dropped row | final_mapped gold lost | precision before -> after |
+|---|---|---|---|---|---|---|
+| PMC5130987 | legs-trna/off2-PMC5130987/2026-11-24_2259 | protoporphyrin IX + Fe 2 -> protoheme | protoporphyrin IX + Fe 2 -> protoheme (12) | ['PW_R2146849'] | ['PW_R2146849'] | 0.4375 -> 0.4 |
+| PMC5130987 | legs-trna/on1-PMC5130987/2026-11-24_2051 | protoporphyrin IX -> protoheme | protoporphyrin IX -> protoheme (15) | [] | [] | 0.4118 -> 0.4375 |
+| PMC5130987 | legs4g/base1-PMC5130987/2026-11-23_1538 | protoporphyrin IX + Fe 2 -> protoheme | protoporphyrin IX + Fe 2 -> protoheme (8) | ['PW_R2146849'] | no final_mapped | None -> None |
+| PMC12096016 | legs4g/base2-PMC12096016/2026-11-23_1906 | pyruvate + NADH -> lactate + NAD | pyruvate + NADH -> lactate + NAD (5) | [] | [] | 0.5714 -> 0.6667 |
+| PMC5130987 | legs4g/base2-PMC5130987/2026-11-23_2100 | protoporphyrin IX + Fe 2 -> protoheme | protoporphyrin IX + Fe 2 -> protoheme (18) | ['PW_R2146849'] | ['PW_R2146849'] | 0.4444 -> 0.4118 |
+| PMC5130987 | legs4g/base3-PMC5130987/2026-11-24_0229 | protoporphyrin IX + Fe 2 -> protoheme | protoporphyrin IX + Fe 2 -> protoheme (16) | ['PW_R2146849'] | ['PW_R2146849'] | 0.5 -> 0.4667 |
+| PMC12096016 | legs4g/vt1-PMC12096016/2026-11-23_1322 | pyruvate + NADH -> lactate + NAD | pyruvate + NADH -> lactate + NAD (5) | [] | no final_mapped | None -> None |
+| PMC12096016 | legs4g/vt2-PMC12096016/2026-11-23_1919 | pyruvate + NADH -> lactate + NAD | pyruvate + NADH -> lactate + NAD (5) | [] | [] | 0.5 -> 0.6 |
+| PMC5130987 | legs4g/vt2-PMC5130987/2026-11-23_2211 | protoporphyrin IX + Fe 2 -> protoheme | protoporphyrin IX + Fe 2 -> protoheme (19) | ['PW_R2146849'] | ['PW_R2146849'] | 0.3889 -> 0.3529 |
+| PMC12096016 | legs4g/vt3-PMC12096016/2026-11-24_0016 | pyruvate + NADH -> lactate + NAD | pyruvate + NADH -> lactate + NAD (9) | [] | [] | 0.8571 -> 1.0 |
+| PMC5130987 | legs4g/vt3-PMC5130987/2026-11-24_1052 | protoporphyrin IX + Fe 2 -> protoheme | protoporphyrin IX + Fe 2 -> protoheme (7) | ['PW_R2146849'] | ['PW_R2146849'] | 0.5 -> 0.4706 |
+| PMC12096016 | legs5g/base1-PMC12096016/2026-11-24_1237 | pyruvate + NADH -> lactate + NAD | pyruvate + NADH -> lactate + NAD (5) | [] | [] | 0.6667 -> 0.75 |
+| PMC12096016 | legs5g/base3-PMC12096016/2026-11-24_1413 | pyruvate + NADH -> lactate + NAD | pyruvate + NADH -> lactate + NAD (5) | [] | [] | 0.6667 -> 0.8 |
+| PMC12096016 | legs5g/vt1-PMC12096016/2026-11-24_1250 | pyruvate + NADH -> lactate + NAD | pyruvate + NADH -> lactate + NAD (8) | [] | [] | 0.75 -> 0.8571 |
+| PMC12096016 | server item-4/attempt-1/out | pyruvate + NADH -> lactate + NAD | pyruvate + NADH -> lactate + NAD (5) | [] | [] | 0.75 -> 0.8571 |
+| PMC12096016 | server item-5/attempt-1/out | pyruvate + NADH -> lactate + NAD | pyruvate + NADH -> lactate + NAD (6) | [] | [] | 0.8333 -> 1.0 |
+
+The 9 LDH drops are still clean (no gold, precision up). 6 of the 7 ferrochelatase drops match gold
+PW_R2146849 (the seventh has no Fe2+ and matches nothing). In all 5 runs with a `final_mapped.json`
+that step is lost and precision falls. Log: `review1_replay_heme_oosdump.log`.
+
+### 3.1a Same rule, original scorer (`replay.json`): WRONG, kept for the record
 
 runs scanned 74, with an out-of-scope Stage-1 row 23, drops 16, dropped rows matching gold 0, gold lost 0
 
@@ -115,12 +152,12 @@ runs scanned 74, with an out-of-scope Stage-1 row 23, drops 16, dropped rows mat
 | PMC12096016 | server item-4/attempt-1/out | pyruvate + NADH -> lactate + NAD | pyruvate + NADH -> lactate + NAD (5) | [] | [] | 0.75 -> 0.8571 |
 | PMC12096016 | server item-5/attempt-1/out | pyruvate + NADH -> lactate + NAD | pyruvate + NADH -> lactate + NAD (6) | [] | [] | 0.8333 -> 1.0 |
 
-Every drop is the LDH assay (enterobactin, 9 runs, incl. server items 4 and 5) or ferrochelatase's protoporphyrin IX + Fe2+ -> protoheme (chlorophyll paper PMC5130987, 7 runs; the heme branch is not in its gold). No dropped row matches a gold step; no run loses a gold reaction; precision rises in every run with a final_mapped. 74 runs includes the other session's legs-trna legs and this task's two A/B legs, all read-only. Log: `replay_final.log`.
+Every drop is the LDH assay (enterobactin, 9 runs, incl. server items 4 and 5) or ferrochelatase's protoporphyrin IX + Fe2+ -> protoheme (chlorophyll paper PMC5130987, 7 runs). **This table's "gold lost 0" is wrong:** the heme step IS in the chlorophyll gold (PW_R2146849) and this scorer could not match it (section 3.1). 74 runs includes the other session's legs-trna legs and this task's two A/B legs, all read-only. Log: `replay_final.log`.
 
 ### 3.2 First rule, without the verifier exclusion (`replay_rule1_no_verifier_exclusion.json`, dead end)
 
 70 runs scanned, 19 with an out-of-scope Stage-1 row, 20 drops, **1 dropped row matching gold**, gold
-lost 0. The five extra drops were all verifier omissions:
+lost 0 (original scorer; the same ferrochelatase drops are gold, section 3.1). The five extra drops were all verifier omissions:
 
 | run | Stage-2 row | verifier action on the Stage-1 row | gold |
 |---|---|---|---|
@@ -137,7 +174,7 @@ no longer dropped (a precision gain given up on PMC12312563).
 
 ## 4. Tests
 
-`tests/test_fix_s2scope.py` (10 tests): no out-of-scope rows -> nothing dropped and the same object
+`tests/test_fix_s2scope.py` (11 tests; the 11th, fail-open, is section 11): no out-of-scope rows -> nothing dropped and the same object
 back; the lactate shape dropped and recorded (NAD+ vs NAD, extra H+); a real step sharing only
 NADH/NAD+ with the assay kept (EntA, and pyruvate + NADH -> malate + NAD+); a step Stage 1 also holds
 in scope kept; the reverse direction kept; a verifier-omitted or -folded row ignored, and the same row
@@ -228,15 +265,73 @@ environment, so the flag is switched on by setting `T2PW_STAGE2_RESPECT_SCOPE=1`
   have raised precision there, but the same mechanism restored a gold step the verifier wrongly
   omitted as a summary. Options: keep as is (safe); drop only re-added rows of verifier `split`
   omissions (needs its own no-loss replay).
-- **Q3 A/B completion.** 2 of 6 legs ran before low RAM stopped the driver. Options: reboot and run
-  the remaining four (about 1 h with the lock free; nothing else changes); or decide on the replay
-  (74 runs, 0 gold lost, 0 dropped rows matching gold) plus the two legs.
+- **Q3 A/B completion.** 2 of 6 legs ran before low RAM stopped the driver. Moot until the rule is
+  settled (section 11.5).
+- **Q4 Narrowing (review F2).** No structured field separates an assay from a branch (section 11.3).
+  Options: (a) keep the flag off and accept the LDH row (status quo, no cost); (b) add an `assay` scope
+  label to the Stage-1 prompt and drop only Stage-2 repeats of those rows (a prompt change; needs its
+  own replay and A/B); (c) the `biological_state`-absent correlate (8 of 9 LDH drops, 0 gold in this
+  replay, but no basis for generalising); (d) apply the rule only when an explicit `<pathway_scope>` is
+  given, where the prompt does not fold branches into `out_of_scope` (needs a replay over scoped runs;
+  none is stored).
 
 ## 10. Recommendation
 
-Enable on the server (`T2PW_STAGE2_RESPECT_SCOPE=1` next to `T2PW_REACTION_VERIFIER=1`). Across 74
-stored runs the filter drops only the LDH assay and the ferrochelatase heme step, never a gold step,
-and raises precision in every scored run; the live pair shows the lactate row gone with gold 5/5 in
-both arms. The rule cannot add or change a row, only withhold a Stage-2 row Stage 1's extractor
-already ruled on, and it never touches a step Stage 1 also holds in scope. Caveat: the live A/B is
-1 + 1 legs (Q3); if the PO wants the full 3 + 3 before enabling, run the remaining four after a reboot.
+**Do not enable `T2PW_STAGE2_RESPECT_SCOPE` as is.** It removes the LDH assay cleanly, but it also
+removes the ferrochelatase step, a curated gold reaction of the chlorophyll pathway, in every
+chlorophyll run where Stage 2 re-added it (5 of 5 scored runs lose PW_R2146849). That breaks the
+no-loss rule. The code is safe to merge default-off (inert, fails open). Section 11.3 covers whether a
+narrower rule exists.
+
+## 11. Review R1 (REJECT of the no-loss claim) and response
+
+- **F1 (blocking).** The 7 protoporphyrin IX + Fe2+ -> protoheme drops are the gold step PW_R2146849;
+  accscore missed it ("protoheme" is not an alias; "Fe2+" is cleaned to "Fe 2"). Confirmed: section 3.1,
+  gold lost 5 with heme matched. The earlier "gold lost 0" and the recommendation to enable are withdrawn.
+- **F2 (blocking).** `pwml_system.txt:15` tells Stage 1 to mark biochemically adjacent and branch steps
+  `out_of_scope` when no `<pathway_scope>` is given, and Stage 2 currently restores them. So
+  `out_of_scope` covers both "assay in the Methods" (LDH) and "adjacent branch" (ferrochelatase), and the
+  rule cannot tell them apart. Agreed; section 11.3 looks for a field that can.
+- **F3 (should-fix).** Done in `fbf8cbd7`: `drop_stage_two_scope_repeats` wraps the check; any
+  exception keeps `stage_two` unchanged, logs a warning and records `error` in the report. Test:
+  `test_an_error_in_the_check_keeps_every_stage_two_row`. Gates: section 11.4.
+
+### 11.3 Is there a structured signal that separates an assay from a branch? (data only)
+
+`scripts/oosdump.py` dumped every `out_of_scope` Stage-1 row in the 74 stored runs (`oos_rows.json`,
+38 rows: 16 removed by the reaction verifier, 22 marked by the extractor). After cleaning, a Stage-1 row
+carries only `inputs`, `outputs`, `name`, `enzymes`, `biological_state`, `evidence`, `scope_membership`
+and `provenance_lineage` (plus `inference` or `locked_reaction_id` when set). The extractor-marked rows,
+grouped (`oos_rows_summary.txt`):
+
+| paper | step (Stage-1 name) | rows | scope_membership | biological_state | enzyme provenance / confidence | lineage (stage / origin / explicit / support) | locked id | kind |
+|---|---|---|---|---|---|---|---|---|
+| PMC12096016 | LDH reaction: pyruvate + NADH -> lactate + NAD | 8 | out_of_scope | **absent** | extracted / 1.0 | paper_extraction / paper_stated / explicit / unsupported | none | assay |
+| PMC12096016 | LDH reaction (same) | 2 | out_of_scope | cytosolic state | extracted / 1.0 | same | none | assay |
+| PMC5130987 | ferrochelatase reaction: protoporphyrin IX (+ Fe 2) -> protoheme | 6 | out_of_scope | plastid state | extracted / 1.0 | same | none | branch (gold) |
+| PMC5130987 | Proto IX to protoheme | 3 | out_of_scope | plastid state | extracted / 1.0 | same | none | branch (gold) |
+| PMC12312563 | MenD step (2-oxoglutarate + isochorismate -> SEPHCHC; 2-oxoglutarate -> intermediate I) | 2 | out_of_scope | cytosolic state | extracted / 1.0 | audit_repair / audit_modified / explicit / direct | none | pathway step |
+| PMC7059786 | ATP release from Type II cells: ATP -> ATP | 1 | out_of_scope | Type II cell state | none | paper_extraction / paper_stated / explicit / unsupported | none | other |
+
+**No clean structured signal.** `scope_membership` has one value for both (`out_of_scope`; the prompt
+has no "assay" label). Enzyme provenance and confidence, lineage and the absent lock id are identical
+for the assay and the branch. The only field that differs is `biological_state`: absent on 8 of 10
+LDH rows, present on every branch row. That is a correlate, not a signal: 2 of 10 LDH rows have
+"cytosolic state", all 10 come from one assay in one paper, and nothing in the prompt makes an absent
+state mean "measurement". For the record (`drops_by_biological_state.txt`), a rule narrowed to "the
+Stage-1 row has no biological_state" would drop 8 of the 9 LDH rows and none of the ferrochelatase rows
+in this replay (gold lost 0 with heme matched). With 10 assay rows from one paper that is no evidence it
+generalises, so I do not propose it. A structured way to tell an assay apart would have to be new: a
+distinct label in the Stage-1 prompt (for example `assay`, which is a prompt change), or the source
+section of the evidence, which the cleaned Stage-1 row does not keep.
+
+### 11.4 Gates on `fbf8cbd7`
+
+One queue hold, 460 s, 0 surviving processes (`gates2.log`). Plain group 670 passed (669 + the
+fail-open test); the 15 AppTest files as before (all pass except the environmental
+`test_batch_preflight.py` .venv assertion, section 5); SMOKE 511; golden-seam 2/8/4/24 (none edited);
+equivalence 8/14/6; vision 370 + 1 skipped; web 83.
+
+### 11.5 Live legs
+
+Not resumed, per the coordinator: they decide nothing until the rule is settled. 2 of 6 ran (section 6).
