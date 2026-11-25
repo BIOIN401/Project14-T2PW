@@ -901,6 +901,18 @@ def step_signature(row: Any, context: Any) -> Tuple[frozenset, frozenset]:
 
 def drop_stage_two_scope_repeats(stage_two: Any, stage_one: Any, context: Any,
                                  verifier_report: Any = None) -> Tuple[Any, Dict[str, Any]]:
+    """:func:`_drop_stage_two_scope_repeats`, failing open: any error keeps ``stage_two`` unchanged and is
+    recorded in the report (review F3)."""
+
+    try:
+        return _drop_stage_two_scope_repeats(stage_two, stage_one, context, verifier_report)
+    except Exception as exc:  # noqa: BLE001 - a filter error must never cost the run its Stage-2 rows
+        logger.warning("T2PW_STAGE2_RESPECT_SCOPE: check failed, Stage-2 additions kept: %r", exc)
+        return stage_two, {"flag": STAGE2_SCOPE_FLAG, "error": repr(exc), "drops": []}
+
+
+def _drop_stage_two_scope_repeats(stage_two: Any, stage_one: Any, context: Any,
+                                  verifier_report: Any = None) -> Tuple[Any, Dict[str, Any]]:
     """``(additions to merge, report)``. A Stage-2 reaction is dropped when its :func:`step_signature`
     equals that of a Stage-1 row marked ``out_of_scope`` and of no Stage-1 row in scope (Stage 1 holding the
     same step on both sides is no verdict). Only reactions: entities, RAG and every Stage-1 row are untouched.

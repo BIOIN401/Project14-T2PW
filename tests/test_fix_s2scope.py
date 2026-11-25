@@ -118,6 +118,16 @@ def test_a_row_the_verifier_omitted_or_folded_is_not_a_scope_verdict():
     assert _reactions(out) == []
 
 
+def test_an_error_in_the_check_keeps_every_stage_two_row(monkeypatch):
+    def boom(*a, **k):
+        raise ValueError("broken key")
+
+    monkeypatch.setattr(ex, "step_signature", boom)
+    s2 = _additions(LDH_S2, ENTB_S2)
+    out, report = ex.drop_stage_two_scope_repeats(s2, _stage_one(ENTA, LDH_S1), PCTX)
+    assert out is s2 and report["drops"] == [] and "broken key" in report["error"]
+
+
 def test_the_real_merge_of_the_filtered_additions_has_no_lactate_row():
     base = _stage_one(ENTA)
     out, _ = ex.drop_stage_two_scope_repeats(_additions(LDH_S2, ENTB_S2), _stage_one(ENTA, LDH_S1), PCTX)
