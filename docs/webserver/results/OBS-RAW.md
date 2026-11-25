@@ -1,6 +1,6 @@
 # OBS-RAW: keep the raw LLM replies of a run
 
-Branch `obs/raw-llm-responses`, code commit `2c81ef19`, cut from main `5bf9d552`.
+Branch `obs/raw-llm-responses`, cut from main `5bf9d552`. Code commits `2c81ef19` (hook) and `355c1963` (tool calls, see below).
 
 ## What
 `T2PW_KEEP_RAW_LLM=1` (default off, read per call like `T2PW_REACTION_VERIFIER`) makes every provider
@@ -31,14 +31,23 @@ zero LLM calls leaves an old file in a reused folder untouched (job folders are 
 ## Format (one line per attempt)
 `ts` (UTC ISO), `stage`, `model`, `attempt`, `status` (`ok`/`empty`/`error`/`timeout`/...), `finish_reason`,
 `error` (credential-redacted by `leg_trace.redact`), `request_hash`, and for an `ok` attempt `response_chars`
-and `response` (the reply exactly as returned, not stripped). Above 200 000 chars the reply is cut and
-`"\n[TRUNCATED: N chars, first 200000 kept]"` is appended with `truncated: true`. No headers, key or provider
+and `response` (the reply exactly as returned, not stripped). A tool-call turn also has `tool_calls`:
+`[{"name", "arguments"}]`, each function name and its raw arguments string exactly as returned (the gap resolver's and
+curator's edit ops are in the arguments). The reply and all arguments share one 200 000-char budget per line; a
+string that does not fit is cut and `"\n[TRUNCATED: N chars, first K kept]"` is appended, with `truncated: true`. No headers, key or provider
 config. `request_hash` is the existing `sha256:` prefix (16 hex) of the messages, the same value as in
 `LEG_TRACE.jsonl`, so lines can be joined to the trace. Failed attempts have no reply, only status/error.
 Write errors are logged as a warning and swallowed. A lock serialises writes from concurrent draws.
 
+## Tool calls (added after review)
+`chat_with_tools` passes `(name, arguments)` of each `message.tool_calls` entry to `note()`. They are read only when the
+flag is on, inside a try, so a malformed tool call cannot fail the run. 2 new tests: a tool-call turn with odd-spaced and
+non-JSON arguments is kept verbatim; the shared cap (reply 8 + arguments 8 + 5 under a cap of 10).
+Gate for this change (new file + client files only, `suite2` skipped by instruction, `obsraw-final.log`): new test file
+10 passed, `test_llm_client_request_timeout` 6 passed, `test_llm_client_empty_completion_retry` 29 passed, surviving 0.
+
 ## Tests
-`tests/test_obs_raw_llm_responses.py`, 8 tests: flag off writes nothing; flag on one line per call with the
+`tests/test_obs_raw_llm_responses.py`, 10 tests (8 below plus the 2 tool-call tests): flag off writes nothing; flag on one line per call with the
 fields and the unstripped reply; tool loop covered and leg trace unchanged; empty attempt line; no secret or
 provider field (key in env not in file); truncation marker; fresh file per activation; failing write does not raise.
 
@@ -62,7 +71,6 @@ read `T2PW_OFFLINE_CURATOR`) and `test_batch_preflight.py::test_the_message_name
   fixed before any other result was taken. Evidence logs are of the re-run.
 - Waited about 2 h for the heavy lock held by another session.
 - Scope is wider than audit and enrichment (all stages), by design of the single hook. A stage filter is a one-liner if wanted.
-- Tool-call turns record only `message.content` (usually empty), not the tool-call arguments.
 
 ## Open questions
 None.
