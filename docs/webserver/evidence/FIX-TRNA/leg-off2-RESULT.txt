@@ -1,0 +1,69 @@
+RESULT: PASS (with warnings)
+========================================
+paper      : PMC5130987
+title      : (unknown)
+slug       : PMC5130987
+mode       : strict
+status     : pass
+stage      : pwml_export
+wall time  : 6327.4s (105m27s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] runtime_schema_value_error @ /entities/protein_complexes/1/generation_reason: Expected a 'single_protein_pathwhiz_wrapper'.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/7/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/compounds/27/mapping_meta/resolution: Mapping metadata must include a resolution object.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/compounds/28/mapping_meta/resolution: Mapping metadata must include a resolution object.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/proteins/30/mapping_meta/resolution: Mapping metadata must include a resolution object.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/protein_complexes/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_enrichment_runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/8/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] runtime_schema_value_error @ /entities/protein_complexes/1/generation_reason: Expected a 'single_protein_pathwhiz_wrapper'.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/7/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/compounds/27/mapping_meta/resolution: Mapping metadata must include a resolution object.
+  ! runtime-schema finding (informational, not blocking): and 4 more finding(s); all of them are in contract_reports.json
+
+message    : strict run completed; pathway.review_required.pwml is 266872 bytes
+
+COUNTS
+----------------------------------------
+  blocking_issues = 0
+  compounds = 27
+  entities = 93
+  gate_errors = 0
+  proteins = 23
+  pwml = {'compounds': 27, 'proteins': 23, 'reactions': 16, 'edges': 85}
+  pwml_bytes = 266872
+  reactions = 16
+  runtime_schema_findings = 14
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  transports = 0
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (1407 B)
+  - cleaning_report.json  (5823 B)
+  - contract_reports.json  (14351 B)
+  - coverage_diagnostics.json  (2019 B)
+  - coverage_summary.json  (3289 B)
+  - extraction_boundary_report.json  (13952 B)
+  - final_mapped.json  (799761 B)
+  - final_stage3_gate_report.json  (3513 B)
+  - gap_iteration_summary.json  (76762 B)
+  - gate_fail_report.json  (34803 B)
+  - graph_closure_iterations.json  (4350 B)
+  - initial_stage3_gate_report.json  (34803 B)
+  - merged_payload.json  (176009 B)
+  - pathway.review_required.pwml  (266872 B)
+  - pwml_ir.json  (370792 B)
+  - pwml_ir_report.json  (9350 B)
+  - pwml_ir_validation.json  (237 B)
+  - pwml_qa.json  (1274 B)
+  - pwml_required_field_gate_report.json  (12334 B)
+  - pwml_validation_report.json  (19586 B)
+  - quarantine_report.json  (36932 B)
+  - rag_admission_report.json  (331065 B)
+  - reaction_verifier_report.json  (16701 B)
+  - removed_entity_report.json  (3981 B)
+  - stage0_attempts.json  (3775 B)
+  - stage1_payload.json  (73132 B)

@@ -1,0 +1,86 @@
+== tree C:/t/fix-trna
+HEAD 69e9984ca49d5f9e528b95c9a56ee08fc50ffd6c
+STATUS_BEGIN
+STATUS_END
+== smoke
+........................................................................ [ 84%]
+........................................................................ [ 98%]
+.......                                                                  [100%]
+511 passed in 51.53s
+EXIT_smoke=0
+== g-batch
+T2PW: C:\t\fix-trna\src\t2pw\__init__.py
+..                                                                       [100%]
+2 passed in 6.39s
+EXIT_g-batch=0
+== g-c011
+T2PW: C:\t\fix-trna\src\t2pw\__init__.py
+........                                                                 [100%]
+8 passed in 45.10s
+EXIT_g-c011=0
+== g-stage8
+T2PW: C:\t\fix-trna\src\t2pw\__init__.py
+....                                                                     [100%]
+4 passed in 0.47s
+EXIT_g-stage8=0
+== g-quar
+T2PW: C:\t\fix-trna\src\t2pw\__init__.py
+........................                                                 [100%]
+24 passed in 38.96s
+EXIT_g-quar=0
+== eq-run
+T2PW: C:\t\fix-trna\src\t2pw\__init__.py
+........                                                                 [100%]
+8 passed in 61.60s (0:01:01)
+EXIT_eq-run=0
+== eq-app
+T2PW: C:\t\fix-trna\src\t2pw\__init__.py
+..............                                                           [100%]
+14 passed in 58.08s
+EXIT_eq-app=0
+== eq-default
+T2PW: C:\t\fix-trna\src\t2pw\__init__.py
+......                                                                   [100%]
+6 passed in 30.42s
+EXIT_eq-default=0
+== vision
+........................................................................ [ 77%]
+........................................................................ [ 97%]
+..........s                                                              [100%]
+370 passed, 1 skipped in 16.07s
+EXIT_vision=0
+== web
+T2PW: C:\t\fix-trna\src\t2pw\__init__.py
+........................................................................ [ 86%]
+...........                                                              [100%]
+83 passed in 5.67s
+EXIT_web=0
+SUITE_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e4941825c9fc0fcf963d62168096557664af03c3  [git, worktree dirty=True]
+label                   : suite2
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/vis-runs/suite2.sh C:/t/fix-trna fixtrna-suite2
+cwd                     : C:\t\fix-trna
+root PID / process group: 377524 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 5400 s
+duration                : 327.01 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 76  386824:bash.exe, 387236:bash.exe, 381588:bash.exe, 381992:git.exe, 383336:bash.exe, 387480:python.exe, 387976:python.exe, 377852:python.exe, 384676:python.exe, 383556:python.exe, 385108:python.exe, 382724:python.exe, 383516:python.exe, 383736:python.exe, 387548:python.exe, 387728:git.exe, 380180:git.exe, 380656:python.exe, 381240:bash.exe, 387276:python.exe, 383156:python.exe, 383856:bash.exe, 384856:python.exe, 385160:tail.exe, 387456:bash.exe, 385596:git.exe, 386112:python.exe, 388728:python.exe, 388736:python.exe, 388800:python.exe, 369636:git.exe, 380940:python.exe, 383348:python.exe, 387484:python.exe, 388372:python.exe, 384200:python.exe, 387760:python.exe, 380584:python.exe, 388820:python.exe, 388128:python.exe, 388328:python.exe, 384756:python.exe, 388500:python.exe, 388584:bash.exe, 385872:python.exe, 388700:python.exe, 384284:bash.exe, 387692:python.exe, 388844:python.exe, 376844:python.exe, 383672:python.exe, 388924:bash.exe, 389272:python.exe, 389952:python.exe, 386944:bash.exe, 390760:python.exe, 390904:python.exe, 392788:bash.exe, 390296:python.exe, 392936:python.exe, 393300:bash.exe, 393324:bash.exe, 393332:python.exe, 393344:python.exe, 394000:python.exe, 387688:bash.exe, 393460:python.exe, 393620:python.exe, 391488:python.exe, 394052:python.exe, 392644:python.exe, 394024:python.exe, 389392:python.exe, 393376:python.exe, 387988:python.exe, 391300:python.exe
+descendants terminated  : 76  369636, 376844, 377852, 380180, 380584, 380656, 380940, 381240, 381588, 381992, 382724, 383156, 383336, 383348, 383516, 383556, 383672, 383736, 383856, 384200, 384284, 384676, 384756, 384856, 385108, 385160, 385596, 385872, 386112, 386824, 386944, 387236, 387276, 387456, 387480, 387484, 387548, 387688, 387692, 387728, 387760, 387976, 387988, 388128, 388328, 388372, 388500, 388584, 388700, 388728, 388736, 388800, 388820, 388844, 388924, 389272, 389392, 389952, 390296, 390760, 390904, 391300, 391488, 392644, 392788, 392936, 393300, 393324, 393332, 393344, 393376, 393460, 393620, 394000, 394024, 394052
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-runs/logs/fixtrna-suite2.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=fixtrna  acquired=True  released=True
+pre-existing (reported, NEVER killed): 13
+================================================
+BW_EXIT=0

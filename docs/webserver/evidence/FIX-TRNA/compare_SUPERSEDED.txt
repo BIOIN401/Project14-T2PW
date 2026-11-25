@@ -1,0 +1,12 @@
+payloads scanned: 69
+flag-off (worktree) == original main-tree code, byte-identical: 0 of 69
+main-tree on==off (flag ignored there): 69
+payloads whose audit result differs flag off vs on: 1
+
+== legs4g/base1-PMC5130987/2026-11-23_1538
+  ops only with flag off: [["add", "/entities/compounds/-", {"name": "tRNA Glu"}, "Add missing compound referenced by reaction/transport process."]]
+  ops only with flag on : []
+  issues only off: []
+  issues only on : []
+  report keys differ: ['errors', 'summary', 'warnings']
+  reaction[20] 'Glu to Glu-tRNA Glu': 'tRNA Glu' as input
