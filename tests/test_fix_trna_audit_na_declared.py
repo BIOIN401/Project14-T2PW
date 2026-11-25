@@ -68,9 +68,57 @@ def test_other_values_are_off(monkeypatch, v) -> None:
     assert "tRNA Glu" in _added_compounds(monkeypatch, v)
 
 
-def test_flag_off_output_is_unchanged_by_the_change(monkeypatch) -> None:
-    monkeypatch.delenv(FLAG, raising=False)
-    a = audit_payload(_payload(), use_llm=False)
-    monkeypatch.setenv(FLAG, "0")
-    b = audit_payload(_payload(), use_llm=False)
-    assert a == b
+def _transport_payload() -> dict:
+    return {
+        "entities": {
+            "nucleic_acids": [{"name": "tRNA Glu"}],
+            "subcellular_locations": [{"name": "cytosol"}, {"name": "nucleus"}],
+        },
+        "processes": {
+            "reactions": [],
+            "transports": [
+                {"name": "tRNA Glu export", "cargo": "tRNA Glu", "from_location": "nucleus", "to_location": "cytosol"}
+            ],
+        },
+    }
+
+
+def _transport_run(monkeypatch, on: bool):
+    if on:
+        monkeypatch.setenv(FLAG, "1")
+    else:
+        monkeypatch.delenv(FLAG, raising=False)
+    res = audit_payload(_transport_payload(), use_llm=False)
+    added = [o["value"]["name"] for o in res["patch"] if o["op"] == "add" and o["path"] == "/entities/compounds/-"]
+    cargo_errors = [e for e in res["report"]["errors"] if "cargo" in e.get("reason", "")]
+    return added, cargo_errors
+
+
+def test_transport_cargo_flag_off_adds_duplicate_and_reports_it_missing(monkeypatch) -> None:
+    added, cargo_errors = _transport_run(monkeypatch, False)
+    assert added == ["tRNA Glu"]
+    assert cargo_errors
+
+
+def test_transport_cargo_flag_on_counts_a_nucleic_acid_as_declared(monkeypatch) -> None:
+    added, cargo_errors = _transport_run(monkeypatch, True)
+    assert added == []
+    assert not cargo_errors
+
+
+def test_flag_on_removes_the_missing_entity_error_and_warning_for_the_reaction_input(monkeypatch) -> None:
+    def run(on):
+        if on:
+            monkeypatch.setenv(FLAG, "1")
+        else:
+            monkeypatch.delenv(FLAG, raising=False)
+        r = audit_payload(_payload(), use_llm=False)["report"]
+        return (
+            [e["evidence"] for e in r["errors"] if "does not exist" in e["reason"]],
+            [w["evidence"] for w in r["warnings"] if w["reason"].startswith("Added missing compound")],
+        )
+
+    off_err, off_warn = run(False)
+    on_err, on_warn = run(True)
+    assert "tRNA Glu" in off_err and "tRNA Glu" in off_warn
+    assert "tRNA Glu" not in on_err and "tRNA Glu" not in on_warn
