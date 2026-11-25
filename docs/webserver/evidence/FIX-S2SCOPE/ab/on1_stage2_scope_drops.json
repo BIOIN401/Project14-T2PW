@@ -1,0 +1,76 @@
+{
+  "flag": "T2PW_STAGE2_RESPECT_SCOPE",
+  "stage1_out_of_scope_rows": 1,
+  "verifier_removed_rows_ignored": [
+    9
+  ],
+  "drops": [
+    {
+      "stage2_row": {
+        "inputs": [
+          "pyruvate",
+          "NADH"
+        ],
+        "outputs": [
+          "lactate",
+          "NAD"
+        ],
+        "name": "LDH reaction",
+        "enzymes": [
+          {
+            "protein": "LDH",
+            "evidence": "LDH‐catalyzed conversion of pyruvate to lactate is then monitored by loss of OD 340 following oxidation of NADH to NAD+",
+            "provenance": "inferred",
+            "confidence": 0.95
+          }
+        ],
+        "biological_state": "cytosolic state",
+        "evidence": "LDH‐catalyzed conversion of pyruvate to lactate is then monitored by loss of OD 340 following oxidation of NADH to NAD+"
+      },
+      "stage1_index": 8,
+      "stage1_row": {
+        "inputs": [
+          "pyruvate",
+          "NADH"
+        ],
+        "outputs": [
+          "lactate",
+          "NAD"
+        ],
+        "name": "LDH reaction",
+        "enzymes": [
+          {
+            "protein": "LDH",
+            "evidence": "LDH-catalyzed conversion of pyruvate to lactate is then monitored by loss of OD 340 following oxidation of NADH to NAD+",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "cytosolic state",
+        "evidence": "LDH-catalyzed conversion of pyruvate to lactate is then monitored by loss of OD 340 following oxidation of NADH to NAD+",
+        "scope_membership": "out_of_scope",
+        "provenance_lineage": [
+          {
+            "stage": "paper_extraction",
+            "origin": "paper_stated",
+            "support": "unsupported",
+            "paper_explicit": "explicit",
+            "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+            "review_required": false,
+            "uncertainty": "",
+            "sources": []
+          }
+        ]
+      },
+      "out_of_scope_reason": "the Stage-1 extractor marked the row scope_membership 'out_of_scope'",
+      "match": {
+        "substrates": [
+          "pyruvate"
+        ],
+        "products": [
+          "lactate"
+        ]
+      }
+    }
+  ]
+}

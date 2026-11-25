@@ -1,0 +1,71 @@
+{
+ "off1-PMC12096016": {
+  "arm": "off",
+  "paper": "PMC12096016",
+  "status": "pass",
+  "pwml": [
+   "pathway.review_required.pwml"
+  ],
+  "lactate_rows_merged_payload": [
+   "pyruvate + NADH -> lactate + NAD"
+  ],
+  "lactate_rows_final_mapped": [
+   "Pyruvic acid + NADH -> lactate + NAD+"
+  ],
+  "stage1_out_of_scope": [
+   "isochorismate -> 2,3-dihydro-2,3-dihydroxybenzoate + pyruvate"
+  ],
+  "drops_report_present": false,
+  "matched": [
+   "R1",
+   "R2",
+   "R3",
+   "R4",
+   "R5"
+  ],
+  "n_matched": 5,
+  "n_gold": 5,
+  "rows": 8,
+  "tp_rows": 6,
+  "precision": 0.75,
+  "fps": [
+   "2,3-dihydroxybenzoic acid + Adenosine triphosphate -> enterobactin",
+   "Pyruvic acid + NADH -> lactate + NAD+"
+  ],
+  "cost": 0.0444
+ },
+ "on1-PMC12096016": {
+  "arm": "on",
+  "paper": "PMC12096016",
+  "status": "pass",
+  "pwml": [
+   "pathway.review_required.pwml"
+  ],
+  "lactate_rows_merged_payload": [],
+  "lactate_rows_final_mapped": [],
+  "stage1_out_of_scope": [
+   "pyruvate + NADH -> lactate + NAD",
+   "isochorismate -> 2,3-dihydro-2,3-dihydroxybenzoate + pyruvate"
+  ],
+  "drops_report_present": true,
+  "drops": [
+   "pyruvate + NADH -> lactate + NAD"
+  ],
+  "matched": [
+   "R1",
+   "R2",
+   "R3",
+   "R4",
+   "R5"
+  ],
+  "n_matched": 5,
+  "n_gold": 5,
+  "rows": 8,
+  "tp_rows": 7,
+  "precision": 0.875,
+  "fps": [
+   "2,3-dihydroxybenzoic acid -> 2,3-dihydro-2,3-dihydroxybenzoate"
+  ],
+  "cost": 0.0469
+ }
+}

@@ -1,0 +1,46 @@
+[00:44:55] STARTING a fresh run 2026-11-25_0044 (--fresh was given)
+[00:44:55]   cache snapshot   : id_mapping_cache.json, enrichment_cache.json
+[00:44:55] fetching papers (topics=C:\t\acc-runs\topics\PMC12096016.txt, limit=none) ...
+[00:44:55]   + PMC12096016  (45775 chars)  (untitled)
+[00:44:55] planned 1 paper(s) x 1 mode(s) = 1 run(s); 0 candidate(s) skipped (see skipped.json)
+[00:44:55] acquisition funnel: requested 1, examined 1, eligible 1, ineligible 0, no_full_text 0, accepted 1
+[00:44:55] leg engine       : run_pathway
+[00:44:55] running 1 paper+mode pair(s) sequentially
+[00:44:55] whole-night deadline : 2.6h from now
+[00:44:55] [1/1] PMC12096016 / strict -> starting (timeout 9000s)
+[00:54:41] [1/1] PMC12096016 / strict -> PASS WITH WARNINGS in 584.8s (9m44s)
+[00:54:41]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[00:54:41]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[00:54:41]     1/1 done | strict 1 pass | research 0 pass | 1 NO DELIVERABLE
+[00:54:41] run directory : C:\t\acc-runs\legs-s2scope\on1-PMC12096016\2026-11-25_0044
+[00:54:41] summary       : C:\t\acc-runs\legs-s2scope\on1-PMC12096016\2026-11-25_0044\SUMMARY.txt
+[00:54:41] fix-list      : C:\t\acc-runs\legs-s2scope\on1-PMC12096016\2026-11-25_0044\failures_by_code.txt
+[00:54:41] PASSED WITH WARNINGS: 1 paper+mode run(s) passed but 1 produced no deliverable or lost an artifact on write -- see SUMMARY.txt
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e4941825c9fc0fcf963d62168096557664af03c3  [git, worktree dirty=True]
+label                   : s2scope-on1-PMC12096016
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u -X utf8 C:/t/corr-assess/scripts/live_launch.py --script C:/t/fix-s2scope/scripts/batch_run.py --topics C:/t/acc-runs/topics/PMC12096016.txt --modes strict --out C:/t/acc-runs/legs-s2scope/on1-PMC12096016 --fresh --timeout 9000 --deadline 2.6
+cwd                     : C:\t\fix-s2scope
+root PID / process group: 633464 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 9600 s
+duration                : 588.03 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 5  634660:python.exe, 633196:python.exe, 634408:python.exe, 633572:python.exe, 634088:python.exe
+descendants terminated  : 5  633196, 633572, 634088, 634408, 634660
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/acc-runs/logs-s2scope/on1-PMC12096016.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=s2scope  acquired=True  released=True
+pre-existing (reported, NEVER killed): 13
+================================================
+BW_EXIT=0

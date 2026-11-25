@@ -1,0 +1,33 @@
+| leg | status | PWML | gold | rows | precision | lactate in final | drops |
+| off1-PMC12096016 | pass | yes | 5/5 | 8 | 0.75 | True | None |
+| on1-PMC12096016 | pass | yes | 5/5 | 8 | 0.875 | False | ['pyruvate + NADH -> lactate + NAD'] |
+SCORE_DONE
+EXIT_score=0
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e4941825c9fc0fcf963d62168096557664af03c3  [git, worktree dirty=True]
+label                   : score
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/vis-runs/scratch/s2scope/score.sh
+cwd                     : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 631248 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 1500 s
+duration                : 0.70 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 3  620572:timeout.exe, 644312:bash.exe, 644964:bash.exe
+descendants terminated  : 3  620572, 644312, 644964
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-runs/logs/s2scope-score.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=s2scope  acquired=True  released=True
+pre-existing (reported, NEVER killed): 13
+================================================
+BW_EXIT=0

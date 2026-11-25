@@ -1,0 +1,38 @@
+== C:/t/fix-s2scope HEAD ec611e4d
+E       AssertionError: this project ships a .venv; the test assumes it
+tests\test_batch_preflight.py:616: AssertionError
+FAILED tests/test_batch_preflight.py::test_the_message_names_the_problem_the_interpreter_and_the_cure
+1 failed, 32 passed, 4 skipped in 10.13s
+== C:/t/fix-noname HEAD 767c6e66
+E       AssertionError: this project ships a .venv; the test assumes it
+tests\test_batch_preflight.py:616: AssertionError
+FAILED tests/test_batch_preflight.py::test_the_message_names_the_problem_the_interpreter_and_the_cure
+1 failed, 32 passed, 4 skipped in 9.15s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e4941825c9fc0fcf963d62168096557664af03c3  [git, worktree dirty=True]
+label                   : preflight
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/vis-runs/scratch/s2scope/preflight.sh
+cwd                     : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 557428 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 2700 s
+duration                : 21.73 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 9  557244:basename.exe, 557440:bash.exe, 557464:bash.exe, 552456:git.exe, 557452:bash.exe, 558624:bash.exe, 555624:bash.exe, 558804:grep.exe, 558828:bash.exe
+descendants terminated  : 9  552456, 555624, 557244, 557440, 557452, 557464, 558624, 558804, 558828
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-runs/logs/s2scope-preflight.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=s2scope  acquired=True  released=True
+pre-existing (reported, NEVER killed): 13
+================================================
+BW_EXIT=0
