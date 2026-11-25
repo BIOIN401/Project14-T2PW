@@ -220,8 +220,46 @@ from t2pw.service.extraction import (
 # or a state mapping keeps today's behaviour: Streamlit calls and st.session_state.
 install_app_defaults(reporter=lambda: StreamlitReporter(st), state=lambda: st.session_state)
 
-st.set_page_config(page_title="PWML Multi-Stage Pipeline", layout="wide")
-st.title("PWML Extraction -> Inference Pipeline (LM Studio)")
+# Human `streamlit run streamlit_app.py` → landing + top nav (same as t2pw_ui).
+# AppTest / batch keep this file's submit console. As a page under t2pw_ui, main
+# script path is t2pw_ui.py so we do not hand off.
+def _hand_off_to_landing_ui() -> bool:
+    if "streamlit.testing" in sys.modules:
+        return False
+    try:
+        from streamlit.runtime.scriptrunner import get_script_run_ctx
+
+        ctx = get_script_run_ctx()
+        if ctx is None:
+            return False
+        main = Path(str(getattr(ctx, "main_script_path", "") or "")).resolve()
+        return main == Path(__file__).resolve()
+    except Exception:
+        return False
+
+
+if _hand_off_to_landing_ui():
+    from t2pw.app.t2pw_ui import run_app
+
+    run_app()
+    st.stop()
+
+# Submit console chrome. set_page_config only when this file is the Streamlit
+# entry under AppTest; under t2pw_ui the entrypoint already configured the page.
+from t2pw.app.ui_chrome import inject_brand_css  # noqa: E402
+
+try:
+    st.set_page_config(
+        page_title="T2PW · Submit",
+        layout="wide",
+        initial_sidebar_state="collapsed",
+    )
+except st.errors.StreamlitAPIException:
+    pass
+
+inject_brand_css()
+st.title("Submit a pathway")
+st.caption("Local pipeline console for T2PW.")
 
 REFINEMENT_STATE_DEFAULTS = {
     "refinement_working_json": None,
@@ -1489,14 +1527,55 @@ pdf_ocr        = False
 
 text_entry_count = 1
 if uses_text_input:
-    text_entry_count = st.number_input(
-        "Number of text entries",
-        min_value=1,
-        max_value=10,
-        value=1,
-        step=1,
-        key="text_entry_count",
-    )
+    # Mirror public-site multi-pathway slots: keep the count widget (AppTest / batch
+    # key) and Add / Remove with compact renumber of pathway_text_* session keys.
+    # Mutate text_entry_count only in on_click callbacks (before the widget exists).
+    if "text_entry_count" not in st.session_state:
+        st.session_state["text_entry_count"] = 1
+
+    def _add_pathway_entry() -> None:
+        st.session_state["text_entry_count"] = min(
+            10, int(st.session_state.get("text_entry_count", 1)) + 1
+        )
+
+    def _remove_pathway_entry(removed_idx: int) -> None:
+        count = int(st.session_state.get("text_entry_count", 1))
+        if count <= 1 or removed_idx < 1 or removed_idx >= count:
+            return
+        for _i in range(removed_idx, count - 1):
+            st.session_state[f"pathway_text_{_i}"] = st.session_state.get(
+                f"pathway_text_{_i + 1}", ""
+            )
+        st.session_state.pop(f"pathway_text_{count - 1}", None)
+        st.session_state["text_entry_count"] = max(1, count - 1)
+
+    _add_col, _count_col = st.columns([1, 3])
+    with _add_col:
+        st.button(
+            "Add another pathway",
+            key="add_pathway_entry",
+            disabled=int(st.session_state["text_entry_count"]) >= 10,
+            on_click=_add_pathway_entry,
+        )
+    with _count_col:
+        text_entry_count = st.number_input(
+            "Number of text entries",
+            min_value=1,
+            max_value=10,
+            step=1,
+            key="text_entry_count",
+        )
+    _n_slots = int(text_entry_count)
+    if _n_slots > 1:
+        _rm_cols = st.columns(min(_n_slots - 1, 5))
+        for _ri, _idx in enumerate(range(1, _n_slots)):  # pathway 2..n (0-based idx)
+            with _rm_cols[_ri % len(_rm_cols)]:
+                st.button(
+                    f"Remove pathway {_idx + 1}",
+                    key=f"remove_pathway_entry_{_idx}",
+                    on_click=_remove_pathway_entry,
+                    args=(_idx,),
+                )
 
 if uses_pdf_input:
     uploaded_pdfs = st.file_uploader(
