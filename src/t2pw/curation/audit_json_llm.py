@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import os
 import re
 from collections import Counter, defaultdict
 from copy import deepcopy
@@ -679,6 +680,8 @@ def _deterministic_audit(payload: Dict[str, Any], *, locked_reaction_indices: Op
 
     names = _all_entity_name_sets(payload)
     compound_like = names["compounds"] | names["element_collections"]
+    if os.environ.get("T2PW_AUDIT_NA_DECLARED", "").strip().casefold() in ("1", "true", "yes"):
+        compound_like = compound_like | names["nucleic_acids"]  # FIX-TRNA: a declared nucleic acid is not a missing compound
     protein_like = names["proteins"] | names["protein_complexes"]
     compound_norms = {_normalize_name(name) for name in compound_like if name}
     protein_norms = {_normalize_name(name) for name in protein_like if name}
