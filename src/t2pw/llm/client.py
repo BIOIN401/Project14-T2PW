@@ -543,9 +543,9 @@ def _keep_raw(diagnostics: "CompletionDiagnostics", row: Dict[str, Any], raw: Op
         line = json.dumps(entry, ensure_ascii=False)
         with _RAW_LLM_LOCK:
             first = not getattr(trace, "_raw_llm_started", False)
-            trace._raw_llm_started = True
             with open(trace.path.parent / RAW_LLM_FILE, "w" if first else "a", encoding="utf-8", newline="\n") as handle:
                 handle.write(line + "\n")
+            trace._raw_llm_started = True  # only after a good write: a failed first one must not leave an old run's file to append to
     except Exception as exc:  # noqa: BLE001 - a diagnostic must never fail the run
         logger.warning("%s: could not write %s: %s", RAW_LLM_FLAG, RAW_LLM_FILE, exc)
 

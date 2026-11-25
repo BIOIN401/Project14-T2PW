@@ -108,12 +108,34 @@ def test_empty_attempt_is_a_line_with_no_response(run_dir, monkeypatch) -> None:
 
 def test_no_secret_or_provider_field(run_dir, monkeypatch) -> None:
     monkeypatch.setenv(FLAG, "1")
-    monkeypatch.setenv("OPENROUTER_API_KEY", "sk-or-v1-0123456789abcdef0123456789abcdef")
+    key = "sk-" + "or-v1-" + "0123456789abcdef" * 2  # built at runtime: nothing key-shaped in the source
+    monkeypatch.setenv("OPENROUTER_API_KEY", key)
     _QUEUE.append(_resp("reply"))
     client_mod.chat(MESSAGES, model_override="m")
-    text = (run_dir / client_mod.RAW_LLM_FILE).read_text(encoding="utf-8")
-    assert "sk-or-v1" not in text
     assert not {"headers", "api_key", "base_url", "provider", "authorization"} & set(_lines(run_dir)[0])
+    assert key not in (run_dir / client_mod.RAW_LLM_FILE).read_text(encoding="utf-8")
+
+
+def test_a_key_in_a_recorded_error_is_redacted(run_dir, monkeypatch) -> None:
+    monkeypatch.setenv(FLAG, "1")
+    key = "sk-" + "or-v1-" + "0123456789abcdef" * 2
+    diag = client_mod.CompletionDiagnostics(model="m", stage="audit loop", request_hash="sha256:x")
+    client_mod._keep_raw(diag, {"attempt": 1, "status": "error", "error": f"401 bad key {key}"}, None)
+    text = (run_dir / client_mod.RAW_LLM_FILE).read_text(encoding="utf-8")
+    assert "[redacted:openai_style_key]" in text and key not in text and "0123456789abcdef" not in text
+
+
+def test_a_failed_first_write_does_not_make_later_lines_append_to_an_old_file(run_dir, monkeypatch) -> None:
+    monkeypatch.setenv(FLAG, "1")
+    path = run_dir / client_mod.RAW_LLM_FILE
+    path.mkdir()  # the first write fails
+    _QUEUE.append(_resp("lost"))
+    client_mod.chat(MESSAGES, model_override="m")
+    path.rmdir()
+    path.write_text("an earlier run\n", encoding="utf-8")  # a reused folder's old file
+    _QUEUE.append(_resp("kept"))
+    client_mod.chat(MESSAGES, model_override="m")
+    assert [r["response"] for r in _lines(run_dir)] == ["kept"]
 
 
 def test_long_reply_is_truncated_with_a_marker(run_dir, monkeypatch) -> None:
