@@ -867,6 +867,94 @@ def _rag_deadline_kwargs(state: MutableMapping[str, Any]) -> Dict[str, float]:
     return {"deadline_seconds": max(1.0, min(rag_loop_deadline_seconds(), float(deadline) - time.time()))}
 
 
+#: T2PW_STAGE2_RESPECT_SCOPE (default off, read per call): a reaction Stage 2 adds is not merged when it
+#: repeats a reaction Stage 1 marked ``out_of_scope`` (FIX-S2SCOPE). Off, nothing here runs.
+STAGE2_SCOPE_FLAG = "T2PW_STAGE2_RESPECT_SCOPE"
+#: The drop record; the batch driver writes it into the run folder as ``stage2_scope_drops.json``.
+STAGE2_SCOPE_DROPS_KEY = "stage2_scope_drops"
+
+
+def stage2_respect_scope_enabled() -> bool:
+    return os.environ.get(STAGE2_SCOPE_FLAG, "").strip().casefold() in ("1", "true", "yes")
+
+
+def step_signature(row: Any, context: Any) -> Tuple[frozenset, frozenset]:
+    """``(substrates, products)`` as ``reference_key`` sets, currency left out.
+
+    Currency is ``cofactor_policy``'s ``cofactor_or_currency`` verdict in the run's context, so NAD+/NADH,
+    ATP/ADP, H2O, H+ and the like never decide a match (and in a pathway that is ABOUT one of them, the
+    policy calls it a participant and it counts). A row of currency only keeps all its names.
+    """
+
+    from t2pw.pipeline.cofactor_policy import COFACTOR_OR_CURRENCY, classify_entity
+    from t2pw.pipeline.name_keys import reference_key
+
+    sides = [[n for n in (row.get(k) or []) if isinstance(n, str) and n.strip()] for k in ("inputs", "outputs")]
+
+    def keys(names: List[str], skip_currency: bool) -> frozenset:
+        return frozenset(reference_key(n) for n in names
+                         if not (skip_currency and classify_entity(n, context).verdict == COFACTOR_OR_CURRENCY)) - {""}
+
+    core = (keys(sides[0], True), keys(sides[1], True))
+    return core if any(core) else (keys(sides[0], False), keys(sides[1], False))
+
+
+def drop_stage_two_scope_repeats(stage_two: Any, stage_one: Any, context: Any,
+                                 verifier_report: Any = None) -> Tuple[Any, Dict[str, Any]]:
+    """``(additions to merge, report)``. A Stage-2 reaction is dropped when its :func:`step_signature`
+    equals that of a Stage-1 row marked ``out_of_scope`` and of no Stage-1 row in scope (Stage 1 holding the
+    same step on both sides is no verdict). Only reactions: entities, RAG and every Stage-1 row are untouched.
+    Nothing dropped returns ``stage_two`` itself, so the merge is byte for byte what it was.
+
+    Only the extractor's own verdict counts. A row the reaction verifier omitted or folded (listed in
+    ``verifier_report`` with any action but kept, repaired or flagged) is ignored: those are summary, split
+    and duplicate calls, not scope, and Stage 2 re-adding such a row can be the step the verifier got wrong
+    (legs4g vt3-PMC12096016: the EntF step, gold R5, omitted as a "summary" and restored by Stage 2)."""
+
+    import copy
+
+    from t2pw.pipeline.pipeline import clean_inference_output
+
+    rows = ((stage_one or {}).get("processes") or {}).get("reactions") if isinstance(stage_one, dict) else None
+    verifier_rows = ((verifier_report or {}).get("reactions") or {}).get("rows") if isinstance(verifier_report, dict) else None
+    verifier_removed = {x.get("index") for x in (verifier_rows if isinstance(verifier_rows, list) else [])
+                        if isinstance(x, dict) and x.get("action") not in ("kept", "repaired", "flagged")}
+    out_of_scope: Dict[Tuple[frozenset, frozenset], Tuple[int, Dict[str, Any]]] = {}
+    in_scope = set()
+    report: Dict[str, Any] = {"flag": STAGE2_SCOPE_FLAG, "stage1_out_of_scope_rows": 0,
+                              "verifier_removed_rows_ignored": sorted(i for i in verifier_removed if isinstance(i, int)),
+                              "drops": []}
+    for i, row in enumerate(rows if isinstance(rows, list) else []):
+        if not isinstance(row, dict) or i in verifier_removed:
+            continue
+        sig = step_signature(row, context)
+        if str(row.get("scope_membership") or "").strip().casefold() == "out_of_scope":
+            report["stage1_out_of_scope_rows"] += 1
+            out_of_scope.setdefault(sig, (i, row))
+        else:
+            in_scope.add(sig)
+    if not out_of_scope:
+        return stage_two, report
+    # Matched on the cleaned rows merge_additions would merge (composite tokens split, strings only).
+    cleaned = clean_inference_output(copy.deepcopy(stage_two) if isinstance(stage_two, dict) else {})
+    procs = cleaned.get("additions", {}).get("processes", {})
+    kept = []
+    for row in procs.get("reactions", []) if isinstance(procs, dict) else []:
+        sig = step_signature(row, context)
+        hit = out_of_scope.get(sig) if any(sig) and sig not in in_scope else None
+        if hit is None:
+            kept.append(row)
+            continue
+        report["drops"].append({"stage2_row": row, "stage1_index": hit[0], "stage1_row": hit[1],
+                                "out_of_scope_reason": "the Stage-1 extractor marked the row scope_membership "
+                                                       f"{hit[1].get('scope_membership')!r}",
+                                "match": {"substrates": sorted(sig[0]), "products": sorted(sig[1])}})
+    if not report["drops"]:
+        return stage_two, report
+    procs["reactions"] = kept
+    return cleaned, report
+
+
 def run_stage_two(
     text: str,
     stage_one_result: StageOneResult,
@@ -951,12 +1039,18 @@ def run_stage_two(
         # deliberately not supplied -- see the pipeline.py site for why.
         from t2pw.pipeline.entity_admission import pathway_context_from_stage_zero
 
+        stage_two_raw = stage_two  # state["stage_two"] keeps the model's own output
+        if stage2_respect_scope_enabled():
+            stage_two, state[STAGE2_SCOPE_DROPS_KEY] = drop_stage_two_scope_repeats(
+                stage_two, stage_one, pathway_context_from_stage_zero(pathway_context),
+                state.get("reaction_verifier_report"))
         final_payload = merge_additions(
             stage_one_in_scope,
             stage_two if isinstance(stage_two, dict) else {},
             pathway_context=pathway_context_from_stage_zero(pathway_context),
             source_text=text,
         )
+        stage_two = stage_two_raw
 
     # S3 — inject R5's synthesized reactions/entities INTO the seed payload rather
     # than REPLACING it, ONE ROUND AT A TIME. A no-op with RAG off (rag_result is

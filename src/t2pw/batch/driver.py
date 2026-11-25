@@ -1775,6 +1775,10 @@ def _add_common_artifacts(at: Any, artifacts: Dict[str, Any], out: Dict[str, Any
     verifier = _ss(at, "reaction_verifier_report")
     if isinstance(verifier, dict) and verifier:
         out["reaction_verifier_report.json"] = _json_text(verifier)
+    # T2PW_STAGE2_RESPECT_SCOPE (default off): the Stage-2 rows not merged because Stage 1 ruled them out of scope.
+    scope_drops = _ss(at, "stage2_scope_drops")
+    if isinstance(scope_drops, dict) and scope_drops:
+        out["stage2_scope_drops.json"] = _json_text(scope_drops)
     stage_one = _ss(at, "stage_one")
     if isinstance(stage_one, dict) and stage_one:
         out["stage1_payload.json"] = _json_text(stage_one)
