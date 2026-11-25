@@ -29,6 +29,10 @@ export T2PW_EXTRACTION_DRAWS=${T2PW_EXTRACTION_DRAWS:-3}
 export T2PW_LLM_MODEL=${T2PW_LLM_MODEL:-google/gemma-4-31b-it}
 export T2PW_REACTION_VERIFIER=1
 unset T2PW_INTERACTION_TYPING T2PW_VD18_SPAN_TEMPLATES T2PW_VERIFIER_GRANULARITY
+# PO ruling 2026-11-24 (ACC-R3 Q1): keep raw audit/enrichment LLM responses per job (llm_raw_responses.jsonl, OBS-RAW).
+export T2PW_KEEP_RAW_LLM=1
+# FIX-TRNA (T2PW_AUDIT_NA_DECLARED) and FIX-S2SCOPE stay off until their evidence is in.
+unset T2PW_AUDIT_NA_DECLARED T2PW_STAGE2_RESPECT_SCOPE
 cd "$R"
 stamp=$(date +%Y%m%d-%H%M%S)
 
