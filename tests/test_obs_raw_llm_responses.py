@@ -38,8 +38,8 @@ EXPECTED_KEYS = {"ts", "stage", "model", "attempt", "status", "finish_reason", "
 _QUEUE: List[Any] = []  # the canned replies the fake client hands out, in order
 
 
-def _resp(content: Any, finish_reason: str = "stop") -> Any:
-    message = types.SimpleNamespace(content=content, tool_calls=None)
+def _resp(content: Any, finish_reason: str = "stop", tool_calls: Any = None) -> Any:
+    message = types.SimpleNamespace(content=content, tool_calls=tool_calls)
     return types.SimpleNamespace(choices=[types.SimpleNamespace(message=message, finish_reason=finish_reason)],
                                  usage=None)
 
@@ -141,3 +141,37 @@ def test_a_failing_write_never_fails_the_call(run_dir, monkeypatch, caplog) -> N
     _QUEUE.append(_resp("still fine"))
     assert client_mod.chat(MESSAGES, model_override="m") == "still fine"
     assert "could not write" in caplog.text
+
+
+TOOLS = [{"type": "function", "function": {"name": "apply_op", "parameters": {"type": "object"}}}]
+
+
+def _call(name: str, arguments: str, call_id: str = "c1") -> Any:
+    return types.SimpleNamespace(id=call_id, function=types.SimpleNamespace(name=name, arguments=arguments))
+
+
+def test_tool_call_turn_keeps_each_call_name_and_raw_arguments(run_dir, monkeypatch) -> None:
+    monkeypatch.setenv(FLAG, "1")
+    raw_args = ' {"op": "rename", "id":"E1",  "name": ""} '  # odd spacing and an empty name: kept verbatim
+    _QUEUE.extend([_resp(None, "tool_calls", [_call("apply_op", raw_args), _call("lookup", "not json{", "c2")]),
+                   _resp("done")])
+    executed: List[Any] = []
+    out = client_mod.chat_with_tools(MESSAGES, TOOLS, lambda n, a: executed.append(n) or {"ok": True},
+                                     model_override="m", stage_name="gap resolver")
+    assert out == "done" and executed == ["apply_op", "lookup"]
+    turn, final = _lines(run_dir)
+    assert turn["finish_reason"] == "tool_calls" and turn["response"] == ""
+    assert turn["tool_calls"] == [{"name": "apply_op", "arguments": raw_args}, {"name": "lookup", "arguments": "not json{"}]
+    assert "tool_calls" not in final and final["response"] == "done"
+
+
+def test_reply_and_tool_arguments_share_one_cap(run_dir, monkeypatch) -> None:
+    monkeypatch.setenv(FLAG, "1")
+    monkeypatch.setattr(client_mod, "RAW_LLM_MAX_CHARS", 10)
+    _QUEUE.extend([_resp("x" * 8, "tool_calls", [_call("a", "y" * 8), _call("b", "z" * 5)]), _resp("done")])
+    client_mod.chat_with_tools(MESSAGES, TOOLS, lambda n, a: {}, model_override="m")
+    (turn, _final) = _lines(run_dir)
+    assert turn["response"] == "x" * 8 and turn["truncated"] is True
+    assert turn["tool_calls"][0]["arguments"] == "yy\n[TRUNCATED: 8 chars, first 2 kept]"
+    assert turn["tool_calls"][1]["arguments"] == "\n[TRUNCATED: 5 chars, first 0 kept]"
+

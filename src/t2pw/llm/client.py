@@ -498,11 +498,13 @@ def _raw_on() -> bool:
     return os.getenv(RAW_LLM_FLAG, "").strip().casefold() in ("1", "true", "yes")
 
 
-def _keep_raw(diagnostics: "CompletionDiagnostics", row: Dict[str, Any], raw: Optional[str]) -> None:
-    """Append one attempt (stage, model, request hash, raw reply, finish reason, error) to
+def _keep_raw(diagnostics: "CompletionDiagnostics", row: Dict[str, Any], raw: Optional[str],
+              tool_calls: Optional[List[Tuple[str, str]]] = None) -> None:
+    """Append one attempt (stage, model, request hash, raw reply, tool calls, finish reason, error) to
     ``llm_raw_responses.jsonl`` in the folder of the active leg trace. Read per call; off means no
     file, no work. Never raises. No headers, keys or provider config are ever in the row. The file
-    starts empty for each activation of the trace (each job or leg). Only while a trace is active."""
+    starts empty for each activation of the trace (each job or leg). Only while a trace is active.
+    ``tool_calls`` is ``[(function name, raw arguments string)]``; reply and arguments share one cap."""
 
     if not _raw_on():
         return
@@ -522,12 +524,22 @@ def _keep_raw(diagnostics: "CompletionDiagnostics", row: Dict[str, Any], raw: Op
             "error": redact(row.get("error", "")),
             "request_hash": diagnostics.request_hash,
         }
+        left = RAW_LLM_MAX_CHARS  # one budget for the reply and every argument string of the line
+        cut = "\n[TRUNCATED: {} chars, first {} kept]"
+
+        def fit(text: str) -> str:
+            nonlocal left
+            kept, left = text[:left], max(0, left - len(text))
+            if len(kept) < len(text):
+                entry["truncated"] = True
+                return kept + cut.format(len(text), len(kept))
+            return kept
+
         if raw is not None:
             entry["response_chars"] = len(raw)
-            entry["response"] = raw
-            if len(raw) > RAW_LLM_MAX_CHARS:
-                entry["response"] = raw[:RAW_LLM_MAX_CHARS] + f"\n[TRUNCATED: {len(raw)} chars, first {RAW_LLM_MAX_CHARS} kept]"
-                entry["truncated"] = True
+            entry["response"] = fit(raw)
+        if tool_calls:
+            entry["tool_calls"] = [{"name": name, "arguments": fit(args)} for name, args in tool_calls]
         line = json.dumps(entry, ensure_ascii=False)
         with _RAW_LLM_LOCK:
             first = not getattr(trace, "_raw_llm_started", False)
@@ -675,6 +687,7 @@ class CompletionDiagnostics:
         content_chars: int = 0,
         error: str = "",
         raw: Optional[str] = None,
+        tool_calls: Optional[List[Tuple[str, str]]] = None,
     ) -> None:
         row: Dict[str, Any] = {
             "attempt": int(attempt),
@@ -695,7 +708,7 @@ class CompletionDiagnostics:
         # exists to explain.
         if not self._raw_only:
             _publish_attempt(self, row)
-        _keep_raw(self, row, raw)
+        _keep_raw(self, row, raw, tool_calls)
 
 
 @dataclass
@@ -1381,8 +1394,17 @@ def chat_with_tools(
                     )
                     return resp
 
-                _trace(attempt + 1, STATUS_OK, finish_reason=_finish_reason(resp),
-                       raw=(resp.choices[0].message.content or "") if trace_diag is not None else None)
+                if trace_diag is not None:
+                    msg = resp.choices[0].message
+                    calls: List[Tuple[str, str]] = []
+                    if _raw_on():
+                        try:
+                            calls = [(str(tc.function.name), str(tc.function.arguments or "")) for tc in (msg.tool_calls or [])]
+                        except Exception:  # noqa: BLE001 - a diagnostic must never fail the run
+                            pass
+                    _trace(attempt + 1, STATUS_OK, finish_reason=_finish_reason(resp), raw=msg.content or "", tool_calls=calls)
+                else:
+                    _trace(attempt + 1, STATUS_OK, finish_reason=_finish_reason(resp))
                 return resp
             except AuthenticationError as e:
                 _trace(attempt + 1, STATUS_ERROR, error=str(e))
