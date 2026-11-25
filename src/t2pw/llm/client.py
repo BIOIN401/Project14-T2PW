@@ -487,6 +487,69 @@ def _response_facts(resp: Any) -> Dict[str, Any]:
     return facts
 
 
+#: OBS-RAW (default off): keep the raw reply of every provider attempt, beside the run's LEG_TRACE.jsonl.
+RAW_LLM_FLAG = "T2PW_KEEP_RAW_LLM"
+RAW_LLM_FILE = "llm_raw_responses.jsonl"
+RAW_LLM_MAX_CHARS = 200_000
+_RAW_LLM_LOCK = threading.Lock()
+
+
+def _raw_on() -> bool:
+    return os.getenv(RAW_LLM_FLAG, "").strip().casefold() in ("1", "true", "yes")
+
+
+def _keep_raw(diagnostics: "CompletionDiagnostics", row: Dict[str, Any], raw: Optional[str],
+              tool_calls: Optional[List[Tuple[str, str]]] = None) -> None:
+    """Append one attempt (stage, model, request hash, raw reply, tool calls, finish reason, error) to
+    ``llm_raw_responses.jsonl`` in the folder of the active leg trace. Read per call; off means no
+    file, no work. Never raises. No headers, keys or provider config are ever in the row. The file
+    starts empty for each activation of the trace (each job or leg). Only while a trace is active.
+    ``tool_calls`` is ``[(function name, raw arguments string)]``; reply and arguments share one cap."""
+
+    if not _raw_on():
+        return
+    try:
+        from t2pw.batch.leg_trace import active, redact
+
+        trace = active()
+        if trace is None:
+            return
+        entry: Dict[str, Any] = {
+            "ts": datetime.now(timezone.utc).isoformat(timespec="milliseconds"),
+            "stage": str(diagnostics.stage or "unattributed"),
+            "model": str(diagnostics.model or ""),
+            "attempt": row.get("attempt", 0),
+            "status": row.get("status", ""),
+            "finish_reason": row.get("finish_reason", ""),
+            "error": redact(row.get("error", "")),
+            "request_hash": diagnostics.request_hash,
+        }
+        left = RAW_LLM_MAX_CHARS  # one budget for the reply and every argument string of the line
+        cut = "\n[TRUNCATED: {} chars, first {} kept]"
+
+        def fit(text: str) -> str:
+            nonlocal left
+            kept, left = text[:left], max(0, left - len(text))
+            if len(kept) < len(text):
+                entry["truncated"] = True
+                return kept + cut.format(len(text), len(kept))
+            return kept
+
+        if raw is not None:
+            entry["response_chars"] = len(raw)
+            entry["response"] = fit(raw)
+        if tool_calls:
+            entry["tool_calls"] = [{"name": name, "arguments": fit(args)} for name, args in tool_calls]
+        line = json.dumps(entry, ensure_ascii=False)
+        with _RAW_LLM_LOCK:
+            first = not getattr(trace, "_raw_llm_started", False)
+            with open(trace.path.parent / RAW_LLM_FILE, "w" if first else "a", encoding="utf-8", newline="\n") as handle:
+                handle.write(line + "\n")
+            trace._raw_llm_started = True  # only after a good write: a failed first one must not leave an old run's file to append to
+    except Exception as exc:  # noqa: BLE001 - a diagnostic must never fail the run
+        logger.warning("%s: could not write %s: %s", RAW_LLM_FLAG, RAW_LLM_FILE, exc)
+
+
 def _publish_attempt(diagnostics: "CompletionDiagnostics", row: Dict[str, Any]) -> None:
     """Flush one attempt row to the batch leg trace, if a leg is recording. C-111.
 
@@ -577,6 +640,8 @@ class CompletionDiagnostics:
     # to_dict(), attempt_log or any report.
     _attempt_clock: Optional[Tuple[float, float]] = field(default=None, init=False, repr=False, compare=False)
     _attempt_facts: Dict[str, Any] = field(default_factory=dict, init=False, repr=False, compare=False)
+    # OBS-RAW: a private diagnostics object that only feeds llm_raw_responses.jsonl, not the leg trace.
+    _raw_only: bool = field(default=False, init=False, repr=False, compare=False)
 
     def begin_attempt(self) -> None:
         """Stamp the start of one provider request (trace-only timing)."""
@@ -621,6 +686,8 @@ class CompletionDiagnostics:
         finish_reason: str = "",
         content_chars: int = 0,
         error: str = "",
+        raw: Optional[str] = None,
+        tool_calls: Optional[List[Tuple[str, str]]] = None,
     ) -> None:
         row: Dict[str, Any] = {
             "attempt": int(attempt),
@@ -639,7 +706,9 @@ class CompletionDiagnostics:
         # C-111: the same row, durably, BEFORE the next attempt begins. An
         # attempt record that only exists in memory is destroyed by the kill it
         # exists to explain.
-        _publish_attempt(self, row)
+        if not self._raw_only:
+            _publish_attempt(self, row)
+        _keep_raw(self, row, raw, tool_calls)
 
 
 @dataclass
@@ -1090,6 +1159,7 @@ def chat_detailed(
                 status=STATUS_OK,
                 finish_reason=reason,
                 content_chars=len(text),
+                raw=resp.choices[0].message.content or "",
             )
             diagnostics.response_hash = _hash(text)
             diagnostics.raw_chars = len(text)
@@ -1240,9 +1310,11 @@ def chat_with_tools(
             CompletionDiagnostics(
                 model=resolved_model, stage=str(stage_name or "chat_with_tools"), request_hash=_hash(msgs)
             )
-            if _WEB_RUN
+            if _WEB_RUN or _raw_on()
             else None
         )
+        if trace_diag is not None and not _WEB_RUN:
+            trace_diag._raw_only = True
 
         def _trace(attempt_no: int, status: str, **row: Any) -> None:
             if trace_diag is not None:
@@ -1322,7 +1394,17 @@ def chat_with_tools(
                     )
                     return resp
 
-                _trace(attempt + 1, STATUS_OK, finish_reason=_finish_reason(resp))
+                if trace_diag is not None:
+                    msg = resp.choices[0].message
+                    calls: List[Tuple[str, str]] = []
+                    if _raw_on():
+                        try:
+                            calls = [(str(tc.function.name), str(tc.function.arguments or "")) for tc in (msg.tool_calls or [])]
+                        except Exception:  # noqa: BLE001 - a diagnostic must never fail the run
+                            pass
+                    _trace(attempt + 1, STATUS_OK, finish_reason=_finish_reason(resp), raw=msg.content or "", tool_calls=calls)
+                else:
+                    _trace(attempt + 1, STATUS_OK, finish_reason=_finish_reason(resp))
                 return resp
             except AuthenticationError as e:
                 _trace(attempt + 1, STATUS_ERROR, error=str(e))

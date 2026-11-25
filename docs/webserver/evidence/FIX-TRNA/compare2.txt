@@ -1,0 +1,15 @@
+payloads scanned: 69
+flag-off (worktree) vs original main-tree code, patch+report minus report.llm identical: 69 of 69
+   (full strings differ on all 69 only through report.llm.provider: env-dependent, local vs openrouter)
+payloads whose audit result differs flag off vs on: 1
+
+== C:/t/acc-runs/legs4g/base1-PMC5130987/2026-11-23_1538/papers/PMC5130987/strict/merged_payload.json
+  ops only flag off: [{'confidence': 0.99, 'evidence': 'tRNA Glu', 'op': 'add', 'path': '/entities/compounds/-', 'reason': 'Add missing compound referenced by reaction/transport process.', 'source': 'deterministic', 'value': {'name': 'tRNA Glu'}}]
+  ops only flag on : []
+  errors only flag off: [{'evidence': 'tRNA Glu', 'path': '/processes/reactions/20/inputs', 'reason': "Reaction input 'tRNA Glu' does not exist in entities.", 'source': 'deterministic'}]
+  errors only flag on : []
+  warnings only flag off: [{'evidence': 'tRNA Glu', 'path': '/entities/compounds', 'reason': "Added missing compound 'tRNA Glu' referenced in process definitions.", 'source': 'deterministic'}]
+  warnings only flag on : []
+  summary off: {'error_count': 8, 'patch_count': 2, 'suggestion_count': 0, 'warning_count': 47}
+  summary on : {'error_count': 7, 'patch_count': 1, 'suggestion_count': 0, 'warning_count': 46}
+  reaction[20] 'Glu to Glu-tRNA Glu': 'tRNA Glu' is an input
