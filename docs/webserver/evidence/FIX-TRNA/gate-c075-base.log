@@ -1,0 +1,40 @@
+?? tests/test_fix_trna_audit_na_declared.py
+E         Extra items in the left set:
+E         ('PMC12096016', 'strict', "Pantetheine 4'-phosphate")
+E         Use -v to get more diff
+
+tests\test_c075_source_support_armed.py:879: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_c075_source_support_armed.py::test_corpus_the_armed_pass_over_every_committed_artifact_and_its_own_paper
+1 failed, 40 passed in 4.50s
+EXIT_base=1
+ M src/t2pw/curation/audit_json_llm.py
+?? tests/test_fix_trna_audit_na_declared.py
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e4941825c9fc0fcf963d62168096557664af03c3  [git, worktree dirty=True]
+label                   : c075
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/vis-runs/scratch/fixtrna/c075base.sh
+cwd                     : C:\t\fix-trna
+root PID / process group: 378996 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 1500 s
+duration                : 6.38 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 11  383176:mkdir.exe, 383852:bash.exe, 383952:bash.exe, 378916:git.exe, 383992:bash.exe, 383040:git.exe, 383288:bash.exe, 383684:git.exe, 381852:bash.exe, 382964:bash.exe, 383648:git.exe
+descendants terminated  : 11  378916, 381852, 382964, 383040, 383176, 383288, 383648, 383684, 383852, 383952, 383992
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-runs/logs/fixtrna-c075.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=fixtrna  acquired=True  released=True
+pre-existing (reported, NEVER killed): 13
+================================================
+BW_EXIT=0

@@ -1,0 +1,43 @@
+HEAD 5bf9d552ba6bafbd87778c023b7b0a7319bdf966
+== new
+T2PW: C:\t\fix-trna\src\t2pw\__init__.py
+.......                                                                  [100%]
+7 passed in 1.09s
+EXIT_new=0
+== importers
+E         Use -v to get more diff
+
+tests\test_c075_source_support_armed.py:879: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_c075_source_support_armed.py::test_corpus_the_armed_pass_over_every_committed_artifact_and_its_own_paper
+1 failed, 291 passed in 12.88s
+EXIT_importers=1
+COVER_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e4941825c9fc0fcf963d62168096557664af03c3  [git, worktree dirty=True]
+label                   : cover
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/vis-runs/scratch/fixtrna/cover.sh
+cwd                     : C:\t\fix-trna
+root PID / process group: 381628 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 3000 s
+duration                : 16.26 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 4  376012:bash.exe, 381564:bash.exe, 379820:bash.exe, 382264:bash.exe
+descendants terminated  : 4  376012, 379820, 381564, 382264
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-runs/logs/fixtrna-cover.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=fixtrna  acquired=True  released=True
+pre-existing (reported, NEVER killed): 13
+================================================
+BW_EXIT=0

@@ -1,0 +1,100 @@
+HEAD 5bf9d552ba6bafbd87778c023b7b0a7319bdf966
+STATUS_BEGIN
+STATUS_END
+FLAGS_LISTED_ABOVE_SHOULD_BE_NONE
+== tree C:/t/merge-r3
+HEAD 5bf9d552ba6bafbd87778c023b7b0a7319bdf966
+STATUS_BEGIN
+STATUS_END
+== smoke
+........................................................................ [ 84%]
+........................................................................ [ 98%]
+.......                                                                  [100%]
+511 passed in 51.32s
+EXIT_smoke=0
+== g-batch
+T2PW: C:\t\merge-r3\src\t2pw\__init__.py
+..                                                                       [100%]
+2 passed in 6.30s
+EXIT_g-batch=0
+== g-c011
+T2PW: C:\t\merge-r3\src\t2pw\__init__.py
+........                                                                 [100%]
+8 passed in 41.48s
+EXIT_g-c011=0
+== g-stage8
+T2PW: C:\t\merge-r3\src\t2pw\__init__.py
+....                                                                     [100%]
+4 passed in 0.37s
+EXIT_g-stage8=0
+== g-quar
+T2PW: C:\t\merge-r3\src\t2pw\__init__.py
+........................                                                 [100%]
+24 passed in 36.02s
+EXIT_g-quar=0
+== eq-run
+T2PW: C:\t\merge-r3\src\t2pw\__init__.py
+........                                                                 [100%]
+8 passed in 60.40s (0:01:00)
+EXIT_eq-run=0
+== eq-app
+T2PW: C:\t\merge-r3\src\t2pw\__init__.py
+..............                                                           [100%]
+14 passed in 58.29s
+EXIT_eq-app=0
+== eq-default
+T2PW: C:\t\merge-r3\src\t2pw\__init__.py
+......                                                                   [100%]
+6 passed in 30.15s
+EXIT_eq-default=0
+== vision
+........................................................................ [ 77%]
+........................................................................ [ 97%]
+..........s                                                              [100%]
+370 passed, 1 skipped in 15.94s
+EXIT_vision=0
+== web
+T2PW: C:\t\merge-r3\src\t2pw\__init__.py
+........................................................................ [ 86%]
+...........                                                              [100%]
+83 passed in 5.63s
+EXIT_web=0
+SUITE_DONE
+== focused: lane tests + rag + final_payload + pwml
+tests\test_rag_seed_entity_reimport.py:570: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_rag_seed_entity_reimport.py::test_the_orchestrator_passes_the_merge_base_to_conform
+1 failed, 1207 passed, 1 skipped in 32.07s
+== llm client files, own process
+T2PW: C:\t\merge-r3\src\t2pw\__init__.py
+...................................                                      [100%]
+35 passed in 0.57s
+MERGE_GATES_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 1bb0f3e408cbb4531001d32a97ef4f4e7e7c5c46  [git, worktree dirty=True]
+label                   : merge-r3-gates
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/vis-runs/merge_r3_inner.sh
+cwd                     : C:\t\merge-r3
+root PID / process group: 311516 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 7200 s
+duration                : 353.45 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 94  314236:bash.exe, 314296:bash.exe, 308140:bash.exe, 309948:git.exe, 313732:bash.exe, 313784:bash.exe, 314268:bash.exe, 314332:bash.exe, 313800:git.exe, 314128:bash.exe, 307476:bash.exe, 309400:python.exe, 312868:python.exe, 312084:python.exe, 313448:python.exe, 313460:python.exe, 313508:python.exe, 312508:python.exe, 313640:python.exe, 306500:python.exe, 306712:python.exe, 310808:git.exe, 306900:bash.exe, 309372:bash.exe, 310676:python.exe, 314340:python.exe, 314424:tail.exe, 283528:bash.exe, 295676:python.exe, 310840:python.exe, 313228:bash.exe, 315352:tail.exe, 315236:git.exe, 307204:python.exe, 313664:python.exe, 298896:python.exe, 311460:python.exe, 313060:git.exe, 302048:python.exe, 310636:python.exe, 313872:python.exe, 314732:python.exe, 310360:python.exe, 313920:python.exe, 310848:python.exe, 313528:python.exe, 298684:python.exe, 314796:python.exe, 314104:python.exe, 313740:python.exe, 310164:python.exe, 314604:bash.exe, 315300:python.exe, 309900:bash.exe, 314480:python.exe, 314508:python.exe, 20064:bash.exe, 308892:python.exe, 310284:python.exe, 308492:python.exe, 313988:python.exe, 274888:python.exe, 307268:python.exe, 311276:bash.exe, 317068:bash.exe, 317100:python.exe, 317112:python.exe, 311112:bash.exe, 313984:python.exe, 314088:python.exe, 317808:python.exe, 317828:python.exe, 317848:python.exe, 317868:python.exe, 313496:python.exe, 317456:bash.exe, 317600:python.exe, 317620:bash.exe, 317976:python.exe, 318088:python.exe, 310264:python.exe, 313372:python.exe, 316188:python.exe, 318240:python.exe, 317948:python.exe, 317996:python.exe, 311036:bash.exe, 314052:bash.exe, 318292:bash.exe, 318396:ls.exe, 318404:tail.exe, 313676:bash.exe, 316012:bash.exe, 317780:bash.exe
+descendants terminated  : 94  20064, 274888, 283528, 295676, 298684, 298896, 302048, 306500, 306712, 306900, 307204, 307268, 307476, 308140, 308492, 308892, 309372, 309400, 309900, 309948, 310164, 310264, 310284, 310360, 310636, 310676, 310808, 310840, 310848, 311036, 311112, 311276, 311460, 312084, 312508, 312868, 313060, 313228, 313372, 313448, 313460, 313496, 313508, 313528, 313640, 313664, 313676, 313732, 313740, 313784, 313800, 313872, 313920, 313984, 313988, 314052, 314088, 314104, 314128, 314236, 314268, 314296, 314332, 314340, 314424, 314480, 314508, 314604, 314732, 314796, 315236, 315300, 315352, 316012, 316188, 317068, 317100, 317112, 317456, 317600, 317620, 317780, 317808, 317828, 317848, 317868, 317948, 317976, 317996, 318088, 318240, 318292, 318396, 318404
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-runs/logs/merge-r3-gates.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH  acquired=True  released=True
+pre-existing (reported, NEVER killed): 12
+================================================
+BW_EXIT=0

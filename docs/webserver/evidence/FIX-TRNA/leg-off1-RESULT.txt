@@ -1,0 +1,45 @@
+RESULT: FAIL
+========================================
+paper      : PMC5130987
+title      : (unknown)
+slug       : PMC5130987
+mode       : strict
+status     : error
+stage      : post_pipeline
+wall time  : 3964.1s (66m04s)
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : crash
+termination_reason  : (not recorded)
+operational_failure : (not recorded)
+message      : Post-pipeline conversion failed: AMBIGUOUS_RENAME_TARGET: 2 distinct compound names canonicalize to 'magnesiumprotoporphyrinmonomethylester'; applying the rename would merge them
+issue codes  : (none reported)
+
+DETAIL / TRACEBACK
+----------------------------------------
+Post-pipeline conversion failed: AMBIGUOUS_RENAME_TARGET: 2 distinct compound names canonicalize to 'magnesiumprotoporphyrinmonomethylester'; applying the rename would merge them
+AMBIGUOUS_RENAME_TARGET: 2 distinct compound names canonicalize to 'magnesiumprotoporphyrinmonomethylester'; applying the rename would merge them
+
+COUNTS
+----------------------------------------
+  compounds = 30
+  entities = 82
+  proteins = 41
+  reactions = 24
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  transports = 0
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (1453 B)
+  - cleaning_report.json  (5757 B)
+  - extraction_boundary_report.json  (13927 B)
+  - gap_iteration_summary.json  (73988 B)
+  - mapped_failure_snapshot.json  (602 B)
+  - merged_payload.json  (185969 B)
+  - rag_admission_report.json  (340834 B)
+  - reaction_verifier_report.json  (21778 B)
+  - stage0_attempts.json  (3775 B)
+  - stage1_payload.json  (82992 B)

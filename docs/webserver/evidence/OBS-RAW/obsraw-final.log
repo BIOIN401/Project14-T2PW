@@ -1,0 +1,41 @@
+== test_obs_raw_llm_responses
+T2PW: C:\t\obs-raw\src\t2pw\__init__.py
+..........                                                               [100%]
+10 passed in 0.38s
+== test_llm_client_request_timeout
+T2PW: C:\t\obs-raw\src\t2pw\__init__.py
+......                                                                   [100%]
+6 passed in 0.42s
+== test_llm_client_empty_completion_retry
+T2PW: C:\t\obs-raw\src\t2pw\__init__.py
+.............................                                            [100%]
+29 passed in 0.24s
+FINAL_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e4941825c9fc0fcf963d62168096557664af03c3  [git, worktree dirty=True]
+label                   : final
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/vis-runs/scratch/obsraw/final.sh
+cwd                     : C:\t\obs-raw
+root PID / process group: 464700 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 3.48 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 12  539728:mkdir.exe, 542212:bash.exe, 543680:bash.exe, 544160:python.exe, 545028:python.exe, 545124:bash.exe, 545896:bash.exe, 545928:python.exe, 545964:python.exe, 546084:bash.exe, 546116:python.exe, 546128:python.exe
+descendants terminated  : 12  539728, 542212, 543680, 544160, 545028, 545124, 545896, 545928, 545964, 546084, 546116, 546128
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-runs/logs/obsraw-final.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=obsraw  acquired=True  released=True
+pre-existing (reported, NEVER killed): 13
+================================================
+BW_EXIT=0

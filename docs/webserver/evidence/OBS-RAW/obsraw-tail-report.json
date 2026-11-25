@@ -1,0 +1,160 @@
+{
+  "label": "tail",
+  "command": [
+    "C:\\Program Files\\Git\\bin\\bash.exe",
+    "C:/t/vis-runs/scratch/obsraw/tail.sh"
+  ],
+  "cwd": "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-11-25T02:51:40+00:00",
+  "finished_at": "2026-11-25T02:51:42+00:00",
+  "duration_seconds": 2.02277480000339,
+  "timeout_seconds": 900.0,
+  "root_pid": 464168,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 463900,
+      "name": "bash.exe",
+      "ppid": 464168
+    },
+    {
+      "pid": 464236,
+      "name": "bash.exe",
+      "ppid": 463900
+    },
+    {
+      "pid": 464080,
+      "name": "bash.exe",
+      "ppid": 463900
+    },
+    {
+      "pid": 464460,
+      "name": "python.exe",
+      "ppid": 464080
+    },
+    {
+      "pid": 464488,
+      "name": "python.exe",
+      "ppid": 464460
+    },
+    {
+      "pid": 463916,
+      "name": "bash.exe",
+      "ppid": 463900
+    },
+    {
+      "pid": 463932,
+      "name": "python.exe",
+      "ppid": 463964
+    },
+    {
+      "pid": 463964,
+      "name": "python.exe",
+      "ppid": 463916
+    }
+  ],
+  "descendants_terminated": [
+    463900,
+    463916,
+    463932,
+    463964,
+    464080,
+    464236,
+    464460,
+    464488
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 329248,
+      "name": "python.exe"
+    },
+    {
+      "pid": 329264,
+      "name": "python.exe"
+    },
+    {
+      "pid": 329356,
+      "name": "python.exe"
+    },
+    {
+      "pid": 329368,
+      "name": "python.exe"
+    },
+    {
+      "pid": 329452,
+      "name": "python.exe"
+    },
+    {
+      "pid": 329476,
+      "name": "python.exe"
+    },
+    {
+      "pid": 329500,
+      "name": "python.exe"
+    },
+    {
+      "pid": 329588,
+      "name": "python.exe"
+    },
+    {
+      "pid": 337040,
+      "name": "python.exe"
+    },
+    {
+      "pid": 438544,
+      "name": "python.exe"
+    },
+    {
+      "pid": 458700,
+      "name": "python.exe"
+    },
+    {
+      "pid": 464680,
+      "name": "python.exe"
+    },
+    {
+      "pid": 464692,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/vis-runs/logs/obsraw-tail.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "e4941825c9fc0fcf963d62168096557664af03c3",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "obsraw",
+    "token": "obsraw:464692:e4eb908534625a36",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
