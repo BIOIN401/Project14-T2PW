@@ -1,0 +1,19 @@
+flags {'T2PW_REACTION_VERIFIER': True, 'T2PW_INTERACTION_TYPING': False} | model google/gemma-4-31b-it | calls 1 | s 4.6 | error None | lock removed 1
+omitted 0 | merged 1 | repaired 0 | flagged 0 | appended 0
+   ['chorismate'] -> ['isochorismate']
+   ['isochorismate'] -> ['2,3-dihydro-2,3-dihydroxybenzoate', 'Pyruvic acid']
+   ['2,3-dihydro-2,3-dihydroxybenzoate'] -> ['2,3-dihydroxybenzoic acid']
+   ['2,3-dihydroxybenzoic acid', 'Adenosine triphosphate'] -> ['2,3-dihydroxybenzoyl-AMP']
+   ['2,3-dihydroxybenzoyl-AMP', 'L-serine'] -> ['enterobactin']
+   ['Pyruvic acid', 'NADH'] -> ['lactate', 'NAD+']
+reactions 6 | duplicate signatures []
+rename/add pairs seen 0 | reference_key mismatches 0
+dropped entities [] | still referenced: []
+ir report errors: []
+0 ['chorismate'] -> ['isochorismate'] | ok | None
+1 ['isochorismate'] -> ['2,3-dihydro-2,3-dihydroxybenzoate', 'pyruvate'] | ok | None
+2 ['2,3-dihydro-2,3-dihydroxybenzoate'] -> ['2,3-dihydroxybenzoic acid'] | ok | None
+3 ['2,3-dihydroxybenzoic acid', 'ATP'] -> ['2,3-dihydroxybenzoyl-AMP'] | ok | None
+4 ['2,3-dihydroxybenzoyl-AMP', 'L-serine'] -> ['enterobactin'] | ok | None
+5 ['isochorismate'] -> ['2,3-dihydro-2,3-dihydroxybenzoate'] | incomplete | None
+merged: [{"index": 5, "into": 1, "name": "EntB reaction"}]

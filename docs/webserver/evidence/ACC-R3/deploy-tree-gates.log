@@ -1,0 +1,94 @@
+== tree C:/t/t2pw-server
+HEAD f717e0ae491d104145e309f97b8671867929e60b
+STATUS_BEGIN
+ M data/enrichment_cache.json
+ M data/id_mapping_cache.json
+ M out/enrichment_dump.json
+ M outputs/pathway.pwml
+ M tmp/draft_graph.json
+ M tmp/qa_report.json
+ M tmp/reaction_summary.txt
+STATUS_END
+== smoke
+........................................................................ [ 84%]
+........................................................................ [ 98%]
+.......                                                                  [100%]
+511 passed in 62.84s (0:01:02)
+EXIT_smoke=0
+== g-batch
+T2PW: C:\t\t2pw-server\src\t2pw\__init__.py
+..                                                                       [100%]
+2 passed in 6.17s
+EXIT_g-batch=0
+== g-c011
+T2PW: C:\t\t2pw-server\src\t2pw\__init__.py
+........                                                                 [100%]
+8 passed in 45.48s
+EXIT_g-c011=0
+== g-stage8
+T2PW: C:\t\t2pw-server\src\t2pw\__init__.py
+....                                                                     [100%]
+4 passed in 0.39s
+EXIT_g-stage8=0
+== g-quar
+=========================== short test summary info ===========================
+FAILED tests/test_streamlit_quarantine_boundary.py::test_a_refinement_that_adds_an_unexportable_process_still_exports_the_core
+FAILED tests/test_streamlit_quarantine_boundary.py::test_research_mode_keeps_the_unmapped_candidate_and_does_not_block
+2 failed, 22 passed in 315.00s (0:05:15)
+EXIT_g-quar=1
+== eq-run
+T2PW: C:\t\t2pw-server\src\t2pw\__init__.py
+........                                                                 [100%]
+8 passed in 60.47s (0:01:00)
+EXIT_eq-run=0
+== eq-app
+T2PW: C:\t\t2pw-server\src\t2pw\__init__.py
+..............                                                           [100%]
+14 passed in 57.11s
+EXIT_eq-app=0
+== eq-default
+T2PW: C:\t\t2pw-server\src\t2pw\__init__.py
+......                                                                   [100%]
+6 passed in 29.49s
+EXIT_eq-default=0
+== vision
+........................................................................ [ 77%]
+........................................................................ [ 97%]
+..........s                                                              [100%]
+370 passed, 1 skipped in 14.56s
+EXIT_vision=0
+== web
+T2PW: C:\t\t2pw-server\src\t2pw\__init__.py
+........................................................................ [ 86%]
+...........                                                              [100%]
+83 passed in 5.38s
+EXIT_web=0
+SUITE_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 2f7faea439c1bb2ba375a13ab5a7053b13815e26  [git, worktree dirty=True]
+label                   : deploy-suite3
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/vis-runs/suite2.sh C:/t/t2pw-server deploy-suite3
+cwd                     : C:\t\t2pw-server
+root PID / process group: 321916 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 3600 s
+duration                : 608.52 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 77  321936:bash.exe, 321960:bash.exe, 322056:bash.exe, 322080:git.exe, 322232:bash.exe, 322264:python.exe, 322280:python.exe, 247832:python.exe, 318580:python.exe, 314536:python.exe, 320996:python.exe, 318724:python.exe, 322356:python.exe, 322644:python.exe, 322664:python.exe, 311480:git.exe, 322524:bash.exe, 317292:python.exe, 322904:python.exe, 314828:bash.exe, 321352:python.exe, 322376:python.exe, 321440:git.exe, 321996:git.exe, 323768:git.exe, 323880:python.exe, 323896:python.exe, 321120:python.exe, 323956:python.exe, 323948:git.exe, 317560:python.exe, 324392:python.exe, 322528:python.exe, 324432:python.exe, 246144:python.exe, 324592:python.exe, 323620:python.exe, 323652:python.exe, 322660:python.exe, 322928:python.exe, 307064:python.exe, 317380:python.exe, 304436:bash.exe, 306196:python.exe, 318984:python.exe, 324328:bash.exe, 319912:python.exe, 323964:python.exe, 324024:python.exe, 324380:bash.exe, 325680:python.exe, 302288:python.exe, 326448:python.exe, 327484:bash.exe, 320528:python.exe, 324384:python.exe, 328000:bash.exe, 328032:python.exe, 328060:python.exe, 328344:bash.exe, 328304:python.exe, 328328:python.exe, 326392:git.exe, 323196:python.exe, 325244:python.exe, 327200:python.exe, 328404:bash.exe, 325676:python.exe, 326604:python.exe, 324504:python.exe, 326992:python.exe, 328308:python.exe, 326948:python.exe, 303916:python.exe, 327708:python.exe, 328512:python.exe, 328544:python.exe
+descendants terminated  : 77  246144, 247832, 302288, 303916, 304436, 306196, 307064, 311480, 314536, 314828, 317292, 317380, 317560, 318580, 318724, 318984, 319912, 320528, 320996, 321120, 321352, 321440, 321936, 321960, 321996, 322056, 322080, 322232, 322264, 322280, 322356, 322376, 322524, 322528, 322644, 322660, 322664, 322904, 322928, 323196, 323620, 323652, 323768, 323880, 323896, 323948, 323956, 323964, 324024, 324328, 324380, 324384, 324392, 324432, 324504, 324592, 325244, 325676, 325680, 326392, 326448, 326604, 326948, 326992, 327200, 327484, 327708, 328000, 328032, 328060, 328304, 328308, 328328, 328344, 328404, 328512, 328544
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-runs/logs/deploy-suite3.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
+BW_EXIT=0
