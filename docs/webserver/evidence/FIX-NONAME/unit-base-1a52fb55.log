@@ -1,0 +1,290 @@
+T2PW: C:\t\fix-noname\src\t2pw\__init__.py
+FFFFFF..F                                                                [100%]
+================================== FAILURES ===================================
+____ test_gemma_shape_no_longer_reaches_post_audit_nameless[name_blanked] _____
+
+shape = 'name_blanked'
+
+    @pytest.mark.parametrize("shape", sorted(GEMMA_SHAPES))
+    def test_gemma_shape_no_longer_reaches_post_audit_nameless(shape: str) -> None:
+        source = _lipid_a_payload()
+        good = _op("add", "/entities/proteins/0/uniprot_id", "P0A725")
+        patched, report = apply_patch_with_policy(source, [GEMMA_SHAPES[shape], good])
+    
+        # The run would have died here on 1a52fb55.
+>       validate_post_audit(patched)
+
+tests\test_fix_noname_post_audit.py:83: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\pipeline\stage_contracts.py:341: in validate_post_audit
+    return _raise_or_return(report)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+src\t2pw\pipeline\stage_contracts.py:573: in _raise_or_return
+    _abort(report)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+report = {'contract_type': 'structural', 'effect_on_failure': 'abort', 'errors': [{'bucket': 'compounds', 'code': 'entity_missi..., 'review_required': False, ...}]}, 'message': 'Every entity row must have a non-empty name.', ...}], 'ok': False, ...}
+message = None
+
+    def _abort(report: Report, message: str | None = None) -> None:
+        errors = _safe_list(report.get("errors"))
+        first = _safe_dict(errors[0]) if errors else {}
+        detail = str(first.get("message") or "Stage contract failed.")
+>       raise StageContractError(
+            str(report.get("stage") or "unknown_stage"),
+            message or detail,
+            report,
+        )
+E       t2pw.pipeline.stage_contracts.StageContractError: Every entity row must have a non-empty name.
+
+src\t2pw\pipeline\stage_contracts.py:563: StageContractError
+_____ test_gemma_shape_no_longer_reaches_post_audit_nameless[name_nulled] _____
+
+shape = 'name_nulled'
+
+    @pytest.mark.parametrize("shape", sorted(GEMMA_SHAPES))
+    def test_gemma_shape_no_longer_reaches_post_audit_nameless(shape: str) -> None:
+        source = _lipid_a_payload()
+        good = _op("add", "/entities/proteins/0/uniprot_id", "P0A725")
+        patched, report = apply_patch_with_policy(source, [GEMMA_SHAPES[shape], good])
+    
+        # The run would have died here on 1a52fb55.
+>       validate_post_audit(patched)
+
+tests\test_fix_noname_post_audit.py:83: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\pipeline\stage_contracts.py:341: in validate_post_audit
+    return _raise_or_return(report)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+src\t2pw\pipeline\stage_contracts.py:573: in _raise_or_return
+    _abort(report)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+report = {'contract_type': 'structural', 'effect_on_failure': 'abort', 'errors': [{'bucket': 'compounds', 'code': 'entity_missi..., 'review_required': False, ...}]}, 'message': 'Every entity row must have a non-empty name.', ...}], 'ok': False, ...}
+message = None
+
+    def _abort(report: Report, message: str | None = None) -> None:
+        errors = _safe_list(report.get("errors"))
+        first = _safe_dict(errors[0]) if errors else {}
+        detail = str(first.get("message") or "Stage contract failed.")
+>       raise StageContractError(
+            str(report.get("stage") or "unknown_stage"),
+            message or detail,
+            report,
+        )
+E       t2pw.pipeline.stage_contracts.StageContractError: Every entity row must have a non-empty name.
+
+src\t2pw\pipeline\stage_contracts.py:563: StageContractError
+____ test_gemma_shape_no_longer_reaches_post_audit_nameless[name_removed] _____
+
+shape = 'name_removed'
+
+    @pytest.mark.parametrize("shape", sorted(GEMMA_SHAPES))
+    def test_gemma_shape_no_longer_reaches_post_audit_nameless(shape: str) -> None:
+        source = _lipid_a_payload()
+        good = _op("add", "/entities/proteins/0/uniprot_id", "P0A725")
+        patched, report = apply_patch_with_policy(source, [GEMMA_SHAPES[shape], good])
+    
+        # The run would have died here on 1a52fb55.
+>       validate_post_audit(patched)
+
+tests\test_fix_noname_post_audit.py:83: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\pipeline\stage_contracts.py:341: in validate_post_audit
+    return _raise_or_return(report)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+src\t2pw\pipeline\stage_contracts.py:573: in _raise_or_return
+    _abort(report)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+report = {'contract_type': 'structural', 'effect_on_failure': 'abort', 'errors': [{'bucket': 'compounds', 'code': 'entity_missi..., 'review_required': False, ...}]}, 'message': 'Every entity row must have a non-empty name.', ...}], 'ok': False, ...}
+message = None
+
+    def _abort(report: Report, message: str | None = None) -> None:
+        errors = _safe_list(report.get("errors"))
+        first = _safe_dict(errors[0]) if errors else {}
+        detail = str(first.get("message") or "Stage contract failed.")
+>       raise StageContractError(
+            str(report.get("stage") or "unknown_stage"),
+            message or detail,
+            report,
+        )
+E       t2pw.pipeline.stage_contracts.StageContractError: Every entity row must have a non-empty name.
+
+src\t2pw\pipeline\stage_contracts.py:563: StageContractError
+_ test_gemma_shape_no_longer_reaches_post_audit_nameless[nameless_row_appended] _
+
+shape = 'nameless_row_appended'
+
+    @pytest.mark.parametrize("shape", sorted(GEMMA_SHAPES))
+    def test_gemma_shape_no_longer_reaches_post_audit_nameless(shape: str) -> None:
+        source = _lipid_a_payload()
+        good = _op("add", "/entities/proteins/0/uniprot_id", "P0A725")
+        patched, report = apply_patch_with_policy(source, [GEMMA_SHAPES[shape], good])
+    
+        # The run would have died here on 1a52fb55.
+>       validate_post_audit(patched)
+
+tests\test_fix_noname_post_audit.py:83: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\pipeline\stage_contracts.py:341: in validate_post_audit
+    return _raise_or_return(report)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+src\t2pw\pipeline\stage_contracts.py:573: in _raise_or_return
+    _abort(report)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+report = {'contract_type': 'structural', 'effect_on_failure': 'abort', 'errors': [{'bucket': 'protein_complexes', 'code': 'enti..., 'review_required': False, ...}]}, 'message': 'Every entity row must have a non-empty name.', ...}], 'ok': False, ...}
+message = None
+
+    def _abort(report: Report, message: str | None = None) -> None:
+        errors = _safe_list(report.get("errors"))
+        first = _safe_dict(errors[0]) if errors else {}
+        detail = str(first.get("message") or "Stage contract failed.")
+>       raise StageContractError(
+            str(report.get("stage") or "unknown_stage"),
+            message or detail,
+            report,
+        )
+E       t2pw.pipeline.stage_contracts.StageContractError: Every entity row must have a non-empty name.
+
+src\t2pw\pipeline\stage_contracts.py:563: StageContractError
+_ test_gemma_shape_no_longer_reaches_post_audit_nameless[row_inserted_at_index] _
+
+shape = 'row_inserted_at_index'
+
+    @pytest.mark.parametrize("shape", sorted(GEMMA_SHAPES))
+    def test_gemma_shape_no_longer_reaches_post_audit_nameless(shape: str) -> None:
+        source = _lipid_a_payload()
+        good = _op("add", "/entities/proteins/0/uniprot_id", "P0A725")
+        patched, report = apply_patch_with_policy(source, [GEMMA_SHAPES[shape], good])
+    
+        # The run would have died here on 1a52fb55.
+>       validate_post_audit(patched)
+
+tests\test_fix_noname_post_audit.py:83: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\pipeline\stage_contracts.py:341: in validate_post_audit
+    return _raise_or_return(report)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+src\t2pw\pipeline\stage_contracts.py:573: in _raise_or_return
+    _abort(report)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+report = {'contract_type': 'structural', 'effect_on_failure': 'abort', 'errors': [{'bucket': 'species', 'code': 'entity_missing..., 'review_required': False, ...}]}, 'message': 'Every entity row must have a non-empty name.', ...}], 'ok': False, ...}
+message = None
+
+    def _abort(report: Report, message: str | None = None) -> None:
+        errors = _safe_list(report.get("errors"))
+        first = _safe_dict(errors[0]) if errors else {}
+        detail = str(first.get("message") or "Stage contract failed.")
+>       raise StageContractError(
+            str(report.get("stage") or "unknown_stage"),
+            message or detail,
+            report,
+        )
+E       t2pw.pipeline.stage_contracts.StageContractError: Every entity row must have a non-empty name.
+
+src\t2pw\pipeline\stage_contracts.py:563: StageContractError
+_ test_gemma_shape_no_longer_reaches_post_audit_nameless[row_replaced_by_id_only] _
+
+shape = 'row_replaced_by_id_only'
+
+    @pytest.mark.parametrize("shape", sorted(GEMMA_SHAPES))
+    def test_gemma_shape_no_longer_reaches_post_audit_nameless(shape: str) -> None:
+        source = _lipid_a_payload()
+        good = _op("add", "/entities/proteins/0/uniprot_id", "P0A725")
+        patched, report = apply_patch_with_policy(source, [GEMMA_SHAPES[shape], good])
+    
+        # The run would have died here on 1a52fb55.
+>       validate_post_audit(patched)
+
+tests\test_fix_noname_post_audit.py:83: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\pipeline\stage_contracts.py:341: in validate_post_audit
+    return _raise_or_return(report)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+src\t2pw\pipeline\stage_contracts.py:573: in _raise_or_return
+    _abort(report)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+report = {'contract_type': 'structural', 'effect_on_failure': 'abort', 'errors': [{'bucket': 'species', 'code': 'entity_missing..., 'review_required': False, ...}]}, 'message': 'Every entity row must have a non-empty name.', ...}], 'ok': False, ...}
+message = None
+
+    def _abort(report: Report, message: str | None = None) -> None:
+        errors = _safe_list(report.get("errors"))
+        first = _safe_dict(errors[0]) if errors else {}
+        detail = str(first.get("message") or "Stage contract failed.")
+>       raise StageContractError(
+            str(report.get("stage") or "unknown_stage"),
+            message or detail,
+            report,
+        )
+E       t2pw.pipeline.stage_contracts.StageContractError: Every entity row must have a non-empty name.
+
+src\t2pw\pipeline\stage_contracts.py:563: StageContractError
+___________ test_post_audit_failure_snapshot_names_bucket_and_index ___________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000139E6F815E0>
+
+    def test_post_audit_failure_snapshot_names_bucket_and_index(monkeypatch: pytest.MonkeyPatch) -> None:
+        payload = _lipid_a_payload()
+        payload["entities"]["species"][0] = {"pathbank_species_id": "1"}
+        with pytest.raises(StageContractError) as caught:
+            validate_post_audit(payload)
+    
+        recorded: list = []
+    
+        class _Recorder:
+            def record_mapped_failure(self, snapshot):
+                recorded.append(snapshot)
+    
+        monkeypatch.setattr(postpipeline, "current_extraction_diagnostics", lambda: _Recorder())
+        postpipeline._record_mapped_failure_snapshot(
+            payload, stage=caught.value.stage, reason=str(caught.value), report=caught.value.report
+        )
+    
+        (snapshot,) = recorded
+        assert snapshot["failing_codes"] == ["entity_missing_name"]
+>       (issue,) = snapshot["failing_issues"]
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'failing_issues'
+
+tests\test_fix_noname_post_audit.py:134: KeyError
+=========================== short test summary info ===========================
+FAILED tests/test_fix_noname_post_audit.py::test_gemma_shape_no_longer_reaches_post_audit_nameless[name_blanked]
+FAILED tests/test_fix_noname_post_audit.py::test_gemma_shape_no_longer_reaches_post_audit_nameless[name_nulled]
+FAILED tests/test_fix_noname_post_audit.py::test_gemma_shape_no_longer_reaches_post_audit_nameless[name_removed]
+FAILED tests/test_fix_noname_post_audit.py::test_gemma_shape_no_longer_reaches_post_audit_nameless[nameless_row_appended]
+FAILED tests/test_fix_noname_post_audit.py::test_gemma_shape_no_longer_reaches_post_audit_nameless[row_inserted_at_index]
+FAILED tests/test_fix_noname_post_audit.py::test_gemma_shape_no_longer_reaches_post_audit_nameless[row_replaced_by_id_only]
+FAILED tests/test_fix_noname_post_audit.py::test_post_audit_failure_snapshot_names_bucket_and_index
+7 failed, 2 passed in 2.16s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 0800dfd561ee04290c4fd7ac4d2a999ac1e2d39e  [git, worktree dirty=True]
+label                   : fixnoname-unit-base
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe C:/t/fix-noname/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/fix-noname -q --basetemp=C:/t/vis-runs/bt/fixnoname/u-base1 tests/test_fix_noname_post_audit.py
+cwd                     : C:\t\fix-noname
+root PID / process group: 252180 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 600 s
+duration                : 3.21 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  249260:python.exe
+descendants terminated  : 1  249260
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-runs/logs/fixnoname-unit-base.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=FIX  acquired=True  released=True
+pre-existing (reported, NEVER killed): 12
+================================================
+BW_EXIT=1
