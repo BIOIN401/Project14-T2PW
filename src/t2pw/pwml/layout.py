@@ -25,6 +25,7 @@ import re
 from collections import defaultdict
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
+from t2pw.pwml import cell_art
 from t2pw.pwml.compound_templates import COMPOUND_ID_TO_TEMPLATE, TEMPLATE_DIMS
 
 LOC_SECTIONS = ("compound-locations", "protein-locations", "nucleic-acid-locations", "element-collection-locations")
@@ -933,12 +934,25 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
     children: Dict[Any, List[Any]] = defaultdict(list)
     for st in bands:
         children[parent[st]].append(st)
+    # cell art (VIS-2): the organism of the drawn compartments; a Gram-negative bacterium whose boxes do not already nest
+    # an outer membrane / periplasm gets PathBank's envelope on its cell box (outer and inner membrane lines 250 apart,
+    # peptidoglycan between): membrane visualizations only
+    cell = cell_art.cell_kind(items, bands)
+    gram_neg = cell == "bacterium" and cell_art.gram_negative(compartment_kind(str(l.get("name") or ""))
+                                                              for l in items.get("subcellular-locations", []))
+    flat_envelope = gram_neg and not any(kinds[s] in ("outer_membrane", "periplasm") for s in bands)
+    cyto = [s for s in bands if kinds[s] == "cytoplasm"]
+    if cell == "bacterium" and cyto:  # room for the chromosome: an empty group after the cytoplasm's own groups
+        host = max(cyto, key=lambda s: (len(by_state[s]), -bands.index(s)))
+        comps_by_state[host].append(([], *cell_art.CHROMOSOME_ROOM))
 
     def style(st):
         """(membrane template or None for a label only, gap of a double line or 0) of a compartment box."""
         if st == loose_key:
             return None, 0
         k, pk = kinds[st], kinds.get(parent.get(st))
+        if flat_envelope and parent.get(st) is None and k in ("cytoplasm", "membrane"):
+            return KIND_TEMPLATE[k], cell_art.ENVELOPE_GAP
         if k == "extracellular":
             return None, 0  # PathBank draws no outline around the outside of a cell
         if (k == "cytoplasm" and pk == "membrane") or (k == "periplasm" and pk == "outer_membrane") \
@@ -1073,6 +1087,27 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
                 "id": new_id(), "visualization-template-id": LABEL_TEMPLATE, "label-text": part,
                 "x": x0 + d + 12, "y": y0 + d + 4 + j * LABEL_STEP, "zindex": 20, "scale-x": f"{LABEL_SCALE}", "scale-y": f"{LABEL_SCALE}",
                 "width": "200", "height": "15"})
+    # peptidoglycan (VIS-2): between the outer and inner membrane lines of a Gram-negative cell (after the labels, so
+    # every other record keeps its id)
+    pg: List[Tuple[int, int, int, int]] = []
+    if gram_neg:
+        drawn_line = {s for s, _ in band_rects if style(s)[0] is not None}
+        for s, (x0, y0, x1, y1) in band_rects:
+            if s not in drawn_line or parent.get(s) is not None:
+                continue
+            if flat_envelope and kinds[s] in ("cytoplasm", "membrane"):
+                g = int(style(s)[1] * 0.48)
+                pg.append((x0 + g, y0 + g, x1 - g, y1 - g))
+            elif kinds[s] in ("outer_membrane", "periplasm"):
+                inner = [c for c in children.get(s, []) if c in drawn_line] or \
+                        [g for c in children.get(s, []) if c not in drawn_line for g in children.get(c, []) if g in drawn_line]
+                if len(inner) == 1 and kinds[inner[0]] in ("membrane", "cytoplasm"):
+                    i0, j0, i1, j1 = rect_of_state[inner[0]]
+                    pg.append(((x0 + i0) // 2, (y0 + j0) // 2, (x1 + i1) // 2, (y1 + j1) // 2))
+    for (a0, b0, a1, b1) in pg:
+        items.setdefault("membrane-visualizations", []).append({
+            "id": new_id(), "path": _rounded_rect(a0, b0, a1, b1), "visualization-template-id": cell_art.PEPTIDOGLYCAN_TEMPLATE,
+            "complete-membrane": True, "zindex": 6, "width": f"{a1 - a0}.0", "height": f"{b1 - b0}.0"})
 
     # ---- transports across their membrane: a transporter (or a transport point) that serves transports only sits on
     # the membrane line between its cargo compartments, on the side facing the outer cargo (PathBank's convention)
@@ -1269,4 +1304,41 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
             _set_arrow_paths(e, new[0], new[1], new[-1], new[-2])
             for px, py in new:
                 width, height = max(width, int(px) + MARGIN), max(height, int(py) + MARGIN)
-    return int(width), int(height)
+
+    # ---- cell and organelle art (VIS-2, pwml/cell_art.py): images and zoom boxes over the finished layout; the picture
+    # moves right (bacterium image) or down (organelle cluster without a free spot) to make room
+    plan: Dict[str, Any] = {"cell": cell}
+    lined = [s for s, _ in band_rects if style(s)[0] is not None]
+
+    def nodes_in(st):
+        return sum(len(by_state.get(s, [])) for s, chain in anc.items() if st in chain)
+
+    if cell == "bacterium":
+        cells = [s for s in lined if parent.get(s) is None and kinds[s] in _CHAIN]
+        if cells:
+            c = max(cells, key=lambda s: (rect_of_state[s][2] - rect_of_state[s][0]) * (rect_of_state[s][3] - rect_of_state[s][1]))
+            plan["cell_rect"] = rect_of_state[c]
+            hosts = [s for s in bands if kinds[s] == "cytoplasm" and c in anc[s]]
+            if hosts:
+                h = max(hosts, key=lambda s: (nodes_in(s), -bands.index(s)))
+                x0, y0, x1, y1 = rect_of_state[h]
+                plan["chromosome_region"] = (x0 + inset(h) + 20, y0 + pad_top(h), x1 - inset(h) - 20, y1 - inset(h) - 20)
+                plan["boxes_inside"] = [rect_of_state[s] for s in bands if s != h and h in anc[s]]
+    elif cell == "eukaryote":
+        plan["plant"] = any(kinds[s] in ("plastid", "thylakoid") for s in bands)
+        fam = cell_art.FAMILY
+        cands = [s for s in lined if fam.get(kinds[s]) and fam.get(kinds.get(parent.get(s))) != fam.get(kinds[s])]
+        if cands:
+            t = max(cands, key=lambda s: (nodes_in(s), -bands.index(s)))
+            plan["target_rect"], plan["family"] = rect_of_state[t], fam[kinds[t]]
+            strips = []
+            for s in lined:  # the target's enclosing boxes: only their membrane bands are in the way; other boxes whole
+                x0, y0, x1, y1 = rect_of_state[s]
+                if s in anc[t]:
+                    strips += [(x0 - 30, y0 - 30, x1 + 30, y0 + 30), (x0 - 30, y1 - 30, x1 + 30, y1 + 30),
+                               (x0 - 30, y0, x0 + 30, y1), (x1 - 30, y0, x1 + 30, y1)]
+                else:
+                    strips.append((x0, y0, x1, y1))
+            plan["membrane_strips"] = strips
+    obstacles = [r for rs in member_rects.values() for r in rs] + [_label_rect(lb) for lb in items.get("label-locations", [])]
+    return cell_art.decorate(items, new_id, int(width), int(height), plan, obstacles, drawn, LOC_SECTIONS, _set_arrow_paths, MARGIN)
