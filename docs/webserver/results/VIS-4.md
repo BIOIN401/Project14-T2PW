@@ -97,6 +97,10 @@ byte-identical (test `test_render_is_deterministic_with_a_warm_cache`).
    showcases, since the PWML exports these CIDs to PathWhiz.
 2. **Orphan connectors** (VIS-1 review F2): template-83 edges from each enzyme through its own location, referenced
    by nothing. Dropped by the renderer now, as PathWhiz drops them; the layout could stop writing them.
+   The same rule also hides **7 template-5 reaction edges** that nothing refers to, in VIS-1's final2 replays:
+   `100.pwml` #38, `146.pwml` #35-36, `6.pwml` #124-127 (VIS-4 review F5; checked with `scripts/orphans_tpl.py`;
+   none in the 8 showcases or item-6). PathWhiz drops them too, so the picture matches PathWhiz, but the reactions
+   lose those lines: a writer defect for the layout lane.
 3. **Red edge 2,3-dihydroxybenzoic acid -> EntB** on item-6: edge 162, template 148, `start_flat_arrow`, drawn by
    `interaction-protein-complex-visualization` of interaction 60, type **Inhibition**, Compound 40792
    (2,3-dihydroxybenzoic acid) -> ProteinComplex 40002 (isochorismatase, EntB). 148 is PathWhiz's editor default for
@@ -135,3 +139,33 @@ byte-identical (test `test_render_is_deterministic_with_a_warm_cache`).
 4. **Attribution**: structure drawings are PubChem's (public domain, NCBI asks for acknowledgement); add
    "structures: PubChem" next to the PathBank art credit (VIS-3 open question 4).
 5. Wrong CIDs (§ 5.1): for the biology track.
+
+## 8. Review round 1 (ws-reviewer on `95d05949`: APPROVE WITH NOTES), fixed in `067cb575`
+
+- **F1** `structures.key_for` / `_valid`: ids must be 1-10 ASCII digits (`re.fullmatch(r"[0-9]{1,10}")`). Before,
+  `str.isdigit()` let "²" through to `int()` (ValueError: the whole render failed), turned "٣" into CHEBI:3 (a wrong
+  molecule) and let a 5000-digit id raise. Now any of these is "no id" (a broken ChEBI id falls back to the CID);
+  `key_for` never raises.
+- **F2** `structures.png_ok`: the PNG's IHDR width and height must be <= 2000 px (PubChem's depictions are 300 px),
+  checked before a body is cached and before `pathbank._picture` decodes it, so a small file can no longer decode to a
+  multi-GB array. A body over the 2 MB read cap is `Unusable` and never cached as `.png`; `_get` re-checks whatever a
+  fetcher returns.
+- **F3** `download`: only 404, or a 400 whose body says `PUGREST.NotFound`, is a permanent `.miss`. A 403, any other
+  status, or a 200 that is not a usable PNG (maintenance page) raises, and is cached as a retryable `.fail` (one retry,
+  then an hour), so an IP block cannot mark every compound missing for good.
+- **F5** record only: § 5.2 now names the 7 template-5 reaction edges the orphan rule also hides.
+- **F6** `_header_lines`: line widths are measured (`matplotlib.textpath.TextToPath`, the font the picture uses)
+  instead of 0.55 em per character. "dihydroxybenzoate" now drops to 19 units and stays inside the 190-unit body;
+  "Oxoglutaric acid" and "3,8-divinyl / chlorophyllide a" still match PathBank's lines. Zoom:
+  `evidence/VIS-4/zoom-ent-item6-final2-r5.png` (round r5).
+- **F7** `tests/conftest.py` already existed: one autouse fixture sets `T2PW_STRUCTURE_BUDGET_S=0` (cache only), so
+  no test anywhere fetches unless it passes a budget itself (6 lines; outside the original file boundary, added at
+  the orchestrator's request). The two render test files keep their own `download` / `urlopen` guards.
+- Tests added: F1 (8 parametrised bad ids + the CID fallback), F2 (IHDR check, no decode of an oversized header,
+  oversized and over-cap bodies, nothing cached as `.png`), F3 (404 and 400 NotFound miss; 400 BadRequest, 403, 410,
+  429, 503 and a non-PNG 200 retryable; `.fail` files on disk), F6 (every header line measured to fit).
+
+Gates on `067cb575` (`evidence/VIS-4/logs/vis4-review.log`, holder `vis4`, tree clean at start): render tests
+(`test_render_pathbank.py` + `test_render_structures.py`) **49 passed**; `test_service_run_pathway.py` **107 passed**;
+render round r5 15 of 15; `BW_EXIT=0`, **FINAL SURVIVING COUNT 0**. SMOKE and the full gates: the orchestrator runs
+them on the merge result.
