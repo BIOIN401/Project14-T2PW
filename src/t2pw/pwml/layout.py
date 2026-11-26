@@ -352,6 +352,8 @@ class _Router:
         return [a] + corners[1:-1] + [b]
 
 
+EDGE_PATH_MAX = 255  # VIS-5: PathWhiz's edges.path is varchar(255); a longer path fails the edge's import
+ROUTE_PATH_MAX = 220  # a routed path's budget before the cell art may shift the picture (a digit more per number)
 CORNER_R = 24  # VIS-5: radius of a routed edge's rounded corner
 
 
@@ -1696,8 +1698,12 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
             ends = [(q[0] - 20, q[1] - 20, q[0] + 20, q[1] + 20) for q in (pa, pb)]  # VIS-5: an end under a label
             route = router.route(pa, pb, member_rects[a] + member_rects[b] + ends) if pa != pb else None
             if route and len(set(route)) > 1:
+                # PathWhiz stores an edge path in a varchar(255): cut corners only while the path fits, never longer
                 path, c1, c2 = _path(_round_corners(route))
-                best, pick = (path, route[0], c1, route[-1], c2, [tuple(q) for q in route]), None
+                if len(path) > ROUTE_PATH_MAX:
+                    path, c1, c2 = _path(route)
+                if len(path) <= ROUTE_PATH_MAX:
+                    best, pick = (path, route[0], c1, route[-1], c2, [tuple(q) for q in route]), None
         if fa is None and fb is None and best is not None and pick is not None:
             plain[(a, b)] = pick
         if best is None:  # both ends on one point (a reaction point on its own substrate): a short stub
@@ -1771,6 +1777,15 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
                                       _set_arrow_paths, MARGIN)
     # VIS-5: the canvas ends a margin below what is drawn (PathBank: canvas = drawing + margin); an outside row moved up
     # to its transporter left an empty strip at the bottom
+    for e in items.get("edges", []):  # last guard for PathWhiz's varchar(255): one cubic between the same ends
+        pts = _path_points(str(e.get("path") or ""))
+        if len(str(e.get("path") or "")) > EDGE_PATH_MAX and len(pts) >= 2:
+            (x0, y0), (x1, y1) = pts[0], pts[-1]
+            p0, p3 = (int(x0), int(y0)), (int(x1), int(y1))
+            dx, dy = p3[0] - p0[0], p3[1] - p0[1]
+            n0 = (1 if dx >= 0 else -1, 0) if abs(dx) >= abs(dy) else (0, 1 if dy >= 0 else -1)
+            e["path"], c1, c2 = _curve(p0, n0, p3, (-n0[0], -n0[1]))
+            _set_arrow_paths(e, p0, c1, p3, c2)
     bottom = _drawn_bottom(items)
     height = min(height, int(bottom) + MARGIN) if bottom else height
     for loc in hidden_locs:  # not drawn; kept inside the (possibly shorter) canvas

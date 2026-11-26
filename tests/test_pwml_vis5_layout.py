@@ -75,3 +75,5 @@ def test_long_chain_snakes_and_isozymes_stack_and_membranes_are_named_on_their_l
     assert abs(lb["y"] + (25 + 15.5) * sc - top) <= 1
     # a nucleic-acid location is drawn with PathWhiz's Nucleic Acid template, not the protein template 2
     assert items["nucleic-acid-locations"][0]["visualization-template-id"] == 12
+    # every edge path fits PathWhiz's edges.path varchar(255)
+    assert all(len(e["path"]) <= 255 for e in items["edges"])
