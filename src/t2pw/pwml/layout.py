@@ -1198,6 +1198,7 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
 
     bound = (width, height)
     drawn: List[List[Tuple[float, float]]] = []  # visible edges drawn so far, as sampled polylines
+    plain: Dict[Tuple[Any, Any], Any] = {}  # (start block, end block) -> chosen ends of a curve with no hub end
     for eid, (a, b) in edge_ends.items():
         e = edges[eid]
         ra, rb = own_rect(a), own_rect(b)
@@ -1212,9 +1213,11 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
         fa, fb = hub_end(eid, a, rb), hub_end(eid, b, ra)
         ends_a = [fa] if fa else [_side_point(ra, s) for s in _facing_sides(ra, *(fb[0] if fb else ((rb[0] + rb[2]) / 2, (rb[1] + rb[3]) / 2)))]
         ends_b = [fb] if fb else [_side_point(rb, s) for s in _facing_sides(rb, *(ends_a[0][0]))]
+        if fa is None and fb is None and (b, a) in plain:  # the reverse of a curve already drawn between the two nodes
+            ends_b, ends_a = [plain[(b, a)][0]], [plain[(b, a)][1]]  # (an interaction's hidden Left edge)
         ratio = 0.4 if a in pill_of or b in pill_of else 0.25  # side compounds: shorter, rounder branches
         # the first candidate (preferred sides first) clear of node boxes, fewest crossings with the edges drawn so far
-        best, score = None, None
+        best, score, pick = None, None, None
         for i, (p0, n0) in enumerate(ends_a):
             for j, (p3, n3) in enumerate(ends_b):
                 if p0 == p3:
@@ -1223,7 +1226,7 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
                 pts = _bezier_points(p0, c1, c2, p3)
                 sc = (not _clear(pts, obstacles), _crossings(pts, drawn), i + j)
                 if score is None or sc < score:
-                    best, score = (path, p0, c1, p3, c2, pts), sc
+                    best, score, pick = (path, p0, c1, p3, c2, pts), sc, ((p0, n0), (p3, n3))
                 if sc[:2] == (False, 0):
                     break
             if score is not None and score[:2] == (False, 0):
@@ -1233,7 +1236,9 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
             route = router.route(pa, pb, member_rects[a] + member_rects[b]) if pa != pb else None
             if route and len(set(route)) > 1:
                 path, c1, c2 = _path(route)
-                best = (path, route[0], c1, route[-1], c2, [tuple(q) for q in route])
+                best, pick = (path, route[0], c1, route[-1], c2, [tuple(q) for q in route]), None
+        if fa is None and fb is None and best is not None and pick is not None:
+            plain[(a, b)] = pick
         if best is None:  # both ends on one point (a reaction point on its own substrate): a short stub
             p0 = ends_a[0][0]
             best = _curve(p0, (1, 0), (p0[0] + 12, p0[1]), (-1, 0), bound=bound)
