@@ -43,6 +43,7 @@ MEMBRANE_TEMPLATE = 220  # PathWhiz "Simple Membrane"
 LABEL_TEMPLATE, LABEL_SCALE, LABEL_TEXT_LENGTH = 235, 2.0, 28
 BOX_PAD_TOP_NO_LABEL, LABEL_GAP = 40, 24
 LINE_LABEL_ROOM, LINE_LABEL_X = 45, 80  # VIS-5: label on a membrane line: room above a box, offset from its corner
+LOOSE_GAP = 40  # VIS-5: gap between unattached nodes in a box
 OUTSIDE_GAP = 110  # VIS-5: outside cargo row distance from the cell's membrane
 INTERNAL_NAME_PREFIXES = ("__", "AutoState_")
 # PathWhiz template sizes of non-compound location templates met in T2PW output (template 2 "Enzyme Monomer I")
@@ -1189,7 +1190,9 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
             if cx > 0 and cx + w > target:
                 cx, cy, shelf_h = 0, cy + shelf_h + 2 * VGAP, 0
             placed.append((comp, cx, cy))
-            own_w, shelf_h, cx = max(own_w, cx + w), max(shelf_h, h), cx + w + HGAP
+            # VIS-5: nodes no process refers to (PathWhiz's viewer drops them) pack tight instead of a column gap apart
+            gap = HGAP if any(k in attached for k in comp) else LOOSE_GAP
+            own_w, shelf_h, cx = max(own_w, cx + w), max(shelf_h, h), cx + w + gap
         own_h = cy + shelf_h
         kids = children.get(st, []) if st != loose_key else []
         for c in kids:
@@ -1376,7 +1379,8 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
         return m if m in rect_of_state and style(m)[0] is not None else None
 
     on_membrane: Dict[Any, Tuple[set, bool]] = {}
-    hub_mem: Dict[Any, Any] = {}  # VIS-5: the membrane box a moved transporter sits on  # moved hub -> (states inside its membrane, membrane is the box top)
+    hub_mem: Dict[Any, Any] = {}  # VIS-5: the membrane box a moved transporter sits on
+    placed_cols: List[Tuple[Any, int, int, int, int]] = []  # VIS-5: (membrane box, rect) of each moved transporter  # moved hub -> (states inside its membrane, membrane is the box top)
 
     def anc_set(mem):
         return {st for st, chain in anc.items() if mem in chain}
@@ -1425,6 +1429,9 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
         # the first free spot from the inner cargo's x outward, preferring one the inner cargo reaches on a clear line
         cargo_r = ba.rect()
         others = [f for f in fixed if f != own]
+        # VIS-5: a transporter on the other line of the same envelope keeps its column free (TolC under TonB crossed)
+        others += [(c0 - 40, min(c1, ny - 400), c2 + 40, max(c3, ny + hb.h + 400)) for m, c0, c1, c2, c3 in placed_cols
+                   if m == mem and abs(c1 - ny) > 20]
         inner_side = "B" if on_top else "T"
         first = hit = None
         for step in range(0, x1 - x0, 20):
@@ -1452,6 +1459,7 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
                 fixed.remove(own)
             hb.x, hb.y = hit, ny
             fixed.append((hb.x, hb.y, hb.x + hb.w, hb.y + hb.h))
+            placed_cols.append((mem, hb.x, hb.y, hb.x + hb.w, hb.y + hb.h))
             on_membrane[hub] = (anc_set(mem), on_top)
             hub_mem[hub] = mem
     # VIS-5: the outside cargo of transports through a membrane sits right under (or over) its transporter instead of
