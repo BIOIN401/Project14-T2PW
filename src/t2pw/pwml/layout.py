@@ -782,6 +782,20 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
                 it["width"], it["height"] = str(dims[0]), str(dims[1])
             (hidden_locs.append(it) if it.get("hidden") else locs.__setitem__(int(it["id"]), it))
     edges = {int(e["id"]): e for e in items.get("edges", [])}
+    # VIS-5: PathBank labels each subunit of a complex with its own protein name (label-type "subunit"); the writer's
+    # label-type "protein" makes PathWhiz print the complex name on every subunit (TcyJKLMN five times). A complex
+    # with two or more drawn subunits, none of them PathBank's Unknown placeholder, gets PathBank's labelling; a
+    # one-subunit complex and an Unknown subunit keep the complex name (the enzyme name the paper gives).
+    prot_name = {str(pr.get("id")): str(pr.get("name") or "").strip().casefold() for pr in items.get("proteins", [])}
+    loc_by_id = {int(it["id"]): it for it in items.get("protein-locations", [])}
+    for pcv in items.get("protein-complex-visualizations", []):
+        subs = [loc_by_id.get(int(m["protein-location-id"])) for m in pcv.get("protein_complex_protein_visualizations", [])
+                if m.get("protein-location-id") is not None]
+        subs = [l for l in subs if l is not None and not l.get("hidden")]
+        if len(subs) >= 2 and all(prot_name.get(str(l.get("protein-id")), "unknown") not in ("", "unknown") for l in subs):
+            for l in subs:
+                if l.get("label-type") == "protein":
+                    l["label-type"] = "subunit"
 
     # ---- blocks: one per visible location, protein locations of one complex visualization grouped
     parent = {lid: lid for lid in locs}
