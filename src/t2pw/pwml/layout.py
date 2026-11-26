@@ -32,13 +32,16 @@ LOC_SECTIONS = ("compound-locations", "protein-locations", "nucleic-acid-locatio
 MARGIN, BAND_GAP, BAND_PAD_X, BAND_PAD_BOT = 40, 80, 40, 40
 HGAP, VGAP, MEMBER_GAP, MEMBERS_PER_ROW = 160, 60, 10, 3  # PathBank substrate-to-product step: median 667
 JUNCTION_W, JUNCTION_H = 40, 20
+STACK_DX, STACK_DY = 10, 38  # VIS-5: offset of each further enzyme in a reaction's stack (PathBank PW000779: ~5, ~22)
 OBSTACLE_PAD, CELL = 8, 10
+SNAKE_MIN, SNAKE_OVER = 1800, 1.8  # VIS-5: a group folds into rows when wider than 1.8x the picture's square-ish width
 ASPECT = 1.5  # target width:height of the packed picture (PathBank content: median 1.4)
 MEMBRANE_TEMPLATE = 220  # PathWhiz "Simple Membrane"
 # Labels as in PathBank's own files (PW000001: template 235 "Simple Label - Large", scale 1.9). PathWhiz draws it as a
 # rounded box at (x + 5s, y + 25s) of 200s x (15 + 16 lines)s, text wrapped at 28 characters (the template's text_length).
 LABEL_TEMPLATE, LABEL_SCALE, LABEL_TEXT_LENGTH = 235, 2.0, 28
 BOX_PAD_TOP_NO_LABEL, LABEL_GAP = 40, 24
+OUTSIDE_GAP = 110  # VIS-5: outside cargo row distance from the cell's membrane
 INTERNAL_NAME_PREFIXES = ("__", "AutoState_")
 # PathWhiz template sizes of non-compound location templates met in T2PW output (template 2 "Enzyme Monomer I")
 OTHER_TEMPLATE_DIMS = {2: (150, 70)}
@@ -200,6 +203,8 @@ class _Block:
     def __init__(self, key: Any, state: Any, members: List[Dict[str, Any]], w: int, h: int, offsets: List[Tuple[int, int]]):
         self.key, self.state, self.members, self.w, self.h, self.offsets = key, state, members, w, h, offsets
         self.x = self.y = 0
+        self.dir = 1  # VIS-5: -1 in a right-to-left row of a snaked chain (substrates enter from the right)
+        self.layer, self.col = 0, (0, 0)  # column index and (x, width) of its column in the layered group
 
     @property
     def virtual(self) -> bool:
@@ -614,11 +619,67 @@ def _layered(blocks: Dict[Any, "_Block"], keys: List[Any], flow: List[Tuple[Any,
         bl, l = blocks[k], layer[k] - low
         bl.x = colx[l] + (colw[l] - bl.w) // 2
         bl.y = int(round(yc[k] - bl.h / 2 - lo))
-    for k in order:  # a reaction point with no enzyme sits right next to its substrates
+        bl.layer, bl.col, bl.dir = l, (colx[l], colw[l]), 1
+    for k in order:  # a reaction point with no enzyme sits on its substrates' side (the writer hides the substrate edge,
+        # so the visible product edge starts at the substrate; VIS-5: at the substrates' centre height, not wherever the
+        # alignment put the point, where the edge began in empty space)
         ins = [blocks[p] for p in pred[k] if layer[p] == layer[k] - 1]
         if blocks[k].virtual and ins:
-            blocks[k].x = max(p.x + p.w for p in ins) + 12
+            blocks[k].x = max(p.x + p.w for p in ins) - JUNCTION_W // 2 + 2
+            blocks[k].y = int(round(sum(p.y + p.h / 2 for p in ins) / len(ins) - blocks[k].h / 2))
     return x - HGAP, int(round(max(blocks[k].y + blocks[k].h for k in keys)))
+
+
+ROW_GAP = 160  # VIS-5: vertical gap between the rows of a snaked chain
+
+
+def _snake(blocks: Dict[Any, "_Block"], keys: List[Any], limit: int, hubs: set) -> Tuple[int, int]:
+    """VIS-5: fold a layered group wider than ``limit`` into rows read alternately left to right and right to left
+    (PathBank's long chains turn back instead of running off the page). Rows end after a node column rather than a
+    process column where possible, so the turn is a short vertical step from a node to its next process. Sets block
+    x/y (relative to the group) and ``dir``; returns the group's (width, height)."""
+    cols: Dict[int, Tuple[int, int]] = {}
+    for k in keys:
+        cols[blocks[k].layer] = blocks[k].col
+    order = sorted(cols)
+    rows: List[List[int]] = [[]]
+    start = 0
+    for l in order:
+        cx, cw = cols[l]
+        if rows[-1] and cx + cw - start > limit:
+            last = rows[-1][-1]
+            carry = [last] if len(rows[-1]) > 2 and all(k in hubs for k in keys if blocks[k].layer == last) else []
+            if carry:
+                rows[-1].pop()
+            rows.append(carry)
+            start = cols[carry[0]][0] if carry else cx
+        if not rows[-1]:
+            start = cx
+        rows[-1].append(l)
+    if len(rows) < 2:
+        return max(cx + cw for cx, cw in cols.values()), max(blocks[k].y + blocks[k].h for k in keys)
+    row_of = {l: i for i, r in enumerate(rows) for l in r}
+    top, anchor = 0, 0.0  # each row starts right under the previous row's last column
+    for i, r in enumerate(rows):
+        ks = [k for k in keys if row_of[blocks[k].layer] == i]
+        y0 = min(blocks[k].y for k in ks)
+        y1 = max(blocks[k].y + blocks[k].h for k in ks)
+        a, cw0 = cols[r[0]]
+        sgn = 1 if i % 2 == 0 else -1
+        base = 0.0 if i == 0 else anchor - sgn * cw0 / 2  # where the row's first column begins (its far side when sgn<0)
+        for k in ks:
+            bl = blocks[k]
+            rel = bl.x - a
+            bl.x = int(round(base + rel)) if sgn > 0 else int(round(base - rel - bl.w))
+            bl.y = bl.y - y0 + top
+            bl.dir = sgn
+        lx, lw = cols[r[-1]]
+        anchor = base + sgn * (lx - a + lw / 2)
+        top += y1 - y0 + ROW_GAP
+    x0 = min(blocks[k].x for k in keys)
+    for k in keys:
+        blocks[k].x -= x0
+    return max(blocks[k].x + blocks[k].w for k in keys), top - ROW_GAP
 
 
 def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], ir: Optional[Dict[str, Any]] = None,
@@ -737,6 +798,24 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
             if e is not None:
                 edge_ends[int(e["id"])] = (k if k is not None else hub, hub)
                 edge_role[int(e["id"])] = ("r", hub, role)
+    # VIS-5: PathBank draws the other enzymes of one reaction (isozymes, subunits listed separately) as a stack of
+    # overlapping ellipses at the reaction point; an enzyme no other process refers to joins its first enzyme's block
+    firsts = {hubs[0] for _, hubs, _ in pending if hubs}
+    for _, hubs, _ in pending:
+        for k in list(hubs[1:]):
+            if uses[k] != 1 or k in firsts or k not in blocks or hubs[0] not in blocks:
+                continue
+            hb, kb = blocks[hubs[0]], blocks.pop(k)
+            n = getattr(hb, "stacked", 0) + 1
+            hb.stacked = n
+            for loc, (dx, dy) in zip(kb.members, kb.offsets):
+                hb.members.append(loc)
+                hb.offsets.append((dx + STACK_DX * n, dy + STACK_DY * n))
+                block_of_loc[int(loc["id"])] = hubs[0]
+            hb.w = max(ox + _dim(l["width"]) for l, (ox, _) in zip(hb.members, hb.offsets))
+            hb.h = max(oy + _dim(l["height"]) for l, (_, oy) in zip(hb.members, hb.offsets))
+            hubs.remove(k)
+            attached.discard(k)
     # PathBank's fork: one main member on the shaft, side compounds beside it. With two or more main members meeting at
     # one side of an enzyme (one reaction or several sharing the enzyme) their edges fan in through the side compounds'
     # places, so that side keeps its compounds in the layered layout.
@@ -787,6 +866,7 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
             if k is not None:
                 flow.append((k, hub) if left else (hub, k))
     n_flow_after_transports = len(flow)
+    hub_set = set(hub_of.values())
     for iv in items.get("interaction-visualizations", []):
         ends: Dict[str, List[Tuple[Dict[str, Any], Any]]] = {"Left": [], "Right": []}
         for sec, fld in (("interaction_compound_visualizations", "compound-location-id"),
@@ -921,6 +1001,16 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
                                            key=lambda c: -(c[1] * c[2]))
 
     area = sum((w + HGAP) * (h + VGAP) for cs in comps_by_state.values() for _, w, h in cs)
+    # VIS-5: a group much wider than the whole picture's square-ish width folds into rows (a snake)
+    limit = max(SNAKE_MIN, int((area * ASPECT) ** 0.5))
+    snaked_states = set()
+    for st, cs in comps_by_state.items():
+        for i, (comp, w, h) in enumerate(cs):
+            if w > SNAKE_OVER * limit and st != loose_key:
+                cs[i] = (comp, *_snake(blocks, comp, limit, hub_set))
+                snaked_states.add(st)
+        cs.sort(key=lambda c: (not any(k in attached for k in c[0]), -(c[1] * c[2])))
+    area = sum((w + HGAP) * (h + VGAP) for cs in comps_by_state.values() for _, w, h in cs)
     target = max([int((area * ASPECT) ** 0.5)] + [w for cs in comps_by_state.values() for _, w, _ in cs])
     # compartment kinds (PathBank membrane template and colour per kind) and nesting (organelles inside the cell,
     # the cell inside its envelope); each box holds its own groups (shelf-packed), then its child boxes in rows
@@ -944,7 +1034,8 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
     cyto = [s for s in bands if kinds[s] == "cytoplasm"]
     if cell == "bacterium" and cyto:  # room for the chromosome: an empty group after the cytoplasm's own groups
         host = max(cyto, key=lambda s: (len(by_state[s]), -bands.index(s)))
-        comps_by_state[host].append(([], *cell_art.CHROMOSOME_ROOM))
+        if host not in snaked_states:  # VIS-5: a snake's short last row leaves room for it already
+            comps_by_state[host].append(([], *cell_art.CHROMOSOME_ROOM))
 
     def style(st):
         """(membrane template or None for a label only, gap of a double line or 0) of a compartment box."""
@@ -1057,10 +1148,13 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
     for k, (hub, role, s, near) in pill_at.items():  # side compounds beside their reaction's shaft
         x0, y0, x1, y1 = own_rect(hub)
         cy, bl = (y0 + y1) // 2, blocks[k]
-        if blocks[hub].virtual:  # a reaction point without enzyme sits next to its substrates: side compounds go right
-            cx = (x0 + x1) // 2 + (PILL_ALONG // 2 if role == "in" else PILL_ALONG + PILL_ALONG // 2)
+        d = blocks[hub].dir  # VIS-5: mirrored in a right-to-left row
+        if blocks[hub].virtual:  # a reaction point: side compounds before and after it along the shaft
+            cx = (x0 + x1) // 2 + d * (PILL_ALONG // 2 if role == "in" else PILL_ALONG + PILL_ALONG // 2)
+        elif (role == "in") == (d > 0):
+            cx = x0 - PILL_ALONG
         else:
-            cx = x0 - PILL_ALONG if role == "in" else x1 + PILL_ALONG
+            cx = x1 + PILL_ALONG
         bl.x, bl.y = cx - bl.w // 2, (cy - near - bl.h) if s < 0 else (cy + near)
 
     # ---- compartments: bound-visualizations (when written), membranes and labels
@@ -1074,6 +1168,7 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
         bv["x"], bv["y"], bv["width"], bv["height"] = r[0], r[1], str(r[2] - r[0]), str(r[3] - r[1])
     height = (extra_y + 80 + MARGIN) if extra_x > MARGIN else ((top - BAND_GAP if rows else top) + MARGIN)
     width = max(width, extra_x + MARGIN)
+    label_items: Dict[Any, List[Dict[str, Any]]] = defaultdict(list)
     for s, (x0, y0, x1, y1) in band_rects:
         tpl, gap = style(s)
         lines = [] if tpl is None else [(x0, y0, x1, y1)] + ([(x0 + gap, y0 + gap, x1 - gap, y1 - gap)] if gap else [])
@@ -1083,10 +1178,11 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
                 "complete-membrane": True, "zindex": 6, "width": f"{a1 - a0}.0", "height": f"{b1 - b0}.0"})
         d = inset(s)
         for j, part in enumerate(label_parts(labels[s]) if labels.get(s) else []):
-            items.setdefault("label-locations", []).append({
+            label_items[s].append({
                 "id": new_id(), "visualization-template-id": LABEL_TEMPLATE, "label-text": part,
                 "x": x0 + d + 12, "y": y0 + d + 4 + j * LABEL_STEP, "zindex": 20, "scale-x": f"{LABEL_SCALE}", "scale-y": f"{LABEL_SCALE}",
                 "width": "200", "height": "15"})
+            items.setdefault("label-locations", []).append(label_items[s][-1])
     # peptidoglycan (VIS-2): between the outer and inner membrane lines of a Gram-negative cell (after the labels, so
     # every other record keeps its id)
     pg: List[Tuple[int, int, int, int]] = []
@@ -1126,7 +1222,8 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
         m = next((s for s in reversed(anc[si]) if s not in anc[so]), None)
         return m if m in rect_of_state and style(m)[0] is not None else None
 
-    on_membrane: Dict[Any, Tuple[set, bool]] = {}  # moved hub -> (states inside its membrane, membrane is the box top)
+    on_membrane: Dict[Any, Tuple[set, bool]] = {}
+    hub_mem: Dict[Any, Any] = {}  # VIS-5: the membrane box a moved transporter sits on  # moved hub -> (states inside its membrane, membrane is the box top)
 
     def anc_set(mem):
         return {st for st, chain in anc.items() if mem in chain}
@@ -1147,6 +1244,11 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
             continue
         r = rect_of_state[mem]
         plans[hub].append((mem, outer.center()[1] < (r[1] + r[3]) / 2, inner))
+    all_states = {st.get("id"): st for st in items.get("biological-states", [])}
+    twin_kinds: Dict[Any, set] = defaultdict(set)
+    for k, (twin, _) in twin_of.items():
+        st = all_states.get(blocks[k].state, {})
+        twin_kinds[twin].add(compartment_kind(loc_names.get(st.get("subcellular-location-id")) or "", str(st.get("name") or "")))
     for hub, plan in plans.items():
         # a transporter shared by transports across different membranes stays where its group put it
         if hub in other_use or None in plan or len({(m, t) for m, t, _ in plan}) != 1:
@@ -1156,6 +1258,11 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
         gap = style(mem)[1]
         hb = blocks[hub]
         line_y = y0 + gap // 2 if on_top else y1 - gap // 2  # a double membrane: between its two lines
+        tk = twin_kinds.get(hub, set())  # VIS-5: the transporter's own membrane (its undrawn twin location) picks the line
+        if gap and "outer_membrane" in tk and "membrane" not in tk:
+            line_y = y0 if on_top else y1
+        elif gap and "membrane" in tk and "outer_membrane" not in tk:
+            line_y = y0 + gap if on_top else y1 - gap
         ny = int(line_y - hb.h / 2)
         want = int(ba.center()[0] - hb.w / 2)
         lo, hi = x0 + inset(mem) + 20, x1 - inset(mem) - 20 - hb.w
@@ -1193,6 +1300,48 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
             hb.x, hb.y = hit, ny
             fixed.append((hb.x, hb.y, hb.x + hb.w, hb.y + hb.h))
             on_membrane[hub] = (anc_set(mem), on_top)
+            hub_mem[hub] = mem
+    # VIS-5: the outside cargo of transports through a membrane sits right under (or over) its transporter instead of
+    # wherever the outside box's own packing put it, when the outside compartment has no outline and holds nothing else
+    hub_x = {h: blocks[h].center()[0] for h in on_membrane}
+    by_outer: Dict[Any, Dict[Any, List[float]]] = defaultdict(lambda: defaultdict(list))
+    hubs_of_outer: Dict[Any, set] = defaultdict(set)
+    for hub, cargo in transports:
+        if hub not in on_membrane:
+            continue
+        inside, _ = on_membrane[hub]
+        for k, _side in cargo:
+            st = blocks[k].state
+            if st not in inside and st in rect_of_state:
+                by_outer[st][k].append(hub_x[hub])
+                hubs_of_outer[st].add(hub)
+    for st, want in by_outer.items():
+        ks = by_state.get(st, [])
+        if style(st)[0] is not None or parent.get(st) is not None or set(ks) != set(want)                 or any(n not in on_membrane for k in ks for n in nbrs[k]):
+            continue
+        sx0, sy0, sx1, sy1 = rect_of_state[st]
+        mems = [rect_of_state[m] for m in rect_of_state if style(m)[0] is not None]
+        if any(not (sy0 >= r[3] or sy1 <= r[1]) and not (sx1 <= r[0] or sx0 >= r[2]) for r in mems):
+            continue  # beside a box, not above or below it: moving under the transporter would land inside the box
+        order_k = sorted(ks, key=lambda k: sum(want[k]) / len(want[k]))
+        desired = [sum(want[k]) / len(want[k]) - blocks[k].w / 2 for k in order_k]
+        seps = [0.0] + [blocks[a].w + 60 for a in order_k[:-1]]
+        nh = max(blocks[k].h for k in ks)
+        hs = hubs_of_outer[st]
+        tops = {on_membrane[h][1] for h in hs}
+        if len(tops) != 1:
+            continue
+        below = not tops.pop()
+        # one row just outside the cell (clear of the zoom frame drawn 27 outside it), its label beside the row
+        edge_y = max(rect_of_state[hub_mem[h]][3] for h in hs) if below else min(rect_of_state[hub_mem[h]][1] for h in hs)
+        if (below and sy0 < edge_y) or (not below and sy1 > edge_y):
+            continue
+        row_y = edge_y + OUTSIDE_GAP if below else edge_y - OUTSIDE_GAP - nh
+        for k, x in zip(order_k, _pava(desired, seps)):
+            blocks[k].x, blocks[k].y = max(MARGIN, int(round(x))), row_y
+        right = max(blocks[k].x + blocks[k].w for k in ks)
+        for j, lb in enumerate(label_items.get(st, [])):
+            lb["x"], lb["y"] = right + 40, row_y + nh // 2 - int(40 * LABEL_SCALE) + j * LABEL_STEP
     for k, (twin, i) in twin_of.items():
         tb = blocks[twin]
         blocks[k].x, blocks[k].y = tb.x + tb.offsets[i][0], tb.y + tb.offsets[i][1]
@@ -1226,8 +1375,9 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
             return _side_point(r, ("B" if inner else "T") if on_top else ("T" if inner else "B"))
         if blocks[k].virtual:  # a point: met from the side facing the other end
             return ((r[0] + r[2]) // 2, (r[1] + r[3]) // 2), SIDES[_sides_toward(r, ox, oy)[0]]
-        s = "L" if role == "in" else "R"
-        if (role == "in" and ox >= r[0]) or (role == "out" and ox <= r[2]):  # behind the enzyme: top or bottom
+        enter_left = (role == "in") == (blocks[k].dir > 0)  # VIS-5: a right-to-left row enters on the right
+        s = "L" if enter_left else "R"
+        if (enter_left and ox >= r[0]) or (not enter_left and ox <= r[2]):  # behind the enzyme: top or bottom
             s = "T" if oy < (r[1] + r[3]) / 2 else "B"
         return _side_point(r, s)
 
