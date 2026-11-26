@@ -1529,6 +1529,8 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
         if (below and sy0 < edge_y) or (not below and sy1 > edge_y):
             continue
         row_y = edge_y + OUTSIDE_GAP if below else edge_y - OUTSIDE_GAP - nh
+        if row_y < MARGIN:
+            continue  # no room above the cell
         xs = [max(MARGIN, int(round(x))) for x in _pava(desired, seps)]
         new = [(x, row_y, x + blocks[k].w, row_y + blocks[k].h) for k, x in zip(order_k, xs)]
         if any(not (n[2] <= r[0] or r[2] <= n[0] or n[3] <= r[1] or r[3] <= n[1])
