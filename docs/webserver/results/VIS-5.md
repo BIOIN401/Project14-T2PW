@@ -21,7 +21,7 @@ Dev loop `evidence/VIS-5/scripts/quick.sh` (VIS-2's, pointed at this tree): repl
 job item-6 through this tree's PWML export (no LLM, no network), runs the content check against the unmodified base
 (`f3241270`) and renders the 9 PWMLs and 4 PathBank reference PWMLs (PW000001, PW000779, PW012911, PW000017) with the
 tree's own renderer as a fast preview. Each round through `bounded_run.py` (light, no heavy lock, per the brief);
-every round FINAL SURVIVING COUNT 0 and content check 0 differences on all 9. 24 rounds (base, r1-r24). PathWhiz
+every round FINAL SURVIVING COUNT 0 and content check 0 differences on all 9. 28 rounds (base, r1-r28); r1 (renderer structures) was reverted after the PO's course correction. PathWhiz
 checkpoints (the real importer and viewer, VIS-2 harness, project `t2pw-pwdraw`) through the heavy-lock queue.
 
 ## 2. Structural diff (PathBank vs ours)
@@ -37,7 +37,7 @@ count, G14 compound structures (`moldb-smiles` / `inchi` empty in ours, filled i
 ## 3. What changed (layout v2 only; `T2PW_PWML_LAYOUT=v1` untouched)
 
 Geometry and visualization records only (location x/y, edge paths and their arrow paths, membranes, labels, art,
-canvas size), plus one template field (G6). All in `pwml/layout.py` unless noted.
+canvas size), plus the nucleic-acid template (G6, item 11) and the subunit label-type (item 13). All in `pwml/layout.py` unless noted.
 
 1. **Long chains snake** (`_snake`): a layered group wider than 1.8x the picture's square-ish width folds into rows read
    left to right, then right to left, each row starting under the previous row's last column; hubs, side-compound pills
@@ -167,8 +167,36 @@ under its transporter, Golgi edges starting at the ceramide, complex names (LDH,
 Unknown-protein enzymes, nucleic acids as PathWhiz's yellow Nucleic Acid shape. Drawable art and compound structures
 are placeholders in this dev stack, for PathBank's own PW000779 too.
 
-**Unit / suite gates**: queued on the final tree (`vis5-focused-final`: `tests/test_pwml_*.py tests/test_render_*.py
-tests/test_final_payload_writer_fixes.py tests/test_orch768_replay_corpus.py`; `vis5-suite2`: SMOKE 511, golden,
-equivalence, vision, web) but not yet run at the time of writing: the queue's RAM gate (6 GB free) has been blocked
-since ~14:00 (free RAM 1.6-3.4 GB; Docker's WSL VM ~6-9 GB with another session's containers, plus the user's
-applications). Numbers will be added here when they run.
+**Unit / suite gates** (queue, heavy lock, run on HEAD `9edbaa67` = code `5f964ff7` + docs, `git status` clean in both
+logs; `evidence/VIS-5/gates/`):
+
+| gate | result |
+|---|---|
+| `vis5-focused-final`: `tests/test_pwml_*.py` | 281 passed |
+| `tests/test_render_*.py` | 49 passed |
+| `tests/test_final_payload_writer_fixes.py` | 22 passed |
+| `tests/test_orch768_replay_corpus.py` | 9 passed |
+| wrapper | BW_EXIT=0, FINAL SURVIVING COUNT 0 |
+| `vis5-suite2`: SMOKE | 511 passed |
+| golden seams (batch / c011 / stage8 / quarantine), unedited | 2 / 8 / 4 / 24 passed |
+| equivalence (run_pathway / app vs service / default path) | 8 / 14 / 6 passed |
+| vision | 370 passed, 1 skipped |
+| web | 83 passed |
+| wrapper | BW_EXIT=0, FINAL SURVIVING COUNT 0 |
+
+The gates waited ~3 h on the queue's 6 GB free-RAM gate (Docker's WSL VM with another session's containers plus the
+user's applications held the machine at 1.6-4.6 GB free from ~14:00 to ~17:00).
+
+## 9. Remaining defects (after r28)
+
+- Lipid A: MsbA (one transporter for seven transports between cytoplasm, leaflets, periplasm and outer membrane) stays
+  in the cytoplasm with long lines to the outer membrane's nodes; 8 grid-routed edges remain there (content shape,
+  open question 7.6).
+- Sour taste: three cytoplasm boxes with 5-HT / H+ transports between them give long crossing lines (content shape).
+- Menaquinone: two cytoplasm states (intracellular, cytoplasmic) side by side; transports cross a box edge.
+- Readability at 1100 px: a 30-node pathway is still 2700-4500 units wide (PathBank's own PW000779 is 4400); labels
+  are legible zoomed, not at 1100 px. Snaking and packing reduced the worst cases (max width on the 97-PWML corpus
+  7685 -> 5365, aspect > 3 from 9 to 3).
+- Compound boxes without a structure in our preview: renderer issue, dropped per PO; PathWhiz draws from its own
+  database (open question 7.4).
+- Edge routing: 20 grid-routed edges over the 9 (base 37), 32 over the 97 corpus (base 64); none through a node.

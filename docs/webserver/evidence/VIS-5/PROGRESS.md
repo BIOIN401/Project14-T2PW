@@ -95,3 +95,9 @@ Pending, unverified until RAM frees (uncommitted): multi-subunit complexes label
 - r28: multi-subunit complexes (no Unknown subunit) labelled per subunit (label-type subunit, PathBank's way): coenzyme A TcyJ/K/L/M/N instead of "TcyJKLMN" x5, chlorophyll Mg-chelatase subunits; one-subunit complexes and Unknown subunits keep the complex name (LDH etc.). Content check copy masks label-type subunit->protein. 9 showcases: only chlorophyll + coenzyme A changed (label-type only); 97-corpus: 6 files changed, 97/97 content-identical, 0 edges over 255. 9cd45f1d confirmed behaviour-neutral (other 7 PWMLs byte-identical to r27).
 - Checkpoint 3 (vis5-pwab-r27, all 9 + PW000779): BW_EXIT=0, EXIT_import=0, stack down, 0 survivors; 10/10 success=true; import errors IDENTICAL to VIS-2's final arm for all 8 showcases (ceramide back to 1 error: the varchar(255) drop is gone); created records differ only in membranes / labels (visual). Screenshots: 9 of 10 failed on the login page under load (Playwright 30 s timeout, machine busy with another session's containers); only enterobactin's saved. Visual PathWhiz evidence stays checkpoints 1-2 (6 pathways); a screenshot-only rerun is pending RAM.
 - Gates still queued behind the RAM gate (free 3 GB).
+
+## Final gates -- 17:05 (RAM freed)
+Lock/process check on the coordinator's request: no heavy lock held, no python process of mine alive.
+vis5-focused-final (HEAD 9edbaa67, tree clean): pwml 281 passed, render 49, final_payload_writer_fixes 22, orch768 corpus 9; BW_EXIT=0, 0 survivors.
+vis5-suite2 (same HEAD, clean): SMOKE 511, golden 2/8/4/24, equivalence 8/14/6, vision 370 + 1 skipped, web 83; BW_EXIT=0, 0 survivors.
+Checkpoint 4 (vis5-pwab-r28, all 9 + PW000779, for the screenshots checkpoint 3 lost) queued.
