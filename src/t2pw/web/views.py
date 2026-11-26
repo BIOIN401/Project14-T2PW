@@ -339,7 +339,8 @@ def item_view(item: Dict[str, Any], history: List[Dict[str, Any]], sid: str) -> 
                 "A PWML file exists but its release status is missing or diagnostic-only, "
                 "so it is not offered for download.")
         if res.get("image_path"):
-            d["image"] = {"href": f"{base}/file/image"}
+            d["image"] = {"href": f"{base}/file/image",
+                          "pathbank": Path(str(res["image_path"])).with_name("pathway.png.pathbank").is_file()}
         d["reports"] = [{"name": k, "href": f"{base}/file/report/{k}"}
                         for k in sorted(res.get("report_paths", {})) if _SAFE_KEY.match(k)]
         if res.get("status") == STATUS_PASS and not d["pwml"]:

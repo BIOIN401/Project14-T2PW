@@ -45,7 +45,11 @@
 {% if it.finished and it.downloads.pwml %}{% include "_vision_panel.html" %}{% endif %}
 {% if it.downloads.image %}
 <h2>Pathway diagram</h2>
+{% if it.downloads.image.pathbank %}
+{{ c.figure(it.downloads.image.href, "Rendered diagram of " ~ it.title, caption="Rendered from the PWML above. Click to open full size. Organelle and cell art: PathBank / PathWhiz. Structures: PubChem.", link=true) }}
+{% else %}
 {{ c.figure(it.downloads.image.href, "Rendered diagram of " ~ it.title, caption="Rendered from the PWML above.") }}
+{% endif %}
 {% endif %}
 {% if it.downloads.reports %}
 <details class="disclosure">
