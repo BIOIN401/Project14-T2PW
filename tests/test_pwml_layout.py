@@ -101,7 +101,8 @@ def _content(root):
     signatures). A signature drops id and geometry (x, y, width, height, edge path, *_path arrow options) and replaces
     every location / edge / complex-visualization reference by the signature of what it points at, so each reaction,
     transport and interaction visualization keeps its members (compound, state, side), enzymes and edges (hidden,
-    template, arrows). Compound locations compare as a set: F3 merges identical copies. Membranes and labels are v2's own.
+    template, arrows). Compound locations compare as a set: F3 merges identical copies. Membranes, labels, cell / organelle
+    images and zoom boxes (VIS-2) are v2's own.
     A compound location's box template 157 (drug) compares as 81 (compound), an edge's template 83 (transport) as 5: v2
     redraws them (VIS-1).
     """
@@ -130,7 +131,8 @@ def _content(root):
         return tuple(out)
 
     drawn = {s.tag: sorted(repr(sig(el)) for el in s if isinstance(el.tag, str))
-             for s in sections if s.tag not in ("membrane-visualizations", "label-locations")}
+             for s in sections if s.tag not in ("membrane-visualizations", "label-locations", "drawable-element-locations",
+                                               "zoom-visualizations")}  # VIS-2: cell / organelle art is v2's own too
     drawn["compound-locations"] = sorted(set(drawn.get("compound-locations", [])))
     core = copy.deepcopy(root)
     cpv = core.find(".//pathway-visualization")
