@@ -8,8 +8,10 @@ PWMLs carry some wrong PubChem CIDs (VIS-4 record) while their ChEBI ids are rig
 Cache files, named after the key with ``:`` as ``_``:
 
 - ``<key>.png``: the picture;
-- ``<key>.miss``: PubChem has no picture for that id (4xx); never asked again;
-- ``<key>.fail``: a network error or timeout (after one retry); asked again after ``FAIL_RETRY_S`` (an hour).
+- ``<key>.miss``: PubChem answered 404 (or 400 NotFound) for that id; never asked again;
+- ``<key>.fail``: anything else that gave no usable picture (network error, timeout, 403 or other status, a body
+  that is not a PNG or is over ``MAX_SIDE_PX`` a side or cut at ``MAX_BYTES``), after one retry; asked again after
+  ``FAIL_RETRY_S`` (an hour).
 
 The cache directory is ``$T2PW_STRUCTURE_CACHE`` (default ``~/.cache/t2pw/structures``). Requests are paced to at
 most 4 per second (PubChem's limit is 5), each has a short timeout, and the whole lookup an overall budget, so a slow
@@ -21,6 +23,7 @@ from __future__ import annotations
 
 import contextlib
 import os
+import re
 import threading
 import time
 import urllib.error
@@ -40,26 +43,44 @@ WORKERS = 4
 MIN_GAP_S = 0.25  # PubChem asks for at most 5 requests per second
 RETRY_PAUSE_S = 1.0
 PNG_MAGIC = b"\x89PNG\r\n\x1a\n"
+MAX_BYTES = 2_000_000
+MAX_SIDE_PX = 2000  # PubChem's depictions are 300 px; anything far larger is not one (and would decode to GBs)
+_ID = re.compile(r"[0-9]{1,10}")  # ASCII digits only: str.isdigit() also accepts "²" and "٣"
 
 
 class Missing(Exception):
-    """PubChem answered, and has no picture for this id."""
+    """PubChem answered 404 (or PUG REST's 400 NotFound): it has no compound for this id."""
+
+
+class Unusable(Exception):
+    """The answer is not a usable PNG (an HTML page, an oversized or truncated image): retried later, never kept."""
+
+
+def _id(s: str) -> Optional[int]:
+    return int(s) if _ID.fullmatch(s) and int(s) > 0 else None
 
 
 def key_for(chebi_id: str, pubchem_cid: str) -> Optional[str]:
-    """The cache and lookup key for a compound: its ChEBI id if it has one, else its PubChem CID, else ``None``."""
-    chebi = chebi_id.strip().upper().removeprefix("CHEBI:")
-    cid = pubchem_cid.strip()
-    if chebi.isdigit() and int(chebi) > 0:
-        return f"CHEBI:{int(chebi)}"
-    if cid.isdigit() and int(cid) > 0:
-        return f"CID:{int(cid)}"
-    return None
+    """The cache and lookup key for a compound: its ChEBI id if it has one, else its PubChem CID, else ``None``.
+    Never raises; anything but 1-10 ASCII digits is no id."""
+    chebi = _id((chebi_id or "").strip().upper().removeprefix("CHEBI:"))
+    if chebi:
+        return f"CHEBI:{chebi}"
+    cid = _id((pubchem_cid or "").strip())
+    return f"CID:{cid}" if cid else None
 
 
 def _valid(key: str) -> bool:
     kind, _, n = key.partition(":")
-    return kind in URLS and n.isdigit() and int(n) > 0
+    return kind in URLS and _id(n) is not None
+
+
+def png_ok(data: bytes) -> bool:
+    """A PNG whose IHDR says at most ``MAX_SIDE_PX`` a side (read before any decoding)."""
+    if len(data) < 24 or not data.startswith(PNG_MAGIC) or data[12:16] != b"IHDR":
+        return False
+    w, h = int.from_bytes(data[16:20], "big"), int.from_bytes(data[20:24], "big")
+    return 0 < w <= MAX_SIDE_PX and 0 < h <= MAX_SIDE_PX
 
 
 def cache_dir() -> Path:
@@ -74,18 +95,23 @@ def default_budget() -> float:
 
 
 def download(key: str) -> bytes:
-    """PubChem's PNG for ``key``. Raises ``Missing`` for a 4xx answer, anything else for a network failure."""
+    """PubChem's PNG for ``key``. Raises ``Missing`` only for 404 or a 400 PUGREST.NotFound (cached for good);
+    ``Unusable`` or the network error for anything else (cached as a retryable failure): a 403 block or a
+    maintenance page must not mark every compound missing."""
     kind, _, n = key.partition(":")
     req = urllib.request.Request(URLS[kind].format(n), headers={"User-Agent": "t2pw-render/0.1 (research tool)"})
     try:
         with urllib.request.urlopen(req, timeout=REQUEST_TIMEOUT_S) as resp:  # noqa: S310 - fixed https URL
-            data = resp.read(2_000_000)
+            data = resp.read(MAX_BYTES + 1)
     except urllib.error.HTTPError as e:
-        if 400 <= e.code < 500 and e.code != 429:
+        body = b""
+        with contextlib.suppress(Exception):
+            body = e.read(4096) if e.fp is not None else b""
+        if e.code == 404 or (e.code == 400 and b"NotFound" in body):
             raise Missing(key) from e
         raise
-    if not data.startswith(PNG_MAGIC):
-        raise Missing(key)
+    if len(data) > MAX_BYTES or not png_ok(data):
+        raise Unusable(key)
     return data
 
 
@@ -127,6 +153,9 @@ def _get(base: Path, key: str, fetch: Callable[[str], bytes], pace: _Pace, until
                 time.sleep(RETRY_PAUSE_S)
                 continue
             _write(base.with_suffix(".fail"), b"")  # asked again after FAIL_RETRY_S
+            return None
+        if not png_ok(data):  # an injected fetcher, or a body cut short: never cached as a picture
+            _write(base.with_suffix(".fail"), b"")
             return None
         _write(base.with_suffix(".png"), data)
         return data

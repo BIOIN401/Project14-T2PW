@@ -56,6 +56,7 @@ def test_key_prefers_chebi_because_our_cids_can_be_wrong():
     assert structures.key_for("CHEBI:29780", "") == "CHEBI:29780"
     assert structures.key_for("", "5950") == "CID:5950"
     assert structures.key_for("", "") is None and structures.key_for("0", "x") is None
+    assert structures.key_for("\u00b2", "5950") == "CID:5950"  # a broken ChEBI id falls back to the CID
 
 
 def test_misses_are_cached_for_good_and_failures_for_a_day(offline: Path, monkeypatch):
@@ -121,23 +122,75 @@ def test_download_maps_http_answers(monkeypatch):
     monkeypatch.setattr(structures.urllib.request, "urlopen", lambda req, timeout: urls.append(req.full_url) or Resp(_png()))
     REAL_DOWNLOAD("CHEBI:29780")
     assert urls == ["https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/xref/RegistryID/CHEBI:29780/PNG"]
-    monkeypatch.setattr(structures.urllib.request, "urlopen", lambda req, timeout: Resp(b"<html>"))
-    with pytest.raises(structures.Missing):
+    # review F3: a 200 that is not a PNG (a maintenance page) is retryable, never a permanent miss
+    monkeypatch.setattr(structures.urllib.request, "urlopen", lambda req, timeout: Resp(b"<html>maintenance</html>"))
+    with pytest.raises(structures.Unusable):
         REAL_DOWNLOAD("CID:5950")
 
-    def http(code):
+    def http(code, body=None):
         def urlopen(req, timeout):
             assert req.full_url.endswith("/cid/5950/PNG") and timeout == structures.REQUEST_TIMEOUT_S
-            raise urllib.error.HTTPError(req.full_url, code, "x", {}, None)
+            raise urllib.error.HTTPError(req.full_url, code, "x", {}, io.BytesIO(body) if body is not None else None)
         return urlopen
 
-    monkeypatch.setattr(structures.urllib.request, "urlopen", http(404))
-    with pytest.raises(structures.Missing):
-        REAL_DOWNLOAD("CID:5950")
-    for code in (429, 503):
-        monkeypatch.setattr(structures.urllib.request, "urlopen", http(code))
+    for code, body in ((404, None), (400, b"Status: 404\nCode: PUGREST.NotFound\nMessage: No CID found")):
+        monkeypatch.setattr(structures.urllib.request, "urlopen", http(code, body))
+        with pytest.raises(structures.Missing):
+            REAL_DOWNLOAD("CID:5950")
+    for code, body in ((400, b"Code: PUGREST.BadRequest"), (403, None), (410, None), (429, None), (503, None)):
+        monkeypatch.setattr(structures.urllib.request, "urlopen", http(code, body))
         with pytest.raises(urllib.error.HTTPError):
             REAL_DOWNLOAD("CID:5950")
+
+
+def _ihdr(w: int, h: int) -> bytes:
+    """Just a PNG signature and an IHDR claiming w x h: enough for the size check, nothing to decode."""
+    return structures.PNG_MAGIC + b"\x00\x00\x00\x0dIHDR" + w.to_bytes(4, "big") + h.to_bytes(4, "big") + b"\x08\x06\x00\x00\x00"
+
+
+def test_oversized_or_truncated_pngs_are_never_decoded_or_cached(offline: Path, monkeypatch):
+    # review F2: a 2 MB PNG can decode to a multi-GB array; the IHDR is checked first
+    assert structures.png_ok(_png()) and structures.png_ok(_ihdr(2000, 300))
+    assert not structures.png_ok(_ihdr(2001, 300)) and not structures.png_ok(_ihdr(300, 50000))
+    assert not structures.png_ok(b"\x89PNG") and not structures.png_ok(b"GIF89a" + b"\x00" * 30)
+    monkeypatch.setattr(pathbank.mpimg, "imread", lambda *a, **k: pytest.fail("decoded an oversized PNG"))
+    assert pathbank._picture(_ihdr(40000, 40000)) is None
+
+    class Resp(io.BytesIO):
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            return False
+
+    for body in (_ihdr(9000, 9000), _png() + b"\x00" * structures.MAX_BYTES):  # too large; body over the read cap
+        monkeypatch.setattr(structures.urllib.request, "urlopen", lambda req, timeout, b=body: Resp(b))
+        with pytest.raises(structures.Unusable):
+            REAL_DOWNLOAD("CID:5950")
+    # whatever a fetcher returns, only a PNG that passes the check is cached as a picture
+    assert structures.structures(["CID:7"], 5, lambda key: _ihdr(9000, 9000)) == {}
+    assert not (offline / "CID_7.png").exists() and (offline / "CID_7.fail").exists()
+
+
+def test_unusable_answers_and_blocks_are_retryable_failures_not_misses(offline: Path):
+    # review F3: one IP block or maintenance page must not mark every compound missing for good
+    import urllib.error
+
+    def blocked(key):
+        if key == "CID:1":
+            raise urllib.error.HTTPError("u", 403, "Forbidden", {}, None)
+        raise structures.Unusable(key)
+
+    assert structures.structures(["CID:1", "CID:2"], 5, blocked) == {}
+    assert sorted(x.name for x in offline.iterdir()) == ["CID_1.fail", "CID_2.fail"]
+
+
+@pytest.mark.parametrize("chebi, cid", [("\u00b2", ""), ("\u0663", ""), ("9" * 5000, ""), ("", "\u0663"),
+                                        ("", "12345678901"), ("-5", "+7"), ("1e3", " "), ("CHEBI:\u00b2", "\u00b9")])
+def test_key_for_takes_ascii_ids_only_and_never_raises(chebi, cid):
+    # review F1: str.isdigit() accepts "\u00b2" (int() raises) and "\u0663" (int() gives 3: the wrong molecule)
+    assert structures.key_for(chebi, cid) is None
+    assert structures.structures([f"CID:{cid}", f"CHEBI:{chebi}"], 0) == {}
 
 
 def test_picture_drops_the_backdrop_and_crops_to_the_drawing():
@@ -241,6 +294,11 @@ def test_compound_header_wraps_like_pathbank_and_breaks_after_hyphens():
     assert pathbank._header_lines("3,8-divinyl chlorophyllide a", 200) == (["3,8-divinyl", "chlorophyllide a"], 20.0)
     assert pathbank._header_lines("Oxoglutaric acid", 200) == (["Oxoglutaric acid"], 20.0)
     # item-6: textwrap never broke "dihydro-2,3", so the name shrank to 10 units
-    assert pathbank._header_lines("2,3-dihydro-2,3-dihydroxybenzoate", 200) == (["2,3-dihydro-2,3-", "dihydroxybenzoate"], 20.0)
+    lines, size = pathbank._header_lines("2,3-dihydro-2,3-dihydroxybenzoate", 200)
+    assert lines == ["2,3-dihydro-2,3-", "dihydroxybenzoate"] and size >= 16
+    # review F6: every line is measured to fit inside the box (0.55 em per character let it cross the border)
+    for name in ("2,3-dihydro-2,3-dihydroxybenzoate", "2,3-dihydroxybenzoic acid", "Oxoglutaric acid"):
+        lines, size = pathbank._header_lines(name, 200)
+        assert all(pathbank._text_width(t, size) <= 190 for t in lines)
     lines, size = pathbank._header_lines("tetrahydrogeranylgeranyl diphosphate", 200)
     assert lines == ["tetrahydrogeranylgeranyl", "diphosphate"] and 12 <= size < 20  # one word too wide: shrink

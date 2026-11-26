@@ -26,6 +26,8 @@ from matplotlib import image as mpimg
 from matplotlib import rc_context
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 from matplotlib.figure import Figure
+from matplotlib.font_manager import FontProperties
+from matplotlib.textpath import TextToPath
 from matplotlib.patches import Ellipse, FancyBboxPatch, PathPatch, Polygon, Rectangle
 from matplotlib.path import Path as MPath
 from matplotlib.transforms import Affine2D
@@ -56,6 +58,7 @@ PILL_DEFAULT = "#D8C25A"  # PathBank's ATP-style radial gradient, flattened
 ICON_TEMPLATES = {"47", "49", "51", "52", "55", "56", "63", "64", "65"}  # 78x78 small-molecule icons
 NAMED = ("compound", "protein", "nucleic-acid", "element-collection", "sub-pathway")
 _ART = "pathbank_art"
+_TEXT_TO_PATH = TextToPath()
 TARGET_PX, MIN_SCALE, MAX_PX = 2400, 0.85, 8000  # see output_scale
 MARGIN = 40.0  # PWML units of background kept around the drawing
 
@@ -184,7 +187,10 @@ def _is_structure_box(w: float, h: float) -> bool:
 
 
 def _picture(data: bytes):
-    """A structure PNG as RGBA, its flat background made transparent and cropped to the drawing; ``None`` if unusable."""
+    """A structure PNG as RGBA, its flat background made transparent and cropped to the drawing; ``None`` if unusable
+    (checked on the PNG header before decoding, so a huge image never becomes a huge array)."""
+    if not _structures.png_ok(data):
+        return None
     try:
         a = mpimg.imread(io.BytesIO(data), format="png")
     except Exception:  # noqa: BLE001 - a broken cache file just means an empty box
@@ -213,15 +219,24 @@ def _draw_picture(ax, pic, x, y, w, h, z) -> None:
               interpolation="antialiased")
 
 
-def _wrap_chemical(text: str, per: int) -> List[str]:
+@lru_cache(maxsize=4096)
+def _text_width(text: str, size: float) -> float:
+    """Width of ``text`` in PWML units at font ``size`` (matplotlib's default font, measured, not estimated)."""
+    return _TEXT_TO_PATH.get_text_width_height_descent(text, FontProperties(size=size), ismath=False)[0]
+
+
+def _wrap_chemical(text: str, fits) -> List[str]:
     """Greedy wrap at spaces and after any hyphen ("2,3-dihydro-" / "2,3-dihydroxybenzoate"), which textwrap does
-    not break when a digit follows; a part longer than ``per`` stays whole (the caller shrinks the font)."""
+    not break when a digit follows. ``fits(line)`` says whether a line fits, or an int is a character budget; a part
+    that does not fit alone stays whole (the caller shrinks the font)."""
+    if isinstance(fits, int):
+        fits = (lambda per: lambda t: len(t) <= per)(fits)
     lines: List[str] = []
     cur = ""
     for word in text.split():
         for i, part in enumerate(re.findall(r"[^-]*-|[^-]+", word)):
             sep = "" if i else " "
-            if cur and len(cur) + len(sep) + len(part) > per:
+            if cur and not fits(cur + sep + part):
                 lines.append(cur)
                 cur = part
             else:
@@ -236,9 +251,8 @@ def _header_lines(name: str, w: float) -> Tuple[List[str], float]:
     body. We shrink only when a word is wider than the box, and stop at three lines."""
     s = 20.0
     while True:
-        per = max(1, int((w - 10) / (0.55 * s)))  # DejaVu Sans, mixed case: ~0.55 em per character
-        lines = _wrap_chemical(name, per) or [""]
-        if (len(lines) <= 3 and max(len(t) for t in lines) <= per) or s <= 9:
+        lines = _wrap_chemical(name, lambda t, s=s: _text_width(t, s) <= w - 10) or [""]
+        if (len(lines) <= 3 and max(_text_width(t, s) for t in lines) <= w - 10) or s <= 9:
             if len(lines) > 3:
                 lines = lines[:3]
                 lines[-1] = lines[-1][:-1] + "…"
