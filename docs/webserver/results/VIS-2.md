@@ -193,3 +193,18 @@ headless Edge from the reference SVGs). Side-by-side page: `C:/t/vis-pw2-work/co
 7. **Envelope membrane count.** The Gram-negative envelope adds membrane-visualization records (enterobactin: 1 -> 3),
    besides the drawable and zoom records the A/B rule names. They are visualization records only, as item 3 of the
    brief asked; confirm that this is acceptable.
+
+## 6. Review verdict and merge (orchestrator, 2026-11-26)
+
+- Independent ws-reviewer on `d4814ab1`: **APPROVE WITH NOTES**. It ran its own edge-case probe: the bacterial
+  envelope cannot be triggered by a mitochondrial or chloroplast outer membrane, art always sits below pathway content
+  (zindex), and every emitted field is one PathWhiz accepts. Notes carried to VIS-5: F1 TolC and TonB both sit
+  mid-envelope; F4 a Mycobacterium outer membrane would trigger the Gram-negative envelope; F5 `_shift_path` ignores
+  H/V/A path commands.
+- Merged as `aa34af70` = webserver/refactor `7084cb95` (VIS-4 merged) + `vis/organelle-art` `d4814ab1`, no conflicts,
+  in the detached worktree `C:/t/merge-vis2`. Lane flags unset.
+- Gates on `aa34af70` (`evidence/VIS-2/logs/merge-vis2-gates.log`, script `merge_vis2_inner.sh`, tree clean):
+  SMOKE **511 passed**; golden seams **2 / 8 / 4 / 24 passed**, unedited; equivalence **8 / 14 / 6 passed**;
+  vision **370 passed, 1 skipped**; web **83 passed**; `test_pwml_*` + writer fixes + replay corpus **311 passed**;
+  `test_render_*` **49 passed**; service + web **346 passed**. `BW_EXIT=0`, **FINAL SURVIVING COUNT 0**.
+- Pushed `aa34af70` to `webserver/refactor`. The open questions in section 5 stay open.
