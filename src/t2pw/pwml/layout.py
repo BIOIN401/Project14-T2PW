@@ -597,9 +597,10 @@ def _layered(blocks: Dict[Any, "_Block"], keys: List[Any], flow: List[Tuple[Any,
     for u in order:
         for v in dag[u]:
             layer[v] = max(layer[v], layer[u] + 1)
-    for u in reversed(order):  # a pure source sits just before its first successor
-        if not pred[u] and dag[u]:
-            layer[u] = min(layer[v] for v in dag[u]) - 1
+    for u in reversed(order):  # VIS-5: a node sits just before its first successor (a side chain joins where it is
+        # used instead of running a long edge from the left edge of the group; was: pure sources only)
+        if dag[u]:
+            layer[u] = max(layer[u], min(layer[v] for v in dag[u]) - 1)
     low = min(layer.values())
     n_layers = max(layer.values()) - low + 1
     cells: List[List[Any]] = [[] for _ in range(n_layers)]
@@ -669,7 +670,11 @@ def _layered(blocks: Dict[Any, "_Block"], keys: List[Any], flow: List[Tuple[Any,
         ins = [blocks[p] for p in pred[k] if layer[p] == layer[k] - 1]
         if blocks[k].virtual and ins:
             blocks[k].x = max(p.x + p.w for p in ins) - JUNCTION_W // 2 + 2
-            blocks[k].y = int(round(sum(p.y + p.h / 2 for p in ins) / len(ins) - blocks[k].h / 2))
+            cy = sum(p.y + p.h / 2 for p in ins) / len(ins)
+            if any(layer[o] == layer[k] - 1 and blocks[o] not in ins and blocks[o].y <= cy <= blocks[o].y + blocks[o].h
+                   for o in keys):  # the substrates' middle is another node: start at the first substrate instead
+                cy = ins[0].y + ins[0].h / 2
+            blocks[k].y = int(round(cy - blocks[k].h / 2))
     return x - HGAP, int(round(max(blocks[k].y + blocks[k].h for k in keys)))
 
 
@@ -1443,7 +1448,11 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
                 hubs_of_outer[st].add(hub)
     for st, want in by_outer.items():
         ks = by_state.get(st, [])
-        if style(st)[0] is not None or parent.get(st) is not None or set(ks) != set(want)                 or any(n not in on_membrane for k in ks for n in nbrs[k]):
+        t_hubs = {h for h, _ in transports}
+        if style(st)[0] is not None or parent.get(st) is not None or any(n not in t_hubs for k in ks for n in nbrs[k]):
+            continue
+        for k in ks:  # outside cargo of a transport whose transporter stays put: keeps its own x in the row
+            want.setdefault(k, [blocks[k].center()[0]])
             continue
         sx0, sy0, sx1, sy1 = rect_of_state[st]
         mems = [rect_of_state[m] for m in rect_of_state if style(m)[0] is not None]
@@ -1512,6 +1521,13 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
             s = "T" if oy < (r[1] + r[3]) / 2 else "B"
         return _side_point(r, s)
 
+    band_strips: Dict[Any, List[Tuple[int, int, int, int]]] = {}
+    for st, (x0, y0, x1, y1) in band_rects:
+        tpl, gap = style(st)
+        if tpl is not None:
+            t = (3 if tpl in THIN_TEMPLATES else BAND_STROKE // 2) + 5
+            band_strips[st] = [(x0 - t, y0 - t, x1 + t, y0 + t + gap), (x0 - t, y1 - t - gap, x1 + t, y1 + t),
+                               (x0 - t, y0 - t, x0 + t + gap, y1 + t), (x1 - t - gap, y0 - t, x1 + t, y1 + t)]
     bound = (width, height)
     drawn: List[List[Tuple[float, float]]] = []  # visible edges drawn so far, as sampled polylines
     plain: Dict[Tuple[Any, Any], Any] = {}  # (start block, end block) -> chosen ends of a curve with no hub end
@@ -1526,6 +1542,9 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
             _set_arrow_paths(e, p0, c1, p3, c2)
             continue
         obstacles = [r for r in all_rects if r not in member_rects[a] and r not in member_rects[b]]
+        # VIS-5: an edge between two nodes inside a box does not leave it through its membrane band
+        common = set(anc.get(blocks[a].state, [])) & set(anc.get(blocks[b].state, []))             if edge_role.get(eid, ("",))[0] != "t" and a not in on_membrane and b not in on_membrane else set()
+        obstacles = obstacles + [q for st in common for q in band_strips.get(st, [])]
         fa, fb = hub_end(eid, a, rb), hub_end(eid, b, ra)
         ends_a = [fa] if fa else [_side_point(ra, s) for s in _facing_sides(ra, *(fb[0] if fb else ((rb[0] + rb[2]) / 2, (rb[1] + rb[3]) / 2)))]
         ends_b = [fb] if fb else [_side_point(rb, s) for s in _facing_sides(rb, *(ends_a[0][0]))]
