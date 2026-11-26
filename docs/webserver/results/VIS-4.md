@@ -169,3 +169,21 @@ Gates on `067cb575` (`evidence/VIS-4/logs/vis4-review.log`, holder `vis4`, tree 
 (`test_render_pathbank.py` + `test_render_structures.py`) **49 passed**; `test_service_run_pathway.py` **107 passed**;
 render round r5 15 of 15; `BW_EXIT=0`, **FINAL SURVIVING COUNT 0**. SMOKE and the full gates: the orchestrator runs
 them on the merge result.
+
+## 9. Review verdict and merge (orchestrator, 2026-11-26)
+
+- Re-review of `067cb575` by an independent ws-reviewer: **APPROVE WITH NOTES**. R1: `tests/conftest.py` changed, so
+  SMOKE must run on the merge result (done below). R3: the autouse fixture sets the budget to 0 but not the cache dir;
+  tests that pass their own budget must also pass their own cache dir (carried to VIS-5).
+- Merged as `bae69502` = webserver/refactor `68f7c6e4` + `vis/render-structures` `9441ef80`, no conflicts, in the
+  detached worktree `C:/t/merge-vis4`. Lane flags unset, `T2PW_RESULT_RENDER` unset (the new render stays off).
+- First gate run was killed by the machine reboot at 11:30 (empty log, no result); rerun from scratch.
+- Gates on `bae69502` (`evidence/VIS-4/logs/merge-vis4-gates.log`, script `merge_vis4_inner.sh`, tree clean):
+  SMOKE **511 passed**; golden seams **2 / 8 / 4 / 24 passed**, unedited; equivalence **8 / 14 / 6 passed**;
+  vision **370 passed, 1 skipped**; web **83 passed**; `test_pwml_*` + writer fixes + replay corpus **305 passed**;
+  `test_render_*` **49 passed**; `test_service_run_pathway.py` + `test_web_*` **346 passed**. `BW_EXIT=0`,
+  **FINAL SURVIVING COUNT 0**.
+- Pushed `bae69502` to `webserver/refactor`.
+- Visual verdict from the product owner the same day: the renders are not good enough yet (empty structure boxes,
+  sparse canvas, small labels, loops and long crossings). The renderer draws PathBank's own PWMLs faithfully, so the
+  remaining work is in our PWML layout. Carried to VIS-5 (`vis/layout-iter`).
