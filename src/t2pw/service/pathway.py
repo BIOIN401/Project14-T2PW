@@ -59,6 +59,8 @@ KIND_UNKNOWN = "unknown"
 
 #: The diagram the review step renders, saved beside the reports (Q-R5-1).
 IMAGE_NAME = "pathway.png"
+PATHBANK_MARKER = "pathway.png.pathbank"  # VIS-6: empty file beside the image when the PathBank-style render drew it (credits)
+STRUCTURE_SAFETY_S = 5.0  # VIS-6: deadline seconds kept free after the structure fetch
 
 
 @dataclass(frozen=True)
@@ -573,10 +575,14 @@ def run_pathway(request: PathwayRequest) -> PathwayResult:
     record = out_dir / bridge.OUTCOME_NAME  # the bridge adds bridge_files[].error (an OSError text with its path) as it writes
     _rescrub_json_file(record, out_dir)
     result.attempt_log = [{**row, "runner": "t2pw.service.pathway.run_pathway"} for row in result.attempt_log]
-    png = _pathbank_png(result.pwml_path, deadline) or state.get("refinement_graph_bytes")
+    pb_png = _pathbank_png(result.pwml_path, deadline)
+    png = pb_png or state.get("refinement_graph_bytes")
     if isinstance(png, (bytes, bytearray)) and png:
         try:
             (out_dir / IMAGE_NAME).write_bytes(bytes(png))
+            (out_dir / PATHBANK_MARKER).unlink(missing_ok=True)
+            if pb_png:
+                (out_dir / PATHBANK_MARKER).touch()
             result.image_path = out_dir / IMAGE_NAME
         except OSError:
             result.warnings.append("the pathway diagram could not be written")
@@ -593,7 +599,11 @@ def _pathbank_png(pwml_path: Optional[Path], deadline: Optional[float] = None) -
         return None
     try:
         from t2pw.render import pathbank
-        return pathbank.render_pwml(pwml_path)
+        budget = None  # no deadline: the renderer's default
+        if deadline is not None:  # fetch for at most what the deadline leaves, minus a margin; 0 = cache only
+            from t2pw.render import structures
+            budget = max(0.0, min(structures.default_budget(), deadline - time.time() - STRUCTURE_SAFETY_S))
+        return pathbank.render_pwml(pwml_path, structure_budget_s=budget)
     except Exception:  # noqa: BLE001 - any render failure falls back to the draft graph
         import logging
         logging.getLogger(__name__).warning("PathBank render of %s failed; using the draft graph", Path(pwml_path).name,

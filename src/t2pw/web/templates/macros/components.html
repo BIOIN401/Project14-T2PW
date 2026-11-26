@@ -250,9 +250,11 @@
 
 {#- Figure (W6): an image with a caption. `src` must be a server-built URL and
     `alt` is required text (escaped). -#}
-{% macro figure(src, alt, caption=None) -%}
+{% macro figure(src, alt, caption=None, link=false) -%}
 <figure class="figure">
-  <img class="figure__img" src="{{ src }}" alt="{{ alt }}">
+  {%- if link %}<a href="{{ src }}" target="_blank" rel="noopener"><img class="figure__img" src="{{ src }}" alt="{{ alt }}"></a>
+  {%- else %}
+  <img class="figure__img" src="{{ src }}" alt="{{ alt }}">{% endif %}
   {%- if caption %}
   <figcaption class="figure__caption">{{ caption }}</figcaption>
   {%- endif %}

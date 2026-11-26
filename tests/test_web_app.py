@@ -542,3 +542,27 @@ def test_all_x_forwarded_for_lines_are_used(tmp_path):
     assert again.status_code == 429
     other = s.submit(headers=[("x-forwarded-for", "2.2.2.2"), ("x-forwarded-for", "203.0.113.8")])
     assert other.status_code == 303
+
+
+@pytest.mark.parametrize("pathbank", [False, True])
+def test_result_page_pathbank_image_links_full_size_and_credits(site, pathbank):
+    """VIS-6: the PathBank-style image (by the marker file beside it) links to itself and carries the credits; the draft graph does not."""
+    sid = site.new_job()
+    st = site.store()
+    item = st.claim_next(3600)
+    name = "pathway.png"
+    for rel, data in {"pathway.pwml": b"<pwml/>", name: PNG, **({"pathway.png.pathbank": b""} if pathbank else {})}.items():
+        p = site.work / f"item-{item['id']}" / "attempt-1" / "out" / rel
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_bytes(data)
+    d = result_to_dict(PathwayResult(status="pass"))
+    d.update(release_status={"status": "release_ready"}, pwml_path=site.out(item["id"], "pathway.pwml"),
+             image_path=site.out(item["id"], name))
+    st.finish(item["id"], 1, d, 0)
+    html = site.client.get(f"/job/{sid}/0").text
+    href = f"/job/{sid}/0/file/image"
+    assert (f'<a href="{href}" target="_blank"' in html) is pathbank
+    assert ("Click to open full size" in html) is pathbank
+    assert ("Organelle and cell art: PathBank / PathWhiz. Structures: PubChem." in html) is pathbank
+    assert "Rendered from the PWML above." in html
+    st.close()
