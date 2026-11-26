@@ -456,8 +456,8 @@ def _curve(p0, n0, p3, n3, ratio: float = 0.25, bound: Optional[Tuple[int, int]]
     return f"M{p0[0]} {p0[1]} C{c1[0]} {c1[1]} {c2[0]} {c2[1]} {p3[0]} {p3[1]}", c1, c2
 
 
-BEND_OFFSETS = (90, -90, 180, -180, 300, -300, 450, -450)
-VIA_PAD = 60  # VIS-5: a bent edge passes this far off the side of the box it goes round  # VIS-5: how far a bent edge's middle leaves the chord
+BEND_OFFSETS = (90, -90, 180, -180, 300, -300, 450, -450)  # VIS-5: how far a bent edge's middle leaves the chord
+VIA_PAD = 60  # VIS-5: a bent edge passes this far off the side of the box it goes round
 
 
 def _bend(p0, n0, p3, n3, off: float, bound: Optional[Tuple[int, int]] = None, via: Optional[Tuple[int, int]] = None):
@@ -1168,7 +1168,8 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
         """VIS-5 (STRUCTURE_DIFF G2): PathBank writes the name of a compartment with its own membrane ON that membrane
         line; the inside of the cell (cytoplasm) keeps its label inside the box."""
         text = labels.get(st, "")
-        return bool(text) and style(st)[0] is not None and kinds.get(st) != "cytoplasm" and not envelope(st)             and len(label_parts(text)) == 1
+        return bool(text) and style(st)[0] is not None and kinds.get(st) != "cytoplasm" and not envelope(st) \
+            and len(label_parts(text)) == 1
 
     def pad_top(st):
         text = labels.get(st, "")
@@ -1616,7 +1617,8 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
             continue
         obstacles = [r for r in all_rects if r not in member_rects[a] and r not in member_rects[b]]
         # VIS-5: an edge between two nodes inside a box does not leave it through its membrane band
-        common = set(anc.get(blocks[a].state, [])) & set(anc.get(blocks[b].state, []))             if edge_role.get(eid, ("",))[0] != "t" and a not in on_membrane and b not in on_membrane else set()
+        common = set(anc.get(blocks[a].state, [])) & set(anc.get(blocks[b].state, [])) \
+            if edge_role.get(eid, ("",))[0] != "t" and a not in on_membrane and b not in on_membrane else set()
         obstacles = obstacles + [q for st in common for q in band_strips.get(st, [])]
         fa, fb = hub_end(eid, a, rb), hub_end(eid, b, ra)
         ends_a = [fa] if fa else [_side_point(ra, s) for s in _facing_sides(ra, *(fb[0] if fb else ((rb[0] + rb[2]) / 2, (rb[1] + rb[3]) / 2)))]
