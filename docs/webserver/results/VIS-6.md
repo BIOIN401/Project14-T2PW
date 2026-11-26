@@ -30,3 +30,21 @@ not offered for download.
 ## Open questions
 1. Marker file beside the image vs. a flag in the persisted result (would need `jobs.result_to_dict`, outside the boundary).
 2. Server needs outbound HTTPS to PubChem and a writable `T2PW_STRUCTURE_CACHE` (VIS-4 q3).
+
+## Review verdict and merge (orchestrator, 2026-11-26)
+
+- Independent ws-reviewer on `127b4b0e` (code `d373b28a`): **APPROVE WITH NOTES**. F1: with the flag off the page is
+  not byte-identical as claimed above; the new `if/else` tags add two newlines (no visible change; the `figure` macro
+  itself is byte-identical). F2: `views.py:343` spells out `pathway.png.pathbank` instead of importing
+  `pathway.PATHBANK_MARKER`. F3: no `run_pathway` test of the marker life cycle; an `OSError` from `touch()` after
+  the PNG is written would drop the image (flag on only, job does not fail). F4: `focused.log` has no HEAD stamp.
+  All four go to a follow-up; none blocks.
+- Merged as `3e0cb627` = webserver/refactor `aa34af70` (VIS-2 merged) + `vis/result-switch` `127b4b0e`, no
+  conflicts, in the detached worktree `C:/t/merge-vis6`. Lane flags and `T2PW_RESULT_RENDER` unset.
+- Gates on `3e0cb627` (`evidence/VIS-6/logs/merge-vis6-gates.log`, script `merge_vis6_inner.sh`, tree clean):
+  SMOKE **511 passed**; golden seams **2 / 8 / 4 / 24 passed**, unedited; equivalence **8 / 14 / 6 passed**;
+  vision **370 passed, 1 skipped**; web **85 passed**; pwml **311 passed**; render **49 passed**; service
+  (`test_service_run_pathway.py`, `test_service_result_render.py`, `test_web_*`) **350 passed**. `BW_EXIT=0`,
+  **FINAL SURVIVING COUNT 0**.
+- Two docs-only commits had landed on webserver/refactor meanwhile; merged in (`482b3096`, no file outside `docs/`
+  changed) and pushed as `482b3096`.
