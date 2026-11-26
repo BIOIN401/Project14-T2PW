@@ -95,12 +95,11 @@ def test_arrow_options_read_both_encodings(mini: Path):
     assert pathbank._arrow_options(edges["2"]) == {"end_arrow": True, "start_flat_arrow": False}
 
 
-def test_parse_names_roles_hidden_and_unknown_art(mini: Path):
+def test_parse_names_hidden_and_unknown_art(mini: Path):
     root = pathbank.read_xml_with_repairs(str(mini))
-    names, _ = pathbank._definitions(root)
+    names = pathbank._definitions(root)
     assert names[("compound", "8")] == ("Adenosine triphosphate", "ATP")
     assert names[("protein", "7")] == ("Alanine aminotransferase", "GPT")
-    assert pathbank._edge_roles(pathbank.find_first_visualization(root), {}) == {"2": "transport"}
     items, w, h = _model(mini)
     # 3 edges + 2 visible compounds + 1 protein + 1 known image (id 987654 skipped) + membrane + label + zoom
     assert len(items) == 10
@@ -170,3 +169,87 @@ def test_flag_on_falls_back_when_pwml_missing_or_broken(monkeypatch, tmp_path: P
     if make == "broken":
         path.write_text("<super-pathway-visualization><unclosed>", encoding="utf-8")
     assert pathway._pathbank_png(path) is None
+
+
+def test_flag_on_skips_the_render_once_the_deadline_has_passed(monkeypatch, mini: Path):
+    import time
+
+    monkeypatch.setenv("T2PW_RESULT_RENDER", "pathbank")
+    assert pathway._pathbank_png(mini, time.time() + 600).startswith(PNG_MAGIC)
+    monkeypatch.setattr(pathbank, "render_pwml", lambda *a, **k: pytest.fail("rendered after the deadline"))
+    assert pathway._pathbank_png(mini, time.time() - 1) is None
+
+
+# -- edge colour is the template's, never a role (PathBank: 591/591 template-5 edges are gold) -----------
+
+EDGES_ONLY = """<?xml version="1.0"?>
+<super-pathway-visualization><pathway-visualization-contexts><pathway-visualization-context><pathway-visualization>
+ <height>500</height><width>500</width>
+ <edges>
+  <edge><id>1</id><path>M10 10 L100 10</path><visualization-template-id>148</visualization-template-id><zindex>18</zindex></edge>
+  <edge><id>2</id><path>M10 20 L100 20</path><visualization-template-id>149</visualization-template-id><zindex>18</zindex></edge>
+  <edge><id>3</id><path>M10 30 L100 30</path><visualization-template-id>5</visualization-template-id><zindex>18</zindex></edge>
+  <edge><id>4</id><path>M10 40 L100 40</path><visualization-template-id>83</visualization-template-id><zindex>18</zindex></edge>
+  <edge><id>5</id><path>M10 50 L100 50</path><visualization-template-id>5</visualization-template-id><zindex>18</zindex></edge>
+ </edges>
+ <transport-visualizations><transport-visualization><id>1</id><transport_compound_visualizations>
+  <transport-compound-visualization><id>1</id><edge-id>4</edge-id></transport-compound-visualization>
+  <transport-compound-visualization><id>2</id><edge-id>5</edge-id></transport-compound-visualization>
+ </transport_compound_visualizations></transport-visualization></transport-visualizations>
+ <interaction-visualizations><interaction-visualization><id>1</id><interaction-id>9</interaction-id>
+  <interaction_protein_complex_visualizations><interaction-protein-complex-visualization><id>1</id><edge-id>3</edge-id>
+  </interaction-protein-complex-visualization></interaction_protein_complex_visualizations></interaction-visualization>
+ </interaction-visualizations>
+ <interactions><interaction><id>9</id><interaction-type>Inhibition</interaction-type></interaction></interactions>
+</pathway-visualization></pathway-visualization-context></pathway-visualization-contexts></super-pathway-visualization>
+"""
+
+
+def test_edge_colour_comes_from_the_template_only(tmp_path: Path):
+    from matplotlib.colors import to_rgba
+    from matplotlib.figure import Figure
+
+    p = tmp_path / "edges.pwml"
+    p.write_text(EDGES_ONLY, encoding="utf-8")
+    items, _, _ = _model(p)
+    colours = []
+    for _, _, draw in items:
+        ax = Figure().add_subplot()
+        draw(ax)
+        colours.append(ax.patches[0].get_edgecolor())
+    want = ["#FF0000",  # 148 inhibition: red
+            "#2AC5E5",  # 149 activation: cyan
+            pathbank.GOLD,  # template 5 on an Inhibition interaction: still gold
+            "#44ee22",  # 83 transport: green
+            pathbank.GOLD]  # template 5 on a transport: gold, as PathWhiz draws it
+    assert colours == [to_rgba(c) for c in want]
+
+
+# -- the run_pathway tail that writes out/pathway.png ---------------------------------------------------
+
+def test_run_pathway_writes_the_pathbank_render_with_the_flag_on(monkeypatch, tmp_path: Path):
+    from test_service_run_pathway import World, _run
+
+    World(monkeypatch, tmp_path)
+    monkeypatch.setenv("T2PW_RESULT_RENDER", "pathbank")
+    seen = []
+    monkeypatch.setattr(pathbank, "render_pwml", lambda path, *a, **k: seen.append(Path(path)) or b"NEW-PNG")
+    res = _run(tmp_path)
+    assert seen == [res.pwml_path]
+    assert res.image_path == tmp_path / "out" / pathway.IMAGE_NAME
+    assert res.image_path.read_bytes() == b"NEW-PNG"
+
+
+@pytest.mark.parametrize("flag", ["pathbank", "off"])
+def test_run_pathway_keeps_the_draft_graph_when_the_render_raises_or_the_flag_is_off(monkeypatch, tmp_path, flag):
+    from test_service_run_pathway import World, _run
+
+    World(monkeypatch, tmp_path)
+    monkeypatch.setenv("T2PW_RESULT_RENDER", flag)
+
+    def boom(*a, **k):
+        raise RuntimeError("render failed")
+
+    monkeypatch.setattr(pathbank, "render_pwml", boom)
+    res = _run(tmp_path)
+    assert res.image_path.read_bytes() == b"\x89PNG"  # World's refinement_graph_bytes, unchanged

@@ -573,7 +573,7 @@ def run_pathway(request: PathwayRequest) -> PathwayResult:
     record = out_dir / bridge.OUTCOME_NAME  # the bridge adds bridge_files[].error (an OSError text with its path) as it writes
     _rescrub_json_file(record, out_dir)
     result.attempt_log = [{**row, "runner": "t2pw.service.pathway.run_pathway"} for row in result.attempt_log]
-    png = _pathbank_png(result.pwml_path) or state.get("refinement_graph_bytes")
+    png = _pathbank_png(result.pwml_path, deadline) or state.get("refinement_graph_bytes")
     if isinstance(png, (bytes, bytearray)) and png:
         try:
             (out_dir / IMAGE_NAME).write_bytes(bytes(png))
@@ -583,11 +583,13 @@ def run_pathway(request: PathwayRequest) -> PathwayResult:
     return result
 
 
-def _pathbank_png(pwml_path: Optional[Path]) -> Optional[bytes]:
+def _pathbank_png(pwml_path: Optional[Path], deadline: Optional[float] = None) -> Optional[bytes]:
     """VIS-3: with ``T2PW_RESULT_RENDER=pathbank`` (read per call) the result image is a PathBank-style render of
-    the run's own PWML. ``None`` when the flag is off, there is no PWML or the render fails; the caller then keeps
-    the draft-graph picture, so the picture never fails a job."""
+    the run's own PWML. ``None`` when the flag is off, there is no PWML, the run's (graced) deadline has already
+    passed, or the render fails; the caller then keeps the draft-graph picture, so the picture never fails a job."""
     if os.environ.get("T2PW_RESULT_RENDER", "").strip().lower() != "pathbank" or not pwml_path:
+        return None
+    if deadline is not None and time.time() >= deadline:
         return None
     try:
         from t2pw.render import pathbank

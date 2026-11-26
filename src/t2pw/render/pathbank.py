@@ -35,8 +35,6 @@ GOLD = "#ffc500"
 # edge template -> (colour, stroke); template 5 is the plain reaction edge, 83 transport
 EDGE_STYLE = {"5": (GOLD, 9), "83": ("#44ee22", 9), "148": ("#FF0000", 9), "149": ("#2AC5E5", 9),
               "195": ("#000000", 2), "218": ("#000000", 5)}
-# what a plain (template 5) edge is drawn as when its role says more: PathBank draws these with 83/148/149
-ROLE_COLOUR = {"transport": "#44ee22", "inhibition": "#FF0000", "activation": "#2AC5E5"}
 # membrane template -> (colour, band width); PathWhiz draws an unknown template like 1 (Plasma Membrane)
 MEMBRANE_STYLE = {"1": ("#4BC8F2", 50), "84": ("#FF0000", 50), "91": ("#EE9189", 50), "92": ("#AED02A", 50),
                   "93": ("#FEF935", 50), "94": ("#DDB0FD", 50), "95": ("#92130A", 50), "146": ("#FF7000", 50),
@@ -80,6 +78,8 @@ def _num(k: Dict[str, Any], name: str, default: float = 0.0) -> float:
         return default
 
 
+# ponytail: unbounded cache; ceiling ~82 MiB (all 41 images as float32 RGBA, measured). Fine for a per-job worker
+# child; bound it (maxsize=8) if the worker becomes long-lived.
 @lru_cache(maxsize=None)
 def _art(image_id: str):
     """PathBank's raster of one drawable image, or ``None`` for an id we do not have."""
@@ -236,41 +236,21 @@ def _sub_pathway(ax, x, y, tpl, name, z):
 
 # -- the picture ------------------------------------------------------------------------------------------
 
-def _definitions(root) -> Tuple[Dict[Tuple[str, str], Tuple[str, str]], Dict[str, str]]:
+def _definitions(root) -> Dict[Tuple[str, str], Tuple[str, str]]:
     names: Dict[Tuple[str, str], Tuple[str, str]] = {}
-    interaction_type: Dict[str, str] = {}
     for el in root.iter():
         t = _local(el.tag)
-        if t in NAMED or t == "interaction":
+        if t in NAMED:
             k = _kids(el)
             i = _txt(k, "id")
-            if t == "interaction":
-                interaction_type.setdefault(i, _txt(k, "interaction-type").lower())
-            elif i:
-                name = _txt(k, "altext" if t == "sub-pathway" else "name")  # a sub-pathway's name is its altext
-                if name:
-                    names.setdefault((t, i), (name, _txt(k, "short-name") or _txt(k, "gene-name")))
-    return names, interaction_type
-
-
-def _edge_roles(vis, interaction_type: Dict[str, str]) -> Dict[str, str]:
-    roles: Dict[str, str] = {}
-    for el in vis.iter():
-        t = _local(el.tag)
-        if t not in ("transport-visualization", "interaction-visualization"):
-            continue
-        role = "transport"
-        if t == "interaction-visualization":
-            role = interaction_type.get(_txt(_kids(el), "interaction-id"), "")
-        for sub in el.iter():
-            if _local(sub.tag) == "edge-id" and sub.text and role in ROLE_COLOUR:
-                roles.setdefault(sub.text.strip(), role)
-    return roles
+            name = _txt(k, "altext" if t == "sub-pathway" else "name")  # a sub-pathway's name is its altext
+            if i and name:
+                names.setdefault((t, i), (name, _txt(k, "short-name") or _txt(k, "gene-name")))
+    return names
 
 
 def _items(root, vis) -> Tuple[List[Tuple[float, int, Callable[[Any], None]]], float, float]:
-    names, itype = _definitions(root)
-    roles = _edge_roles(vis, itype)
+    names = _definitions(root)
     items: List[Tuple[float, int, Callable[[Any], None]]] = []
     ext = [0.0, 0.0]
 
@@ -297,9 +277,7 @@ def _items(root, vis) -> Tuple[List[Tuple[float, int, Callable[[Any], None]]], f
                 add(z, lambda ax, mp=mp, c=colour, lw=width, z=z: ax.add_patch(
                     PathPatch(mp, fill=False, ec=c, lw=lw, zorder=z, capstyle="butt")), bx[0], bx[1])
                 continue
-            colour, width = EDGE_STYLE.get(tpl, EDGE_STYLE["5"])
-            if tpl in ("", "5") and _txt(k, "id") in roles:
-                colour = ROLE_COLOUR[roles[_txt(k, "id")]]
+            colour, width = EDGE_STYLE.get(tpl, EDGE_STYLE["5"])  # strictly by template, as PathWhiz draws it
             add(z, lambda ax, mp=mp, c=colour, lw=width, opts=_arrow_options(el), z=z:
                 _draw_edge(ax, mp, c, lw, opts, z), bx[0], bx[1])
         elif t == "compound-location":
