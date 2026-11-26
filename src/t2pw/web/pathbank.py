@@ -206,9 +206,10 @@ def files_root() -> Optional[Path]:
 
 
 def local_file(root: Optional[Path], kind: str, pw_id: str) -> Optional[Path]:
-    """PathBank's own SVG (``kind="svg"``) or PWML (``"pwml"``) for ``pw_id``, if mirrored."""
+    """PathBank's own SVG (``kind="svg"``: the full-colour drawing PathBank shows by default, else
+    the simple one) or PWML (``"pwml"``) for ``pw_id``, if mirrored."""
     if root is None or not PW_RE.fullmatch(pw_id or ""):
         return None
-    sub, ext = {"svg": ("simple_vector_images", ".svg"), "pwml": ("pwml_markups", ".pwml")}[kind]
-    p = root / sub / (pw_id + ext)
-    return p if p.is_file() else None
+    subs = {"svg": ("full_vector_images", "simple_vector_images"), "pwml": ("pwml_markups",)}[kind]
+    ext = ".svg" if kind == "svg" else ".pwml"
+    return next((p for p in (root / s / (pw_id + ext) for s in subs) if p.is_file()), None)

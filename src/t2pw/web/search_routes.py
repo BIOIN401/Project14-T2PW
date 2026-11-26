@@ -117,7 +117,8 @@ def register(app: FastAPI, page: Callable[..., Any], cross_site: Callable[[Reque
             return pathway_page(request, hits[0], route.query, others=hits[1:])
         others = []
         if route.organism is not None:  # nothing for this organism: does PathBank draw it for others?
-            others = [h for h in idx.search(route.pathway_name) if h.score >= 0.8]
+            shown = {h.pw_id for h in hits}
+            others = [h for h in idx.search(route.pathway_name) if h.score >= 0.8 and h.pw_id not in shown]
         org = route.organism.label if route.organism else ""
         return run_form(request, view="choices" if hits else "run", kind="name", query=route.query,
                         pathway=route.pathway_name, organism=org,

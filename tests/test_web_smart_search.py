@@ -204,6 +204,10 @@ def test_local_files_only_by_valid_id(tmp_path):
     assert pathbank.local_file(tmp_path, "svg", "PW000001") is None
     assert pathbank.local_file(tmp_path, "pwml", "../PW000001") is None
     assert pathbank.local_file(None, "pwml", "PW000001") is None
+    for sub in ("simple_vector_images", "full_vector_images"):  # the full-colour drawing wins
+        (tmp_path / sub).mkdir()
+        (tmp_path / sub / "PW000001.svg").write_text("<svg/>")
+        assert pathbank.local_file(tmp_path, "svg", "PW000001").parent.name == sub
 
 
 # -- web routes --------------------------------------------------------------------------
@@ -281,7 +285,7 @@ def test_several_matches_offer_a_choice(tmp_path, index):
     site = Site(tmp_path, index)
     r = site.client.post("/search", data={"q": "glycolysis in Saccharomyces cerevisiae"})
     assert r.status_code == 200 and "PathBank pathways for" in r.text
-    assert 'href="/pathbank/PW002386?q=' in r.text and "Glycolysis I" in r.text
+    assert r.text.count('href="/pathbank/PW002386?q=') == 1 and "Glycolysis I" in r.text  # not listed twice
     assert "Drawn by PathBank for other organisms" in r.text and "/pathbank/PW000146?q=" in r.text
     assert site.jobs() == 0
 
