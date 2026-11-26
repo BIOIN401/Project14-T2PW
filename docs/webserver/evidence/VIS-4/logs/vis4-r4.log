@@ -1,0 +1,86 @@
+== round r4
+TREE C:/t/vis-pw4
+wrote C:\t\vis-pw4-work\r4\PW000001.png 566957 bytes 0.36s
+wrote C:\t\vis-pw4-work\r4\PW000017.png 974067 bytes 0.45s
+wrote C:\t\vis-pw4-work\r4\PW000779.png 752654 bytes 0.58s
+wrote C:\t\vis-pw4-work\r4\PW012911.png 913337 bytes 0.39s
+wrote C:\t\vis-pw4-work\r4\PW127049.png 6056475 bytes 2.87s
+wrote C:\t\vis-pw4-work\r4\ent-item6-final2.png 226964 bytes 0.21s
+wrote C:\t\vis-pw4-work\r4\ent-item6-base.png 245106 bytes 0.31s
+wrote C:\t\vis-pw4-work\r4\chlorophyll.png 540139 bytes 0.54s
+wrote C:\t\vis-pw4-work\r4\lipid-a.png 816277 bytes 0.66s
+wrote C:\t\vis-pw4-work\r4\ceramide-sphingolipid.png 256605 bytes 0.25s
+wrote C:\t\vis-pw4-work\r4\coenzyme-a.png 248000 bytes 0.30s
+wrote C:\t\vis-pw4-work\r4\menaquinone.png 228474 bytes 0.28s
+wrote C:\t\vis-pw4-work\r4\furochromone.png 170618 bytes 0.18s
+wrote C:\t\vis-pw4-work\r4\sour-taste.png 148811 bytes 0.10s
+wrote C:\t\vis-pw4-work\r4\enterobactin.png 221142 bytes 0.19s
+ROUND_DONE
+HEAD 20db38d0e2e1b621c20fe10aaca4113ca1010dbb
+STATUS_BEGIN
+STATUS_END
+== render
+T2PW: C:\t\vis-pw4\src\t2pw\__init__.py
+.......................................                                  [100%]
+39 passed in 10.29s
+EXIT_render=0
+== service
+T2PW: C:\t\vis-pw4\src\t2pw\__init__.py
+........................................................................ [ 67%]
+...................................                                      [100%]
+107 passed in 5.01s
+EXIT_service=0
+== web
+T2PW: C:\t\vis-pw4\src\t2pw\__init__.py
+........................................................................ [ 30%]
+........................................................................ [ 60%]
+........................................................................ [ 90%]
+.......................                                                  [100%]
+239 passed in 43.31s
+EXIT_web=0
+FOCUSED_DONE
+== svg
+wrote C:\t\vis-pw4-work\svg\ent-item6.svg 140039 bytes 0.26s
+wrote C:\t\vis-pw4-work\svg\PW000001.svg 513585 bytes 0.27s
+== timing
+ent-item6: no-fetch(budget 0)   0.18s  png 177 KB  cids 7  cached pictures 0
+ent-item6: cold                 2.10s  png 221 KB  cids 7  cached pictures 7
+ent-item6: warm                 0.21s  png 221 KB  cids 7  cached pictures 7
+ent-item6: warm2                0.21s  png 221 KB  cids 7  cached pictures 7
+lipid-a: no-fetch(budget 0)   0.61s  png 730 KB  cids 15  cached pictures 0
+lipid-a: cold                 4.77s  png 797 KB  cids 15  cached pictures 10
+lipid-a: warm                 0.65s  png 797 KB  cids 15  cached pictures 10
+lipid-a: warm2                0.72s  png 797 KB  cids 15  cached pictures 10
+chlorophyll: no-fetch(budget 0)   0.50s  png 466 KB  cids 11  cached pictures 0
+chlorophyll: cold                 3.88s  png 527 KB  cids 11  cached pictures 9
+chlorophyll: warm                 0.53s  png 527 KB  cids 11  cached pictures 9
+chlorophyll: warm2                0.52s  png 527 KB  cids 11  cached pictures 9
+JOB_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 68f7c6e48bee063dcece70cae5c57da15aa49ec8  [git, worktree dirty=True]
+label                   : vis4-r4
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/vis-pw4-work/job.sh r4 +focused c +svg +timing
+cwd                     : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 371828 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 1800 s
+duration                : 86.61 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 138  373156:bash.exe, 373700:bash.exe, 367544:bash.exe, 370248:bash.exe, 373280:bash.exe, 371804:python.exe, 372420:python.exe, 374552:bash.exe, 374576:bash.exe, 374596:bash.exe, 374716:bash.exe, 373772:bash.exe, 373832:python.exe, 373856:python.exe, 372232:python.exe, 372524:bash.exe, 374488:python.exe, 371324:python.exe, 371768:bash.exe, 374180:python.exe, 373880:python.exe, 374308:python.exe, 373016:python.exe, 374664:python.exe, 365300:python.exe, 374528:python.exe, 366088:python.exe, 373908:python.exe, 370112:python.exe, 373596:python.exe, 374292:python.exe, 365536:python.exe, 365420:python.exe, 370876:python.exe, 366740:python.exe, 370808:python.exe, 365680:python.exe, 369628:python.exe, 373820:python.exe, 374436:python.exe, 373476:python.exe, 374780:python.exe, 370120:python.exe, 373468:python.exe, 374340:python.exe, 374400:python.exe, 374112:python.exe, 374480:python.exe, 369624:python.exe, 374328:python.exe, 362764:python.exe, 373140:python.exe, 373128:python.exe, 373984:python.exe, 366472:python.exe, 368792:python.exe, 362080:python.exe, 373960:python.exe, 373160:python.exe, 369876:python.exe, 373168:python.exe, 373904:python.exe, 368564:python.exe, 374760:python.exe, 370212:python.exe, 374152:python.exe, 356056:python.exe, 367668:python.exe, 341812:python.exe, 369476:python.exe, 371984:python.exe, 372360:python.exe, 368204:python.exe, 374100:python.exe, 363952:python.exe, 373900:python.exe, 372236:python.exe, 374044:python.exe, 364564:python.exe, 373204:python.exe, 349896:python.exe, 372356:python.exe, 365212:tasklist.exe, 374584:python.exe, 370540:python.exe, 371728:python.exe, 369692:python.exe, 367652:python.exe, 364132:python.exe, 372444:python.exe, 341676:python.exe, 374264:python.exe, 372412:python.exe, 374732:python.exe, 372536:python.exe, 370216:python.exe, 369044:python.exe, 374588:python.exe, 375560:python.exe, 375572:python.exe, 375600:python.exe, 375612:python.exe, 375796:python.exe, 374800:python.exe, 372532:python.exe, 375780:python.exe, 363936:python.exe, 374640:python.exe, 372072:python.exe, 372928:python.exe, 373636:python.exe, 374940:python.exe, 375076:python.exe, 375096:python.exe, 375244:python.exe, 375272:python.exe, 375088:python.exe, 375228:python.exe, 375276:python.exe, 375280:python.exe, 373464:python.exe, 375128:python.exe, 368000:python.exe, 372152:python.exe, 372956:python.exe, 375436:python.exe, 373520:python.exe, 375432:python.exe, 363980:python.exe, 372564:python.exe, 373784:python.exe, 375524:python.exe, 370136:bash.exe, 375748:python.exe, 375768:python.exe, 359932:bash.exe, 374392:python.exe, 373580:python.exe
+descendants terminated  : 138  341676, 341812, 349896, 356056, 359932, 362080, 362764, 363936, 363952, 363980, 364132, 364564, 365212, 365300, 365420, 365536, 365680, 366088, 366472, 366740, 367544, 367652, 367668, 368000, 368204, 368564, 368792, 369044, 369476, 369624, 369628, 369692, 369876, 370112, 370120, 370136, 370212, 370216, 370248, 370540, 370808, 370876, 371324, 371728, 371768, 371804, 371984, 372072, 372152, 372232, 372236, 372356, 372360, 372412, 372420, 372444, 372524, 372532, 372536, 372564, 372928, 372956, 373016, 373128, 373140, 373156, 373160, 373168, 373204, 373280, 373464, 373468, 373476, 373520, 373580, 373596, 373636, 373700, 373772, 373784, 373820, 373832, 373856, 373880, 373900, 373904, 373908, 373960, 373984, 374044, 374100, 374112, 374152, 374180, 374264, 374292, 374308, 374328, 374340, 374392, 374400, 374436, 374480, 374488, 374528, 374552, 374576, 374584, 374588, 374596, 374640, 374664, 374716, 374732, 374760, 374780, 374800, 374940, 375076, 375088, 375096, 375128, 375228, 375244, 375272, 375276, 375280, 375432, 375436, 375524, 375560, 375572, 375600, 375612, 375748, 375768, 375780, 375796
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-runs/json/vis4-r4.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=vis4  acquired=True  released=True
+pre-existing (reported, NEVER killed): 13
+================================================
+BW_EXIT=0
