@@ -51,9 +51,8 @@ _BRAND_CSS = f"""
     max-width: 100% !important;
   }}
 
-  /* True viewport full-bleed (same width for nav + hero; ignores block-container padding) */
-  .t2pw-fullbleed,
-  div[data-testid="stHorizontalBlock"]:has(.t2pw-nav-brand),
+  /* True viewport full-bleed (same width for nav + hero) */
+  .t2pw-topnav,
   .t2pw-hero,
   .t2pw-hero-cta-band {{
     width: 100vw !important;
@@ -62,71 +61,109 @@ _BRAND_CSS = f"""
     margin-right: calc(50% - 50vw) !important;
     box-sizing: border-box;
   }}
-
-  /* Full-bleed magenta nav */
-  div[data-testid="stHorizontalBlock"]:has(.t2pw-nav-brand),
-  div[data-testid="stHorizontalBlock"]:has(.t2pw-nav-brand) > div[data-testid="stColumn"] {{
-    background: {_PB_MAGENTA} !important;
+  div[data-testid="element-container"]:has(.t2pw-topnav) {{
+    margin-bottom: 0 !important;
   }}
-  div[data-testid="stHorizontalBlock"]:has(.t2pw-nav-brand) {{
+
+  /* Magenta top nav with desktop row + mobile hamburger */
+  .t2pw-topnav {{
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
     margin-top: 0 !important;
     margin-bottom: 0 !important;
-    padding: 0.65rem var(--t2pw-band-pad-x) !important;
+    padding: 0.7rem var(--t2pw-band-pad-x);
+    background: {_PB_MAGENTA};
     border-bottom: 1px solid {_PB_MAGENTA_DEEP};
-    gap: 0.25rem !important;
+    color: #ffffff;
   }}
-  /* Collapse Streamlit vertical gaps under the nav so navy hero butts up against it */
-  div[data-testid="element-container"]:has(.t2pw-nav-brand),
-  div[data-testid="stHorizontalBlock"]:has(.t2pw-nav-brand) {{
-    margin-bottom: 0 !important;
-  }}
-  div[data-testid="stVerticalBlockBorderWrapper"]:has(.t2pw-nav-brand),
-  div[data-testid="stVerticalBlock"]:has(> div .t2pw-nav-brand) {{
-    gap: 0 !important;
-  }}
-  div[data-testid="stHorizontalBlock"]:has(.t2pw-nav-brand) [data-testid="stPageLink"] a,
-  div[data-testid="stHorizontalBlock"]:has(.t2pw-nav-brand) a {{
-    color: #ffffff !important;
-    font-weight: 500 !important;
-    text-decoration: none !important;
-    padding: 0.45rem 0.8rem !important;
-    border-radius: 0.4rem !important;
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-  }}
-  div[data-testid="stHorizontalBlock"]:has(.t2pw-nav-brand) [data-testid="stPageLink"] a:hover,
-  div[data-testid="stHorizontalBlock"]:has(.t2pw-nav-brand) a:hover {{
-    background: {_PB_MAGENTA_DEEP} !important;
-    color: #ffffff !important;
-  }}
-  [data-testid="stPageLink"] a:hover,
-  [data-testid="stPageLink"] a:focus {{
-    background: {_PB_MAGENTA_DEEP} !important;
-    color: #ffffff !important;
-  }}
-  button:hover,
-  button[kind="secondary"]:hover,
-  button[kind="primary"]:hover {{
-    background-color: {_PB_MAGENTA_DEEP} !important;
-    border-color: {_PB_MAGENTA_DARKER} !important;
-    color: #ffffff !important;
-  }}
-
-  .t2pw-nav-brand {{
+  .t2pw-topnav__brand {{
+    display: flex;
+    align-items: baseline;
+    gap: 0.55rem;
     margin: 0;
-    padding: 0.35rem 0.25rem;
     color: #ffffff !important;
+    text-decoration: none !important;
     font-size: 1.25rem;
     font-weight: 700;
     letter-spacing: 0.02em;
     white-space: nowrap;
   }}
-  .t2pw-nav-brand span {{
-    margin-left: 0.55rem;
+  .t2pw-topnav__brand span {{
     font-size: 0.92rem;
     font-weight: 500;
     color: rgba(255, 255, 255, 0.88) !important;
+  }}
+  .t2pw-nav-cb {{
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }}
+  .t2pw-nav-burger {{
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 2.5rem;
+    height: 2.5rem;
+    margin: 0;
+    padding: 0.45rem;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 0.4rem;
+    background: transparent;
+    cursor: pointer;
+  }}
+  .t2pw-nav-burger span {{
+    display: block;
+    height: 2px;
+    width: 100%;
+    background: #ffffff;
+    border-radius: 1px;
+  }}
+  .t2pw-topnav__menu {{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.15rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }}
+  .t2pw-topnav__menu a {{
+    display: block;
+    padding: 0.45rem 0.8rem;
+    border-radius: 0.4rem;
+    color: #ffffff !important;
+    font-weight: 500;
+    text-decoration: none !important;
+  }}
+  .t2pw-topnav__menu a:hover {{
+    background: {_PB_MAGENTA_DEEP} !important;
+    color: #ffffff !important;
+  }}
+  @media (max-width: 48rem) {{
+    .t2pw-nav-burger {{
+      display: inline-flex;
+      margin-left: auto;
+    }}
+    .t2pw-topnav__menu {{
+      display: none;
+      flex-basis: 100%;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.2rem;
+      padding: 0.35rem 0 0.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.22);
+    }}
+    .t2pw-nav-cb:checked ~ .t2pw-topnav__menu {{
+      display: flex;
+    }}
+    .t2pw-nav-cb:checked + .t2pw-nav-burger {{
+      background: rgba(255, 255, 255, 0.14);
+    }}
   }}
 
   .t2pw-hero {{
@@ -208,10 +245,9 @@ _BRAND_CSS = f"""
   .t2pw-hero-ctas {{
     display: flex;
     flex-direction: column;
-    align-items: stretch;
+    align-items: flex-end; /* right-aligned; widths set per button */
     gap: 0.75rem;
-    max-width: min(17.5rem, 100%);
-    width: min(17.5rem, 100%);
+    width: 100%;
     margin-left: auto;
   }}
   a.t2pw-hero-cta {{
@@ -219,7 +255,6 @@ _BRAND_CSS = f"""
     align-items: center;
     justify-content: flex-start;
     box-sizing: border-box;
-    width: 100%;
     min-height: 2.9rem;
     padding: 0.75rem 1.2rem;
     border-radius: 0.45rem;
@@ -245,9 +280,8 @@ _BRAND_CSS = f"""
   a.t2pw-hero-cta--examples {{ background: {_PB_GREEN} !important; }}
   a.t2pw-hero-cta--examples:hover {{ background: {_PB_GREEN_DARK} !important; }}
 
-  /* Nav + hero share one column: kill Streamlit's default vertical gap so navy
-     meets magenta with no white seam; keep spacing for later page content. */
-  div[data-testid="stVerticalBlock"]:has(.t2pw-nav-brand) {{
+  /* Home only: collapse gap between nav and hero. */
+  div[data-testid="stVerticalBlock"]:has(.t2pw-hero):has(.t2pw-topnav) {{
     gap: 0 !important;
   }}
   div[data-testid="stVerticalBlock"]:has(.t2pw-hero) > div:has(.t2pw-intro),
@@ -257,16 +291,21 @@ _BRAND_CSS = f"""
   }}
 
   .t2pw-intro {{
-    background: {_PB_CREAM};
-    border: 1px solid #e0c48a;
+    background: #eef2f7;
+    border: 1px solid #c5d0dc;
     border-radius: 0.5rem;
     padding: 1.25rem 1.4rem;
     margin-bottom: 1.25rem;
+    color: #1a2332;
+  }}
+  .t2pw-intro h2 {{
+    margin-top: 0;
+    color: {_PB_NAVY};
   }}
   .t2pw-funders {{
     margin-top: 2rem;
     padding-top: 1.25rem;
-    border-top: 1px solid #e0c48a;
+    border-top: 1px solid #c5d0dc;
     color: #444;
     font-size: 0.9rem;
   }}
@@ -309,25 +348,38 @@ def render_top_nav(
     about_page: str,
     examples_page: str,
 ) -> None:
-    """Magenta top bar: brand left, links right — matches public site chrome."""
-    brand, home, submit, tutorial, about, examples = st.columns(
-        [3.4, 1, 1, 1.1, 1, 1.1]
+    """Magenta top bar: brand + links; hamburger collapses links under 48rem."""
+    # Absolute url_paths so brand/links resolve from any page (not relative to /submit).
+    def _href(page: str) -> str:
+        mapping = {
+            home_page: "/",  # default landing
+            submit_page: "/submit",
+            tutorial_page: "/tutorial",
+            about_page: "/about",
+            examples_page: "/examples",
+        }
+        return mapping.get(page, "/")
+
+    st.html(
+        f"""
+        <header class="t2pw-topnav" role="banner">
+          <a class="t2pw-topnav__brand" href="/" title="Home">
+            T2PW<span>Text to PathWhiz</span>
+          </a>
+          <input type="checkbox" id="t2pw-nav-cb" class="t2pw-nav-cb" aria-hidden="true">
+          <label for="t2pw-nav-cb" class="t2pw-nav-burger" aria-label="Open menu">
+            <span></span><span></span><span></span>
+          </label>
+          <nav class="t2pw-topnav__menu" aria-label="Site">
+            <a href="{_href(home_page)}">Home</a>
+            <a href="{_href(submit_page)}">Submit</a>
+            <a href="{_href(tutorial_page)}">Tutorial</a>
+            <a href="{_href(about_page)}">About</a>
+            <a href="{_href(examples_page)}">Examples</a>
+          </nav>
+        </header>
+        """
     )
-    with brand:
-        st.markdown(
-            '<p class="t2pw-nav-brand">T2PW<span>Text to PathWhiz</span></p>',
-            unsafe_allow_html=True,
-        )
-    with home:
-        st.page_link(home_page, label="Home")
-    with submit:
-        st.page_link(submit_page, label="Submit")
-    with tutorial:
-        st.page_link(tutorial_page, label="Tutorial")
-    with about:
-        st.page_link(about_page, label="About")
-    with examples:
-        st.page_link(examples_page, label="Examples")
 
 
 def render_landing_hero() -> None:
@@ -360,20 +412,23 @@ def render_landing_ctas(
     examples_page: str,
     about_page: str | None = None,
 ) -> None:
-    """Stacked magenta / orange / green CTAs, right-aligned on the navy band."""
+    """Stacked magenta / orange / green CTAs, right-aligned; stepped widths."""
     del about_page
     _ = (submit_page, tutorial_page, examples_page)
-    st.markdown(
+    # Inline widths so Streamlit theme CSS cannot force equal 100% button widths.
+    st.html(
         """
         <div class="t2pw-hero-cta-band">
           <nav class="t2pw-hero-ctas" aria-label="Get started">
-            <a class="t2pw-hero-cta t2pw-hero-cta--submit" href="submit">Submit a pathway →</a>
-            <a class="t2pw-hero-cta t2pw-hero-cta--tutorial" href="tutorial">Read the tutorial →</a>
-            <a class="t2pw-hero-cta t2pw-hero-cta--examples" href="examples">Browse examples →</a>
+            <a class="t2pw-hero-cta t2pw-hero-cta--submit" href="submit"
+               style="width:20rem;max-width:100%;flex:0 0 auto">Submit a pathway →</a>
+            <a class="t2pw-hero-cta t2pw-hero-cta--tutorial" href="tutorial"
+               style="width:15.5rem;max-width:92%;flex:0 0 auto">Read the tutorial →</a>
+            <a class="t2pw-hero-cta t2pw-hero-cta--examples" href="examples"
+               style="width:12rem;max-width:78%;flex:0 0 auto">Browse examples →</a>
           </nav>
         </div>
-        """,
-        unsafe_allow_html=True,
+        """
     )
 
 
@@ -430,3 +485,134 @@ def render_funders() -> None:
 def page_chrome(_page_label: str = "") -> None:
     """Pages under t2pw_ui: CSS only (nav is drawn by the entrypoint)."""
     inject_brand_css()
+
+
+def inject_submit_page_css() -> None:
+    """Submit-page polish: sections, pathway cards, primary run button (no biology change)."""
+    st.markdown(
+        f"""
+        <style>
+          .t2pw-submit-lead {{
+            max-width: 42rem;
+            margin: 0 0 1.25rem 0;
+            color: #3a4553;
+            font-size: 1.02rem;
+            line-height: 1.45;
+          }}
+          .t2pw-section-label {{
+            display: block;
+            margin: 1.5rem 0 0 !important;
+            padding: 0 0 0.45rem 0 !important;
+            border: none !important;
+            border-bottom: 2px solid {_PB_MAGENTA} !important;
+            color: {_PB_NAVY};
+            font-size: 1.05rem;
+            font-weight: 700;
+            letter-spacing: 0.01em;
+            line-height: 1.35;
+          }}
+          .t2pw-section-hint {{
+            display: block;
+            margin: 0.65rem 0 0.85rem 0 !important;
+            padding: 0 !important;
+            border: none !important;
+            color: #5a6573;
+            font-size: 0.9rem;
+            line-height: 1.45;
+            text-decoration: none !important;
+          }}
+          /* Space below the rule so the hint never sits on the bar. */
+          div[data-testid="element-container"]:has(.t2pw-section-label) {{
+            margin-bottom: 0.55rem !important;
+          }}
+          div[data-testid="element-container"]:has(.t2pw-section-hint) {{
+            margin-top: 0.15rem !important;
+            margin-bottom: 0.5rem !important;
+          }}
+          [data-testid="stCaption"],
+          [data-testid="stCaption"] *,
+          [data-testid="stWidgetLabel"],
+          [data-testid="stWidgetLabel"] * {{
+            text-decoration: none !important;
+          }}
+          div[data-testid="stRadio"] > label[data-testid="stWidgetLabel"],
+          div[data-testid="stFileUploader"] > label[data-testid="stWidgetLabel"] {{
+            display: none !important;
+          }}
+          /* Right-align per-pathway remove; allow full label (no ellipsis) */
+          div[class*="st-key-remove_pathway_entry"] {{
+            display: flex;
+            justify-content: flex-end;
+          }}
+          div[class*="st-key-remove_pathway_entry"] button {{
+            white-space: nowrap !important;
+            overflow: visible !important;
+            text-overflow: clip !important;
+            min-width: 11rem;
+          }}
+          .t2pw-pathway-card {{
+            margin: 0.75rem 0 1rem 0;
+            padding: 0.85rem 1rem 0.25rem;
+            border: 1px solid #d5dde8;
+            border-radius: 0.5rem;
+            background: #f7f9fc;
+          }}
+          .t2pw-pathway-card__title {{
+            margin: 0 0 0.35rem 0;
+            color: {_PB_MAGENTA};
+            font-weight: 700;
+            font-size: 0.95rem;
+          }}
+          /* Primary form submit */
+          div[data-testid="stForm"] button[kind="primaryFormSubmit"],
+          div[data-testid="stForm"] button[type="submit"] {{
+            background-color: {_PB_MAGENTA} !important;
+            border-color: {_PB_MAGENTA_DEEP} !important;
+            color: #ffffff !important;
+            font-weight: 600 !important;
+            min-height: 2.75rem;
+            padding-left: 1.4rem !important;
+            padding-right: 1.4rem !important;
+          }}
+          div[data-testid="stForm"] button[kind="primaryFormSubmit"]:hover,
+          div[data-testid="stForm"] button[type="submit"]:hover {{
+            background-color: {_PB_MAGENTA_DEEP} !important;
+            border-color: {_PB_MAGENTA_DARKER} !important;
+            color: #ffffff !important;
+          }}
+          div[class*="st-key-add_pathway_entry"] button {{
+            background-color: {_PB_MAGENTA} !important;
+            border-color: {_PB_MAGENTA_DEEP} !important;
+            color: #ffffff !important;
+            font-weight: 600 !important;
+          }}
+          div[class*="st-key-add_pathway_entry"] button:hover {{
+            background-color: {_PB_MAGENTA_DEEP} !important;
+            color: #ffffff !important;
+          }}
+          div[class*="st-key-remove_pathway_entry"] button {{
+            background: transparent !important;
+            border: 1px solid #c5d0dc !important;
+            color: {_PB_MAGENTA_DEEP} !important;
+          }}
+          div[class*="st-key-remove_pathway_entry"] button:hover {{
+            background: #eef2f7 !important;
+            border-color: {_PB_MAGENTA} !important;
+            color: {_PB_MAGENTA_DEEP} !important;
+          }}
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def render_submit_header() -> None:
+    """Title + lead for the Submit page."""
+    st.title("Submit a pathway")
+    st.markdown(
+        '<p class="t2pw-submit-lead">'
+        "Paste a pathway description or upload PDFs. T2PW runs the local pipeline and "
+        "returns a draft PathWhiz PWML for review."
+        "</p>",
+        unsafe_allow_html=True,
+    )

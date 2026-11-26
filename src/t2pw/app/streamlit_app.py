@@ -246,7 +246,11 @@ if _hand_off_to_landing_ui():
 
 # Submit console chrome. set_page_config only when this file is the Streamlit
 # entry under AppTest; under t2pw_ui the entrypoint already configured the page.
-from t2pw.app.ui_chrome import inject_brand_css  # noqa: E402
+from t2pw.app.ui_chrome import (  # noqa: E402
+    inject_brand_css,
+    inject_submit_page_css,
+    render_submit_header,
+)
 
 try:
     st.set_page_config(
@@ -258,8 +262,8 @@ except st.errors.StreamlitAPIException:
     pass
 
 inject_brand_css()
-st.title("Submit a pathway")
-st.caption("Local pipeline console for T2PW.")
+inject_submit_page_css()
+render_submit_header()
 
 REFINEMENT_STATE_DEFAULTS = {
     "refinement_working_json": None,
@@ -1477,6 +1481,14 @@ def run_libsbml_checker(sbml_bytes: bytes) -> Dict[str, Any]:
 
 # ── Export mode (OUTSIDE form — governs the whole run AND the later PWML
 # export section, so it must be readable from both) ────────────────────────
+st.markdown('<p class="t2pw-section-label">Export mode</p>', unsafe_allow_html=True)
+# st.html avoids Markdown strikethrough/emphasis; caption/markdown both parse MD.
+st.html(
+    '<p class="t2pw-section-hint" style="text-decoration:none">'
+    "Strict PWML for PathBank-ready checks. "
+    "Research relaxes formatting rules and reports flags instead of aborting."
+    "</p>"
+)
 EXPORT_MODE_LABELS = {
     "Strict PWML": PATHWHIZ,
     "Research (relaxed)": RESEARCH,
@@ -1486,10 +1498,11 @@ _export_mode_label = st.radio(
     list(EXPORT_MODE_LABELS),
     horizontal=True,
     key="export_mode_radio",
+    label_visibility="collapsed",
     help=(
         "Strict PWML (default): every check blocks, exactly as before — this is "
         "the mode to use for anything destined for PathBank. "
-        "Research (relaxed): PathWhiz *formatting* rules are skipped (no required "
+        "Research (relaxed): PathWhiz formatting rules are skipped (no required "
         "external DB identity, no protein_complex wrapper around enzymes, ':' in a "
         "name is fine), and every biology/provenance check still runs but only "
         "FLAGS instead of aborting. Research mode always produces a candidate "
@@ -1510,11 +1523,18 @@ if is_research(export_mode):
     )
 
 # ── Input mode (OUTSIDE form — triggers immediate re-render on click) ──────
+st.markdown('<p class="t2pw-section-label">Input</p>', unsafe_allow_html=True)
+st.html(
+    '<p class="t2pw-section-hint" style="text-decoration:none">'
+    "Choose how you are providing source material for this run."
+    "</p>"
+)
 input_mode = st.radio(
     "Input mode",
     ["Paste text", "Upload PDF", "Text + PDF"],
     horizontal=True,
     key="input_mode_radio",
+    label_visibility="collapsed",
 )
 
 # ── PDF controls (OUTSIDE form — file_uploader is banned inside st.form) ───
@@ -1549,7 +1569,13 @@ if uses_text_input:
         st.session_state.pop(f"pathway_text_{count - 1}", None)
         st.session_state["text_entry_count"] = max(1, count - 1)
 
-    _add_col, _count_col = st.columns([1, 3])
+    st.markdown('<p class="t2pw-section-label">Pathways</p>', unsafe_allow_html=True)
+    st.html(
+        '<p class="t2pw-section-hint" style="text-decoration:none">'
+        "Add up to 10 text entries. Remove sits under each optional pathway."
+        "</p>"
+    )
+    _add_col, _hint_col = st.columns([1.2, 2.8])
     with _add_col:
         st.button(
             "Add another pathway",
@@ -1557,7 +1583,14 @@ if uses_text_input:
             disabled=int(st.session_state["text_entry_count"]) >= 10,
             on_click=_add_pathway_entry,
         )
-    with _count_col:
+    with _hint_col:
+        st.html(
+            f'<p class="t2pw-section-hint" style="text-decoration:none;margin-top:0.55rem">'
+            f"Currently {int(st.session_state['text_entry_count'])} pathway slot(s)."
+            f"</p>"
+        )
+    # Keep the AppTest / batch key, but tuck the spinner into an expander.
+    with st.expander("Advanced: set entry count directly", expanded=False):
         text_entry_count = st.number_input(
             "Number of text entries",
             min_value=1,
@@ -1565,24 +1598,47 @@ if uses_text_input:
             step=1,
             key="text_entry_count",
         )
+    text_entry_count = int(st.session_state.get("text_entry_count", text_entry_count))
     _n_slots = int(text_entry_count)
-    if _n_slots > 1:
-        _rm_cols = st.columns(min(_n_slots - 1, 5))
-        for _ri, _idx in enumerate(range(1, _n_slots)):  # pathway 2..n (0-based idx)
-            with _rm_cols[_ri % len(_rm_cols)]:
+    # Text areas + per-pathway Remove must live outside st.form (form only allows
+    # form_submit_button). Values are read from session_state when the form runs.
+    for _idx in range(_n_slots):
+        _label = (
+            "Paste pathway description:"
+            if _n_slots == 1
+            else f"Paste pathway description {_idx + 1}:"
+        )
+        st.markdown(
+            f'<div class="t2pw-pathway-card"><p class="t2pw-pathway-card__title">'
+            f"Pathway {_idx + 1}</p></div>",
+            unsafe_allow_html=True,
+        )
+        st.text_area(_label, height=220, key=f"pathway_text_{_idx}")
+        if _idx > 0:
+            # Wide enough column so "Remove pathway N" is not ellipsized.
+            _sp, _rm = st.columns([2, 1])
+            with _rm:
                 st.button(
                     f"Remove pathway {_idx + 1}",
                     key=f"remove_pathway_entry_{_idx}",
                     on_click=_remove_pathway_entry,
                     args=(_idx,),
+                    use_container_width=True,
                 )
 
 if uses_pdf_input:
+    st.markdown('<p class="t2pw-section-label">PDF files</p>', unsafe_allow_html=True)
+    st.html(
+        '<p class="t2pw-section-hint" style="text-decoration:none">'
+        "Upload papers or pathway descriptions as PDF."
+        "</p>"
+    )
     uploaded_pdfs = st.file_uploader(
         "Upload scientific PDFs (research papers, pathway descriptions, etc.)",
         type=["pdf"],
         key="pdf_uploads_widget",
         accept_multiple_files=True,
+        label_visibility="collapsed",
     )
     _c1, _c2, _c3 = st.columns(3)
     pdf_page_range = _c1.text_input(
@@ -1603,18 +1659,23 @@ if uses_pdf_input:
         help="Requires tesseract + pytesseract installed.",
     )
 
-# ── Form — only the text area changes; everything else is UNCHANGED ─────────
+# ── Form — pathway text widgets are outside (see above); read them here ─────
 with st.form("pwml_pipeline"):
-    text_entries = []
     if uses_text_input:
-        for _idx in range(int(text_entry_count)):
-            _label = "Paste pathway description:" if int(text_entry_count) == 1 else f"Paste pathway description {_idx + 1}:"
-            text_entries.append(st.text_area(_label, height=220, key=f"pathway_text_{_idx}"))
+        text_entries = [
+            str(st.session_state.get(f"pathway_text_{_i}", "") or "")
+            for _i in range(int(text_entry_count))
+        ]
+    else:
+        text_entries = []
 
+    st.markdown('<p class="t2pw-section-label">Focus (optional)</p>', unsafe_allow_html=True)
     user_task_context = st.text_area(
         "Optional extraction focus / task context",
         height=100,
         help="Use this to tell the model what pathway or scope you want extracted. This guides extraction but does not override the source text or validation rules.",
+        label_visibility="collapsed",
+        placeholder="e.g. focus on the mitochondrial reactions only",
     )
 
     if uses_pdf_input:
@@ -1631,6 +1692,7 @@ with st.form("pwml_pipeline"):
                 st.caption("Optional: upload one or more PDFs using the file uploader above.")
 
         
+    st.markdown('<p class="t2pw-section-label">Pipeline options</p>', unsafe_allow_html=True)
     run_inference = st.checkbox(
         "Run inference/enrichment stage",
         value=_defaults.RUN_INFERENCE,
