@@ -48,6 +48,7 @@ MEMBRANE_STYLE = {"1": ("#4BC8F2", 50), "84": ("#FF0000", 50), "91": ("#EE9189",
 ARROW_LEG, ARROW_DEG, FLAT_HALF = 30.0, 30.0, 15.0  # PathBank chevron: two 30-unit legs at +-30 degrees
 ARROW_KEYS = ("start_arrow", "end_arrow", "start_flat_arrow", "end_flat_arrow")
 COMPOUND_BLUE, PROTEIN_GREEN = "#1E9EFF", "#44EE22"
+NAME_BOX_FILL = "#D6ECFF"  # VIS-5: a compound box without a structure picture
 PROTEIN_FILL = {"76": "#AC58FA", "77": "#AC58FA", "97": "#FE9A2E", "113": "#FE9A2E", "164": "#FE9A2E",
                 "98": "#FE642E", "99": "#298A08"}
 PROTEIN_STACK = {"6": 2, "77": 2, "113": 2, "16": 3, "7": 4, "8": 4, "17": 4, "164": 4}  # stacked ellipses
@@ -261,7 +262,11 @@ def _header_lines(name: str, w: float) -> Tuple[List[str], float]:
 
 
 def _compound(ax, x, y, w, h, tpl, name, short, z, pic=None):
-    if _is_structure_box(w, h):  # structure box: blue header with the name, white body with the structure
+    if _is_structure_box(w, h) and pic is None:  # VIS-5: no structure picture: a name box, never an empty square
+        ax.add_patch(_rbox(x, y, w, h, 10, fc=COMPOUND_BLUE, ec="black", lw=1, zorder=z))
+        ax.add_patch(_rbox(x + 6, y + 6, w - 12, h - 12, 10, fc=NAME_BOX_FILL, ec="black", lw=1, zorder=z + 0.1))
+        _label(ax, x + w / 2, y + h / 2, name or short, w - 26, h - 26, 30, z + 0.1, min_size=12, max_lines=5)
+    elif _is_structure_box(w, h):  # structure box: blue header with the name, white body with the structure
         ax.add_patch(_rbox(x, y, w, h, 10, fc=COMPOUND_BLUE, ec="black", lw=1, zorder=z))
         ax.add_patch(_rbox(x + 5, y + 35, w - 10, h - 40, 10, fc="white", ec="black", lw=1, zorder=z + 0.1))
         lines, s = _header_lines(name, w)
@@ -297,7 +302,8 @@ def _protein(ax, x, y, w, h, tpl, name, z):
         for k in range(n):
             ax.add_patch(Ellipse((x + k * dx + ew / 2, y + k * dy + eh / 2), ew, eh, fc=fill, ec="black", lw=1,
                                  zorder=z + k * 0.01))
-    _label(ax, x + w / 2, y + h / 2, name, w * 0.92, h * 0.9, 15, z, min_size=8)  # PathBank: Verdana 15, wrapped
+    # PathBank: Verdana 15, wrapped; VIS-5: a short name grows up to 24 so it stays legible on a scaled-down picture
+    _label(ax, x + w / 2, y + h / 2, name, w * 0.84, h * 0.8, 24, z, min_size=8)
 
 
 def _nucleic_acid(ax, x, y, w, h, name, z):
