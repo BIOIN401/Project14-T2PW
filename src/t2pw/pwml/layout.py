@@ -704,7 +704,8 @@ def _layered(blocks: Dict[Any, "_Block"], keys: List[Any], flow: List[Tuple[Any,
 ROW_GAP = 160  # VIS-5: vertical gap between the rows of a snaked chain
 
 
-def _snake(blocks: Dict[Any, "_Block"], keys: List[Any], limit: int, hubs: set) -> Tuple[int, int]:
+def _snake(blocks: Dict[Any, "_Block"], keys: List[Any], limit: int, hubs: set,
+           free_out: Optional[Dict[int, Tuple[int, int, int, int]]] = None) -> Tuple[int, int]:
     """VIS-5: fold a layered group wider than ``limit`` into rows read alternately left to right and right to left
     (PathBank's long chains turn back instead of running off the page). Rows end after a node column rather than a
     process column where possible, so the turn is a short vertical step from a node to its next process. Sets block
@@ -750,7 +751,14 @@ def _snake(blocks: Dict[Any, "_Block"], keys: List[Any], limit: int, hubs: set) 
     x0 = min(blocks[k].x for k in keys)
     for k in keys:
         blocks[k].x -= x0
-    return max(blocks[k].x + blocks[k].w for k in keys), top - ROW_GAP
+    width, height = max(blocks[k].x + blocks[k].w for k in keys), top - ROW_GAP
+    if free_out is not None:  # VIS-5: the empty part beside the last (short) row, for other groups of the box
+        last = [k for k in keys if row_of[blocks[k].layer] == len(rows) - 1]
+        lx0, lx1 = min(blocks[k].x for k in last), max(blocks[k].x + blocks[k].w for k in last)
+        ly0 = min(blocks[k].y for k in last)
+        right, left = (lx1 + HGAP, ly0, width, height), (0, ly0, lx0 - HGAP, height)
+        free_out[id(keys)] = max(right, left, key=lambda r: r[2] - r[0])
+    return width, height
 
 
 def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], ir: Optional[Dict[str, Any]] = None,
@@ -1077,10 +1085,11 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
     # VIS-5: a group much wider than the whole picture's square-ish width folds into rows (a snake)
     limit = max(SNAKE_MIN, int((area * ASPECT) ** 0.5))
     snaked_states = set()
+    snake_free: Dict[int, Tuple[int, int, int, int]] = {}
     for st, cs in comps_by_state.items():
         for i, (comp, w, h) in enumerate(cs):
             if w > SNAKE_OVER * limit and st != loose_key:
-                cs[i] = (comp, *_snake(blocks, comp, limit, hub_set))
+                cs[i] = (comp, *_snake(blocks, comp, limit, hub_set, snake_free))
                 snaked_states.add(st)
         cs.sort(key=lambda c: (not any(k in attached for k in c[0]), -(c[1] * c[2])))
     area = sum((w + HGAP) * (h + VGAP) for cs in comps_by_state.values() for _, w, h in cs)
@@ -1186,12 +1195,21 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
 
     def measure(st):
         placed, cx, cy, shelf_h, own_w = [], 0, 0, 0, 0
+        free: List[List[int]] = []  # VIS-5: empty corners of snaked groups already placed in this box
         for comp, w, h in comps_by_state.get(st, []):
+            spot = next((f for f in free if f[2] - f[0] >= w and f[3] - f[1] >= h), None)
+            if spot is not None:  # into the empty end of a snake's last row
+                placed.append((comp, spot[0], spot[1]))
+                spot[0] += w + (HGAP if any(k in attached for k in comp) else LOOSE_GAP)
+                continue
             if cx > 0 and cx + w > target:
                 cx, cy, shelf_h = 0, cy + shelf_h + 2 * VGAP, 0
             placed.append((comp, cx, cy))
             # VIS-5: nodes no process refers to (PathWhiz's viewer drops them) pack tight instead of a column gap apart
             gap = HGAP if any(k in attached for k in comp) else LOOSE_GAP
+            if id(comp) in snake_free:
+                fx0, fy0, fx1, fy1 = snake_free[id(comp)]
+                free.append([cx + fx0, cy + fy0, cx + fx1, cy + fy1])
             own_w, shelf_h, cx = max(own_w, cx + w), max(shelf_h, h), cx + w + gap
         own_h = cy + shelf_h
         kids = children.get(st, []) if st != loose_key else []
@@ -1301,7 +1319,7 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
     height = (extra_y + 80 + MARGIN) if extra_x > MARGIN else ((top - BAND_GAP if rows else top) + MARGIN)
     width = max(width, extra_x + MARGIN)
     label_items: Dict[Any, List[Dict[str, Any]]] = defaultdict(list)
-    line_labels: List[Tuple[Dict[str, Any], int, int]] = []  # VIS-5: (label on a membrane line, the box's x0, x1)
+    line_labels: List[Tuple[Dict[str, Any], int, int, int]] = []  # VIS-5: (label on a membrane line, box x0, x1, y1)
 
     def membrane_name(kind, default):
         """The PWML's own name of its one membrane location of ``kind`` (apical / basolateral sides do not name a whole
@@ -1325,7 +1343,7 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
                 "x": x, "y": int(ly - (25 + 15.5) * LABEL_SCALE), "zindex": 20, "scale-x": f"{LABEL_SCALE}",
                 "scale-y": f"{LABEL_SCALE}", "width": "200", "height": "15"})
             items.setdefault("label-locations", []).append(label_items[st][-1])
-            line_labels.append((label_items[st][-1], x0, x1))
+            line_labels.append((label_items[st][-1], x0, x1, y1))
 
         if envelope(s) and gap:  # PathBank PW000779: each envelope line named on the line
             for text, ly in ((membrane_name("outer_membrane", "Outer Membrane"), y0),
@@ -1374,7 +1392,7 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
             cur = parent.get(cur)
         anc[st] = chain
     fixed = [(bl.x, bl.y, bl.x + bl.w, bl.y + bl.h) for k, bl in blocks.items() if not bl.virtual and k not in twin_of]
-    on_line = {id(lb) for lb, _, _ in line_labels}  # a transporter may take a line label's place; the label moves after
+    on_line = {id(lb) for lb, _, _, _ in line_labels}  # a transporter may take a line label's place; the label moves after
     fixed += [_label_rect(lb) for lb in items.get("label-locations", []) if id(lb) not in on_line]
     def crossing(si, so):
         """The membrane a cargo in ``si`` crosses toward ``so``: the highest outlined box around ``si`` not holding ``so``."""
@@ -1436,25 +1454,29 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
         others += [(c0 - 40, min(c1, ny - 400), c2 + 40, max(c3, ny + hb.h + 400)) for m, c0, c1, c2, c3 in placed_cols
                    if m == mem and abs(c1 - ny) > 20]
         inner_side = "B" if on_top else "T"
-        first = hit = None
-        for step in range(0, x1 - x0, 20):
-            for nx in dict.fromkeys(max(lo, min(hi, v)) for v in (want + step, want - step)):
-                r = (nx - 15, ny - 15, nx + hb.w + 15, ny + hb.h + 15)
-                if any(not (r[2] <= f[0] or f[2] <= r[0] or r[3] <= f[1] or f[3] <= r[1]) for f in others):
-                    continue
-                first = nx if first is None else first
-                if step > TRANSPORTER_REACH:  # past reach: the first free spot
-                    break
-                p3, n3 = _side_point((nx, ny, nx + hb.w, ny + hb.h), inner_side)
-                for s in _facing_sides(cargo_r, *p3):  # the sides the edge drawing will try
-                    p0, n0 = _side_point(cargo_r, s)
-                    _, c1, c2 = _curve(p0, n0, p3, n3)
-                    if _clear(_bezier_points(p0, c1, c2, p3), [f for f in others if f != cargo_r]):
-                        hit = nx
+        line_rects = [_label_rect(lb) for lb, _, _, _ in line_labels]
+        for others in (others + line_rects, others):  # VIS-5: keep off a line label when the line has room
+            first = hit = None
+            for step in range(0, x1 - x0, 20):
+                for nx in dict.fromkeys(max(lo, min(hi, v)) for v in (want + step, want - step)):
+                    r = (nx - 15, ny - 15, nx + hb.w + 15, ny + hb.h + 15)
+                    if any(not (r[2] <= f[0] or f[2] <= r[0] or r[3] <= f[1] or f[3] <= r[1]) for f in others):
+                        continue
+                    first = nx if first is None else first
+                    if step > TRANSPORTER_REACH:  # past reach: the first free spot
                         break
-                if hit is not None:
+                    p3, n3 = _side_point((nx, ny, nx + hb.w, ny + hb.h), inner_side)
+                    for s in _facing_sides(cargo_r, *p3):  # the sides the edge drawing will try
+                        p0, n0 = _side_point(cargo_r, s)
+                        _, c1, c2 = _curve(p0, n0, p3, n3)
+                        if _clear(_bezier_points(p0, c1, c2, p3), [f for f in others if f != cargo_r]):
+                            hit = nx
+                            break
+                    if hit is not None:
+                        break
+                if hit is not None or (first is not None and step > TRANSPORTER_REACH):
                     break
-            if hit is not None or (first is not None and step > TRANSPORTER_REACH):
+            if first is not None:
                 break
         hit = first if hit is None else hit
         if hit is not None:
@@ -1518,15 +1540,17 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
     # VIS-5: a membrane-line label a transporter landed on slides along its line to the first free place
     hubs_r = [(blocks[h].x - 20, blocks[h].y - 20, blocks[h].x + blocks[h].w + 20, blocks[h].y + blocks[h].h + 20)
               for h in on_membrane]
-    for lb, bx0, bx1 in line_labels:
-        def hits(x, lb=lb):
-            r = _label_rect(dict(lb, x=x))
+    for lb, bx0, bx1, by1 in line_labels:
+        def hits(x, y, lb=lb):
+            r = _label_rect(dict(lb, x=x, y=y))
             return any(not (r[2] <= q[0] or q[2] <= r[0] or r[3] <= q[1] or q[3] <= r[1]) for q in hubs_r)
-        if hits(lb["x"]):
+        if hits(lb["x"], lb["y"]):
             w = int((205 - 5) * float(lb["scale-x"]))
-            free = [x for x in range(bx0 + 40, bx1 - 40 - w, 20) if not hits(x)]
+            bottom = int(by1 - (25 + 15.5) * float(lb["scale-y"]))  # else the box's bottom line
+            free = [(abs(x - lb["x"]) + (0 if y == lb["y"] else 10000), x, y) for y in (lb["y"], bottom)
+                    for x in range(bx0 + 40, bx1 - 40 - w, 20) if not hits(x, y)]
             if free:
-                lb["x"] = min(free, key=lambda x: abs(x - lb["x"]))
+                _, lb["x"], lb["y"] = min(free)
     for k, (twin, i) in twin_of.items():
         tb = blocks[twin]
         blocks[k].x, blocks[k].y = tb.x + tb.offsets[i][0], tb.y + tb.offsets[i][1]
@@ -1669,7 +1693,8 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
                     score = (False, cr, 0)
         if score is not None and score[0]:  # no clear curve: a right-angle route round the boxes, as PathBank's connectors
             pa, pb = ends_a[0][0], ends_b[0][0]
-            route = router.route(pa, pb, member_rects[a] + member_rects[b]) if pa != pb else None
+            ends = [(q[0] - 20, q[1] - 20, q[0] + 20, q[1] + 20) for q in (pa, pb)]  # VIS-5: an end under a label
+            route = router.route(pa, pb, member_rects[a] + member_rects[b] + ends) if pa != pb else None
             if route and len(set(route)) > 1:
                 path, c1, c2 = _path(_round_corners(route))
                 best, pick = (path, route[0], c1, route[-1], c2, [tuple(q) for q in route]), None
