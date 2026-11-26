@@ -1,0 +1,33 @@
+== off
+EXIT_off=0
+== on
+EXIT_on=0
+POSTREPLAY_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 6394524763e9169a12907fc97021f95bd928264f  [git, worktree dirty=True]
+label                   : trna-postreplay2
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/vis-runs/scratch/fixtrna/postreplay.sh
+cwd                     : c:\t\vis-runs\scratch\fixtrna
+root PID / process group: 149424 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 7800 s
+duration                : 6583.67 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 9  250548:bash.exe, 239456:git.exe, 250460:bash.exe, 250392:timeout.exe, 251272:bash.exe, 339952:git.exe, 340112:bash.exe, 419124:git.exe, 420972:bash.exe
+descendants terminated  : 9  239456, 250392, 250460, 250548, 251272, 339952, 340112, 419124, 420972
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-runs/scratch/fixtrna/postreplay2-run.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=fixtrna  acquired=True  released=True
+pre-existing (reported, NEVER killed): 13
+================================================
+BW_EXIT=0

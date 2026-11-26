@@ -1,0 +1,167 @@
+[
+ {
+  "leg": "off1-PMC5130987",
+  "result": "FAIL",
+  "fail_stage": "post_pipeline",
+  "message": "Post-pipeline conversion failed: AMBIGUOUS_RENAME_TARGET: 2 distinct compound names canonicalize to 'magnesiumprotoporphyrinmonomethylester'; applying the rename would merge them",
+  "pwml": false,
+  "payload": "merged_payload.json",
+  "n_reactions": 24,
+  "trna_compounds": [
+   "Glu-tRNA Glu",
+   "tRNA Glu"
+  ],
+  "trna_nucleic_acids": [],
+  "trna_reactions": [
+   "Glu-tRNA reduction",
+   "Glu to Glu-tRNA Glu"
+  ]
+ },
+ {
+  "leg": "off2-PMC5130987",
+  "result": "PASS",
+  "fail_stage": "",
+  "message": "",
+  "pwml": true,
+  "payload": "final_mapped.json",
+  "n_reactions": 16,
+  "trna_compounds": [
+   "L-Glutamyl-tRNA"
+  ],
+  "trna_nucleic_acids": [],
+  "trna_reactions": [
+   "GluTR reaction",
+   "Pchlide to singlet oxygen conversion"
+  ],
+  "recall": 0.5,
+  "precision": 0.375,
+  "matched": [
+   "PW_R2146839",
+   "PW_R2146841",
+   "PW_R2146842",
+   "PW_R2146843",
+   "PW_R2146844",
+   "PW_R2146855"
+  ],
+  "gold_rows_scored": 16
+ },
+ {
+  "leg": "off3-PMC5130987",
+  "result": "PASS",
+  "fail_stage": "",
+  "message": "",
+  "pwml": true,
+  "payload": "final_mapped.json",
+  "n_reactions": 21,
+  "trna_compounds": [
+   "L-Glutamyl-tRNA",
+   "tRNA(Glu)"
+  ],
+  "trna_nucleic_acids": [],
+  "trna_reactions": [
+   "Glu-tRNA reduction",
+   "GluTR reaction"
+  ],
+  "recall": 0.5833,
+  "precision": 0.3684,
+  "matched": [
+   "PW_R2146839",
+   "PW_R2146840",
+   "PW_R2146841",
+   "PW_R2146842",
+   "PW_R2146843",
+   "PW_R2146844",
+   "PW_R2146855"
+  ],
+  "gold_rows_scored": 19
+ },
+ {
+  "leg": "on1-PMC5130987",
+  "result": "PASS",
+  "fail_stage": "",
+  "message": "",
+  "pwml": true,
+  "payload": "final_mapped.json",
+  "n_reactions": 18,
+  "trna_compounds": [
+   "tRNA(Glu)",
+   "L-Glutamyl-tRNA"
+  ],
+  "trna_nucleic_acids": [],
+  "trna_reactions": [
+   "GluTR reaction",
+   "GluTR reaction",
+   "Glu-tRNA formation"
+  ],
+  "recall": 0.5833,
+  "precision": 0.4118,
+  "matched": [
+   "PW_R2146839",
+   "PW_R2146840",
+   "PW_R2146841",
+   "PW_R2146842",
+   "PW_R2146843",
+   "PW_R2146844",
+   "PW_R2146855"
+  ],
+  "gold_rows_scored": 17
+ },
+ {
+  "leg": "on2-PMC5130987",
+  "result": "PASS",
+  "fail_stage": "",
+  "message": "",
+  "pwml": true,
+  "payload": "final_mapped.json",
+  "n_reactions": 21,
+  "trna_compounds": [
+   "tRNA(Glu)",
+   "L-Glutamyl-tRNA"
+  ],
+  "trna_nucleic_acids": [],
+  "trna_reactions": [
+   "GluTR reaction",
+   "GluTR reaction"
+  ],
+  "recall": 0.5833,
+  "precision": 0.3684,
+  "matched": [
+   "PW_R2146839",
+   "PW_R2146840",
+   "PW_R2146841",
+   "PW_R2146842",
+   "PW_R2146843",
+   "PW_R2146844",
+   "PW_R2146855"
+  ],
+  "gold_rows_scored": 19
+ },
+ {
+  "leg": "on3-PMC5130987",
+  "result": "PASS",
+  "fail_stage": "",
+  "message": "",
+  "pwml": true,
+  "payload": "final_mapped.json",
+  "n_reactions": 17,
+  "trna_compounds": [
+   "L-Glutamyl-tRNA"
+  ],
+  "trna_nucleic_acids": [],
+  "trna_reactions": [
+   "GluTR reaction",
+   "Glu to Glu-tRNA Glu reaction"
+  ],
+  "recall": 0.5,
+  "precision": 0.3529,
+  "matched": [
+   "PW_R2146839",
+   "PW_R2146840",
+   "PW_R2146841",
+   "PW_R2146842",
+   "PW_R2146843",
+   "PW_R2146844"
+  ],
+  "gold_rows_scored": 17
+ }
+]

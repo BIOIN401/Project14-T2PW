@@ -4,9 +4,11 @@ Branch `fix/audit-nucleic-acid-declared`, cut from `main` 5bf9d552. PO-approved,
 Code commits `69e9984c` (change and tests) and `66b8ca26` (review F5 tests). This record is a separate
 docs-only commit. Evidence: `docs/webserver/evidence/FIX-TRNA/`.
 
-STATUS: change, tests, offline replay and gates are done. **Section 5 (decisive post-pipeline replay) and
-the live A/B (section 6, 3 of 6 legs so far) are still open**, see the status lines there. This doc is
-updated in place as they land.
+STATUS (2026-11-25, closed): **merged to main `3e098725`, default off, and NOT enabled on the server.** The
+decisive replay (section 5) shows the flag does not fix the crash it was written for: flag on fails with the
+same `AMBIGUOUS_REFERENCE`. The live A/B (section 6, 6 of 6 legs) shows no harm and no effect: no leg
+declared the tRNA as a nucleic acid. The real cause is in prefreeze (section 5), a biology module, so it is
+an open question for the PO (section 8).
 
 ## 1. Symptom (from FIX-NONAME section 6)
 
@@ -88,25 +90,46 @@ The test-only commit `66b8ca26` changes no `src` file, so the suite2 result stan
 
 ## 5. Decisive post-pipeline replay (review request)
 
-**OPEN.** Replay the stored `legs4g/base1-PMC5130987` merged payload through post-pipeline, offline curator,
-flag off and on: flag off must reproduce `AMBIGUOUS_REFERENCE`, flag on must export reaction 20 with
-`tRNA Glu` as a nucleic-acid participant. Waiting for RAM (4.7 GB free, guard 5 GB).
+**DONE, the flag fails it.** `postreplay.py` replays the stored `legs4g/base1-PMC5130987` merged payload through
+`run_post_pipeline` (offline curator, no LLM audit, no LLM gap resolver, strict DB), flag off then on, one lock
+hold, 0 survivors (`postreplay2.log`, `postreplay-off.json`, `postreplay-on.json`, `post-off.log`, `post-on.log`).
+
+| arm | result |
+|---|---|
+| off | `AMBIGUOUS_REFERENCE: the name 'tRNA Glu' is also carried by ['nucleic_acids#0']; a reference to it cannot be unambiguously redirected to 'tRNA(Glu)'`; no PWML (reproduces section 1) |
+| on | **the same error**, same place; no PWML |
+
+Where it fires: `postpipeline.py:1473` -> `final_payload.prefreeze_with_final_fill` ->
+`prefreeze_resolution.run_prefreeze_resolution` -> `resolve_compounds_prefreeze` (:479) ->
+`_reject_ambiguous_renames` (:894). That is after the audit loop (`postpipeline.py` ~:960-1008), which runs with
+`use_llm=False` too, so the flag-on deterministic audit did run. With the duplicate compound row gone, prefreeze
+still redirects the reaction-20 reference `tRNA Glu` to the mapped name `tRNA(Glu)` and refuses because the
+nucleic acid carries the old name. **So section 1's diagnosis was incomplete:** the audit's duplicate add is not
+what blocks the export; the rename-vs-nucleic-acid conflict in `pwml/prefreeze_resolution.py` is.
+
+The first attempt (`postreplay.log`) hit a 40-minute cap per arm with no output. Stack dumps every 10 minutes
+(`faulthandler`, added in the rerun) showed it was not hung: Stage-2 protein mapping fetches Europe PMC full texts
+(`map_ids._europepmc_full_text`). Each arm took about 55 minutes.
 
 ## 6. Live A/B (chlorophyll PMC5130987, Gemma, verifier on in both arms)
 
 Driver `drivertrna.sh`, legs `legtrna.sh`, interleaved off, on, off, on, off, on, through the queue.
-Scores from `score_legs.py` (the accscore chlorophyll gold, 12 paper-stated steps). **3 of 6 legs done.**
+Scores from `score_legs.py` (the accscore chlorophyll gold, 12 paper-stated steps). **6 of 6 legs done**
+(`legs_score6.json`).
 
 | leg | arm | result | reactions | recall | precision | gold matched | tRNA rows |
 |---|---|---|---|---|---|---|---|
 | off1 | off | FAIL at `post_pipeline`: `AMBIGUOUS_RENAME_TARGET` on `magnesiumprotoporphyrinmonomethylester` | 24 | n/a | n/a | n/a | compounds `Glu-tRNA Glu`, `tRNA Glu` |
 | on1 | on | PASS, PWML | 18 | 0.583 | 0.412 | 7 | compounds `tRNA(Glu)`, `L-Glutamyl-tRNA` |
 | off2 | off | PASS, PWML | 16 | 0.500 | 0.375 | 6 | compound `L-Glutamyl-tRNA` |
-| on2, off3, on3 | | not run: driver stopped on the 5 GB RAM guard before `on2` | | | | | |
+| on2 | on | PASS, PWML | | 0.583 | 0.368 | | compounds `tRNA(Glu)`, `L-Glutamyl-tRNA` |
+| off3 | off | PASS, PWML | | 0.583 | 0.368 | | compounds `L-Glutamyl-tRNA`, `tRNA(Glu)` |
+| on3 | on | PASS, PWML | | 0.500 | 0.353 | | compound `L-Glutamyl-tRNA` |
 
-Reading so far: in none of the three legs is `tRNA Glu` a nucleic acid, so the flag's only effect
-(section 3) was not exercised. Stage 1 differs run to run; this A/B cannot show the flag's effect unless a
-leg declares the tRNA as a nucleic acid. `off1` crashed on a different, unrelated refusal (see 7.2).
+Means over passing legs: recall off 0.542 (2 legs), on 0.556 (3); precision off 0.372, on 0.378. No recall or
+PWML loss with the flag on. But in none of the six legs is `tRNA Glu` a nucleic acid, so the flag's code path was
+never reached live: the A/B shows no harm, not a benefit. `off1` crashed on an unrelated refusal (see 7.2).
+(The legs ran after the PO reboot of 2026-11-25; on2/off3/on3 started at 9.6, 8.9, 5.1 GB free.)
 
 ## 7. Dead ends and findings
 
@@ -120,8 +143,14 @@ leg declares the tRNA as a nucleic acid. `off1` crashed on a different, unrelate
 
 ## 8. Open questions (product owner)
 
-1. Decision rule: enable only if flag-on loses no gold step and no PWML against flag-off and the replay shows
-   no mapped-compound to unmapped-nucleic-acid change. Replay: met (0 changes). Live A/B: undecided until
-   section 5 and the legs are in; the three legs so far cannot test it.
+1. **Orchestrator decision (2026-11-25): flag stays OFF on the server.** It is harmless (sections 3 and 6) but does
+   not fix the crash (section 5), so enabling it buys nothing. It stays merged, default off. Remove it later if
+   the prefreeze fix (next item) makes it redundant.
+1a. **PO, biology:** the real fix is in `pwml/prefreeze_resolution.py` (`_reject_ambiguous_renames`): when the
+   name a reference carries belongs to a nucleic acid, the rename to a mapped compound name should either
+   not apply to that reference or resolve to the nucleic acid. Options: (a) a new flag-gated task on prefreeze,
+   proven by this same replay (flag on must export reaction 20) plus the 74-payload no-loss replay, about one
+   implementer + one reviewer cycle; (b) leave it: 1 of 62 stored runs hits it. Recommendation: (a), bundled
+   with item 2, since both are prefreeze fail-closed refusals on chlorophyll.
 2. `AMBIGUOUS_RENAME_TARGET` (7.2): worth its own task? Cost: a new read of `prefreeze_resolution`.
 3. The pre-existing `test_c075` corpus failure on the base tree needs an owner.
