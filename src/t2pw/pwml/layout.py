@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import heapq
 import json
+import math
 import os
 import re
 from collections import defaultdict
@@ -1071,11 +1072,15 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
     names = {st: str(states.get(st, {}).get("name") or "") + " " + str(loc_names.get(states.get(st, {}).get("subcellular-location-id")) or "")
              for st in bands}
     for st in bands:
-        if parent.get(st) is not None or kinds[st] not in ("leaflet", "cytoplasm"):
+        if parent.get(st) is not None or kinds[st] not in ("leaflet", "cytoplasm", "thylakoid"):
             continue
-        cands = [o for o in bands if o != st and kinds[o] == "membrane"]
-        want = _side_words(names[st]) if kinds[st] == "leaflet" else {"inner", "plasma", "cytoplasmic"}
-        hit = [o for o in cands if _side_words(names[o]) & want]
+        if kinds[st] == "thylakoid":  # thylakoids belong to a chloroplast, not to an etio- or amyloplast
+            cands = [o for o in bands if kinds[o] == "plastid"]
+            hit = [o for o in cands if not re.search(r"etioplast|amyloplast|leucoplast|chromoplast", names[o], re.I)]
+        else:
+            cands = [o for o in bands if o != st and kinds[o] == "membrane"]
+            want = _side_words(names[st]) if kinds[st] == "leaflet" else {"inner", "plasma", "cytoplasmic"}
+            hit = [o for o in cands if _side_words(names[o]) & want]
         if len(cands) > 1 and len(hit) == 1:
             parent[st] = hit[0]
     children: Dict[Any, List[Any]] = defaultdict(list)
@@ -1201,13 +1206,36 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
             x = 0
         rows[-1].append((x, st))
         x += sizes[st][0] + BAND_GAP
-    top = MARGIN + LINE_LABEL_ROOM  # VIS-5: room above the first row for labels on its top membrane line
+    spots: List[Tuple[int, int, Any, int]] = []  # (x, y, state, height) of each root box, relative to the first
+    y = 0
     for row in rows:
         row_h = max(sizes[st][1] for _, st in row)
-        for bx, st in row:
-            place(st, MARGIN + bx, top, sizes[st][0], row_h)
-            row_w = max(row_w, bx + sizes[st][0])
-        top += row_h + BAND_GAP
+        spots += [(bx, y, st, row_h) for bx, st in row]
+        y += row_h + BAND_GAP
+    # VIS-5: when the first box is tall and the other boxes are outlined compartments, stacking them in columns
+    # beside it (PathBank places organelle boxes around the main one) can give a squarer picture than rows under it
+    if len(roots) > 1 and all(style(st)[0] is not None for st in roots[1:]):
+        w0, h0 = sizes[roots[0]]
+        cols = [(0, 0, roots[0], h0)]
+        cx, cy, cw = w0 + BAND_GAP, 0, 0
+        for st in roots[1:]:
+            w, h = sizes[st]
+            if cy > 0 and cy + h > h0:
+                cx, cy, cw = cx + cw + BAND_GAP, 0, 0
+            cols.append((cx, cy, st, h))
+            cy, cw = cy + h + BAND_GAP, max(cw, w)
+
+        def badness(sp):
+            bw = max(x0 + sizes[st][0] for x0, _, st, _ in sp)
+            bh = max(y0 + h for _, y0, _, h in sp)
+            return bw * bh * (1 + abs(math.log(bw / bh / ASPECT)))
+        if badness(cols) < badness(spots):
+            spots = cols
+    top = MARGIN + LINE_LABEL_ROOM  # VIS-5: room above the first row for labels on its top membrane line
+    for bx, by, st, h in spots:
+        place(st, MARGIN + bx, top + by, sizes[st][0], h)
+        row_w = max(row_w, bx + sizes[st][0])
+    top += max(by + h for _, by, _, h in spots) + BAND_GAP
     width = MARGIN + row_w + MARGIN
 
     def own_rect(k) -> Tuple[int, int, int, int]:
