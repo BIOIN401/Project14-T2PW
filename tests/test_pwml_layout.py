@@ -102,6 +102,8 @@ def _content(root):
     every location / edge / complex-visualization reference by the signature of what it points at, so each reaction,
     transport and interaction visualization keeps its members (compound, state, side), enzymes and edges (hidden,
     template, arrows). Compound locations compare as a set: F3 merges identical copies. Membranes and labels are v2's own.
+    A compound location's box template 157 (drug) compares as 81 (compound), an edge's template 83 (transport) as 5: v2
+    redraws them (VIS-1).
     """
     pv = root.find(".//pathway-visualization")
     sections = [s for s in pv if isinstance(s.tag, str) and DRAWING.search(s.tag)]
@@ -119,6 +121,10 @@ def _content(root):
             elif REF.search(c.tag) and c.text:
                 target = by_id.get((c.tag[:-3], c.text))
                 out.append((c.tag, sig(target) if target is not None else ("MISSING", c.text)))
+            elif el.tag == "compound-location" and c.tag == "visualization-template-id" and c.text == "157":
+                out.append((c.tag, "81"))  # VIS-1: v2 draws PathBank's drug box (157) as the compound box (81), same size
+            elif el.tag == "edge" and c.tag == "visualization-template-id" and c.text == "83":
+                out.append((c.tag, "5"))  # VIS-1: v2 draws transport edges with PathBank's transport template (83)
             else:
                 out.append((c.tag, c.text))
         return tuple(out)
@@ -313,7 +319,8 @@ def test_no_attached_node_means_no_box_and_everything_stays_in_the_canvas():
     w, h = relayout(items, _ids())
     assert not items.get("membrane-visualizations") and not items.get("label-locations")
     assert all(0 <= it["x"] and it["x"] + 200 <= w and it["y"] + 190 <= h for it in items["compound-locations"])
-    assert items["edges"][0]["path"] == "M40 %d C40 %d 40 %d 40 %d" % ((h - 20,) * 4)  # zero-length orphan: a point in the margin
+    # zero-length orphan: a short stub in the margin (VIS-1: no zero-length path)
+    assert items["edges"][0]["path"] == "M40 %d C50 %d 60 %d 70 %d" % ((h - 20,) * 4)
 
 
 def test_reaction_point_joins_the_box_of_a_drawn_neighbour():

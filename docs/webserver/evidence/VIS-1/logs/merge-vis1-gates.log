@@ -1,0 +1,99 @@
+HEAD 62ac7eea0516da51d7bf811795258428be95d772
+STATUS_BEGIN
+STATUS_END
+== tree C:/t/merge-vis1
+HEAD 62ac7eea0516da51d7bf811795258428be95d772
+STATUS_BEGIN
+STATUS_END
+== smoke
+........................................................................ [ 84%]
+........................................................................ [ 98%]
+.......                                                                  [100%]
+511 passed in 52.22s
+EXIT_smoke=0
+== g-batch
+T2PW: C:\t\merge-vis1\src\t2pw\__init__.py
+..                                                                       [100%]
+2 passed in 6.37s
+EXIT_g-batch=0
+== g-c011
+T2PW: C:\t\merge-vis1\src\t2pw\__init__.py
+........                                                                 [100%]
+8 passed in 42.06s
+EXIT_g-c011=0
+== g-stage8
+T2PW: C:\t\merge-vis1\src\t2pw\__init__.py
+....                                                                     [100%]
+4 passed in 0.36s
+EXIT_g-stage8=0
+== g-quar
+T2PW: C:\t\merge-vis1\src\t2pw\__init__.py
+........................                                                 [100%]
+24 passed in 35.96s
+EXIT_g-quar=0
+== eq-run
+T2PW: C:\t\merge-vis1\src\t2pw\__init__.py
+........                                                                 [100%]
+8 passed in 60.50s (0:01:00)
+EXIT_eq-run=0
+== eq-app
+T2PW: C:\t\merge-vis1\src\t2pw\__init__.py
+..............                                                           [100%]
+14 passed in 56.65s
+EXIT_eq-app=0
+== eq-default
+T2PW: C:\t\merge-vis1\src\t2pw\__init__.py
+......                                                                   [100%]
+6 passed in 29.45s
+EXIT_eq-default=0
+== vision
+........................................................................ [ 77%]
+........................................................................ [ 97%]
+..........s                                                              [100%]
+370 passed, 1 skipped in 15.06s
+EXIT_vision=0
+== web
+T2PW: C:\t\merge-vis1\src\t2pw\__init__.py
+........................................................................ [ 86%]
+...........                                                              [100%]
+83 passed in 5.45s
+EXIT_web=0
+SUITE_DONE
+== pwml
+305 passed in 7.41s
+EXIT_pwml=0
+== render
+23 passed in 2.17s
+EXIT_render=0
+== service
+346 passed in 47.89s
+EXIT_service=0
+MERGE_VIS1_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 82b31b11924c8ce95924b7a5a8d799bc7ed3690d  [git, worktree dirty=True]
+label                   : merge-vis1-gates
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/vis-runs/merge_vis1_inner.sh
+cwd                     : c:\t\vis-runs
+root PID / process group: 363912 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 5400 s
+duration                : 376.07 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 93  363932:bash.exe, 363956:bash.exe, 364088:bash.exe, 364112:git.exe, 364264:bash.exe, 364288:bash.exe, 364308:bash.exe, 364332:bash.exe, 364428:bash.exe, 364452:git.exe, 320008:python.exe, 349052:bash.exe, 351484:python.exe, 365092:python.exe, 365136:python.exe, 363900:python.exe, 365512:python.exe, 365072:python.exe, 365104:python.exe, 365028:python.exe, 365144:python.exe, 360544:git.exe, 365288:bash.exe, 363132:python.exe, 365452:python.exe, 363108:python.exe, 363368:bash.exe, 364960:python.exe, 345616:git.exe, 366084:git.exe, 362984:python.exe, 366208:python.exe, 366216:python.exe, 366276:python.exe, 362124:python.exe, 366468:python.exe, 365648:python.exe, 366448:python.exe, 361024:python.exe, 365824:python.exe, 366244:python.exe, 366508:python.exe, 366192:python.exe, 366284:python.exe, 363024:python.exe, 354028:python.exe, 354452:python.exe, 364320:python.exe, 366296:bash.exe, 362072:python.exe, 366300:python.exe, 366428:bash.exe, 360560:bash.exe, 366612:bash.exe, 366872:python.exe, 366664:python.exe, 368192:python.exe, 368220:python.exe, 362944:bash.exe, 365700:python.exe, 365752:bash.exe, 368440:python.exe, 358424:python.exe, 360144:bash.exe, 367748:bash.exe, 366596:python.exe, 359244:ls.exe, 368468:bash.exe, 364064:bash.exe, 365400:python.exe, 365696:python.exe, 362988:python.exe, 367456:python.exe, 342464:python.exe, 368152:python.exe, 368840:bash.exe, 368880:python.exe, 368904:python.exe, 369332:python.exe, 369376:python.exe, 368388:python.exe, 369656:python.exe, 369600:python.exe, 369644:python.exe, 357092:python.exe, 368200:python.exe, 365312:bash.exe, 369156:bash.exe, 369176:timeout.exe, 369328:timeout.exe, 360332:bash.exe, 369532:grep.exe, 366356:bash.exe
+descendants terminated  : 93  320008, 342464, 345616, 349052, 351484, 354028, 354452, 357092, 358424, 359244, 360144, 360332, 360544, 360560, 361024, 362072, 362124, 362944, 362984, 362988, 363024, 363108, 363132, 363368, 363900, 363932, 363956, 364064, 364088, 364112, 364264, 364288, 364308, 364320, 364332, 364428, 364452, 364960, 365028, 365072, 365092, 365104, 365136, 365144, 365288, 365312, 365400, 365452, 365512, 365648, 365696, 365700, 365752, 365824, 366084, 366192, 366208, 366216, 366244, 366276, 366284, 366296, 366300, 366356, 366428, 366448, 366468, 366508, 366596, 366612, 366664, 366872, 367456, 367748, 368152, 368192, 368200, 368220, 368388, 368440, 368468, 368840, 368880, 368904, 369156, 369176, 369328, 369332, 369376, 369532, 369600, 369644, 369656
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-runs/merge-vis1-gates.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=orch  acquired=True  released=True
+pre-existing (reported, NEVER killed): 13
+================================================
+BW_EXIT=0

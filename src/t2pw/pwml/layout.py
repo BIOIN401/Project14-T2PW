@@ -11,8 +11,10 @@ Layout: each compartment (biological state) that holds a node PathWhiz draws is 
 name, never an internal one; PathBank's label template and scale); PathWhiz's viewer drops every location no process
 refers to, so such nodes do not make a box of their own; inside it, each connected group of nodes gets a layered
 (Sugiyama-style) left-to-right layout (substrate -> enzyme, transporter or reaction point -> product), groups are
-shelf-packed in the box, and boxes are packed in rows. Edges are straight when the straight line is clear of
-node boxes, otherwise routed around them on a grid.
+shelf-packed in the box, and boxes are packed in rows. Edges are PathBank's cubic curves (VIS-1): they leave a node
+at right angles from the middle of a side and meet the enzyme at its substrate or product side; currency
+co-substrates and co-products are small side nodes beside the reaction's shaft; an edge whose curve would cross a
+node box is routed around them on a grid.
 """
 from __future__ import annotations
 
@@ -23,7 +25,7 @@ import re
 from collections import defaultdict
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
-from t2pw.pwml.compound_templates import TEMPLATE_DIMS
+from t2pw.pwml.compound_templates import COMPOUND_ID_TO_TEMPLATE, TEMPLATE_DIMS
 
 LOC_SECTIONS = ("compound-locations", "protein-locations", "nucleic-acid-locations", "element-collection-locations")
 MARGIN, BAND_GAP, BAND_PAD_X, BAND_PAD_BOT = 40, 80, 40, 40
@@ -245,17 +247,6 @@ def _pava(desired: List[float], seps: List[float]) -> List[float]:
     return [a + b for a, b in zip(z, off)]
 
 
-def _anchor(rect: Tuple[int, int, int, int], tx: float, ty: float) -> Tuple[int, int]:
-    """Point on the rectangle border toward (tx, ty); side middles when the target lies beside the box."""
-    x0, y0, x1, y1 = rect
-    cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
-    if tx >= x1:
-        return x1, int(round(cy))
-    if tx <= x0:
-        return x0, int(round(cy))
-    return int(round(cx)), (y1 if ty >= cy else y0)
-
-
 def _seg_hits(p: Tuple[float, float], q: Tuple[float, float], r: Tuple[int, int, int, int]) -> bool:
     x0, y0, x1, y1 = r
     dx, dy = q[0] - p[0], q[1] - p[1]
@@ -353,6 +344,100 @@ def _path(points: List[Tuple[int, int]]) -> Tuple[str, Tuple[int, int], Tuple[in
             cp1 = c1
         cp2 = c2
     return " ".join(parts), cp1, cp2
+
+
+# ---- edge drawing conventions mined from the 16 curated PathBank reference PWMLs (VIS-1, docs/webserver/results/VIS-1.md):
+# every edge is one cubic "M p0 C c1 c2 p3"; it leaves a node from the middle of a side at right angles (83 % / 93 %)
+# and meets the enzyme at the middle of its side along the reaction's shaft (85 % / 88 %); all substrates of a reaction
+# share one point, all products another (80 % / 85 %); control points sit about a quarter of the chord out (median 30
+# for a 140 chord). Co-substrates and co-products (currency compounds) are small nodes 75 along the shaft from the
+# reaction point and 73 off it (medians), on short branches (chord median 106-113).
+SIDES = {"L": (-1, 0), "R": (1, 0), "T": (0, -1), "B": (0, 1)}
+PILL_ALONG, PILL_PERP, PILL_GAP, PILL_MAX = 75, 73, 20, 100  # PILL_MAX: larger nodes stay on the main chain
+TRANSPORTER_REACH = 300  # how far a transporter slides along its membrane for a clear line to its inner cargo
+SIDE_TEMPLATES = frozenset(COMPOUND_ID_TO_TEMPLATE.values())  # PathBank's small-molecule icons (ATP, NAD+, H2O, ...)
+# Compound box templates (both 200 x 190): PathBank draws 157 ("Drug", pink header) only for the drug a drug pathway is
+# about (15 of 271 boxes in the 16 reference PWMLs: fluconazole, caffeine, zidovudine, buprenorphine, benzethonium, each
+# in its own pathway) and 81 for every other compound, DrugBank id or not (144 of the 256 81-boxes have one: L-alanine,
+# pyruvic acid, ...). compound_templates.select_compound_template_id gives 157 to any compound with a DrugBank id, so v2
+# draws those as 81. ponytail: the drug of a drug-action pathway loses its pink header too; keep 157 for the compound
+# named in the pathway once the pathway name reaches relayout.
+DRUG_TEMPLATE, COMPOUND_TEMPLATE = 157, 81
+# Edge templates: PathBank draws a transport's edges with template 83 (151 of 152 transport member edges in the 16
+# reference PWMLs; 690 of 691 reaction member edges use 5). The writer gives transport edges 5.
+TRANSPORT_EDGE_TEMPLATE = 83
+
+
+def _side_point(r: Tuple[int, int, int, int], s: str) -> Tuple[Tuple[int, int], Tuple[int, int]]:
+    """Middle of side ``s`` of rectangle ``r`` and that side's outward normal."""
+    x0, y0, x1, y1 = r
+    cx, cy = (x0 + x1) // 2, (y0 + y1) // 2
+    return {"L": (x0, cy), "R": (x1, cy), "T": (cx, y0), "B": (cx, y1)}[s], SIDES[s]
+
+
+def _sides_toward(r: Tuple[int, int, int, int], tx: float, ty: float) -> List[str]:
+    """The four sides of ``r``, the one facing (tx, ty) first (distances scaled by the box's half sizes)."""
+    x0, y0, x1, y1 = r
+    dx = (tx - (x0 + x1) / 2) / max(1.0, (x1 - x0) / 2)
+    dy = (ty - (y0 + y1) / 2) / max(1.0, (y1 - y0) / 2)
+    return sorted(SIDES, key=lambda s: -(SIDES[s][0] * dx + SIDES[s][1] * dy))
+
+
+def _facing_sides(r: Tuple[int, int, int, int], tx: float, ty: float) -> List[str]:
+    """The sides of ``r`` that face (tx, ty) at all, best first (always at least one): leaving from a side that faces away
+    makes a loop."""
+    x0, y0, x1, y1 = r
+    dx, dy = tx - (x0 + x1) / 2, ty - (y0 + y1) / 2
+    sides = _sides_toward(r, tx, ty)
+    return sides[:1] + [s for s in sides[1:3] if SIDES[s][0] * dx + SIDES[s][1] * dy > 0]
+
+
+def _curve(p0, n0, p3, n3, ratio: float = 0.25, bound: Optional[Tuple[int, int]] = None, short: Tuple[bool, bool] = (False, False)):
+    """One cubic from p0 (leaving along normal n0) to p3 (arriving against normal n3): path, c1, c2. The control points
+    sit ``ratio`` of the chord out (at least 30, or a third of a short chord; at most 200), kept inside ``bound``; an end
+    marked in ``short`` (a reaction point, where several edges meet) keeps PathBank's 30, so the edges meeting there
+    turn into it late instead of running together."""
+    chord = ((p3[0] - p0[0]) ** 2 + (p3[1] - p0[1]) ** 2) ** 0.5
+    k = max(1, int(max(min(30.0, chord / 3), min(200.0, ratio * chord))))
+    k0, k3 = (max(1, int(min(30.0, chord / 3))) if s else k for s in short)
+    c1 = [p0[0] + k0 * n0[0], p0[1] + k0 * n0[1]]
+    c2 = [p3[0] + k3 * n3[0], p3[1] + k3 * n3[1]]
+    if bound:
+        for c in (c1, c2):
+            c[0], c[1] = max(0, min(bound[0], c[0])), max(0, min(bound[1], c[1]))
+    c1, c2 = tuple(c1), tuple(c2)
+    return f"M{p0[0]} {p0[1]} C{c1[0]} {c1[1]} {c2[0]} {c2[1]} {p3[0]} {p3[1]}", c1, c2
+
+
+def _bezier_points(p0, c1, c2, p3, n: int = 16) -> List[Tuple[float, float]]:
+    out = []
+    for i in range(n + 1):
+        t = i / n
+        u = 1 - t
+        out.append((u ** 3 * p0[0] + 3 * u * u * t * c1[0] + 3 * u * t * t * c2[0] + t ** 3 * p3[0],
+                    u ** 3 * p0[1] + 3 * u * u * t * c1[1] + 3 * u * t * t * c2[1] + t ** 3 * p3[1]))
+    return out
+
+
+def _clear(pts: List[Tuple[float, float]], rects: List[Tuple[int, int, int, int]]) -> bool:
+    return not any(_seg_hits(p, q, r) for p, q in zip(pts, pts[1:]) for r in rects)
+
+
+def _crossings(pts: List[Tuple[float, float]], others: List[List[Tuple[float, float]]]) -> int:
+    """How many of ``others`` (polylines) cross ``pts`` (a proper crossing; touching at a shared end does not count)."""
+    def o(p, q, r):
+        v = (q[0] - p[0]) * (r[1] - p[1]) - (q[1] - p[1]) * (r[0] - p[0])
+        return (v > 1e-9) - (v < -1e-9)
+
+    x0, x1 = min(p[0] for p in pts), max(p[0] for p in pts)
+    y0, y1 = min(p[1] for p in pts), max(p[1] for p in pts)
+    n = 0
+    for b in others:
+        if not b or max(p[0] for p in b) < x0 or min(p[0] for p in b) > x1 or max(p[1] for p in b) < y0 or min(p[1] for p in b) > y1:
+            continue
+        n += any(o(p, q, r) * o(p, q, s) < 0 and o(r, s, p) * o(r, s, q) < 0
+                 for p, q in zip(pts, pts[1:]) for r, s in zip(b, b[1:]))
+    return n
 
 
 def _options(raw: Any) -> Dict[str, Any]:
@@ -545,6 +630,8 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
     hidden_locs: List[Dict[str, Any]] = []
     for sec in LOC_SECTIONS:
         for it in items.get(sec, []):
+            if sec == "compound-locations" and str(it.get("visualization-template-id")) == str(DRUG_TEMPLATE):
+                it["visualization-template-id"] = COMPOUND_TEMPLATE
             dims = (TEMPLATE_DIMS if sec == "compound-locations" else OTHER_TEMPLATE_DIMS).get(it.get("visualization-template-id"))
             if dims:  # PathWhiz draws a location at its template's size and ignores the stored one
                 it["width"], it["height"] = str(dims[0]), str(dims[1])
@@ -596,8 +683,33 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
     # ---- process units: layering edges and, per edge, (start block, end block)
     flow: List[Tuple[Any, Any]] = []
     edge_ends: Dict[int, Tuple[Any, Any]] = {}
+    edge_role: Dict[int, Tuple[str, Any, str]] = {}  # edge -> (process kind "r"/"t", hub block, "in" or "out")
     attached: set = set()  # blocks a process visualization refers to; PathWhiz's viewer drops the rest (isOrphan)
     hub_of: Dict[Tuple[str, Any], Any] = {}
+    # side compounds (PathBank's co-substrate / co-product pills): a small currency compound used by one process only,
+    # beside a reaction that has a main (non-currency) member on the same side in the same compartment
+    uses: Dict[Any, int] = defaultdict(int)
+    for sec in ("reaction-visualizations", "transport-visualizations", "interaction-visualizations"):
+        for viz in items.get(sec, []):
+            for val in viz.values():
+                for m in (val if isinstance(val, list) else []):
+                    for f, x in (m.items() if isinstance(m, dict) else []):
+                        k = pcv_block(x) if f == "protein-complex-visualization-id" else loc_block(x) if f.endswith("location-id") else None
+                        if k is not None:
+                            uses[k] += 1
+    compounds = {c.get("id"): c for c in items.get("compounds", [])}
+    from t2pw.pwml.writer import _is_chain_hub_compound_record
+
+    def is_currency(k):
+        bl = blocks.get(k)
+        if bl is None or len(bl.members) != 1 or "compound-id" not in bl.members[0] or bl.w > PILL_MAX or bl.h > PILL_MAX:
+            return False
+        loc = bl.members[0]
+        return loc.get("visualization-template-id") in SIDE_TEMPLATES or _is_chain_hub_compound_record(compounds.get(loc.get("compound-id")) or {})
+
+    pills: Dict[Any, List[Tuple[Any, str]]] = defaultdict(list)  # hub -> [(side compound block, "in"/"out")]
+    pill_of: Dict[Any, Any] = {}
+    pending: List[Tuple[Any, List[Any], List[Tuple[Any, Any, Any, str]]]] = []  # (hub, enzymes, members with roles)
     for rv in items.get("reaction-visualizations", []):
         hubs = []
         for ev in rv.get("reaction_enzyme_visualizations", []):
@@ -614,16 +726,40 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
             continue
         hub = hubs[0] if hubs else junction(rv.get("biological-state-id"))
         hub_of[("r", rv.get("reaction-id"))] = hub
+        roles = []
         for m, k in members:
             e = edges.get(int(m["edge-id"])) if m.get("edge-id") is not None else None
+            product = _options(e.get("options") if e is not None else None).get("start_arrow") is True
+            roles.append((m, k, e, "out" if product else "in"))
+        pending.append((hub, hubs, roles))
+        for m, k, e, role in roles:
             if e is not None:
                 edge_ends[int(e["id"])] = (k if k is not None else hub, hub)
+                edge_role[int(e["id"])] = ("r", hub, role)
+    # PathBank's fork: one main member on the shaft, side compounds beside it. With two or more main members meeting at
+    # one side of an enzyme (one reaction or several sharing the enzyme) their edges fan in through the side compounds'
+    # places, so that side keeps its compounds in the layered layout.
+    def main(k):
+        return k is not None and not (uses[k] == 1 and is_currency(k))
+
+    mains: Dict[Tuple[Any, str], set] = defaultdict(set)
+    for hub, _, roles in pending:
+        for _, k, _, r in roles:
+            if main(k):
+                mains[(hub, r)].add(k)
+    for hub, hubs, roles in pending:
+        for m, k, e, role in roles:
             if k is None:
                 continue
-            opts = e.get("options") if e is not None else None
-            product = _options(opts).get("start_arrow") is True
+            ms = mains[(hub, role)]
+            if (not main(k) and k not in pill_of and len(ms) == 1 and blocks[next(iter(ms))].state == blocks[k].state
+                    and any(k2 in ms for _, k2, _, r2 in roles if r2 == role)):
+                pills[hub].append((k, role))
+                pill_of[k] = hub
+                attached.add(k)
+                continue
             for h in hubs or [hub]:
-                flow.append((h, k) if product else (k, h))
+                flow.append((h, k) if role == "out" else (k, h))
     n_flow_before_transports = len(flow)
     transports: List[Tuple[Any, List[Tuple[Any, Any]]]] = []  # (hub, [(cargo block, side)])
     for tv in items.get("transport-visualizations", []):
@@ -645,6 +781,8 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
             if m.get("edge-id") is not None and int(m["edge-id"]) in edges:
                 kk = k if k is not None else hub
                 edge_ends[int(m["edge-id"])] = (kk, hub) if left else (hub, kk)
+                edge_role[int(m["edge-id"])] = ("t", hub, "in" if left else "out")
+                edges[int(m["edge-id"])]["visualization-template-id"] = TRANSPORT_EDGE_TEMPLATE
             if k is not None:
                 flow.append((k, hub) if left else (hub, k))
     n_flow_after_transports = len(flow)
@@ -687,7 +825,37 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
 
     # ---- compartments: a box per state holding a node PathWhiz draws; each connected group laid out in layers
     attached.update(k for pair in flow for k in pair)
-    keys = list(blocks)
+    # a location no process refers to (PathWhiz's viewer drops it) that has a drawn twin of the same entity (the IR's
+    # transporter location in its own membrane state next to the one the transport uses): drawn on top of its twin,
+    # never as a stray box of its own
+    def entity(loc):
+        f = next((f for f in ("protein-id", "nucleic-acid-id", "element-collection-id", "compound-id") if f in loc), None)
+        return (f, loc[f]) if f else None
+
+    drawn_by_entity: Dict[Any, Tuple[Any, int]] = {}  # entity -> (drawn block, index of its location in the block)
+    for k, bl in blocks.items():
+        if k in attached:
+            for i, loc in enumerate(bl.members):
+                if entity(loc) is not None:
+                    drawn_by_entity.setdefault(entity(loc), (k, i))
+    twin_of = {k: drawn_by_entity[entity(bl.members[0])] for k, bl in blocks.items()
+               if k not in attached and len(bl.members) == 1 and entity(bl.members[0]) in drawn_by_entity}
+    # a reaction with side compounds reserves room above and below its enzyme (the block grows evenly, so the shaft
+    # stays on the block's centre line); each side compound gets (hub, role, above -1 / below +1, distance to the shaft)
+    pill_at: Dict[Any, Tuple[Any, str, int, int]] = {}
+    for hub, lst in pills.items():
+        hb, reach = blocks[hub], 0
+        for role in ("in", "out"):
+            level = {-1: PILL_PERP, 1: PILL_PERP}
+            for i, (k, _) in enumerate([p for p in lst if p[1] == role]):
+                s = -1 if i % 2 == 0 else 1
+                pill_at[k] = (hub, role, s, level[s])
+                level[s] += blocks[k].h + PILL_GAP
+                reach = max(reach, level[s] - PILL_GAP)
+        pad = max(0, reach - hb.h // 2)
+        hb.h += 2 * pad
+        hb.offsets = [(dx, dy + pad) for dx, dy in hb.offsets]
+    keys = [k for k in blocks if k not in twin_of and k not in pill_of]
     boxed = {blocks[k].state for k in keys if k in attached and not blocks[k].virtual}
     nbrs: Dict[Any, List[Any]] = defaultdict(list)
     for u, v in flow:
@@ -863,6 +1031,24 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
         top += row_h + BAND_GAP
     width = MARGIN + row_w + MARGIN
 
+    def own_rect(k) -> Tuple[int, int, int, int]:
+        """What is drawn of block ``k`` (its locations; a reaction point is a small box round its centre)."""
+        bl = blocks[k]
+        if bl.virtual:
+            cx, cy = bl.center()
+            return int(cx) - JUNCTION_W // 2, int(cy) - JUNCTION_H // 2, int(cx) + JUNCTION_W // 2, int(cy) + JUNCTION_H // 2
+        rs = [(bl.x + dx, bl.y + dy, bl.x + dx + _dim(l["width"]), bl.y + dy + _dim(l["height"])) for l, (dx, dy) in zip(bl.members, bl.offsets)]
+        return min(r[0] for r in rs), min(r[1] for r in rs), max(r[2] for r in rs), max(r[3] for r in rs)
+
+    for k, (hub, role, s, near) in pill_at.items():  # side compounds beside their reaction's shaft
+        x0, y0, x1, y1 = own_rect(hub)
+        cy, bl = (y0 + y1) // 2, blocks[k]
+        if blocks[hub].virtual:  # a reaction point without enzyme sits next to its substrates: side compounds go right
+            cx = (x0 + x1) // 2 + (PILL_ALONG // 2 if role == "in" else PILL_ALONG + PILL_ALONG // 2)
+        else:
+            cx = x0 - PILL_ALONG if role == "in" else x1 + PILL_ALONG
+        bl.x, bl.y = cx - bl.w // 2, (cy - near - bl.h) if s < 0 else (cy + near)
+
     # ---- compartments: bound-visualizations (when written), membranes and labels
     rect_of_state = dict(band_rects)
     extra_x, extra_y = MARGIN, top
@@ -898,12 +1084,17 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
             chain.append(cur)
             cur = parent.get(cur)
         anc[st] = chain
-    fixed = [(bl.x, bl.y, bl.x + bl.w, bl.y + bl.h) for k, bl in blocks.items() if not bl.virtual]
+    fixed = [(bl.x, bl.y, bl.x + bl.w, bl.y + bl.h) for k, bl in blocks.items() if not bl.virtual and k not in twin_of]
     fixed += [_label_rect(lb) for lb in items.get("label-locations", [])]
     def crossing(si, so):
         """The membrane a cargo in ``si`` crosses toward ``so``: the highest outlined box around ``si`` not holding ``so``."""
         m = next((s for s in reversed(anc[si]) if s not in anc[so]), None)
         return m if m in rect_of_state and style(m)[0] is not None else None
+
+    on_membrane: Dict[Any, Tuple[set, bool]] = {}  # moved hub -> (states inside its membrane, membrane is the box top)
+
+    def anc_set(mem):
+        return {st for st, chain in anc.items() if mem in chain}
 
     plans: Dict[Any, List[Any]] = defaultdict(list)  # hub -> [(membrane, top side, inner cargo block)]
     for hub, cargo in transports:
@@ -936,20 +1127,40 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
         if hi < lo:
             continue
         own = (hb.x, hb.y, hb.x + hb.w, hb.y + hb.h)
+        # the first free spot from the inner cargo's x outward, preferring one the inner cargo reaches on a clear line
+        cargo_r = ba.rect()
+        others = [f for f in fixed if f != own]
+        inner_side = "B" if on_top else "T"
+        first = hit = None
         for step in range(0, x1 - x0, 20):
-            hit = None
-            for nx in (want + step, want - step):
-                nx = max(lo, min(hi, nx))
+            for nx in dict.fromkeys(max(lo, min(hi, v)) for v in (want + step, want - step)):
                 r = (nx - 15, ny - 15, nx + hb.w + 15, ny + hb.h + 15)
-                if not any(not (r[2] <= f[0] or f[2] <= r[0] or r[3] <= f[1] or f[3] <= r[1]) for f in fixed if f != own):
-                    hit = nx
+                if any(not (r[2] <= f[0] or f[2] <= r[0] or r[3] <= f[1] or f[3] <= r[1]) for f in others):
+                    continue
+                first = nx if first is None else first
+                if step > TRANSPORTER_REACH:  # past reach: the first free spot
                     break
-            if hit is not None:
-                if not hb.virtual:
-                    fixed.remove(own)
-                hb.x, hb.y = hit, ny
-                fixed.append((hb.x, hb.y, hb.x + hb.w, hb.y + hb.h))
+                p3, n3 = _side_point((nx, ny, nx + hb.w, ny + hb.h), inner_side)
+                for s in _facing_sides(cargo_r, *p3):  # the sides the edge drawing will try
+                    p0, n0 = _side_point(cargo_r, s)
+                    _, c1, c2 = _curve(p0, n0, p3, n3)
+                    if _clear(_bezier_points(p0, c1, c2, p3), [f for f in others if f != cargo_r]):
+                        hit = nx
+                        break
+                if hit is not None:
+                    break
+            if hit is not None or (first is not None and step > TRANSPORTER_REACH):
                 break
+        hit = first if hit is None else hit
+        if hit is not None:
+            if not hb.virtual:
+                fixed.remove(own)
+            hb.x, hb.y = hit, ny
+            fixed.append((hb.x, hb.y, hb.x + hb.w, hb.y + hb.h))
+            on_membrane[hub] = (anc_set(mem), on_top)
+    for k, (twin, i) in twin_of.items():
+        tb = blocks[twin]
+        blocks[k].x, blocks[k].y = tb.x + tb.offsets[i][0], tb.y + tb.offsets[i][1]
     for bl in blocks.values():
         for loc, (dx, dy) in zip(bl.members, bl.offsets):
             loc["x"], loc["y"] = bl.x + dx, bl.y + dy
@@ -957,39 +1168,96 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
         loc["x"] = max(0, min(int(loc.get("x") or 0), width - _dim(loc["width"])))
         loc["y"] = max(0, min(int(loc.get("y") or 0), height - _dim(loc["height"])))
 
-    # ---- edges
+    # ---- edges: PathBank's cubic per edge (see SIDES above). A reaction's substrates meet at the middle of its enzyme's
+    # left side, its products leave from the right side (top or bottom when the node lies behind the enzyme); a
+    # transporter on a membrane takes its inner cargo on the side facing in and its outer cargo on the side facing out
     member_rects = {k: [(int(l["x"]), int(l["y"]), int(l["x"]) + _dim(l["width"]), int(l["y"]) + _dim(l["height"]))
                         for l in bl.members] for k, bl in blocks.items()}
     label_rects = [_label_rect(lb) for lb in items.get("label-locations", [])]
     all_rects = [r for rs in member_rects.values() for r in rs] + label_rects
     router = _Router(width, height, all_rects)
-    routed = 0
+
+    def hub_end(eid, k, other_r):
+        """(point, outward normal) where edge ``eid`` meets block ``k`` when ``k`` is its process's hub, else None."""
+        kind, hub, role = edge_role.get(eid, (None, None, None))
+        if hub != k:
+            return None
+        r = own_rect(k)
+        ox, oy = (other_r[0] + other_r[2]) / 2, (other_r[1] + other_r[3]) / 2
+        if kind == "t" and k in on_membrane:
+            inside, on_top = on_membrane[k]
+            cargo = edge_ends[eid][0] if edge_ends[eid][1] == k else edge_ends[eid][1]
+            inner = blocks[cargo].state in inside
+            return _side_point(r, ("B" if inner else "T") if on_top else ("T" if inner else "B"))
+        if blocks[k].virtual:  # a point: met from the side facing the other end
+            return ((r[0] + r[2]) // 2, (r[1] + r[3]) // 2), SIDES[_sides_toward(r, ox, oy)[0]]
+        s = "L" if role == "in" else "R"
+        if (role == "in" and ox >= r[0]) or (role == "out" and ox <= r[2]):  # behind the enzyme: top or bottom
+            s = "T" if oy < (r[1] + r[3]) / 2 else "B"
+        return _side_point(r, s)
+
+    bound = (width, height)
+    drawn: List[List[Tuple[float, float]]] = []  # visible edges drawn so far, as sampled polylines
+    plain: Dict[Tuple[Any, Any], Any] = {}  # (start block, end block) -> chosen ends of a curve with no hub end
     for eid, (a, b) in edge_ends.items():
-        e, ba, bb = edges[eid], blocks[a], blocks[b]
-        ca, cb = ba.center(), bb.center()
-        pa = (int(ca[0]), int(ca[1])) if ba.virtual else _anchor(ba.rect(), *cb)
-        pb = (int(cb[0]), int(cb[1])) if bb.virtual else _anchor(bb.rect(), *ca)
-        pts = [pa, pb]
-        if a == b:
-            pts = [pa]
-        elif e.get("hidden") and bb.virtual:
-            pts = [pb]  # v1's hidden substrate edge of a reaction without enzyme: a point at the reaction
-        elif any(_seg_hits(pa, pb, r) for r in all_rects if r not in member_rects[a] and r not in member_rects[b]):
-            route = router.route(pa, pb, member_rects[a] + member_rects[b])
-            if route:
-                pts, routed = route, routed + 1
-        path, cp1, cp2 = _path(pts)
-        e["path"] = path
-        _set_arrow_paths(e, pts[0], cp1, pts[-1], cp2)
+        e = edges[eid]
+        ra, rb = own_rect(a), own_rect(b)
+        if a == b:  # a connector from an enzyme to its own reaction: the shaft through the enzyme (its first location)
+            r = member_rects[a][0] if member_rects[a] else ra
+            p0, p3 = ((r[0], (r[1] + r[3]) // 2), (r[2], (r[1] + r[3]) // 2))
+            path, c1, c2 = _curve(p0, (1, 0), p3, (-1, 0), bound=bound)
+            e["path"] = path
+            _set_arrow_paths(e, p0, c1, p3, c2)
+            continue
+        obstacles = [r for r in all_rects if r not in member_rects[a] and r not in member_rects[b]]
+        fa, fb = hub_end(eid, a, rb), hub_end(eid, b, ra)
+        ends_a = [fa] if fa else [_side_point(ra, s) for s in _facing_sides(ra, *(fb[0] if fb else ((rb[0] + rb[2]) / 2, (rb[1] + rb[3]) / 2)))]
+        ends_b = [fb] if fb else [_side_point(rb, s) for s in _facing_sides(rb, *(ends_a[0][0]))]
+        if fa is None and fb is None and (b, a) in plain:  # the reverse of a curve already drawn between the two nodes
+            ends_b, ends_a = [plain[(b, a)][0]], [plain[(b, a)][1]]  # (an interaction's hidden Left edge)
+        ratio = 0.4 if a in pill_of or b in pill_of else 0.25  # side compounds: shorter, rounder branches
+        # the first candidate (preferred sides first) clear of node boxes, fewest crossings with the edges drawn so far
+        best, score, pick = None, None, None
+        for i, (p0, n0) in enumerate(ends_a):
+            for j, (p3, n3) in enumerate(ends_b):
+                if p0 == p3:
+                    continue
+                path, c1, c2 = _curve(p0, n0, p3, n3, ratio, bound, (fa is not None, fb is not None))
+                pts = _bezier_points(p0, c1, c2, p3)
+                sc = (not _clear(pts, obstacles), _crossings(pts, drawn), i + j)
+                if score is None or sc < score:
+                    best, score, pick = (path, p0, c1, p3, c2, pts), sc, ((p0, n0), (p3, n3))
+                if sc[:2] == (False, 0):
+                    break
+            if score is not None and score[:2] == (False, 0):
+                break
+        if score is not None and score[0]:  # no clear curve: a right-angle route round the boxes, as PathBank's connectors
+            pa, pb = ends_a[0][0], ends_b[0][0]
+            route = router.route(pa, pb, member_rects[a] + member_rects[b]) if pa != pb else None
+            if route and len(set(route)) > 1:
+                path, c1, c2 = _path(route)
+                best, pick = (path, route[0], c1, route[-1], c2, [tuple(q) for q in route]), None
+        if fa is None and fb is None and best is not None and pick is not None:
+            plain[(a, b)] = pick
+        if best is None:  # both ends on one point (a reaction point on its own substrate): a short stub
+            p0 = ends_a[0][0]
+            best = _curve(p0, (1, 0), (p0[0] + 12, p0[1]), (-1, 0), bound=bound)
+            best = (best[0], p0, best[1], (p0[0] + 12, p0[1]), best[2], [])
+        if not e.get("hidden"):
+            drawn.append(best[5])
+        e["path"] = best[0]
+        _set_arrow_paths(e, best[1], best[2], best[3], best[4])
     # An edge that neither a visualization member nor the IR ties to anything drawn keeps its v1 shape (PathWhiz's
     # viewer drops it as an orphan; other renderers draw it). Lines move together, unchanged, into a strip under the
-    # content and the canvas grows to hold them; a zero-length one becomes a point in the bottom margin.
+    # content and the canvas grows to hold them; a zero-length one becomes a short stub in the bottom margin.
     orphans = [(e, _path_points(str(e.get("path") or ""))) for eid, e in edges.items() if eid not in edge_ends]
     lines = [(e, pts) for e, pts in orphans if len(set(pts)) > 1 and re.fullmatch(r"[MLC0-9.\s,-]*", str(e.get("path") or ""))
              and len(re.findall(r"-?\d+(?:\.\d+)?", str(e.get("path") or ""))) % 2 == 0]
     for e, pts in orphans:
         if len(set(pts)) <= 1:
-            e["path"] = _path([(MARGIN, height - MARGIN // 2)])[0]
+            p0, p3 = (MARGIN, height - MARGIN // 2), (MARGIN + 30, height - MARGIN // 2)
+            e["path"], c1, c2 = _curve(p0, (1, 0), p3, (-1, 0))
+            _set_arrow_paths(e, p0, c1, p3, c2)
     if lines:
         x0 = min(px for _, pts in lines for px, _ in pts)
         y0 = min(py for _, pts in lines for _, py in pts)
