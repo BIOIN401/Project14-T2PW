@@ -18,6 +18,7 @@ fetch from it (W10 RESULT, evidence).
 from __future__ import annotations
 
 import difflib
+import logging
 import os
 import re
 import sqlite3
@@ -28,6 +29,7 @@ from typing import Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 
 from t2pw.paths import PROJECT_ROOT
 
+log = logging.getLogger("t2pw.web.pathbank")
 DEFAULT_INDEX = PROJECT_ROOT / "data" / "webserver" / "pathbank_index.sqlite"
 PW_RE = re.compile(r"PW\d{6,7}")
 VIEW_URL = "https://pathbank.org/view/{smp}"  # PathBank's own page for one pathway
@@ -118,7 +120,19 @@ class PathBankIndex:
 
     @property
     def available(self) -> bool:
-        return self.path.is_file()
+        """The file exists and answers a query (a corrupt or half-copied index is "not available")."""
+        if not self.path.is_file():
+            return False
+        try:
+            db = self._db()
+            try:
+                db.execute("SELECT 1 FROM names LIMIT 1").fetchall()
+            finally:
+                db.close()
+        except sqlite3.DatabaseError as exc:
+            log.warning("PathBank index unusable (%s)", type(exc).__name__)
+            return False
+        return True
 
     def _db(self) -> sqlite3.Connection:
         db = sqlite3.connect(f"file:{self.path.as_posix()}?mode=ro", uri=True)
@@ -126,7 +140,23 @@ class PathBankIndex:
         return db
 
     def get(self, pw_id: str) -> Optional[Hit]:
-        if not PW_RE.fullmatch(pw_id or "") or not self.available:
+        try:
+            return self._get(pw_id)
+        except sqlite3.DatabaseError as exc:  # corrupt index: a missing pathway, never a 500
+            log.warning("PathBank index unusable (%s)", type(exc).__name__)
+            return None
+
+    def search(self, query: str, species_ids: Optional[Sequence[int]] = None, limit: int = 3) -> List[Hit]:
+        """Best pathways for ``query``, best first, at most one per distinct name; ``[]`` if the
+        index is missing or unusable. See ``_search``."""
+        try:
+            return self._search(query, species_ids, limit)
+        except sqlite3.DatabaseError as exc:
+            log.warning("PathBank index unusable (%s)", type(exc).__name__)
+            return []
+
+    def _get(self, pw_id: str) -> Optional[Hit]:
+        if not PW_RE.fullmatch(pw_id or "") or not self.path.is_file():
             return None
         db = self._db()
         try:
@@ -137,7 +167,7 @@ class PathBankIndex:
             db.close()
         return Hit(r["pw_id"], r["smp_id"], r["name"], r["species_id"], r["subject"], 1.0, r["c"]) if r else None
 
-    def search(self, query: str, species_ids: Optional[Sequence[int]] = None, limit: int = 3) -> List[Hit]:
+    def _search(self, query: str, species_ids: Optional[Sequence[int]] = None, limit: int = 3) -> List[Hit]:
         """Best pathways for ``query``, best first, at most one per distinct name.
 
         Exact name (1.0), then an exact synonym (0.99), then names containing every query
@@ -145,7 +175,7 @@ class PathBankIndex:
         ``species_ids`` only pathways drawn for those species count. Ties: lower PW id first
         (the older, curated originals)."""
         q = normalize(query)
-        if not q or not self.available:
+        if not q or not self.path.is_file():
             return []
         db = self._db()
         try:

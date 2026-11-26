@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import logging
 import math
+import uuid
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 from urllib.parse import urlencode
@@ -36,6 +37,7 @@ from t2pw.web.notify import is_valid_email
 log = logging.getLogger("t2pw.web.search")
 
 SEARCH_LLM_PER_DAY = 30
+SEARCH_IDCONV_PER_DAY = 30  # NCBI ID-converter lookups (they carry our NCBI_API_KEY)
 GET_QUERY_CAP = 2000  # a long passage must come by POST (URL length)
 FILE_CSP = "sandbox; default-src 'none'; img-src data:; style-src 'unsafe-inline'"  # PathBank SVGs embed data: art
 CREDIT = ("Pathway data and diagrams: PathBank (Wishart Lab, University of Alberta). "
@@ -79,23 +81,22 @@ def register(app: FastAPI, page: Callable[..., Any], cross_site: Callable[[Reque
     def run_form(request: Request, status: int = 200, **kw):
         ctx = dict(view="run", kind="name", query="", pathway="", organism="", pmids="", text="",
                    consent=True, email="", email_error="", errors={}, problems=[], notice="", choices=[],
-                   other_choices=[], generate_href="", organism_unknown="", active_nav="submit")
+                   other_choices=[], generate_href="", organism_unknown="", lookup_q="", active_nav="submit")
         ctx.update(kw)
         return page(request, "search.html", status=status, **ctx)
 
-    def llm_allowed(request: Request) -> bool:
-        if not s.search_llm:
-            return False
-        key = "search-llm:" + limits.client_key(request.client.host if request.client else "",
-                                                ", ".join(request.headers.getlist("x-forwarded-for")) or None,
-                                                s.trusted_proxies)
-        rl = limits.RateLimiter(s.db_path, **{**s.rate, "limit": SEARCH_LLM_PER_DAY})
+    def allowed(request: Request, bucket: str, limit: int) -> bool:
+        """One slot from this visitor's ``bucket`` (same keying and window as /submit)."""
+        key = bucket + ":" + limits.client_key(request.client.host if request.client else "",
+                                               ", ".join(request.headers.getlist("x-forwarded-for")) or None,
+                                               s.trusted_proxies)
+        rl = limits.RateLimiter(s.db_path, **{**s.rate, "limit": limit})
         try:
             return rl.hit(key)[0]
         finally:
             rl.close()
 
-    def pathway_answer(request: Request, route: ss.Route):
+    def pathway_answer(request: Request, route: ss.Route, network: bool):
         orgs, idx = organisms(), index()
         if not idx.available:
             return run_form(request, kind="name", query=route.query, pathway=route.pathway_name,
@@ -103,18 +104,22 @@ def register(app: FastAPI, page: Callable[..., Any], cross_site: Callable[[Reque
                             notice="The PathBank lookup is not available on this server right now, "
                                    "so T2PW can build the pathway from the literature instead.")
         hits = idx.search(route.pathway_name, species_ids(route.organism, orgs))
-        if not pathbank.is_strong(hits) and ss.wants_llm(route) and llm_allowed(request):
-            better = ss.llm_extract(route, orgs, s.search_llm if callable(s.search_llm) else None)
-            if better is not None and better.kind == ss.PAPER:
-                return paper_answer(request, better)
-            if better is not None:
-                again = idx.search(better.pathway_name, species_ids(better.organism, orgs))
-                if again and (not hits or again[0].score > hits[0].score):
-                    route, hits = better, again
-                elif not hits:
-                    route = better
+        lookup_q = ""
+        if not pathbank.is_strong(hits) and ss.wants_llm(route) and s.search_llm:
+            if not network:  # a GET (a link, or an <img> on another site): never spend the LLM budget
+                lookup_q = route.query
+            elif allowed(request, "search-llm", SEARCH_LLM_PER_DAY):
+                better = ss.llm_extract(route, orgs, s.search_llm if callable(s.search_llm) else None)
+                if better is not None and better.kind == ss.PAPER:
+                    return paper_answer(request, better, network)
+                if better is not None:
+                    again = idx.search(better.pathway_name, species_ids(better.organism, orgs))
+                    if again and (not hits or again[0].score > hits[0].score):
+                        route, hits = better, again
+                    elif not hits:
+                        route = better
         if pathbank.is_strong(hits):
-            return pathway_page(request, hits[0], route.query, others=hits[1:])
+            return pathway_page(request, hits[0], route.query, others=hits[1:], route=route)
         others = []
         if route.organism is not None:  # nothing for this organism: does PathBank draw it for others?
             shown = {h.pw_id for h in hits}
@@ -127,14 +132,21 @@ def register(app: FastAPI, page: Callable[..., Any], cross_site: Callable[[Reque
                         notice="" if hits else "No curated PathBank pathway matched. T2PW can build it from "
                                                "the literature: it searches open-access papers for this name.",
                         generate_href=_run_href("name", route.pathway_name, org),
-                        organism_unknown=route.organism_text)
+                        organism_unknown=route.organism_text, lookup_q=lookup_q)
 
-    def paper_answer(request: Request, route: ss.Route):
+    def paper_answer(request: Request, route: ss.Route, network: bool):
         pmids = list(route.pmids)
         problems = []
-        if route.pmcids or route.dois:
+        lookup_q = ""
+        to_convert = (*route.pmcids, *route.dois)
+        if to_convert and not network:  # GET: no NCBI call (and no API key spent) for a link or an <img>
+            lookup_q = route.query
+        elif to_convert and not allowed(request, "search-idconv", SEARCH_IDCONV_PER_DAY):
+            problems.append("Too many identifier lookups from your address today. "
+                            "Give PubMed IDs instead, paste the text, or upload the PDF on the full form.")
+        elif to_convert:
             got = ss.to_pmids(route.pmcids, route.dois, s.search_idconv)
-            for i in (*route.pmcids, *route.dois):
+            for i in to_convert:
                 if got.get(i):
                     pmids.append(got[i])
                 else:
@@ -143,9 +155,10 @@ def register(app: FastAPI, page: Callable[..., Any], cross_site: Callable[[Reque
                                     + " Give its PubMed ID, paste its text, or upload the PDF on the full form.")
         pmids = list(dict.fromkeys(pmids))
         return run_form(request, kind="paper", query=route.query, pmids=", ".join(pmids), problems=problems,
-                        pathway=route.pathway_name, organism=route.organism.label if route.organism else "")
+                        pathway=route.pathway_name, organism=route.organism.label if route.organism else "",
+                        lookup_q=lookup_q)
 
-    def pathway_page(request: Request, hit: pathbank.Hit, query: str = "", others=()):
+    def pathway_page(request: Request, hit: pathbank.Hit, query: str = "", others=(), route=None):
         root = s.pathbank_files
         has_svg = pathbank.local_file(root, "svg", hit.pw_id) is not None
         has_pwml = pathbank.local_file(root, "pwml", hit.pw_id) is not None
@@ -153,27 +166,29 @@ def register(app: FastAPI, page: Callable[..., Any], cross_site: Callable[[Reque
         return page(request, "pathbank.html", hit=view, query=query, others=[_hit_view(h, query) for h in others],
                     diagram=f"/pathbank/{hit.pw_id}/diagram" if (has_svg or has_pwml) else "",
                     diagram_is_render=not has_svg, pwml=f"/pathbank/{hit.pw_id}/pwml" if has_pwml else "",
-                    generate_href=_run_href("name", query and _query_name(query, organisms()) or hit.name,
-                                            view["organism"]),
+                    # the visitor's own words: their pathway name, and an organism only if they typed one
+                    generate_href=_run_href("name", (route.pathway_name if route else "") or hit.name,
+                                            route.organism.label if route and route.organism else ""),
                     credit=CREDIT, active_nav="submit")
 
-    def answer(request: Request, q: str):
+    def answer(request: Request, q: str, network: bool):
+        """``network`` is True only for a same-site POST: GET never calls the LLM or NCBI."""
         route = ss.classify(q, organisms())
         if route.kind == ss.EMPTY:
             return RedirectResponse("/", status_code=303)
         if route.kind == ss.PAPER:
-            return paper_answer(request, route)
+            return paper_answer(request, route, network)
         if route.kind == ss.TEXT:
             return run_form(request, kind="text", query=q[:80], text=route.query)
         if route.kind == ss.URL_ONLY:
             return run_form(request, view="message", query=route.query,
                             notice="T2PW cannot read a web page directly. Give the paper's PubMed ID, PMCID or "
                                    "DOI, paste its text into the box, or upload the PDF on the full form.")
-        return pathway_answer(request, route)
+        return pathway_answer(request, route, network)
 
     @app.get("/search")
     def search_get(request: Request, q: str = ""):
-        return answer(request, q[:GET_QUERY_CAP])
+        return answer(request, q[:GET_QUERY_CAP], network=False)
 
     @app.post("/search")
     async def search_post(request: Request):
@@ -185,7 +200,7 @@ def register(app: FastAPI, page: Callable[..., Any], cross_site: Callable[[Reque
             q = q[:limits.MAX_TEXT_CHARS] if isinstance(q, str) else ""
         finally:
             await form.close()
-        return await run_in_threadpool(answer, request, q)
+        return await run_in_threadpool(answer, request, q, True)
 
     @app.get("/search/run")
     def run_get(request: Request, kind: str = "name", name: str = "", organism: str = "", pmids: str = ""):
@@ -271,7 +286,8 @@ def register(app: FastAPI, page: Callable[..., Any], cross_site: Callable[[Reque
         hit = index().get(pw_id)
         if hit is None:
             raise HTTPError(404)
-        return pathway_page(request, hit, q[:200])
+        route = ss.classify(q[:200], organisms()) if q else None
+        return pathway_page(request, hit, q[:200], route=route if route and route.kind == ss.PATHWAY else None)
 
     @app.get("/pathbank/{pw_id}/diagram")
     def pathbank_diagram(pw_id: str):
@@ -288,9 +304,16 @@ def register(app: FastAPI, page: Callable[..., Any], cross_site: Callable[[Reque
             from t2pw.render.pathbank import render_pwml
 
             out.parent.mkdir(parents=True, exist_ok=True)
-            tmp = out.with_suffix(".tmp")
-            tmp.write_bytes(render_pwml(pwml, "png"))
-            tmp.replace(out)
+            tmp = out.with_name(f"{pw_id}.{uuid.uuid4().hex}.tmp")  # concurrent first views do not share a file
+            try:
+                # ponytail: renders in the request (0.3-1.5 s, plus PubChem structure fetches for at most
+                # T2PW_STRUCTURE_BUDGET_S, default 6 s), once per pathway; pre-render if the mirror grows large
+                tmp.write_bytes(render_pwml(pwml, "png"))
+                tmp.replace(out)
+            except Exception as exc:  # noqa: BLE001 - a PWML the renderer cannot draw is "no diagram", not a 500
+                log.warning("PathBank render failed for %s (%s)", pw_id, type(exc).__name__)
+                tmp.unlink(missing_ok=True)
+                raise HTTPError(404)
         return FileResponse(out, media_type="image/png", headers={"Content-Security-Policy": FILE_CSP})
 
     @app.get("/pathbank/{pw_id}/pwml")
@@ -300,12 +323,6 @@ def register(app: FastAPI, page: Callable[..., Any], cross_site: Callable[[Reque
             raise HTTPError(404)
         return FileResponse(pwml, media_type="application/xml", filename=f"{pw_id}.pwml",
                             headers={"Content-Security-Policy": FILE_CSP})
-
-
-def _query_name(query: str, orgs) -> str:
-    """The pathway part of what the visitor typed, for the "generate instead" form."""
-    r = ss.classify(query, orgs)
-    return r.pathway_name if r.kind == ss.PATHWAY else ""
 
 
 def _with_headers(resp: Response, headers: Dict[str, str]) -> Response:

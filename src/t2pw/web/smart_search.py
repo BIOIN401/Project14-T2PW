@@ -24,7 +24,6 @@ from typing import Any, Callable, Optional, Sequence, Tuple
 
 log = logging.getLogger("t2pw.web.smart_search")
 
-MAX_QUERY = 20_000  # a pasted passage; the form caps the box at this too
 TEXT_MIN_CHARS = 400  # shorter than this is never treated as pasted paper text
 LLM_TIMEOUT_S = 25.0
 
@@ -93,7 +92,8 @@ def _split_organism(text: str, organisms: Sequence[Any]):
     """``("glycolysis", <S. cerevisiae>)`` from "glycolysis in Saccharomyces cerevisiae"; the
     organism is the text after the last " in "/" of "/"," or the last 1-3 words."""
     words = text.split()
-    m = re.match(r"(.+?)\s*(?:\bin\b|\bfor\b|,|\(|\bof\b)\s*([^,()]+?)\)?\s*$", text, re.I)
+    # greedy: the LAST connector splits ("biosynthesis of enterobactin in E. coli")
+    m = re.match(r"(.+)\s*(?:\bin\b|\bfor\b|,|\(|\bof\b)\s*([^,()]+?)\)?\s*$", text, re.I)
     if m:
         org = find_organism(m.group(2), organisms)
         if org is not None:
@@ -102,7 +102,7 @@ def _split_organism(text: str, organisms: Sequence[Any]):
         if len(words) > k:
             org = find_organism(" ".join(words[-k:]), organisms)
             if org is not None:
-                return " ".join(words[:-k]), org
+                return re.sub(r"\s+(in|for|of|from)$", "", " ".join(words[:-k]), flags=re.I), org
     return text, None
 
 

@@ -15,6 +15,16 @@
 
 {% block content %}
 <p><a href="/">&larr; New search</a></p>
+{% if lookup_q %}
+{#- W10 review N1: a GET (a shared link) never calls the LLM or NCBI; the visitor asks for it here. -#}
+{% call c.alert("info") %}
+<form method="post" action="/search">
+  <input type="hidden" name="q" value="{{ lookup_q }}">
+  <p>T2PW can read this request more closely (identifier lookup or language model).
+  {{ c.button("Look it up", type="submit", variant="secondary", size="sm") }}</p>
+</form>
+{% endcall %}
+{% endif %}
 {% if view == "choices" %}
 <h1>PathBank pathways for &ldquo;{{ query }}&rdquo;</h1>
 <p class="lead">No exact match, but PathBank has curated pathways with similar names. Pick one to see it,

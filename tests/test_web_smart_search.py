@@ -76,7 +76,8 @@ def test_long_passage_is_text_even_with_a_citation():
     ("enterobactin biosynthesis E. coli", "enterobactin biosynthesis", "Escherichia coli"),
     ("alanine metabolism (human)", "alanine metabolism", "Homo sapiens"),
     ("ergosterol biosynthesis in yeast", "ergosterol biosynthesis", "Saccharomyces cerevisiae"),
-    ("metabolism of serine", "metabolism of serine", None),  # "serine" is no organism: the phrase stays whole
+    ("metabolism of serine", "metabolism of serine", None),
+    ("biosynthesis of enterobactin in E. coli", "biosynthesis of enterobactin", "Escherichia coli"),  # review N4  # "serine" is no organism: the phrase stays whole
 ])
 def test_pathway_phrase_and_organism(text, name, organism):
     r = ss.classify(text, ORGS)
@@ -245,7 +246,8 @@ def test_known_pathway_shows_pathbank_without_a_job(tmp_path, index):
     assert "https://pathbank.org/view/SMP0000802" in r.text and "PathBank (Wishart Lab" in r.text
     assert 'src="/pathbank/PW000779/diagram"' in r.text and "PathBank&#39;s own diagram" in r.text
     assert "Citric Acid Cycle" in r.text  # the synonym hit is offered as another pathway
-    assert "Generate from literature instead" in r.text and "/search/run?kind=name&amp;name=TCA+cycle" in r.text
+    assert "Generate from literature instead" in r.text and '/search/run?kind=name&amp;name=TCA+cycle"' in r.text
+    # review: the visitor typed no organism, so the "generate" form does not prefill PathBank's (E. coli)
     assert site.jobs() == 0
     d = site.client.get("/pathbank/PW000779/diagram")
     assert d.status_code == 200 and d.headers["content-type"].startswith("image/svg+xml")
@@ -406,3 +408,98 @@ def test_missing_index_offers_the_literature_run(tmp_path):
     r = site.client.post("/search", data={"q": "TCA cycle"})
     assert r.status_code == 200 and "PathBank lookup is not available" in r.text
     assert site.client.get("/pathbank/PW000779").status_code == 404
+
+
+# -- review fixes (N1-N8) ----------------------------------------------------------------
+
+SENTENCE = "how do cells burn acetyl-CoA for energy?"
+
+
+class IdConv:
+    def __init__(self):
+        self.calls = 0
+
+    def __call__(self, url, params):
+        self.calls += 1
+
+        class Resp:
+            status_code = 200
+
+            def json(self):
+                return {"records": [{"requested-id": "PMC1234567", "pmid": "11111111"}]}
+
+        return Resp()
+
+
+def test_get_never_calls_the_llm_or_ncbi(tmp_path, index):
+    calls, conv = [], IdConv()
+    site = Site(tmp_path, index, llm=lambda m: calls.append(1) or "{}", search_idconv=conv)
+    r = site.client.get("/search", params={"q": SENTENCE})
+    assert r.status_code == 200 and calls == []
+    assert '<form method="post" action="/search">' in r.text and "Look it up" in r.text
+    r = site.client.get("/search", params={"q": "PMC1234567"})
+    assert r.status_code == 200 and conv.calls == 0 and "Look it up" in r.text
+    r = site.client.post("/search", data={"q": "PMC1234567"})  # the button: a same-site POST
+    assert conv.calls == 1 and "11111111" in r.text and "Look it up" not in r.text
+
+
+def test_llm_calls_are_limited_per_visitor(tmp_path, index, monkeypatch):
+    from t2pw.web import search_routes
+
+    monkeypatch.setattr(search_routes, "SEARCH_LLM_PER_DAY", 1)
+    calls = []
+    site = Site(tmp_path, index, llm=lambda m: calls.append(1) or "{}")
+    for _ in range(2):
+        assert site.client.post("/search", data={"q": SENTENCE}).status_code == 200
+    assert calls == [1]
+
+
+def test_idconv_calls_are_limited_per_visitor(tmp_path, index, monkeypatch):
+    from t2pw.web import search_routes
+
+    monkeypatch.setattr(search_routes, "SEARCH_IDCONV_PER_DAY", 1)
+    conv = IdConv()
+    site = Site(tmp_path, index, search_idconv=conv)
+    site.client.post("/search", data={"q": "PMC1234567"})
+    r = site.client.post("/search", data={"q": "PMC1234567"})
+    assert conv.calls == 1 and "Too many identifier lookups" in r.text
+
+
+def test_render_failure_is_404_and_leaves_no_file(tmp_path, index, monkeypatch):
+    import t2pw.render.pathbank as render
+
+    def boom(*a, **k):
+        raise ValueError("the PWML has no drawable extent")
+
+    monkeypatch.setattr(render, "render_pwml", boom)
+    site = Site(tmp_path, index)
+    assert site.client.get("/pathbank/PW002048/diagram").status_code == 404
+    out = tmp_path / "work" / "pathbank_render"
+    assert not out.exists() or not any(out.iterdir())
+
+
+def test_corrupt_index_is_not_a_500(tmp_path):
+    bad = tmp_path / "bad.sqlite"
+    bad.write_bytes(b"this is not a sqlite database" * 100)
+    idx = pathbank.PathBankIndex(bad)
+    assert not idx.available and idx.search("TCA cycle") == [] and idx.get("PW000779") is None
+    site = Site(tmp_path, idx)
+    r = site.client.post("/search", data={"q": "TCA cycle"})
+    assert r.status_code == 200 and "PathBank lookup is not available" in r.text
+    assert site.client.get("/pathbank/PW000779").status_code == 404
+
+
+def test_generate_link_keeps_the_visitors_words(tmp_path, index):
+    c = Site(tmp_path, index).client
+    r = c.get("/search", params={"q": "enterobactin biosynthesis E. coli"})
+    assert "/search/run?kind=name&amp;name=enterobactin+biosynthesis&amp;organism=Escherichia+coli" in r.text
+    r = c.get("/pathbank/PW000779", params={"q": "Krebs cycle"})
+    assert '/search/run?kind=name&amp;name=Krebs+cycle"' in r.text
+    r = c.get("/pathbank/PW000779")  # no query: PathBank's name, no organism
+    assert '/search/run?kind=name&amp;name=TCA+Cycle"' in r.text
+
+
+def test_llm_hit_prefills_the_extracted_name_not_the_sentence(tmp_path, index):
+    chat = lambda m: json.dumps({"kind": "pathway", "pathway_name": "TCA Cycle", "organism": ""})  # noqa: E731
+    r = Site(tmp_path, index, llm=chat).client.post("/search", data={"q": SENTENCE})
+    assert "<h1>TCA Cycle</h1>" in r.text and '/search/run?kind=name&amp;name=TCA+Cycle"' in r.text
