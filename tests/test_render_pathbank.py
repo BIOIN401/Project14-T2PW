@@ -43,6 +43,10 @@ MINI = """<?xml version="1.0"?>
    <edge><id>3</id><path>M540 839 C540 839 540 839 540 839</path><visualization-template-id>5</visualization-template-id>
      <hidden>false</hidden><zindex>18</zindex><options>{"end_arrow": true}</options></edge>
   </edges>
+  <reaction-visualizations><reaction-visualization><id>1</id><reaction-compound-visualizations>
+   <reaction-compound-visualization><id>1</id><edge-id>1</edge-id></reaction-compound-visualization>
+   <reaction-compound-visualization><id>2</id><edge-id>3</edge-id></reaction-compound-visualization>
+  </reaction-compound-visualizations></reaction-visualization></reaction-visualizations>
   <transport-visualizations><transport-visualization><id>1</id>
    <transport_compound_visualizations><transport-compound-visualization><id>1</id><compound-location-id>1</compound-location-id>
      <edge-id>2</edge-id><side>Left</side></transport-compound-visualization></transport_compound_visualizations>
@@ -64,6 +68,20 @@ MINI = """<?xml version="1.0"?>
  </pathway-visualization></pathway-visualization-context></pathway-visualization-contexts>
 </super-pathway-visualization>
 """
+
+
+@pytest.fixture(autouse=True)
+def no_network(monkeypatch, tmp_path: Path):
+    """VIS-4: structure pictures come from a per-test empty cache and PubChem is unreachable: boxes stay empty."""
+    from t2pw.render import structures
+
+    monkeypatch.setenv(structures.CACHE_ENV, str(tmp_path / "structure-cache"))
+
+    def offline(cid):
+        raise OSError(f"no network in tests (asked for {cid})")
+
+    monkeypatch.setattr(structures, "download", offline)
+    monkeypatch.setattr(structures.urllib.request, "urlopen", lambda *a, **k: pytest.fail("network in a test"))
 
 
 @pytest.fixture
@@ -123,7 +141,11 @@ def test_render_png_size_is_capped(mini: Path):
     import io
 
     im = Image.open(io.BytesIO(pathbank.render_pwml(mini, "png", max_px=500)))
-    assert max(im.size) <= 500 and abs(im.size[0] / im.size[1] - 1000 / 800) < 0.02
+    root = pathbank.read_xml_with_repairs(str(mini))
+    ext = []
+    pathbank._items(root, pathbank.find_first_visualization(root), None, ext)
+    w, h = ext[2] - ext[0] + 2 * pathbank.MARGIN, ext[3] - ext[1] + 2 * pathbank.MARGIN  # VIS-4: cropped
+    assert max(im.size) <= 500 and abs(im.size[0] / im.size[1] - w / h) < 0.02
 
 
 def test_committed_pathbank_reference_renders_with_its_organelle_art():
@@ -198,6 +220,8 @@ EDGES_ONLY = """<?xml version="1.0"?>
  </transport_compound_visualizations></transport-visualization></transport-visualizations>
  <interaction-visualizations><interaction-visualization><id>1</id><interaction-id>9</interaction-id>
   <interaction_protein_complex_visualizations><interaction-protein-complex-visualization><id>1</id><edge-id>3</edge-id>
+  </interaction-protein-complex-visualization><interaction-protein-complex-visualization><id>2</id><edge-id>1</edge-id>
+  </interaction-protein-complex-visualization><interaction-protein-complex-visualization><id>3</id><edge-id>2</edge-id>
   </interaction-protein-complex-visualization></interaction_protein_complex_visualizations></interaction-visualization>
  </interaction-visualizations>
  <interactions><interaction><id>9</id><interaction-type>Inhibition</interaction-type></interaction></interactions>

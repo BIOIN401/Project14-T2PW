@@ -51,3 +51,9 @@ def _one_extraction_draw_unless_a_test_asks(monkeypatch: pytest.MonkeyPatch) -> 
 def _final_payload_off_unless_a_test_asks(monkeypatch: pytest.MonkeyPatch) -> None:
     """D-W19a made T2PW_FINAL_PAYLOAD default ON; the existing suite was written for off, so pin it. A test opts in with setenv("1")."""
     monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "0")
+
+
+@pytest.fixture(autouse=True)
+def _no_structure_fetch_unless_a_test_asks(monkeypatch: pytest.MonkeyPatch) -> None:
+    """VIS-4: the result-image renderer fetches compound structures from PubChem; budget 0 = cache only, so no test reaches the network by default."""
+    monkeypatch.setenv("T2PW_STRUCTURE_BUDGET_S", "0")

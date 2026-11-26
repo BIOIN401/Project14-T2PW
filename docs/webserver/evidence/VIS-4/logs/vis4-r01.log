@@ -1,0 +1,65 @@
+== round r0
+TREE C:/t/vis-pw4-work/base
+wrote C:\t\vis-pw4-work\r0\PW000001.png 538771 bytes 0.42s
+wrote C:\t\vis-pw4-work\r0\PW000017.png 857124 bytes 0.43s
+wrote C:\t\vis-pw4-work\r0\PW000779.png 385850 bytes 0.44s
+wrote C:\t\vis-pw4-work\r0\PW012911.png 455553 bytes 0.29s
+wrote C:\t\vis-pw4-work\r0\PW127049.png 1421178 bytes 1.59s
+wrote C:\t\vis-pw4-work\r0\ent-item6-final2.png 124944 bytes 0.19s
+wrote C:\t\vis-pw4-work\r0\ent-item6-base.png 139790 bytes 0.18s
+wrote C:\t\vis-pw4-work\r0\chlorophyll.png 153651 bytes 0.34s
+wrote C:\t\vis-pw4-work\r0\lipid-a.png 296876 bytes 0.42s
+wrote C:\t\vis-pw4-work\r0\ceramide-sphingolipid.png 122481 bytes 0.15s
+wrote C:\t\vis-pw4-work\r0\coenzyme-a.png 104511 bytes 0.18s
+wrote C:\t\vis-pw4-work\r0\menaquinone.png 72357 bytes 0.18s
+wrote C:\t\vis-pw4-work\r0\furochromone.png 77231 bytes 0.09s
+wrote C:\t\vis-pw4-work\r0\sour-taste.png 125043 bytes 0.12s
+wrote C:\t\vis-pw4-work\r0\enterobactin.png 125338 bytes 0.17s
+ROUND_DONE
+== round r1
+TREE C:/t/vis-pw4
+wrote C:\t\vis-pw4-work\r1\PW000001.png 573357 bytes 1.56s
+wrote C:\t\vis-pw4-work\r1\PW000017.png 976416 bytes 1.47s
+wrote C:\t\vis-pw4-work\r1\PW000779.png 423939 bytes 1.64s
+wrote C:\t\vis-pw4-work\r1\PW012911.png 468405 bytes 0.86s
+wrote C:\t\vis-pw4-work\r1\PW127049.png 3216804 bytes 3.72s
+wrote C:\t\vis-pw4-work\r1\ent-item6-final2.png 128960 bytes 0.43s
+wrote C:\t\vis-pw4-work\r1\ent-item6-base.png 143604 bytes 0.33s
+wrote C:\t\vis-pw4-work\r1\chlorophyll.png 305562 bytes 1.17s
+wrote C:\t\vis-pw4-work\r1\lipid-a.png 450471 bytes 1.68s
+wrote C:\t\vis-pw4-work\r1\ceramide-sphingolipid.png 166797 bytes 0.93s
+wrote C:\t\vis-pw4-work\r1\coenzyme-a.png 136400 bytes 1.44s
+wrote C:\t\vis-pw4-work\r1\menaquinone.png 116309 bytes 0.64s
+wrote C:\t\vis-pw4-work\r1\furochromone.png 87601 bytes 0.66s
+wrote C:\t\vis-pw4-work\r1\sour-taste.png 148811 bytes 0.51s
+wrote C:\t\vis-pw4-work\r1\enterobactin.png 127901 bytes 0.18s
+ROUND_DONE
+JOB_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 82b31b11924c8ce95924b7a5a8d799bc7ed3690d  [git, worktree dirty=True]
+label                   : vis4-r01
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/vis-pw4-work/job.sh r0 r1
+cwd                     : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 331784 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 24.89 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 14  315132:bash.exe, 329740:bash.exe, 329268:bash.exe, 329752:bash.exe, 330084:bash.exe, 326524:python.exe, 328960:bash.exe, 332508:python.exe, 333368:bash.exe, 333392:bash.exe, 333460:bash.exe, 333584:bash.exe, 333608:python.exe, 333620:python.exe
+descendants terminated  : 14  315132, 326524, 328960, 329268, 329740, 329752, 330084, 332508, 333368, 333392, 333460, 333584, 333608, 333620
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-runs/json/vis4-r01.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=vis4  acquired=True  released=True
+pre-existing (reported, NEVER killed): 13
+================================================
+BW_EXIT=0

@@ -15,20 +15,25 @@ from __future__ import annotations
 import io
 import json
 import math
+import re
 import textwrap
 from functools import lru_cache
 from importlib import resources
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
+import numpy as np
 from matplotlib import image as mpimg
 from matplotlib import rc_context
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 from matplotlib.figure import Figure
+from matplotlib.font_manager import FontProperties
+from matplotlib.textpath import TextToPath
 from matplotlib.patches import Ellipse, FancyBboxPatch, PathPatch, Polygon, Rectangle
 from matplotlib.path import Path as MPath
 from matplotlib.transforms import Affine2D
 
 from t2pw.pwml.render import find_first_visualization, read_xml_with_repairs, svg_path_to_mpl_path
+from t2pw.render import structures as _structures
 
 BACKGROUND = "#000099"
 GOLD = "#ffc500"
@@ -53,6 +58,9 @@ PILL_DEFAULT = "#D8C25A"  # PathBank's ATP-style radial gradient, flattened
 ICON_TEMPLATES = {"47", "49", "51", "52", "55", "56", "63", "64", "65"}  # 78x78 small-molecule icons
 NAMED = ("compound", "protein", "nucleic-acid", "element-collection", "sub-pathway")
 _ART = "pathbank_art"
+_TEXT_TO_PATH = TextToPath()
+TARGET_PX, MIN_SCALE, MAX_PX = 2400, 0.85, 8000  # see output_scale
+MARGIN = 40.0  # PWML units of background kept around the drawing
 
 
 def _local(tag: Any) -> str:
@@ -94,12 +102,16 @@ def _art(image_id: str):
 
 def _fit(text: str, w: float, h: float, size: float, min_size: float = 6.0, max_lines: int = 4,
          bold: bool = False) -> Tuple[str, float]:
-    """Wrap ``text`` into a ``w`` x ``h`` box, shrinking the font until it fits (or reaches ``min_size``)."""
+    """Wrap ``text`` into a ``w`` x ``h`` box at spaces and hyphens, shrinking the font until it fits (or reaches
+    ``min_size``, where a word too long for the line is cut as a last resort)."""
     s = size
     while True:
         per = max(1, int(w / ((0.68 if bold else 0.6) * s)))
-        lines = textwrap.wrap(text, per) or [""]
-        if (len(lines) <= max_lines and len(lines) * 1.2 * s <= h) or s <= min_size:
+        lines = _wrap_chemical(text, per) or [""]
+        whole = max(len(t) for t in lines) <= per
+        if (whole and len(lines) <= max_lines and len(lines) * 1.2 * s <= h) or s <= min_size:
+            if not whole:
+                lines = textwrap.wrap(text, per) or [""]
             if len(lines) > max_lines:
                 lines = lines[:max_lines]
                 lines[-1] = lines[-1][:-1] + "…"
@@ -170,11 +182,95 @@ def _arrow_options(edge) -> Dict[str, bool]:
 
 # -- node shapes --------------------------------------------------------------------------------------
 
-def _compound(ax, x, y, w, h, tpl, name, short, z):
-    if w >= 90 and h >= 80:  # structure box: blue header with the name, white body
+def _is_structure_box(w: float, h: float) -> bool:
+    return w >= 90 and h >= 80
+
+
+def _picture(data: bytes):
+    """A structure PNG as RGBA, its flat background made transparent and cropped to the drawing; ``None`` if unusable
+    (checked on the PNG header before decoding, so a huge image never becomes a huge array)."""
+    if not _structures.png_ok(data):
+        return None
+    try:
+        a = mpimg.imread(io.BytesIO(data), format="png")
+    except Exception:  # noqa: BLE001 - a broken cache file just means an empty box
+        return None
+    if a.ndim != 3 or a.shape[2] not in (3, 4):
+        return None
+    if a.dtype != np.float32:
+        a = a.astype(np.float32) / (255.0 if a.dtype == np.uint8 else 1.0)
+    rgba = np.ones(a.shape[:2] + (4,), dtype=np.float32)
+    rgba[..., :a.shape[2]] = a
+    rgba[..., 3] = np.where(rgba[..., :3].min(axis=2) >= 0.94, 0.0, rgba[..., 3])  # PubChem's grey 245 backdrop
+    ys, xs = np.nonzero(rgba[..., 3] > 0.05)
+    if len(xs) == 0:
+        return None
+    return rgba[max(0, ys.min() - 3):ys.max() + 4, max(0, xs.min() - 3):xs.max() + 4]
+
+
+def _draw_picture(ax, pic, x, y, w, h, z) -> None:
+    """``pic`` fitted into the box (x, y, w, h), aspect kept, centred. PubChem draws at about 1.4 px per bond-length
+    unit of PathBank's; enlarging small molecules past 1.1x makes them heavier than PathBank's drawings."""
+    ph, pw = pic.shape[:2]
+    s = min(w / pw, h / ph, 1.1)
+    dw, dh = pw * s, ph * s
+    x0, y0 = x + (w - dw) / 2, y + (h - dh) / 2
+    ax.imshow(pic, extent=(x0, x0 + dw, y0 + dh, y0), origin="upper", aspect="auto", zorder=z,
+              interpolation="antialiased")
+
+
+@lru_cache(maxsize=4096)
+def _text_width(text: str, size: float) -> float:
+    """Width of ``text`` in PWML units at font ``size`` (matplotlib's default font, measured, not estimated)."""
+    return _TEXT_TO_PATH.get_text_width_height_descent(text, FontProperties(size=size), ismath=False)[0]
+
+
+def _wrap_chemical(text: str, fits) -> List[str]:
+    """Greedy wrap at spaces and after any hyphen ("2,3-dihydro-" / "2,3-dihydroxybenzoate"), which textwrap does
+    not break when a digit follows. ``fits(line)`` says whether a line fits, or an int is a character budget; a part
+    that does not fit alone stays whole (the caller shrinks the font)."""
+    if isinstance(fits, int):
+        fits = (lambda per: lambda t: len(t) <= per)(fits)
+    lines: List[str] = []
+    cur = ""
+    for word in text.split():
+        for i, part in enumerate(re.findall(r"[^-]*-|[^-]+", word)):
+            sep = "" if i else " "
+            if cur and not fits(cur + sep + part):
+                lines.append(cur)
+                cur = part
+            else:
+                cur = cur + sep + part if cur else part
+    if cur:
+        lines.append(cur)
+    return lines
+
+
+def _header_lines(name: str, w: float) -> Tuple[List[str], float]:
+    """PathBank's compound header: Verdana 20, wrapped at word breaks, extra lines running down into the white
+    body. We shrink only when a word is wider than the box, and stop at three lines."""
+    s = 20.0
+    while True:
+        lines = _wrap_chemical(name, lambda t, s=s: _text_width(t, s) <= w - 10) or [""]
+        if (len(lines) <= 3 and max(_text_width(t, s) for t in lines) <= w - 10) or s <= 9:
+            if len(lines) > 3:
+                lines = lines[:3]
+                lines[-1] = lines[-1][:-1] + "…"
+            return lines, s
+        s -= 1
+
+
+def _compound(ax, x, y, w, h, tpl, name, short, z, pic=None):
+    if _is_structure_box(w, h):  # structure box: blue header with the name, white body with the structure
         ax.add_patch(_rbox(x, y, w, h, 10, fc=COMPOUND_BLUE, ec="black", lw=1, zorder=z))
         ax.add_patch(_rbox(x + 5, y + 35, w - 10, h - 40, 10, fc="white", ec="black", lw=1, zorder=z + 0.1))
-        _label(ax, x + w / 2, y + 18, name, w - 10, 34, 20, z, max_lines=2)
+        lines, s = _header_lines(name, w)
+        for i, line in enumerate(lines):
+            ax.text(x + w / 2, y + 18 + i * s, line, ha="center", va="center", fontsize=s, color="black",
+                    zorder=z + 0.5, clip_on=False, parse_math=False)
+        if pic is not None:  # PathBank: translate(25,40) scale(0.75) of a 200-unit drawing, below any extra lines
+            top = y + 40 + (len(lines) - 1) * s
+            _draw_picture(ax, pic, x + 20, top + 4, w - 40, y + h - 12 - top, z + 0.2)
     elif tpl == "9":  # small cofactor tag under an enzyme
         ax.add_patch(_rbox(x, y, w, h, 10, fc="#5AAEFF", ec="black", lw=1, zorder=z))
         _label(ax, x + w / 2, y + h / 2, name or short, w - 6, h - 2, 12, z, min_size=5, max_lines=3)
@@ -201,7 +297,7 @@ def _protein(ax, x, y, w, h, tpl, name, z):
         for k in range(n):
             ax.add_patch(Ellipse((x + k * dx + ew / 2, y + k * dy + eh / 2), ew, eh, fc=fill, ec="black", lw=1,
                                  zorder=z + k * 0.01))
-    _label(ax, x + w / 2, y + h / 2, name, w * 0.8, h * 0.85, 15, z, min_size=6)
+    _label(ax, x + w / 2, y + h / 2, name, w * 0.92, h * 0.9, 15, z, min_size=8)  # PathBank: Verdana 15, wrapped
 
 
 def _nucleic_acid(ax, x, y, w, h, name, z):
@@ -249,14 +345,47 @@ def _definitions(root) -> Dict[Tuple[str, str], Tuple[str, str]]:
     return names
 
 
-def _items(root, vis) -> Tuple[List[Tuple[float, int, Callable[[Any], None]]], float, float]:
-    names = _definitions(root)
-    items: List[Tuple[float, int, Callable[[Any], None]]] = []
-    ext = [0.0, 0.0]
+def _cids(root) -> Dict[str, str]:
+    """compound id -> structure key (``structures.key_for``: ChEBI id, else PubChem CID), for those that have one."""
+    out: Dict[str, str] = {}
+    for el in root.iter():
+        if _local(el.tag) == "compound":
+            k = _kids(el)
+            i, key = _txt(k, "id"), _structures.key_for(_txt(k, "chebi-id"), _txt(k, "pubchem-cid"))
+            if i and key:
+                out.setdefault(i, key)
+    return out
 
-    def add(z: float, fn: Callable[[Any], None], x2: float = 0.0, y2: float = 0.0) -> None:
+
+def _structure_cids(root, vis) -> List[str]:
+    """Structure keys of the compounds drawn as structure boxes (visible, large enough)."""
+    cids = _cids(root)
+    want = set()
+    for el in vis.iter():
+        if _local(el.tag) == "compound-location":
+            k = _kids(el)
+            if _txt(k, "hidden").lower() != "true" and _is_structure_box(_num(k, "width"), _num(k, "height")):
+                cid = cids.get(_txt(k, "compound-id"))
+                if cid:
+                    want.add(cid)
+    return sorted(want)
+
+
+def _items(root, vis, pics: Optional[Dict[str, Any]] = None, extent: Optional[List[float]] = None
+           ) -> Tuple[List[Tuple[float, int, Callable[[Any], None]]], float, float]:
+    """The draw calls in PathBank's order, and the drawn extent's right and bottom. ``pics``: structure key ->
+    structure picture. ``extent``, when given, receives [left, top, right, bottom] of everything drawn."""
+    names = _definitions(root)
+    cids = _cids(root) if pics else {}
+    used_edges = {(c.text or "").strip() for c in vis.iter() if _local(c.tag) == "edge-id"}
+    items: List[Tuple[float, int, Callable[[Any], None]]] = []
+    ext = [math.inf, math.inf, 0.0, 0.0]
+
+    def add(z: float, fn: Callable[[Any], None], x2: float = 0.0, y2: float = 0.0,
+            x1: Optional[float] = None, y1: Optional[float] = None) -> None:
         items.append((z, len(items), fn))
-        ext[0], ext[1] = max(ext[0], x2), max(ext[1], y2)
+        ext[0], ext[1] = min(ext[0], x2 if x1 is None else x1), min(ext[1], y2 if y1 is None else y1)
+        ext[2], ext[3] = max(ext[2], x2), max(ext[3], y2)
 
     for el in vis.iter():
         t = _local(el.tag)
@@ -267,36 +396,42 @@ def _items(root, vis) -> Tuple[List[Tuple[float, int, Callable[[Any], None]]], f
         tpl = _txt(k, "visualization-template-id")
         x, y, w, h = _num(k, "x"), _num(k, "y"), _num(k, "width"), _num(k, "height")
 
+        if t == "edge" and _txt(k, "id") not in used_edges:
+            continue  # an orphan: no reaction, transport or interaction draws it, and PathWhiz's viewer drops it
         if t in ("membrane-visualization", "edge"):
             mp = svg_path_to_mpl_path(_txt(k, "path"))
             if mp is None or len(mp.vertices) == 0:
                 continue
-            bx = mp.vertices.max(axis=0)
+            bx, bn = mp.vertices.max(axis=0), mp.vertices.min(axis=0)
             if t == "membrane-visualization":
                 colour, width = MEMBRANE_STYLE.get(tpl, MEMBRANE_STYLE["1"])
                 add(z, lambda ax, mp=mp, c=colour, lw=width, z=z: ax.add_patch(
-                    PathPatch(mp, fill=False, ec=c, lw=lw, zorder=z, capstyle="butt")), bx[0], bx[1])
+                    PathPatch(mp, fill=False, ec=c, lw=lw, zorder=z, capstyle="butt")),
+                    bx[0] + width / 2, bx[1] + width / 2, bn[0] - width / 2, bn[1] - width / 2)
                 continue
             colour, width = EDGE_STYLE.get(tpl, EDGE_STYLE["5"])  # strictly by template, as PathWhiz draws it
             add(z, lambda ax, mp=mp, c=colour, lw=width, opts=_arrow_options(el), z=z:
-                _draw_edge(ax, mp, c, lw, opts, z), bx[0], bx[1])
+                _draw_edge(ax, mp, c, lw, opts, z), bx[0] + ARROW_LEG, bx[1] + ARROW_LEG,
+                bn[0] - ARROW_LEG, bn[1] - ARROW_LEG)
         elif t == "compound-location":
-            name, short = names.get(("compound", _txt(k, "compound-id")), ("", ""))
-            add(z, lambda ax, a=(x, y, w, h, tpl, name, short, z): _compound(ax, *a), x + w, y + h)
+            cid = _txt(k, "compound-id")
+            name, short = names.get(("compound", cid), ("", ""))
+            pic = (pics or {}).get(cids.get(cid, ""))
+            add(z, lambda ax, a=(x, y, w, h, tpl, name, short, z, pic): _compound(ax, *a), x + w, y + h, x, y)
         elif t == "protein-location":
             full, gene = names.get(("protein", _txt(k, "protein-id")), ("", ""))
             lt = _txt(k, "label-type").lower()
             name = "" if lt == "none" else (gene or full) if lt == "gene" else full
-            add(z, lambda ax, a=(x, y, w, h, tpl, name, z): _protein(ax, *a), x + w, y + h)
+            add(z, lambda ax, a=(x, y, w, h, tpl, name, z): _protein(ax, *a), x + w, y + h, x, y)
         elif t == "nucleic-acid-location":
             name = names.get(("nucleic-acid", _txt(k, "nucleic-acid-id")), ("", ""))[0]
-            add(z, lambda ax, a=(x, y, w, h, name, z): _nucleic_acid(ax, *a), x + w, y + h)
+            add(z, lambda ax, a=(x, y, w, h, name, z): _nucleic_acid(ax, *a), x + w, y + h, x, y)
         elif t == "element-collection-location":
             name = names.get(("element-collection", _txt(k, "element-collection-id")), ("", ""))[0]
-            add(z, lambda ax, a=(x, y, w, h, tpl, name, z): _collection(ax, *a), x + w, y + h)
+            add(z, lambda ax, a=(x, y, w, h, tpl, name, z): _collection(ax, *a), x + w, y + h, x, y)
         elif t == "sub-pathway-visualization":
             name = names.get(("sub-pathway", _txt(k, "sub-pathway-id")), ("Sub-pathway", ""))[0]
-            add(z, lambda ax, a=(x, y, tpl, name, z): _sub_pathway(ax, *a), x + 150, y + 70)
+            add(z, lambda ax, a=(x, y, tpl, name, z): _sub_pathway(ax, *a), x + 150, y + 70, x, y)
         elif t == "drawable-element-location":
             art = _art(_txt(k, "drawable-image-id"))
             if art is None:
@@ -305,17 +440,23 @@ def _items(root, vis) -> Tuple[List[Tuple[float, int, Callable[[Any], None]]], f
             w = w or art.shape[1]
             h = h or art.shape[0]
             tr = Affine2D().scale(sx, sy).rotate_deg(_num(k, "degree")).translate(x, y)
+            corners = tr.transform([(0, 0), (w, 0), (0, h), (w, h)])
+            (cx1, cy1), (cx2, cy2) = corners.min(axis=0), corners.max(axis=0)
             add(z, lambda ax, art=art, w=w, h=h, tr=tr, z=z: ax.imshow(
                 art, extent=(0, w, h, 0), origin="upper", aspect="auto", transform=tr + ax.transData,
-                zorder=z, interpolation="antialiased"), x + w * sx, y + h * sy)
+                zorder=z, interpolation="antialiased"), cx2, cy2, cx1, cy1)
         elif t == "label-location":
             text = _txt(k, "label-text")
             sx, sy = _num(k, "scale-x", 1.0), _num(k, "scale-y", 1.0)
-            add(z, lambda ax, a=(x, y, w or 200, sx, sy, text, tpl, z): _draw_label(ax, *a), x + (w or 200) * sx, y + 60 * sy)
+            add(z, lambda ax, a=(x, y, w or 200, sx, sy, text, tpl, z): _draw_label(ax, *a),
+                x + ((w or 200) + 5) * sx, y + 56 * sy, x + 5 * sx, y + 25 * sy)
         elif t == "zoom-visualization":
             p = [_num(k, n) for n in ("p1x", "p1y", "p2x", "p2y", "p3x", "p3y")]
-            add(z, lambda ax, p=p, c=_txt(k, "color"), z=z: _draw_zoom(ax, p, c, z), p[4], p[5])
-    return items, ext[0], ext[1]
+            add(z, lambda ax, p=p, c=_txt(k, "color"), z=z: _draw_zoom(ax, p, c, z),
+                max(p[0] + 25, p[4]), max(p[1] + 20, p[5]), min(p[0], p[2]), min(p[1], p[3]))
+    if extent is not None:
+        extent[:] = ext if items else [0.0, 0.0, 0.0, 0.0]
+    return items, ext[2], ext[3]
 
 
 def _draw_edge(ax, mp: MPath, colour: str, lw: float, opts: Dict[str, bool], z: float) -> None:
@@ -359,28 +500,50 @@ def _draw_zoom(ax, p: List[float], colour: str, z: float) -> None:
     ax.add_patch(Rectangle((sx, sy), 25, 20, fill=False, ec="white", lw=2, zorder=z))
 
 
-def render_pwml(pwml_path, fmt: str = "png", max_px: int = 2400) -> bytes:
-    """Render the PWML at ``pwml_path`` as PNG or SVG bytes; the longest side is at most ``max_px`` pixels."""
+def output_scale(width: float, height: float, max_px: Optional[int] = None) -> float:
+    """Pixels per PWML unit. Aim at ``TARGET_PX`` on the longest side, but never below ``MIN_SCALE`` (PathBank's
+    12-unit pill text stays >= 10 px, 15-unit enzyme text >= 12 px) and never above 1; ``max_px`` (default ``MAX_PX``) is a hard cap on the longest side."""
+    longest = max(width, height)
+    scale = min(1.0, max(TARGET_PX / longest, MIN_SCALE))
+    return min(scale, (max_px or MAX_PX) / longest)
+
+
+def render_pwml(pwml_path, fmt: str = "png", max_px: Optional[int] = None, *,
+                structure_budget_s: Optional[float] = None) -> bytes:
+    """Render the PWML at ``pwml_path`` as PNG or SVG bytes, cropped to what is drawn.
+
+    The scale is ``output_scale``: labels stay readable on wide pathways, and the longest side is at most ``max_px``
+    pixels (default ``MAX_PX``). Compound boxes show PubChem's structure picture of the compound (by its ChEBI
+    id, else its ``pubchem-cid``; ``structures.key_for``) from the on-disk cache, fetching what is missing for at most ``structure_budget_s`` seconds (default
+    ``$T2PW_STRUCTURE_BUDGET_S`` or 6; 0 = cache only); a box without a picture stays empty."""
     root = read_xml_with_repairs(str(pwml_path))
     vis = find_first_visualization(root)
-    items, ex, ey = _items(root, vis)
+    pics = {}
+    for cid, data in _structures.structures(_structure_cids(root, vis), structure_budget_s).items():
+        pic = _picture(data)
+        if pic is not None:
+            pics[cid] = pic
+    extent: List[float] = []
+    items, _, _ = _items(root, vis, pics, extent)
     k = _kids(vis)
-    width = _num(k, "width") or ex + 50
-    height = _num(k, "height") or ey + 50
+    if items:  # crop to the drawing, with a margin
+        x0, y0 = extent[0] - MARGIN, extent[1] - MARGIN
+        width, height = extent[2] + MARGIN - x0, extent[3] + MARGIN - y0
+    else:
+        x0 = y0 = 0.0
+        width, height = _num(k, "width"), _num(k, "height")
     if width <= 0 or height <= 0:
         raise ValueError("the PWML has no drawable extent")
     fig = Figure(figsize=(width / 72, height / 72), dpi=72, facecolor=BACKGROUND)
     FigureCanvasAgg(fig)
     ax = fig.add_axes((0, 0, 1, 1))
     ax.set_autoscale_on(False)
-    ax.set_xlim(0, width)
-    ax.set_ylim(height, 0)
     ax.axis("off")
     for _, _, draw in sorted(items, key=lambda it: (it[0], it[1])):
         draw(ax)
-    ax.set_xlim(0, width)
-    ax.set_ylim(height, 0)
+    ax.set_xlim(x0, x0 + width)
+    ax.set_ylim(y0 + height, y0)
     buf = io.BytesIO()
     with rc_context({"svg.fonttype": "none"}):
-        fig.savefig(buf, format=fmt, dpi=72 * min(1.0, max_px / max(width, height)), facecolor=BACKGROUND)
+        fig.savefig(buf, format=fmt, dpi=72 * output_scale(width, height, max_px), facecolor=BACKGROUND)
     return buf.getvalue()
