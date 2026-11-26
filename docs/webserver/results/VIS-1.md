@@ -209,3 +209,25 @@ on one row, curved branches into CHLI / CAO / POR, GluTR1 stray box gone), menaq
    earlier process and drawn left to right.
 4. **Orphan locations** (no process refers to them): PathWhiz drops them; v2 now stacks the ones with a drawn twin on
    it. Whether the writer should stop emitting them (content change) is a separate question.
+
+## 6. Review and merge (orchestrator, 2026-11-26)
+
+Independent ws-reviewer (opus) on the diff `7bf8588e..2aad7d3d`: **APPROVE WITH NOTES**. Boundary, no-biology, v1
+untouched, logs and content check verified; templates 157 / 83 confirmed as drawing choices in PathWhiz's own code
+(`compound_location.js.coffee:110-113`, `transport_visualization.js.coffee:78`). Notes, carried forward:
+- F1: node clearance (`_clear`, router fallback, `layout_metrics.py`) uses the stored 200x190 box; PathWhiz grows a box
+  for a 3-line name by ~45 units, so a few edges graze it (enterobactin 6 -> 7, lipid A 13 -> 13 at grown sizes). Not
+  new. Follow-up layout round.
+- F2: the IR enzyme connectors are now visible lines through their enzyme; PathWhiz drops them as orphans but the
+  result-page renderer (`render/pathbank.py`) draws every non-hidden edge. Must be fixed in the renderer before
+  `T2PW_RESULT_RENDER=pathbank` is enabled: handed to VIS-4 (the orchestrator's own render showed the enzyme labels
+  scrambled).
+- F3: the content checker's 83 -> 5 mask applies to every edge; tighten to transport members. F4: module docstring
+  still says geometry only. F5: a side compound beside an enzyme in another compartment (rare, untested). F7: private
+  writer import. Follow-up layout round.
+
+Merged `--no-ff` as `62ac7eea` (webserver/refactor `82b31b11` + `2aad7d3d`). Gates on the merge result, clean tree,
+one wrapper run, BW_EXIT 0, FINAL SURVIVING COUNT 0 (`evidence/VIS-1/logs/merge-vis1-gates.log`, script alongside):
+SMOKE 511; golden 2 / 8 / 4 / 24; equivalence 8 / 14 / 6; vision 370 + 1 skipped; web 83; pwml focused 305; render
+23; service + web 346. Not deployed: the server runs layout v2 already, so VIS-1 reaches the server's PWML with the
+next deploy of webserver/refactor.
