@@ -8,9 +8,9 @@ PO request (VIS-REF): pathways must look like curated PathBank diagrams. Plan: `
 | file | what |
 |---|---|
 | `src/t2pw/render/pathbank.py` (new, ~400 lines) | `render_pwml(path, "png" \| "svg", max_px=2400) -> bytes`. Draws a PWML from its own geometry in PathBank's look. One matplotlib `Figure` (no pyplot state) gives both PNG and SVG. |
-| `src/t2pw/render/pathbank_art/` (new, package data) | 41 PathBank drawable images: `<id>.png` runtime rasters, `svg/<id>.svg` PathBank's original vector art byte for byte, `catalog.json` |
+| `src/t2pw/render/pathbank_art/` (new, package data) | 41 PathBank drawable images: `<id>.png` runtime rasters, `svg/<id>.svg` PathBank's original vector art byte for byte (kept in the repo as provenance, not package data: never read at runtime), `catalog.json` |
 | `src/t2pw/service/pathway.py` (+17) | `_pathbank_png()`; the image written as `out/pathway.png` is the PathBank render when the flag is on and the render works, else the old draft-graph bytes |
-| `pyproject.toml` (+1) | package data for `t2pw.render` (outside the declared boundary, one line, needed if the server installs the package as a wheel; without it the art would be silently missing) |
+| `pyproject.toml` (+1) | package data for `t2pw.render`: the PNG rasters and `catalog.json` only (outside the declared boundary, one line, needed if the server installs the package as a wheel; without it the art would be silently missing) |
 | `tests/test_render_pathbank.py` (new, 18 tests) | parsing, chevron geometry against PathBank's own `arrow_path`, both arrow-option encodings, hidden/unknown-art handling, zero-length edge, PNG and SVG output, size cap, the committed `reference/PW000001.pwml`, catalog vs files, flag off/on/fallback |
 
 **Flag.** `T2PW_RESULT_RENDER=pathbank` (case and spaces ignored), read on every call; default off. Flag off: `_pathbank_png`
@@ -31,7 +31,7 @@ the PWML template id joined to the element PathBank's SVG draws for it (by locat
 
 | PWML record | drawn as | source of the style |
 |---|---|---|
-| `edge` | its `path` exactly (matplotlib CURVE4), stroke 9, colour by template: 5 gold `#ffc500` (591 edges), 83 green (87), 148 red, 149 cyan, 195/218 thin black. A template-5 edge that a transport (or an Inhibition / Activation interaction) uses is drawn green (red / cyan), as PathBank's own templates 83/148/149 do | mined |
+| `edge` | its `path` exactly (matplotlib CURVE4), stroke 9, colour by template: 5 gold `#ffc500` (591 edges), 83 green (87), 148 red, 149 cyan, 195/218 thin black. **Strictly by template**, as PathWhiz draws the same PWML: a template-5 edge is gold even when a transport or an interaction uses it (PathBank: 591 of 591 template-5 edges gold; its transports use 83). Review round 1 removed a role override that coloured such edges green/red/cyan; it would have hidden the exporter writing template 5 for transport edges (handed to VIS-1) | mined |
 | `option:start_arrow` / `end_arrow` (PathBank) or the JSON `options` child (T2PW) | open chevron at that end: two 30-unit legs at +-30 degrees from the path's end tangent, same colour and stroke. Reproduces PathBank's `arrow_path` to 3 decimals (test). `*_flat_arrow`: a 30-unit bar across the end | PW000001.svg `arrow_path` |
 | `membrane-visualization` | its `path`, band of the template's colour and width (1 `#4BC8F2` 50; 84 red; 91 `#EE9189`; 92 `#AED02A`; 93 `#FEF935`; 94 `#DDB0FD`; 237 `#389F3C`; 238 `#7CC4B7`; 304 `#ABF7B1`; 291 15 wide; 220 black 6; 95, 146 from PATHBANK-CONVENTIONS); unknown template = template 1, as PathWhiz does | mined + `docs/pwml_output/PATHBANK-CONVENTIONS.md` |
 | `compound-location` | >= 90x80: rounded box, blue header with the name, white body (no structure image). Template 9: small blue cofactor tag. 78x78 icon templates: dark-blue rounded square with the short name. Else a currency pill (ATP-style ochre, Pi/PPi violet, CoA red) with the short name | mined (templates 9, 42-65, 81, 82, 85, 137-140, 157) |
@@ -159,7 +159,20 @@ No golden or other existing test was edited. No biology module changed (`git dif
 - PathBank's own `option:*_arrow_path` values use 15-unit legs; PathBank's SVG draws 30-unit legs, so the chevron is
   computed from the tangent rather than copied from the PWML.
 
-## 7. Open questions (product owner / orchestrator)
+## 7. Review round 1 (ws-reviewer on `6e665bce`: APPROVE WITH NOTES)
+
+Fixed in `ddb7c9ed`:
+- **F1** edge colour strictly by template (§ 2); the role code (`ROLE_COLOUR`, `_edge_roles`) is gone.
+- **F3** `_pathbank_png(pwml_path, deadline)` returns `None` (old picture kept) once the run's graced deadline (`request.deadline - GRACE_S`, the value `run_pathway` already uses) has passed.
+- **F4** new tests: the `run_pathway` tail through the real control flow with the R5 `World` fakes (flag on: the renderer gets `result.pwml_path` and its bytes are `out/pathway.png`; renderer raising or flag off: the draft-graph bytes); edge colour per template on `_items` (148 red, 149 cyan, 83 green, 5 gold also on a transport and on an Inhibition interaction); the deadline skip.
+- **F5** `pathbank_art/svg/*` removed from package data; the files stay in the repo.
+- **F7** `ponytail:` note on the unbounded `_art` cache: ceiling about 82 MiB if all 41 images load (measured: float32 RGBA arrays); bound it if the worker becomes long-lived.
+
+**F2 (recorded, no code change).** The server switch stays **off** until VIS-1/VIS-2 make our layouts compact. On our wide canvases the labels are unreadable at `max_px=2400`: replay-7 is 7658 x 3725 units, scaled by 0.31, so 15-unit enzyme text becomes ~5 px (see `evidence/VIS-3/ours-replay-7.png`). Options: (a) compact layouts (VIS-1/2), the real fix; (b) a higher `max_px` for wide canvases, e.g. scale = max(2400/longest side, 0.6), cost: PNGs up to ~4600 px and a few MB; (c) also write `pathway.svg` and link it from the page (text stays sharp at any zoom; the renderer already produces it), cost: a template change and a new download kind.
+
+Tests after the fixes, on committed HEAD `ddb7c9ed`: `tests/test_render_pathbank.py` **23 passed** (18 + 5 new); service tail and web job/worker set **253 passed**; `BW_EXIT=0`, **FINAL SURVIVING COUNT 0**; log `evidence/VIS-3/logs/vis3-focused2.log` (`C:/t/vis-runs/logs/vis3-focused2.log`). The wrapper notes the worktree dirty: only this RESULT doc was uncommitted at the time; the code under test was the commit.
+
+## 8. Open questions (product owner / orchestrator)
 
 1. **Our layout writes compound template 157**, which PathBank uses for *drug* compounds (pink header, 15 of 16 uses in
    the references are drugs). In PathWhiz our compounds may therefore all show as drugs. Options: (a) VIS-1/VIS-2 switch
