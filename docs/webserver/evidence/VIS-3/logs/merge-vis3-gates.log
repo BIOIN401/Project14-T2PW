@@ -1,0 +1,96 @@
+HEAD 169785158afcf0806824d61044aa9ebcba39c18c
+STATUS_BEGIN
+STATUS_END
+== tree C:/t/merge-vis3
+HEAD 169785158afcf0806824d61044aa9ebcba39c18c
+STATUS_BEGIN
+STATUS_END
+== smoke
+........................................................................ [ 84%]
+........................................................................ [ 98%]
+.......                                                                  [100%]
+511 passed in 73.81s (0:01:13)
+EXIT_smoke=0
+== g-batch
+T2PW: C:\t\merge-vis3\src\t2pw\__init__.py
+..                                                                       [100%]
+2 passed in 7.16s
+EXIT_g-batch=0
+== g-c011
+T2PW: C:\t\merge-vis3\src\t2pw\__init__.py
+........                                                                 [100%]
+8 passed in 63.28s (0:01:03)
+EXIT_g-c011=0
+== g-stage8
+T2PW: C:\t\merge-vis3\src\t2pw\__init__.py
+....                                                                     [100%]
+4 passed in 0.47s
+EXIT_g-stage8=0
+== g-quar
+T2PW: C:\t\merge-vis3\src\t2pw\__init__.py
+........................                                                 [100%]
+24 passed in 54.65s
+EXIT_g-quar=0
+== eq-run
+T2PW: C:\t\merge-vis3\src\t2pw\__init__.py
+........                                                                 [100%]
+8 passed in 65.35s (0:01:05)
+EXIT_eq-run=0
+== eq-app
+T2PW: C:\t\merge-vis3\src\t2pw\__init__.py
+..............                                                           [100%]
+14 passed in 62.20s (0:01:02)
+EXIT_eq-app=0
+== eq-default
+T2PW: C:\t\merge-vis3\src\t2pw\__init__.py
+......                                                                   [100%]
+6 passed in 32.46s
+EXIT_eq-default=0
+== vision
+........................................................................ [ 77%]
+........................................................................ [ 97%]
+..........s                                                              [100%]
+370 passed, 1 skipped in 21.26s
+EXIT_vision=0
+== web
+T2PW: C:\t\merge-vis3\src\t2pw\__init__.py
+........................................................................ [ 86%]
+...........                                                              [100%]
+83 passed in 7.58s
+EXIT_web=0
+SUITE_DONE
+== render
+23 passed in 2.82s
+EXIT_render=0
+== service
+346 passed in 54.87s
+EXIT_service=0
+MERGE_VIS3_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 50bb2f803d73014f9085f07e220807dc47831038  [git, worktree dirty=True]
+label                   : merge-vis3-gates
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/vis-runs/merge_vis3_inner.sh
+cwd                     : c:\t\merge-vis3
+root PID / process group: 160292 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 7200 s
+duration                : 464.61 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 86  161676:bash.exe, 196220:bash.exe, 206096:git.exe, 206372:bash.exe, 207136:bash.exe, 207168:bash.exe, 207196:bash.exe, 207220:bash.exe, 207452:bash.exe, 207628:bash.exe, 207652:bash.exe, 207660:python.exe, 207672:python.exe, 207260:python.exe, 207252:python.exe, 207240:python.exe, 207384:python.exe, 207480:python.exe, 207620:python.exe, 205952:python.exe, 207184:python.exe, 207056:git.exe, 190668:git.exe, 208408:bash.exe, 202032:python.exe, 208624:python.exe, 192708:bash.exe, 198192:python.exe, 207380:bash.exe, 208432:python.exe, 206944:git.exe, 160148:git.exe, 207440:python.exe, 208092:python.exe, 155184:python.exe, 208620:python.exe, 198452:python.exe, 208216:python.exe, 197408:python.exe, 204608:python.exe, 208008:python.exe, 206268:python.exe, 208952:python.exe, 208972:python.exe, 209072:python.exe, 209092:python.exe, 209120:python.exe, 209140:python.exe, 209168:bash.exe, 209200:python.exe, 209224:python.exe, 209428:bash.exe, 209452:bash.exe, 209460:python.exe, 209472:python.exe, 208576:bash.exe, 205500:python.exe, 209408:python.exe, 204784:python.exe, 207556:python.exe, 210160:bash.exe, 210192:python.exe, 210204:python.exe, 186052:bash.exe, 209956:python.exe, 209960:python.exe, 206420:bash.exe, 211076:python.exe, 211104:python.exe, 209412:python.exe, 210500:python.exe, 203660:python.exe, 209392:python.exe, 207372:python.exe, 208832:bash.exe, 211488:bash.exe, 211492:python.exe, 209848:python.exe, 209664:python.exe, 211904:python.exe, 211328:python.exe, 153144:python.exe, 208236:python.exe, 207348:python.exe, 209716:python.exe, 208488:bash.exe
+descendants terminated  : 86  153144, 155184, 160148, 161676, 186052, 190668, 192708, 196220, 197408, 198192, 198452, 202032, 203660, 204608, 204784, 205500, 205952, 206096, 206268, 206372, 206420, 206944, 207056, 207136, 207168, 207184, 207196, 207220, 207240, 207252, 207260, 207348, 207372, 207380, 207384, 207440, 207452, 207480, 207556, 207620, 207628, 207652, 207660, 207672, 208008, 208092, 208216, 208236, 208408, 208432, 208488, 208576, 208620, 208624, 208832, 208952, 208972, 209072, 209092, 209120, 209140, 209168, 209200, 209224, 209392, 209408, 209412, 209428, 209452, 209460, 209472, 209664, 209716, 209848, 209956, 209960, 210160, 210192, 210204, 210500, 211076, 211104, 211328, 211488, 211492, 211904
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-runs/merge-vis3-gates.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=merge-vis3  acquired=True  released=True
+pre-existing (reported, NEVER killed): 17
+================================================
+BW_EXIT=0

@@ -183,3 +183,30 @@ Tests after the fixes, on committed HEAD `ddb7c9ed`: `tests/test_render_pathbank
    nothing on the page uses it yet.
 3. Windows checkouts with `core.autocrlf` turn the art SVGs' LF into CRLF; the repo blob is PathBank's original bytes
    (`catalog.json` `original_sha256`). Harmless for rendering (runtime uses the PNGs).
+4. **PathBank art in the public server (review F6).** The 41 organelle and cell images ship in the server package.
+   They are PathBank's own images (the PO's lab), from a coworker's export. Asked the PO 2026-11-25 whether that is
+   fine and whether the result page should credit "art: PathBank/PathWhiz". The working assumption until answered:
+   yes, with that credit added before the server switch goes on.
+5. **The exporter writes template 5 on transport edges; PathBank uses 83** (review F1/N1). This renderer colours
+   strictly by template, so our transport edges are gold where PathBank's are green. It is handed to VIS-1
+   (`pwml/layout.py`).
+
+## 9. Review round 2 and merge (orchestrator, 2026-11-25)
+
+Re-check of the fix delta `6e665bce..2a46ddaa` (code `ddb7c9ed`): **APPROVE WITH NOTES**. F1, F3, F4, F5, F7 and F8
+fixed; F2 recorded. New notes:
+- N1: the two items above, added here;
+- N2: the tail tests import `World`/`_run` from `test_service_run_pathway`, so a rename there breaks them;
+- N3: SMOKE had to run on the merge result.
+
+**Merged** into webserver/refactor at `16978515` (= `50bb2f80` + `vis/result-render` `2a46ddaa`). Gates on the merge
+result (`logs/merge-vis3-gates.log`, BW_EXIT 0, 0 survivors):
+- SMOKE 511;
+- golden 2/8/4/24, unedited;
+- equivalence 8/14/6;
+- vision 370 (+1 skip);
+- web 83;
+- render 23;
+- service + web job set 346.
+
+The server switch stays **off** until VIS-1/VIS-2 make our layouts compact (F2) and the art credit (item 4) is settled.
