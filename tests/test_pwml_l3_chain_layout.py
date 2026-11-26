@@ -99,14 +99,23 @@ def test_v2_chain_reads_left_to_right(monkeypatch):
     for loc in pv.iter("compound-location"):
         if loc.findtext("id") not in used:  # base locations no process draws (PathWhiz's viewer drops them)
             continue
-        x.setdefault(names[loc.findtext("compound-id")], []).append(int(loc.findtext("x")))
+        x.setdefault(names[loc.findtext("compound-id")], []).append((int(loc.findtext("x")), int(loc.findtext("y"))))
     chain = ["chorismate", "isochorismate", "2,3-dihydro-2,3-dihydroxybenzoate", "2,3-dihydroxybenzoic acid",
              "2,3-dihydroxybenzoyl-AMP", "enterobactin"]
     xs = [x[n] for n in chain]
     assert all(len(v) == 1 for v in xs), xs
     xs = [v[0] for v in xs]
-    # isochorismate and its product share one enzyme (pc_4) in the fixture, so they may stand in the same column
-    assert xs[0] < xs[1] <= xs[2] < xs[3] < xs[4] < xs[5], dict(zip(chain, xs))
+    # VIS-5: a long chain folds into rows read left to right, then right to left (a snake): along the chain, a step
+    # stays in its row and moves in that row's direction, or goes down to the next row
+    rows = sorted({y for _, y in xs})
+    row_of = {}
+    for y in rows:
+        row_of[y] = next((row_of[r] for r in row_of if abs(r - y) < 300), len(set(row_of.values())))
+    for (ax, ay), (bx, by) in zip(xs, xs[1:]):
+        ra, rb = row_of[ay], row_of[by]
+        # isochorismate and its product share one enzyme (pc_4) in the fixture, so they may stand in the same column
+        assert rb == ra + 1 or (rb == ra and (bx >= ax if ra % 2 == 0 else bx <= ax)), dict(zip(chain, xs))
+    assert xs[0][0] < xs[1][0] and row_of[xs[0][1]] == 0, dict(zip(chain, xs))  # it starts left to right
 
 
 def test_v2_changes_only_the_drawing(monkeypatch):

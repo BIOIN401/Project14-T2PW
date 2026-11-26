@@ -1261,11 +1261,11 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
             return bw * bh * (1 + abs(math.log(bw / bh / ASPECT)))
         if badness(cols) < badness(spots):
             spots = cols
-    top = MARGIN + LINE_LABEL_ROOM  # VIS-5: room above the first row for labels on its top membrane line
+    top = MARGIN + (LINE_LABEL_ROOM if spots else 0)  # VIS-5: room above the first row for labels on its top line
     for bx, by, st, h in spots:
         place(st, MARGIN + bx, top + by, sizes[st][0], h)
         row_w = max(row_w, bx + sizes[st][0])
-    top += max(by + h for _, by, _, h in spots) + BAND_GAP
+    top += max(by + h for _, by, _, h in spots) + BAND_GAP if spots else 0
     width = MARGIN + row_w + MARGIN
 
     def own_rect(k) -> Tuple[int, int, int, int]:
@@ -1301,6 +1301,7 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
     height = (extra_y + 80 + MARGIN) if extra_x > MARGIN else ((top - BAND_GAP if rows else top) + MARGIN)
     width = max(width, extra_x + MARGIN)
     label_items: Dict[Any, List[Dict[str, Any]]] = defaultdict(list)
+    line_labels: List[Tuple[Dict[str, Any], int, int]] = []  # VIS-5: (label on a membrane line, the box's x0, x1)
 
     def membrane_name(kind, default):
         """The PWML's own name of its one membrane location of ``kind`` (apical / basolateral sides do not name a whole
@@ -1324,6 +1325,7 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
                 "x": x, "y": int(ly - (25 + 15.5) * LABEL_SCALE), "zindex": 20, "scale-x": f"{LABEL_SCALE}",
                 "scale-y": f"{LABEL_SCALE}", "width": "200", "height": "15"})
             items.setdefault("label-locations", []).append(label_items[st][-1])
+            line_labels.append((label_items[st][-1], x0, x1))
 
         if envelope(s) and gap:  # PathBank PW000779: each envelope line named on the line
             for text, ly in ((membrane_name("outer_membrane", "Outer Membrane"), y0),
@@ -1372,7 +1374,8 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
             cur = parent.get(cur)
         anc[st] = chain
     fixed = [(bl.x, bl.y, bl.x + bl.w, bl.y + bl.h) for k, bl in blocks.items() if not bl.virtual and k not in twin_of]
-    fixed += [_label_rect(lb) for lb in items.get("label-locations", [])]
+    on_line = {id(lb) for lb, _, _ in line_labels}  # a transporter may take a line label's place; the label moves after
+    fixed += [_label_rect(lb) for lb in items.get("label-locations", []) if id(lb) not in on_line]
     def crossing(si, so):
         """The membrane a cargo in ``si`` crosses toward ``so``: the highest outlined box around ``si`` not holding ``so``."""
         m = next((s for s in reversed(anc[si]) if s not in anc[so]), None)
@@ -1512,6 +1515,18 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
         right = max(blocks[k].x + blocks[k].w for k in ks)
         for j, lb in enumerate(label_items.get(st, [])):
             lb["x"], lb["y"] = right + 40, row_y + nh // 2 - int(40 * LABEL_SCALE) + j * LABEL_STEP
+    # VIS-5: a membrane-line label a transporter landed on slides along its line to the first free place
+    hubs_r = [(blocks[h].x - 20, blocks[h].y - 20, blocks[h].x + blocks[h].w + 20, blocks[h].y + blocks[h].h + 20)
+              for h in on_membrane]
+    for lb, bx0, bx1 in line_labels:
+        def hits(x, lb=lb):
+            r = _label_rect(dict(lb, x=x))
+            return any(not (r[2] <= q[0] or q[2] <= r[0] or r[3] <= q[1] or q[3] <= r[1]) for q in hubs_r)
+        if hits(lb["x"]):
+            w = int((205 - 5) * float(lb["scale-x"]))
+            free = [x for x in range(bx0 + 40, bx1 - 40 - w, 20) if not hits(x)]
+            if free:
+                lb["x"] = min(free, key=lambda x: abs(x - lb["x"]))
     for k, (twin, i) in twin_of.items():
         tb = blocks[twin]
         blocks[k].x, blocks[k].y = tb.x + tb.offsets[i][0], tb.y + tb.offsets[i][1]
