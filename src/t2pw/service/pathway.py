@@ -573,7 +573,7 @@ def run_pathway(request: PathwayRequest) -> PathwayResult:
     record = out_dir / bridge.OUTCOME_NAME  # the bridge adds bridge_files[].error (an OSError text with its path) as it writes
     _rescrub_json_file(record, out_dir)
     result.attempt_log = [{**row, "runner": "t2pw.service.pathway.run_pathway"} for row in result.attempt_log]
-    png = state.get("refinement_graph_bytes")
+    png = _pathbank_png(result.pwml_path) or state.get("refinement_graph_bytes")
     if isinstance(png, (bytes, bytearray)) and png:
         try:
             (out_dir / IMAGE_NAME).write_bytes(bytes(png))
@@ -581,3 +581,19 @@ def run_pathway(request: PathwayRequest) -> PathwayResult:
         except OSError:
             result.warnings.append("the pathway diagram could not be written")
     return result
+
+
+def _pathbank_png(pwml_path: Optional[Path]) -> Optional[bytes]:
+    """VIS-3: with ``T2PW_RESULT_RENDER=pathbank`` (read per call) the result image is a PathBank-style render of
+    the run's own PWML. ``None`` when the flag is off, there is no PWML or the render fails; the caller then keeps
+    the draft-graph picture, so the picture never fails a job."""
+    if os.environ.get("T2PW_RESULT_RENDER", "").strip().lower() != "pathbank" or not pwml_path:
+        return None
+    try:
+        from t2pw.render import pathbank
+        return pathbank.render_pwml(pwml_path)
+    except Exception:  # noqa: BLE001 - any render failure falls back to the draft graph
+        import logging
+        logging.getLogger(__name__).warning("PathBank render of %s failed; using the draft graph", Path(pwml_path).name,
+                                            exc_info=True)
+        return None
