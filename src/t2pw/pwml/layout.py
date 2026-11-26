@@ -41,10 +41,14 @@ MEMBRANE_TEMPLATE = 220  # PathWhiz "Simple Membrane"
 # rounded box at (x + 5s, y + 25s) of 200s x (15 + 16 lines)s, text wrapped at 28 characters (the template's text_length).
 LABEL_TEMPLATE, LABEL_SCALE, LABEL_TEXT_LENGTH = 235, 2.0, 28
 BOX_PAD_TOP_NO_LABEL, LABEL_GAP = 40, 24
+LINE_LABEL_ROOM, LINE_LABEL_X = 45, 80  # VIS-5: label on a membrane line: room above a box, offset from its corner
 OUTSIDE_GAP = 110  # VIS-5: outside cargo row distance from the cell's membrane
 INTERNAL_NAME_PREFIXES = ("__", "AutoState_")
 # PathWhiz template sizes of non-compound location templates met in T2PW output (template 2 "Enzyme Monomer I")
-OTHER_TEMPLATE_DIMS = {2: (150, 70)}
+OTHER_TEMPLATE_DIMS = {2: (150, 70), 12: (150, 70)}
+# VIS-5 (STRUCTURE_DIFF G6): the writer gives nucleic-acid locations template 2 ("Enzyme Monomer I", a ProteinLocation
+# template); PathBank uses NucleicAcidLocation templates. 12 is PathWhiz's "Nucleic Acid" (NucleicAcidLocation, 150x70).
+PROTEIN_TEMPLATE_ON_NUCLEIC, NUCLEIC_ACID_TEMPLATE = 2, 12
 
 # ---- compartment drawing conventions mined from curated PathBank diagrams (docs/pwml_output/PATHBANK-CONVENTIONS.md)
 # kind of a compartment, from its subcellular location name (else its state name); first match wins
@@ -415,6 +419,33 @@ def _curve(p0, n0, p3, n3, ratio: float = 0.25, bound: Optional[Tuple[int, int]]
     return f"M{p0[0]} {p0[1]} C{c1[0]} {c1[1]} {c2[0]} {c2[1]} {p3[0]} {p3[1]}", c1, c2
 
 
+BEND_OFFSETS = (90, -90, 180, -180, 300, -300, 450, -450)
+VIA_PAD = 60  # VIS-5: a bent edge passes this far off the side of the box it goes round  # VIS-5: how far a bent edge's middle leaves the chord
+
+
+def _bend(p0, n0, p3, n3, off: float, bound: Optional[Tuple[int, int]] = None, via: Optional[Tuple[int, int]] = None):
+    """VIS-5: an edge as two cubics through a point ``off`` units off the middle of the chord (left of p0->p3 for
+    positive), smooth there (the tangent runs along the chord): path, first point, first control point, last point,
+    last control point, sampled points; ``None`` for a zero chord."""
+    dx, dy = p3[0] - p0[0], p3[1] - p0[1]
+    chord = (dx * dx + dy * dy) ** 0.5
+    if chord < 1:
+        return None
+    ux, uy = dx / chord, dy / chord
+    w = via or (int(round((p0[0] + p3[0]) / 2 - uy * off)), int(round((p0[1] + p3[1]) / 2 + ux * off)))
+    k = max(30.0, min(200.0, chord / 4))
+    h = max(20.0, chord / 5)
+    c1 = (int(p0[0] + k * n0[0]), int(p0[1] + k * n0[1]))
+    c4 = (int(p3[0] + k * n3[0]), int(p3[1] + k * n3[1]))
+    c2 = (int(w[0] - h * ux), int(w[1] - h * uy))
+    c3 = (int(w[0] + h * ux), int(w[1] + h * uy))
+    if bound:
+        c1, c2, c3, c4, w = [(max(0, min(bound[0], c[0])), max(0, min(bound[1], c[1]))) for c in (c1, c2, c3, c4, w)]
+    path = f"M{p0[0]} {p0[1]} C{c1[0]} {c1[1]} {c2[0]} {c2[1]} {w[0]} {w[1]} C{c3[0]} {c3[1]} {c4[0]} {c4[1]} {p3[0]} {p3[1]}"
+    pts = _bezier_points(p0, c1, c2, w) + _bezier_points(w, c3, c4, p3)[1:]
+    return path, p0, c1, p3, c4, pts
+
+
 def _bezier_points(p0, c1, c2, p3, n: int = 16) -> List[Tuple[float, float]]:
     out = []
     for i in range(n + 1):
@@ -694,6 +725,8 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
         for it in items.get(sec, []):
             if sec == "compound-locations" and str(it.get("visualization-template-id")) == str(DRUG_TEMPLATE):
                 it["visualization-template-id"] = COMPOUND_TEMPLATE
+            if sec == "nucleic-acid-locations" and str(it.get("visualization-template-id")) == str(PROTEIN_TEMPLATE_ON_NUCLEIC):
+                it["visualization-template-id"] = NUCLEIC_ACID_TEMPLATE
             dims = (TEMPLATE_DIMS if sec == "compound-locations" else OTHER_TEMPLATE_DIMS).get(it.get("visualization-template-id"))
             if dims:  # PathWhiz draws a location at its template's size and ignores the stored one
                 it["width"], it["height"] = str(dims[0]), str(dims[1])
@@ -1057,8 +1090,20 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
         tpl, gap = style(st)
         return (0 if tpl is None else 3 if tpl in THIN_TEMPLATES else BAND_STROKE // 2) + gap
 
+    def envelope(st):
+        """The cell box that draws a Gram-negative envelope (outer and inner membrane lines)."""
+        return flat_envelope and parent.get(st) is None and kinds.get(st) in ("cytoplasm", "membrane")
+
+    def line_label(st):
+        """VIS-5 (STRUCTURE_DIFF G2): PathBank writes the name of a compartment with its own membrane ON that membrane
+        line; the inside of the cell (cytoplasm) keeps its label inside the box."""
+        text = labels.get(st, "")
+        return bool(text) and style(st)[0] is not None and kinds.get(st) != "cytoplasm" and not envelope(st)             and len(label_parts(text)) == 1
+
     def pad_top(st):
         text = labels.get(st, "")
+        if line_label(st):
+            return inset(st) + BOX_PAD_TOP_NO_LABEL + 10
         return inset(st) + (_label_pad(label_parts(text)) + LABEL_GAP if text else BOX_PAD_TOP_NO_LABEL)
 
     def pad_x(st):
@@ -1095,6 +1140,9 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
         inner_w = max(own_w, kw, label_w if labels.get(st) else 0)
         inner_h = own_h + (2 * VGAP if placed and kids else 0) + kh
         kid_top = own_h + (2 * VGAP if placed and kids else 0)
+        if any(line_label(c) for c in kids):  # room for a child's label drawn on its top line
+            inner_h += LINE_LABEL_ROOM
+            kid_top += LINE_LABEL_ROOM
         layouts[st] = (placed, [(c, dx, kid_top + dy) for c, (dx, dy) in zip(kids, offs)])
         sizes[st] = (inner_w + 2 * pad_x(st), pad_top(st) + inner_h + pad_bot(st))
 
@@ -1127,7 +1175,7 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
             x = 0
         rows[-1].append((x, st))
         x += sizes[st][0] + BAND_GAP
-    top = MARGIN
+    top = MARGIN + LINE_LABEL_ROOM  # VIS-5: room above the first row for labels on its top membrane line
     for row in rows:
         row_h = max(sizes[st][1] for _, st in row)
         for bx, st in row:
@@ -1169,6 +1217,15 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
     height = (extra_y + 80 + MARGIN) if extra_x > MARGIN else ((top - BAND_GAP if rows else top) + MARGIN)
     width = max(width, extra_x + MARGIN)
     label_items: Dict[Any, List[Dict[str, Any]]] = defaultdict(list)
+
+    def membrane_name(kind, default):
+        """The PWML's own name of a membrane location of ``kind`` (first in the file), else ``default``."""
+        for l in items.get("subcellular-locations", []):
+            n = str(l.get("name") or "").strip()
+            if n and compartment_kind(n) == kind:
+                return n[:1].upper() + n[1:]
+        return default
+
     for s, (x0, y0, x1, y1) in band_rects:
         tpl, gap = style(s)
         lines = [] if tpl is None else [(x0, y0, x1, y1)] + ([(x0 + gap, y0 + gap, x1 - gap, y1 - gap)] if gap else [])
@@ -1177,7 +1234,23 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
                 "id": new_id(), "path": _rounded_rect(a0, b0, a1, b1), "visualization-template-id": tpl,
                 "complete-membrane": True, "zindex": 6, "width": f"{a1 - a0}.0", "height": f"{b1 - b0}.0"})
         d = inset(s)
-        for j, part in enumerate(label_parts(labels[s]) if labels.get(s) else []):
+
+        def line_lab(text, ly, x=x0 + LINE_LABEL_X, st=s):
+            label_items[st].append({
+                "id": new_id(), "visualization-template-id": LABEL_TEMPLATE, "label-text": text,
+                "x": x, "y": int(ly - (25 + 15.5) * LABEL_SCALE), "zindex": 20, "scale-x": f"{LABEL_SCALE}",
+                "scale-y": f"{LABEL_SCALE}", "width": "200", "height": "15"})
+            items.setdefault("label-locations", []).append(label_items[st][-1])
+
+        if envelope(s) and gap:  # PathBank PW000779: each envelope line named on the line
+            for text, ly in ((membrane_name("outer_membrane", "Outer Membrane"), y0),
+                             ("Peptidoglycan", y0 + int(gap * 0.48)), (membrane_name("membrane", "Inner Membrane"), y0 + gap)):
+                line_lab(text, ly)
+        elif tpl is not None and parent.get(s) is None and kinds[s] == "cytoplasm" and membrane_name("membrane", ""):
+            line_lab(membrane_name("membrane", ""), y0)
+        if line_label(s):
+            line_lab(labels[s], y0)
+        for j, part in enumerate(label_parts(labels[s]) if labels.get(s) and not line_label(s) else []):
             label_items[s].append({
                 "id": new_id(), "visualization-template-id": LABEL_TEMPLATE, "label-text": part,
                 "x": x0 + d + 12, "y": y0 + d + 4 + j * LABEL_STEP, "zindex": 20, "scale-x": f"{LABEL_SCALE}", "scale-y": f"{LABEL_SCALE}",
@@ -1337,8 +1410,13 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
         if (below and sy0 < edge_y) or (not below and sy1 > edge_y):
             continue
         row_y = edge_y + OUTSIDE_GAP if below else edge_y - OUTSIDE_GAP - nh
-        for k, x in zip(order_k, _pava(desired, seps)):
-            blocks[k].x, blocks[k].y = max(MARGIN, int(round(x))), row_y
+        xs = [max(MARGIN, int(round(x))) for x in _pava(desired, seps)]
+        new = [(x, row_y, x + blocks[k].w, row_y + blocks[k].h) for k, x in zip(order_k, xs)]
+        if any(not (n[2] <= r[0] or r[2] <= n[0] or n[3] <= r[1] or r[3] <= n[1])
+               for o, r in rect_of_state.items() if o != st for n in new):
+            continue  # another compartment's box is in the way
+        for k, x in zip(order_k, xs):
+            blocks[k].x, blocks[k].y = x, row_y
         right = max(blocks[k].x + blocks[k].w for k in ks)
         for j, lb in enumerate(label_items.get(st, [])):
             lb["x"], lb["y"] = right + 40, row_y + nh // 2 - int(40 * LABEL_SCALE) + j * LABEL_STEP
@@ -1416,6 +1494,55 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
                     break
             if score is not None and score[:2] == (False, 0):
                 break
+        if score is not None and score[0]:
+            # VIS-5 (STRUCTURE_DIFF G1): PathBank keeps an edge one cubic (rarely two). Before a grid route: the same
+            # ends with the control points further out, then one smooth bend round the boxes (two cubics through a
+            # point off the chord)
+            short = (fa is not None, fb is not None)
+            for kr in (0.5, 0.8):
+                for i, (p0, n0) in enumerate(ends_a):
+                    for j, (p3, n3) in enumerate(ends_b):
+                        if p0 == p3:
+                            continue
+                        path, c1, c2 = _curve(p0, n0, p3, n3, kr, bound, short)
+                        pts = _bezier_points(p0, c1, c2, p3)
+                        sc = (not _clear(pts, obstacles), _crossings(pts, drawn), i + j)
+                        if sc < score:
+                            best, score, pick = (path, p0, c1, p3, c2, pts), sc, ((p0, n0), (p3, n3))
+            if score[0]:
+                for (p0, n0) in ends_a[:2]:
+                    for (p3, n3) in ends_b[:2]:
+                        if p0 == p3:
+                            continue
+                        for off in BEND_OFFSETS:
+                            cand = _bend(p0, n0, p3, n3, off, bound)
+                            if cand is None:
+                                continue
+                            sc = (not _clear(cand[5], obstacles), _crossings(cand[5], drawn), abs(off))
+                            if not sc[0] and (score[0] or sc[1:] < score[1:]):
+                                best, score, pick = cand, sc, ((p0, n0), (p3, n3))
+                        if not score[0]:
+                            break
+                    if not score[0]:
+                        break
+            if score[0]:  # round the boxes the curve hits: through a point just off one of their sides or corners
+                (p0, n0), (p3, n3) = pick if pick else (ends_a[0], ends_b[0])
+                hit = [r for r in obstacles if not _clear(best[5], [r])]
+                vias = []
+                for r in hit[:3]:
+                    cx, cy = (r[0] + r[2]) // 2, (r[1] + r[3]) // 2
+                    vias += [(r[0] - VIA_PAD, cy), (r[2] + VIA_PAD, cy), (cx, r[1] - VIA_PAD), (cx, r[3] + VIA_PAD),
+                             (r[0] - VIA_PAD, r[1] - VIA_PAD), (r[2] + VIA_PAD, r[1] - VIA_PAD),
+                             (r[0] - VIA_PAD, r[3] + VIA_PAD), (r[2] + VIA_PAD, r[3] + VIA_PAD)]
+                found = []
+                for v in vias:
+                    cand = _bend(p0, n0, p3, n3, 0, bound, via=v)
+                    if cand is not None and _clear(cand[5], obstacles):
+                        ln = sum(((q[0] - o[0]) ** 2 + (q[1] - o[1]) ** 2) ** 0.5 for o, q in zip(cand[5], cand[5][1:]))
+                        found.append((_crossings(cand[5], drawn), ln, cand))
+                if found:
+                    cr, _, best = min(found, key=lambda f: (f[0], f[1]))
+                    score = (False, cr, 0)
         if score is not None and score[0]:  # no clear curve: a right-angle route round the boxes, as PathBank's connectors
             pa, pb = ends_a[0][0], ends_b[0][0]
             route = router.route(pa, pb, member_rects[a] + member_rects[b]) if pa != pb else None
