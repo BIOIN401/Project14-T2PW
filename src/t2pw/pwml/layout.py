@@ -351,6 +351,28 @@ class _Router:
         return [a] + corners[1:-1] + [b]
 
 
+CORNER_R = 24  # VIS-5: radius of a routed edge's rounded corner
+
+
+def _round_corners(points: List[Tuple[int, int]], r: int = CORNER_R) -> List[Tuple[int, int]]:
+    """VIS-5: a right-angle route with each corner cut by a short diagonal of up to ``r`` on either side (PathBank's
+    connectors bend; a grid route's hard corners read as loops). Ends unchanged."""
+    pts = [points[0]] + [q for p, q in zip(points, points[1:]) if q != p]
+    if len(pts) < 3:
+        return pts
+    out = [pts[0]]
+    for p, q, n in zip(pts, pts[1:], pts[2:]):
+        d1 = ((q[0] - p[0]) ** 2 + (q[1] - p[1]) ** 2) ** 0.5
+        d2 = ((n[0] - q[0]) ** 2 + (n[1] - q[1]) ** 2) ** 0.5
+        k = min(r, d1 / 2, d2 / 2)
+        if k < 4:
+            out.append(q)
+            continue
+        out.append((int(round(q[0] - (q[0] - p[0]) * k / d1)), int(round(q[1] - (q[1] - p[1]) * k / d1))))
+        out.append((int(round(q[0] + (n[0] - q[0]) * k / d2)), int(round(q[1] + (n[1] - q[1]) * k / d2))))
+    return out + [pts[-1]]
+
+
 def _path(points: List[Tuple[int, int]]) -> Tuple[str, Tuple[int, int], Tuple[int, int]]:
     """Straight cubic segments (the form PathWhiz edits and draws arrows from); returns path, first cp1, last cp2."""
     pts = [points[0]] + [p for p, q in zip(points[1:], points) if p != q]
@@ -1586,7 +1608,10 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
                     for (p3, n3) in ends_b[:2]:
                         if p0 == p3:
                             continue
+                        chord = ((p3[0] - p0[0]) ** 2 + (p3[1] - p0[1]) ** 2) ** 0.5
                         for off in BEND_OFFSETS:
+                            if abs(off) > 0.6 * chord:
+                                continue  # a bend deeper than the edge is long loops round
                             cand = _bend(p0, n0, p3, n3, off, bound)
                             if cand is None:
                                 continue
@@ -1607,7 +1632,11 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
                              (r[0] - VIA_PAD, r[1] - VIA_PAD), (r[2] + VIA_PAD, r[1] - VIA_PAD),
                              (r[0] - VIA_PAD, r[3] + VIA_PAD), (r[2] + VIA_PAD, r[3] + VIA_PAD)]
                 found = []
+                cl2 = float((p3[0] - p0[0]) ** 2 + (p3[1] - p0[1]) ** 2) or 1.0
                 for v in vias:
+                    t = ((v[0] - p0[0]) * (p3[0] - p0[0]) + (v[1] - p0[1]) * (p3[1] - p0[1])) / cl2
+                    if not 0.15 <= t <= 0.85:
+                        continue  # a point behind either end makes the edge hook back
                     cand = _bend(p0, n0, p3, n3, 0, bound, via=v)
                     if cand is not None and _clear(cand[5], obstacles):
                         ln = sum(((q[0] - o[0]) ** 2 + (q[1] - o[1]) ** 2) ** 0.5 for o, q in zip(cand[5], cand[5][1:]))
@@ -1619,7 +1648,7 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
             pa, pb = ends_a[0][0], ends_b[0][0]
             route = router.route(pa, pb, member_rects[a] + member_rects[b]) if pa != pb else None
             if route and len(set(route)) > 1:
-                path, c1, c2 = _path(route)
+                path, c1, c2 = _path(_round_corners(route))
                 best, pick = (path, route[0], c1, route[-1], c2, [tuple(q) for q in route]), None
         if fa is None and fb is None and best is not None and pick is not None:
             plain[(a, b)] = pick
@@ -1690,4 +1719,26 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
                     strips.append((x0, y0, x1, y1))
             plan["membrane_strips"] = strips
     obstacles = [r for rs in member_rects.values() for r in rs] + [_label_rect(lb) for lb in items.get("label-locations", [])]
-    return cell_art.decorate(items, new_id, int(width), int(height), plan, obstacles, drawn, LOC_SECTIONS, _set_arrow_paths, MARGIN)
+    width, height = cell_art.decorate(items, new_id, int(width), int(height), plan, obstacles, drawn, LOC_SECTIONS,
+                                      _set_arrow_paths, MARGIN)
+    # VIS-5: the canvas ends a margin below what is drawn (PathBank: canvas = drawing + margin); an outside row moved up
+    # to its transporter left an empty strip at the bottom
+    bottom = _drawn_bottom(items)
+    height = min(height, int(bottom) + MARGIN) if bottom else height
+    for loc in hidden_locs:  # not drawn; kept inside the (possibly shorter) canvas
+        loc["y"] = max(0, min(int(loc.get("y") or 0), height - _dim(loc["height"])))
+    return width, height
+
+
+def _drawn_bottom(items: Dict[str, List[Dict[str, Any]]]) -> float:
+    """Lowest point of every drawn record (locations, labels, membranes, edges, cell art, zoom boxes); 0 if none."""
+    ys: List[float] = []
+    for sec in LOC_SECTIONS:
+        ys += [float(it["y"]) + _dim(it["height"]) for it in items.get(sec, []) if not it.get("hidden")]
+    ys += [float(lb["y"]) + 56 * float(lb.get("scale-y") or 1) for lb in items.get("label-locations", [])]
+    for sec in ("membrane-visualizations", "edges"):
+        for it in items.get(sec, []):
+            ys += [py for _, py in _path_points(str(it.get("path") or ""))]
+    ys += [float(d["y"]) + float(d["height"]) * float(d.get("scale-y") or 1) for d in items.get("drawable-element-locations", [])]
+    ys += [float(z["p3y"]) for z in items.get("zoom-visualizations", [])] + [float(z["p1y"]) + 20 for z in items.get("zoom-visualizations", [])]
+    return max(ys, default=0.0)
