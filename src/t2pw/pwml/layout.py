@@ -119,6 +119,17 @@ def compartment_parents(kinds: Dict[Any, str]) -> Dict[Any, Any]:
     return parent
 
 
+def _side_words(text: str) -> set:
+    """VIS-5: which side of a cell envelope a compartment name names: inner / outer / plasma / cytoplasmic."""
+    words = set(re.findall(r"[a-z]+", text.casefold().replace("_", " ")))
+    out = {w for w in ("inner", "outer", "plasma") if w in words}
+    out |= {"inner"} if "im" in words else set()
+    out |= {"outer"} if "om" in words else set()
+    if "cytoplasmic" in words and "membrane" in words and "leaflet" not in words:
+        out.add("cytoplasmic")
+    return out
+
+
 def _label_chunks(text: str, length: int = LABEL_TEXT_LENGTH) -> List[str]:
     """Lines of PathWhiz's divide_label_text (visualization_template.js.coffee): words, long ones split, greedy join."""
     words = []
@@ -1054,6 +1065,19 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
     kinds = {st: compartment_kind(loc_names.get(states.get(st, {}).get("subcellular-location-id")) or "",
                                   str(states.get(st, {}).get("name") or "")) for st in bands}
     parent = compartment_parents(kinds)
+    # VIS-5 (STRUCTURE_DIFF G13): PathBank never draws a membrane leaflet as a box of its own. Where the depth rule
+    # leaves a leaflet (or the cytoplasm) with two candidate membranes, the names decide when exactly one candidate
+    # shares the side word ("inner"/"IM", "outer"/"OM", "plasma", "cytoplasmic membrane")
+    names = {st: str(states.get(st, {}).get("name") or "") + " " + str(loc_names.get(states.get(st, {}).get("subcellular-location-id")) or "")
+             for st in bands}
+    for st in bands:
+        if parent.get(st) is not None or kinds[st] not in ("leaflet", "cytoplasm"):
+            continue
+        cands = [o for o in bands if o != st and kinds[o] == "membrane"]
+        want = _side_words(names[st]) if kinds[st] == "leaflet" else {"inner", "plasma", "cytoplasmic"}
+        hit = [o for o in cands if _side_words(names[o]) & want]
+        if len(cands) > 1 and len(hit) == 1:
+            parent[st] = hit[0]
     children: Dict[Any, List[Any]] = defaultdict(list)
     for st in bands:
         children[parent[st]].append(st)
@@ -1079,6 +1103,8 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
             return KIND_TEMPLATE[k], cell_art.ENVELOPE_GAP
         if k == "extracellular":
             return None, 0  # PathBank draws no outline around the outside of a cell
+        if k == "leaflet" and pk == "membrane":
+            return None, 0  # VIS-5 (G13): a leaflet is a region of its membrane's box, not a box of its own
         if (k == "cytoplasm" and pk == "membrane") or (k == "periplasm" and pk == "outer_membrane") \
                 or (k in ("mito_inner", "mito_matrix") and pk in ("mito", "mito_inner")) or (k == "thylakoid" and pk == "plastid"):
             return None, 0  # the enclosing box already draws this compartment's membrane
@@ -1219,12 +1245,11 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
     label_items: Dict[Any, List[Dict[str, Any]]] = defaultdict(list)
 
     def membrane_name(kind, default):
-        """The PWML's own name of a membrane location of ``kind`` (first in the file), else ``default``."""
-        for l in items.get("subcellular-locations", []):
-            n = str(l.get("name") or "").strip()
-            if n and compartment_kind(n) == kind:
-                return n[:1].upper() + n[1:]
-        return default
+        """The PWML's own name of its one membrane location of ``kind`` (apical / basolateral sides do not name a whole
+        cell membrane), else ``default``."""
+        found = {str(l.get("name") or "").strip() for l in items.get("subcellular-locations", [])}
+        found = sorted(n for n in found if n and compartment_kind(n) == kind and not re.search(r"apical|basolateral", n, re.I))
+        return found[0][:1].upper() + found[0][1:] if len(found) == 1 else default
 
     for s, (x0, y0, x1, y1) in band_rects:
         tpl, gap = style(s)
