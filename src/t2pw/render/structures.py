@@ -3,9 +3,7 @@
 PathBank's compound boxes show a 2-D structure drawing. We take PubChem's depiction of the compound, by one public
 id (only that id leaves the machine), and keep it in an on-disk cache. A key is ``"CHEBI:<n>"`` (PubChem's
 cross-reference from ChEBI) or ``"CID:<n>"`` (a PubChem compound id); ``key_for`` prefers ChEBI, because our
-PWMLs carry some wrong PubChem CIDs (VIS-4 record) while their ChEBI ids are right. VIS-5: a ChEBI id PubChem has no
-cross-reference for (classes with R groups such as ceramide or lipid A, and some plain molecules such as chlorophyll a)
-is drawn from ChEBI's own depiction (an RDKit SVG of paths, rasterised here to a PNG with matplotlib).
+PWMLs carry some wrong PubChem CIDs (VIS-4 record) while their ChEBI ids are right.
 
 Cache files, named after the key with ``:`` as ``_``:
 
@@ -36,10 +34,9 @@ from typing import Callable, Dict, Iterable, Optional
 
 CACHE_ENV = "T2PW_STRUCTURE_CACHE"
 BUDGET_ENV = "T2PW_STRUCTURE_BUDGET_S"
-DEFAULT_BUDGET_S = 20.0  # VIS-5: 6 s left a 30-compound pathway half empty; a job runs for minutes
+DEFAULT_BUDGET_S = 6.0
 PUG = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/"
 URLS = {"CID": PUG + "cid/{}/PNG", "CHEBI": PUG + "xref/RegistryID/CHEBI:{}/PNG"}
-CHEBI_SVG = "https://www.ebi.ac.uk/chebi/backend/api/public/compound/{}/structure/?width=300&height=300"
 REQUEST_TIMEOUT_S = 4.0
 FAIL_RETRY_S = 3600
 WORKERS = 4
@@ -97,102 +94,22 @@ def default_budget() -> float:
         return DEFAULT_BUDGET_S
 
 
-def _http_get(url: str) -> bytes:
-    """The body of ``url``. Raises ``Missing`` only for 404 or a 400 PUGREST.NotFound; the network error else."""
-    req = urllib.request.Request(url, headers={"User-Agent": "t2pw-render/0.1 (research tool)"})
+def download(key: str) -> bytes:
+    """PubChem's PNG for ``key``. Raises ``Missing`` only for 404 or a 400 PUGREST.NotFound (cached for good);
+    ``Unusable`` or the network error for anything else (cached as a retryable failure): a 403 block or a
+    maintenance page must not mark every compound missing."""
+    kind, _, n = key.partition(":")
+    req = urllib.request.Request(URLS[kind].format(n), headers={"User-Agent": "t2pw-render/0.1 (research tool)"})
     try:
         with urllib.request.urlopen(req, timeout=REQUEST_TIMEOUT_S) as resp:  # noqa: S310 - fixed https URL
-            return resp.read(MAX_BYTES + 1)
+            data = resp.read(MAX_BYTES + 1)
     except urllib.error.HTTPError as e:
         body = b""
         with contextlib.suppress(Exception):
             body = e.read(4096) if e.fp is not None else b""
         if e.code == 404 or (e.code == 400 and b"NotFound" in body):
-            raise Missing(url) from e
+            raise Missing(key) from e
         raise
-
-
-_SVG_PATH = re.compile(r"<path\b([^>]*)>", re.S)
-_SVG_ATTR = re.compile(r"""\b(d|style)\s*=\s*(?:'([^']*)'|"([^"]*)")""", re.S)
-_SVG_TOKEN = re.compile(r"[MLQCZmlqcz]|-?\d+(?:\.\d+)?(?:e-?\d+)?")
-
-
-def svg_to_png(svg: bytes, px: int = 300) -> bytes:
-    """A PNG of an RDKit depiction SVG (absolute M/L/Q/C/Z paths with fill and stroke in ``style``; ChEBI's form),
-    drawn on white at ``px`` x ``px``. Raises ``Unusable`` when the SVG has no path."""
-    from matplotlib.backends.backend_agg import FigureCanvasAgg
-    from matplotlib.figure import Figure
-    from matplotlib.patches import PathPatch
-    from matplotlib.path import Path as MPath
-
-    text = svg.decode("utf-8", "replace")
-    vb = re.search(r"viewBox=['\"]\s*([-\d.]+)[ ,]+([-\d.]+)[ ,]+([\d.]+)[ ,]+([\d.]+)", text)
-    x0, y0, w, h = (float(v) for v in vb.groups()) if vb else (0.0, 0.0, 300.0, 300.0)
-    fig = Figure(figsize=(px / 100, px / 100), dpi=100, facecolor="white")
-    FigureCanvasAgg(fig)
-    ax = fig.add_axes((0, 0, 1, 1))
-    ax.axis("off")
-    ax.set_xlim(x0, x0 + w)
-    ax.set_ylim(y0 + h, y0)
-    n = 0
-    for m in _SVG_PATH.finditer(text):
-        attrs = {k: a or b for k, a, b in _SVG_ATTR.findall(m.group(1))}
-        toks = _SVG_TOKEN.findall(attrs.get("d", ""))
-        verts, codes, cmd, i = [], [], None, 0
-        try:
-            while i < len(toks):
-                t = toks[i]
-                if t.isalpha():
-                    cmd, i = t.upper(), i + 1
-                    if cmd == "Z" and verts:
-                        verts.append(verts[-1])
-                        codes.append(MPath.CLOSEPOLY)
-                    continue
-                k = {"M": 1, "L": 1, "Q": 2, "C": 3}.get(cmd or "")
-                if k is None:
-                    break
-                pts = [(float(toks[i + 2 * j]), float(toks[i + 2 * j + 1])) for j in range(k)]
-                i += 2 * k
-                verts += pts
-                codes += [MPath.MOVETO] if cmd == "M" else [MPath.LINETO] if cmd == "L" else                     [MPath.CURVE3] * 2 if cmd == "Q" else [MPath.CURVE4] * 3
-                if cmd == "M":
-                    cmd = "L"
-        except (IndexError, ValueError):
-            continue
-        if len(verts) < 2:
-            continue
-        st = dict(kv.split(":", 1) for kv in attrs.get("style", "").replace(" ", "").split(";") if ":" in kv)
-        fill = st.get("fill", "none")
-        stroke = st.get("stroke", "none")
-        try:
-            lw = float(st.get("stroke-width", "1").rstrip("px")) * 0.72 * px / w
-        except ValueError:
-            lw = 1.0
-        ax.add_patch(PathPatch(MPath(verts, codes), fc=fill if fill.startswith("#") else "none",
-                               ec=stroke if stroke.startswith("#") else "none", lw=lw, capstyle="butt"))
-        n += 1
-    if not n:
-        raise Unusable("no structure in the SVG")
-    buf = __import__("io").BytesIO()
-    fig.savefig(buf, format="png", dpi=100, facecolor="white")
-    return buf.getvalue()
-
-
-def download(key: str) -> bytes:
-    """PubChem's PNG for ``key`` (VIS-5: for a ChEBI id PubChem does not cross-reference, ChEBI's own depiction).
-    Raises ``Missing`` only for 404 or a 400 PUGREST.NotFound from every source (cached for good); ``Unusable`` or
-    the network error for anything else (cached as a retryable failure): a 403 block or a maintenance page must not
-    mark every compound missing."""
-    kind, _, n = key.partition(":")
-    try:
-        data = _http_get(URLS[kind].format(n))
-    except Missing:
-        if kind != "CHEBI":
-            raise
-        svg = _http_get(CHEBI_SVG.format(n))
-        if len(svg) > MAX_BYTES or b"<svg" not in svg[:2000]:
-            raise Unusable(key)
-        data = svg_to_png(svg)
     if len(data) > MAX_BYTES or not png_ok(data):
         raise Unusable(key)
     return data
