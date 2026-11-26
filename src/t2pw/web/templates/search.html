@@ -1,0 +1,72 @@
+{% extends "layout.html" %}
+{% import "macros/components.html" as c %}
+{#- W10 smart search: PathBank choices, a message, or the prefilled form that queues one run. -#}
+{% block title %}{% if view == "choices" %}PathBank matches{% else %}Build a pathway{% endif %}{% endblock %}
+
+{% macro hit_list(items) %}
+<ul class="plain">
+  {% for h in items %}
+  <li><a href="{{ h.href }}"><strong>{{ h.name }}</strong></a>
+    <span class="muted">{% if h.organism %}{{ h.organism }} · {% endif %}{{ h.subject }}</span>
+    {{ c.chip(h.pw_id, kind="accession") }}</li>
+  {% endfor %}
+</ul>
+{% endmacro %}
+
+{% block content %}
+<p><a href="/">&larr; New search</a></p>
+{% if view == "choices" %}
+<h1>PathBank pathways for &ldquo;{{ query }}&rdquo;</h1>
+<p class="lead">No exact match, but PathBank has curated pathways with similar names. Pick one to see it,
+or build the pathway from the literature instead.</p>
+{{ hit_list(choices) }}
+{% if other_choices %}
+<h2>Drawn by PathBank for other organisms</h2>
+{{ hit_list(other_choices) }}
+{% endif %}
+<div class="btn-row">{{ c.button("Generate from literature instead", variant="secondary", href=generate_href) }}</div>
+
+{% elif view == "message" %}
+<h1>Search</h1>
+{% call c.alert("info") %}<p>{{ notice }}</p>{% endcall %}
+
+{% else %}
+<h1>{% if kind == "paper" %}Build a pathway from these papers{% elif kind == "text" %}Build a pathway from your text{% else %}Build a pathway from the literature{% endif %}</h1>
+{% if notice %}{% call c.alert("info") %}<p>{{ notice }}</p>{% endcall %}{% endif %}
+{% if other_choices %}
+<p>PathBank draws this pathway for other organisms:</p>
+{{ hit_list(other_choices) }}
+{% endif %}
+{% if organism_unknown %}<p class="muted">&ldquo;{{ organism_unknown }}&rdquo; is not in the organism list; choose one below.</p>{% endif %}
+{% if problems %}
+{% call c.alert("error", title="Check this before running") %}
+<ul>{% for p in problems %}<li>{{ p }}</li>{% endfor %}</ul>
+{% endcall %}
+{% endif %}
+<p class="lead">A run takes <strong>20 to 60 minutes</strong>. You get a private link to come back to.</p>
+<form class="submit" method="post" action="/search/run">
+  <input type="hidden" name="kind" value="{{ kind }}">
+  <input type="hidden" name="query" value="{{ query }}">
+  {% if kind == "paper" %}
+  {{ c.textarea_field("pmids", "PubMed IDs", value=pmids, rows=2, required=True, error=errors.get("pmids"),
+        hint="Only open-access full text can be read; if a paper has none, upload its PDF on the full form.") }}
+  {% elif kind == "text" %}
+  {{ c.textarea_field("text", "Text to read", value=text, rows=10, required=True, error=errors.get("text")) }}
+  {% endif %}
+  {{ c.text_field("name", "Pathway name", value=pathway, required=True, error=errors.get("name"),
+        hint=("T2PW searches open-access papers for this name." if kind == "name" else "The pathway these papers or this text describe."),
+        attrs={"maxlength": 200}) }}
+  <datalist id="search-organisms"></datalist>
+  {#- named organism_1 so the shared /organisms suggestion route reads it -#}
+  {{ c.text_field("organism_1", "Organism", id="organism", value=organism, required=True, error=errors.get("organism"),
+        hint="Start typing a species name and pick one from the suggestions.", autocomplete="off",
+        attrs={"maxlength": 200, "list": "search-organisms", "hx-get": "/organisms", "hx-trigger": "input changed delay:250ms",
+               "hx-target": "#search-organisms", "hx-swap": "innerHTML"}) }}
+  {{ c.checkbox_field("consent", "OK to add this pathway to PathBank", checked=consent,
+        hint="If ticked, a finished and release-ready result may be passed to PathBank curators for review. Nothing is added to PathBank automatically.") }}
+  {{ c.text_field("email", "Email (optional)", type="email", value=email, error=email_error or None,
+        hint="Used once, to tell you when the job has finished.", autocomplete="email") }}
+  <div class="btn-row">{{ c.button("Start the run", type="submit") }}</div>
+</form>
+{% endif %}
+{% endblock %}

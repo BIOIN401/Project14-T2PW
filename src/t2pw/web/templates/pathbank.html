@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% import "macros/components.html" as c %}
+{#- W10: one curated PathBank pathway. Shown without creating a job. -#}
+{% block title %}{{ hit.name }} (PathBank){% endblock %}
+{% block content %}
+<p><a href="/">&larr; New search</a></p>
+<h1>{{ hit.name }}</h1>
+<p class="lead">A curated pathway from PathBank{% if query %}, found for &ldquo;{{ query }}&rdquo;{% endif %}.</p>
+<dl class="defs">
+  <dt>Organism</dt><dd>{{ hit.organism or "not recorded" }}</dd>
+  {% if hit.subject %}<dt>Category</dt><dd>{{ hit.subject }}</dd>{% endif %}
+  <dt>PathBank ID</dt><dd>{{ c.chip(hit.pw_id, kind="accession") }}{% if hit.smp_id %} {{ c.chip(hit.smp_id, kind="accession") }}{% endif %}</dd>
+  {% if hit.organisms > 1 %}<dt>Also drawn for</dt><dd>{{ hit.organisms - 1 }} other organism{{ "s" if hit.organisms > 2 else "" }} in PathBank</dd>{% endif %}
+</dl>
+<div class="btn-row">
+  {% if hit.url %}{{ c.button("Open in PathBank", variant="secondary", href=hit.url) }}{% endif %}
+  {{ c.button("Generate from literature instead", variant="ghost", href=generate_href) }}
+</div>
+
+{% if diagram %}
+<h2>Pathway diagram</h2>
+{{ c.figure(diagram, "PathBank diagram of " ~ hit.name,
+     caption=("Drawn by T2PW from PathBank's PWML. " if diagram_is_render else "PathBank's own diagram. ") ~ "Click to open full size.", link=true) }}
+{% else %}
+{% call c.alert("info") %}<p>This server has no local copy of PathBank's diagram for this pathway. Open it in PathBank to see the diagram and download its files.</p>{% endcall %}
+{% endif %}
+{% if pwml %}
+<h2>Download</h2>
+<p>{{ c.download_link(pwml, "Download PathBank PWML", filename=hit.pw_id ~ ".pwml", meta="PathWhiz pathway file") }}</p>
+{% endif %}
+
+{% if others %}
+<h2>Other PathBank pathways with similar names</h2>
+<ul class="plain">
+  {% for h in others %}
+  <li><a href="{{ h.href }}">{{ h.name }}</a> <span class="muted">{{ h.organism }}</span> {{ c.chip(h.pw_id, kind="accession") }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+<p class="muted">{{ credit }}</p>
+{% endblock %}

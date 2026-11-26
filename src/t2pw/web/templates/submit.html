@@ -31,6 +31,15 @@
 PathWhiz pathway file (PWML) for you to review. A run takes <strong>20 to 60 minutes</strong> for most pathways and is stopped after 90; you
 get a private link to come back to, and can leave an email address to be told when it is done.</p>
 
+{% call c.card("Search", heading_level=2, raised=True) %}
+<form method="post" action="/search" role="search">
+  {{ c.textarea_field("q", "What do you need?", rows=2, attrs={"maxlength": 200000},
+        hint="A pathway (\"TCA cycle\", \"glycolysis in yeast\"), a PubMed ID, PMCID or DOI, or a passage pasted from a paper. Known pathways are shown straight from PathBank.") }}
+  <div class="btn-row">{{ c.button("Search", type="submit") }}</div>
+</form>
+{% endcall %}
+<h2>Or fill in the full form</h2>
+
 {% if problems %}
 {% call c.alert("error", title="This submission was not accepted") %}
 <ul>{% for p in problems %}<li>{{ p }}</li>{% endfor %}</ul>

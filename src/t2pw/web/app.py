@@ -6,7 +6,10 @@ nothing. Run with ``python -m t2pw.web`` (see ``__main__.py``) or
 
 Request path rule: nothing here resolves a PMID, fetches a paper or calls an LLM. A
 submission stores its raw inputs (name + scope, PMIDs, saved PDF paths) in the job store
-and the worker's ``run_pathway`` resolves them (R5).
+and the worker's ``run_pathway`` resolves them (R5). Two bounded exceptions, both in the
+smart search (W10, ``search_routes.py``): one LLM classification call for a sentence-like
+query that found nothing deterministically (rate-limited per visitor), and one NCBI ID
+converter call to turn a PMCID or DOI into the PMID the pipeline takes.
 
 Security shape: no login, so the job URL is the credential (32 hex chars of uuid4 from
 ``JobStore``); downloads are looked up by key in the job's own result and must resolve
@@ -39,7 +42,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from t2pw.rag.eligibility import RequestedScope
 from t2pw.service import organisms as organism_data
 from t2pw.service.pathway import PathwayRequest
-from t2pw.web import limits, views
+from t2pw.web import limits, pathbank, views
 from t2pw.web.jobs import MAX_ITEMS_PER_SUBMISSION, JobStore, QueueFull
 from t2pw.web.notify import is_valid_email
 
@@ -117,8 +120,18 @@ def create_app(db_path: Path | str, work_root: Path | str, base_url: str = "", *
                rate_secret: Optional[bytes] = None,
                trusted_proxies: Optional[str] = None,
                organisms_path: Optional[Path] = None,
-               max_body_bytes: int = MAX_BODY_BYTES) -> FastAPI:
-    """Build the site. Opens no DB, makes no directory, starts nothing."""
+               max_body_bytes: int = MAX_BODY_BYTES,
+               pathbank_index: Optional[Path] = None,
+               pathbank_files: Optional[Path] = None,
+               search_llm: Any = True,
+               search_idconv: Any = None) -> FastAPI:
+    """Build the site. Opens no DB, makes no directory, starts nothing.
+
+    Smart search (W10): ``pathbank_index`` (default ``T2PW_PATHBANK_INDEX``, else
+    ``data/webserver/pathbank_index.sqlite``), ``pathbank_files`` (default
+    ``T2PW_PATHBANK_FILES``), ``search_llm`` (True = the project LLM client, False = never,
+    or a ``chat(messages) -> str`` callable) and ``search_idconv`` (an injectable
+    ``get(url, params)`` for the PMCID/DOI lookup)."""
     if rate_secret is None and os.environ.get("T2PW_RATE_KEY_SECRET"):
         rate_secret = os.environ["T2PW_RATE_KEY_SECRET"].encode()
     if rate_secret is None:
@@ -132,6 +145,9 @@ def create_app(db_path: Path | str, work_root: Path | str, base_url: str = "", *
     s.rate = dict(limit=rate_limit, window_s=rate_window_s, secret=rate_secret)
     s.trusted_proxies = trusted_proxies
     s.organisms_path = organisms_path or organism_data.DEFAULT_PATH
+    s.pathbank_index = Path(pathbank_index or os.environ.get("T2PW_PATHBANK_INDEX") or pathbank.DEFAULT_INDEX)
+    s.pathbank_files = Path(pathbank_files) if pathbank_files else pathbank.files_root()
+    s.search_llm, s.search_idconv = search_llm, search_idconv
 
     templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
     templates.env.undefined = StrictUndefined
@@ -319,13 +335,7 @@ def _process_submission(app: FastAPI, form, remote: str, forwarded_for: Optional
     if problems or email_error or any(r["errors"] for r in rows):
         return again(400)
 
-    # The rate limit: counts this attempt; a refused one is not recorded.
-    key = limits.client_key(remote, forwarded_for, app.state.trusted_proxies)
-    rl = limits.RateLimiter(app.state.db_path, **app.state.rate)
-    try:
-        ok, wait = rl.hit(key)
-    finally:
-        rl.close()
+    ok, wait = _rate_hit(app, remote, forwarded_for)
     if not ok:
         problems.append(limits.rate_limit_message(wait))
         return again(429, {"Retry-After": str(max(1, math.ceil(wait)))})
@@ -356,6 +366,16 @@ def _process_submission(app: FastAPI, form, remote: str, forwarded_for: Optional
         _discard(upload_dir, saved)
         raise
     return ("ok", sid)
+
+
+def _rate_hit(app: FastAPI, remote: str, forwarded_for: Optional[str]) -> Tuple[bool, float]:
+    """The submission rate limit: counts this attempt; a refused one is not recorded."""
+    key = limits.client_key(remote, forwarded_for, app.state.trusted_proxies)
+    rl = limits.RateLimiter(app.state.db_path, **app.state.rate)
+    try:
+        return rl.hit(key)
+    finally:
+        rl.close()
 
 
 def _cheap_pdf_problem(f: UploadFile) -> Optional[str]:
@@ -496,6 +516,9 @@ def _routes(app: FastAPI) -> None:
 
     from t2pw.vision.web_routes import register as register_vision  # scoped views and formats (V10)
     register_vision(app, _item, _page, _cross_site)
+
+    from t2pw.web.search_routes import register as register_search  # one-box smart search (W10)
+    register_search(app, _page, _cross_site, _rate_hit, _open_store)
 
     @app.get("/examples", response_class=HTMLResponse)
     def examples(request: Request):
