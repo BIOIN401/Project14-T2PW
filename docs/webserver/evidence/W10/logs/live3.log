@@ -1,0 +1,35 @@
+server winpid 444256
+15-tca-fullcolour-freshprofile 210293 http://127.0.0.1:8811/search?q=TCA+cycle
+16-alanine-fullcolour-freshprofile 267550 http://127.0.0.1:8811/pathbank/PW000001
+SUCCESS: The process with PID 471288 (child process of PID 444256) has been terminated.
+SUCCESS: The process with PID 444256 (child process of PID 472980) has been terminated.
+survivors: 0
+LIVE3_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 32fa3c4ef9db503dc52c3c1a4b456d1bcf804cb2  [git, worktree dirty=True]
+label                   : w10-live3
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/ws-search-work/live3.sh
+cwd                     : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 472164 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 600 s
+duration                : 7.15 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 15  471896:bash.exe, 472980:bash.exe, 444256:python.exe, 471288:python.exe, 471492:bash.exe, 471564:curl.exe, 463612:bash.exe, 474588:bash.exe, 473412:bash.exe, 472256:bash.exe, 473296:taskkill.exe, 473200:bash.exe, 473260:bash.exe, 473688:bash.exe, 473728:powershell.exe
+descendants terminated  : 15  444256, 463612, 471288, 471492, 471564, 471896, 472256, 472980, 473200, 473260, 473296, 473412, 473688, 473728, 474588
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-search-work/logs/live3.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=w10  acquired=True  released=True
+pre-existing (reported, NEVER killed): 15
+================================================
+BW_EXIT=0
