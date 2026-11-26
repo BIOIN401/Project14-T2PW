@@ -1,0 +1,82 @@
+after 4 13
+[pwi] starting rails server in the container
+[pwi] OK       53.6s  after_show_ceramide-sphingolipid.pwml  errors=1
+[pwi] OK      180.3s  after_show_chlorophyll.pwml  errors=15
+[pwi] OK       63.2s  after_show_enterobactin.pwml  errors=0
+[pwi] OK       80.1s  after_show_lipid-a.pwml  errors=22
+[pwi] OK       55.0s  after_show_menaquinone.pwml  errors=0
+[pwi] OK       70.5s  after_show_coenzyme-a.pwml  errors=0
+[pwi] OK        6.0s  after_show_sour-taste.pwml  errors=7
+[pwi] OK        3.1s  after_show_furochromone.pwml  errors=0
+[pwi] OK      160.2s  after_v7b_7.pwml  errors=15
+[pwi] OK        6.2s  after_v7b_10.pwml  errors=7
+[pwi] OK        1.8s  after_v7b_14.pwml  errors=0
+[pwi] OK       30.7s  after_v7b_116.pwml  errors=1
+[pwi] OK        3.0s  after_v7b_126.pwml  errors=0
+[pwi] OK       68.7s  after_v7b_128.pwml  errors=0
+[pwi] OK        6.1s  after_v7b_11.pwml  errors=0
+[pwi] OK        3.0s  after_v7b_134.pwml  errors=0
+[pwi] OK       31.5s  after_v7b_114.pwml  errors=0
+[pwi] summary: {"files": 17, "success_true": 17, "success_true_no_errors": 10, "success_false": 0, "total_seconds": 823.1}
+EXIT_import_after=0
+ Container t2pw-pwdraw-app-1 Stopping 
+ Container t2pw-pwdraw-app-1 Stopped 
+ Container t2pw-pwdraw-app-1 Removing 
+ Container t2pw-pwdraw-app-1 Removed 
+ Container t2pw-pwdraw-db-1 Stopping 
+ Container t2pw-pwdraw-db-1 Stopped 
+ Container t2pw-pwdraw-db-1 Removing 
+ Container t2pw-pwdraw-db-1 Removed 
+ Network t2pw-pwdraw_default Removing 
+ Network t2pw-pwdraw_default Removed 
+STACK_DOWN rc=0
+file                         success  created (base->after) | errors base->after
+show_ceramide-sphingolipid   [True, True] drawable_element_locations 0->1, zoom_visualizations 0->1 | 2->2 
+show_chlorophyll             [True, True] drawable_element_locations 0->1, zoom_visualizations 0->1 | 18->18 
+show_coenzyme-a              [True, True] drawable_element_locations 0->2, zoom_visualizations 0->1 | 0->0 
+show_enterobactin            [True, True] membrane_visualizations 1->3, drawable_element_locations 0->2, zoom_visualizations 0->1 | 0->0 
+show_furochromone            [True, True] same | 0->0 
+show_lipid-a                 [True, True] drawable_element_locations 0->2, zoom_visualizations 0->1 | 29->29 
+show_menaquinone             [True, True] drawable_element_locations 0->2, zoom_visualizations 0->1 | 0->0 
+show_sour-taste              [True, True] same | 10->10 
+v7b_10                       [True, True] same | 10->10 
+v7b_11                       [True, True] drawable_element_locations 0->1, zoom_visualizations 0->1 | 0->0 
+v7b_114                      [True, True] drawable_element_locations 0->2, zoom_visualizations 0->1 | 0->0 
+v7b_116                      [True, True] drawable_element_locations 0->1, zoom_visualizations 0->1 | 2->2 
+v7b_126                      [True, True] same | 0->0 
+v7b_128                      [True, True] drawable_element_locations 0->2, zoom_visualizations 0->1 | 0->0 
+v7b_134                      [True, True] drawable_element_locations 0->1, zoom_visualizations 0->1 | 0->0 
+v7b_14                       [True, True] drawable_element_locations 0->2, zoom_visualizations 0->1 | 0->0 
+v7b_7                        [True, True] drawable_element_locations 0->1, zoom_visualizations 0->1 | 18->18 
+created base  {'compounds': 210, 'proteins': 159, 'protein_complexes': 168, 'reactions': 167, 'transports': 32, 'interactions': 39, 'compound_locations': 322, 'nucleic_acids': 20, 'transport_transporters': 18, 'biological_states': 67, 'label_locations': 70, 'membrane_visualizations': 61, 'drawable_element_locations': 0, 'zoom_visualizations': 0}
+created after {'compounds': 210, 'proteins': 159, 'protein_complexes': 168, 'reactions': 167, 'transports': 32, 'interactions': 39, 'compound_locations': 322, 'nucleic_acids': 20, 'transport_transporters': 18, 'biological_states': 67, 'label_locations': 70, 'membrane_visualizations': 63, 'drawable_element_locations': 20, 'zoom_visualizations': 13}
+errors 89 -> 89
+PWAB_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 68f7c6e48bee063dcece70cae5c57da15aa49ec8  [git, worktree dirty=True]
+label                   : vis2-pwab
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/vis-pw2-work/scripts/pwab.sh final
+cwd                     : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 389012 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 5400 s
+duration                : 1493.29 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 70  380968:bash.exe, 388900:bash.exe, 388784:bash.exe, 388840:env.exe, 374788:python.exe, 388316:bash.exe, 388628:python.exe, 389000:docker.exe, 388192:docker.exe, 349920:docker-compose.exe, 388372:docker.exe, 377348:docker-compose.exe, 381040:docker.exe, 388380:docker-compose.exe, 388532:docker.exe, 388888:docker-compose.exe, 373916:docker-compose.exe, 387976:docker.exe, 389324:docker-compose.exe, 390444:docker.exe, 390540:docker-compose.exe, 388876:docker-compose.exe, 389484:python.exe, 390844:python.exe, 388592:node.exe, 387252:chrome-headless-shell.exe, 388848:chrome-headless-shell.exe, 390312:chrome-headless-shell.exe, 390772:chrome-headless-shell.exe, 392456:docker.exe, 392508:docker-compose.exe, 392616:docker-compose.exe, 383824:python.exe, 391108:python.exe, 384976:node.exe, 354280:chrome-headless-shell.exe, 385448:chrome-headless-shell.exe, 389836:chrome-headless-shell.exe, 393984:chrome-headless-shell.exe, 394740:docker.exe, 396352:docker-compose.exe, 397068:docker-compose.exe, 399188:python.exe, 399208:python.exe, 399236:node.exe, 398272:chrome-headless-shell.exe, 398428:chrome-headless-shell.exe, 398464:chrome-headless-shell.exe, 399320:chrome-headless-shell.exe, 399888:docker.exe, 394284:docker-compose.exe, 401432:python.exe, 401896:python.exe, 400652:node.exe, 398056:chrome-headless-shell.exe, 395180:chrome-headless-shell.exe, 399356:chrome-headless-shell.exe, 400800:chrome-headless-shell.exe, 385248:docker-compose.exe, 401440:docker.exe, 399444:docker-compose.exe, 394136:docker.exe, 397200:docker-compose.exe, 399432:docker-compose.exe, 398236:docker-compose.exe, 401988:docker.exe, 405440:docker-compose.exe, 410212:docker.exe, 410420:docker-compose.exe, 6296:bash.exe
+descendants terminated  : 70  6296, 349920, 354280, 373916, 374788, 377348, 380968, 381040, 383824, 384976, 385248, 385448, 387252, 387976, 388192, 388316, 388372, 388380, 388532, 388592, 388628, 388784, 388840, 388848, 388876, 388888, 388900, 389000, 389324, 389484, 389836, 390312, 390444, 390540, 390772, 390844, 391108, 392456, 392508, 392616, 393984, 394136, 394284, 394740, 395180, 396352, 397068, 397200, 398056, 398236, 398272, 398428, 398464, 399188, 399208, 399236, 399320, 399356, 399432, 399444, 399888, 400652, 400800, 401432, 401440, 401896, 401988, 405440, 410212, 410420
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-runs/json/vis2-pwab.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=vis2  acquired=True  released=True
+pre-existing (reported, NEVER killed): 13
+================================================
+BW_EXIT=0
