@@ -83,3 +83,12 @@ read `T2PW_OFFLINE_CURATOR`) and `test_batch_preflight.py::test_the_message_name
 
 ## Open questions
 None.
+
+## Live check on the server (2026-11-25, orchestrator)
+Merged to main `3e098725`, deployed on deploy/local `9b1ea3d1` with `T2PW_KEEP_RAW_LLM=1` (LEDGER row 48).
+One web job, enterobactin, PMID 40400396, Gemma, 3 draws, work `item-6`: PASS. Its `out/` holds
+`llm_raw_responses.jsonl` next to `LEG_TRACE.jsonl`: 45 lines, 111 KB, every call `ok`, model
+`google/gemma-4-31b-it`, none truncated, none empty. By stage: preprocessor 6, Stage 1 extraction 3,
+Stage 1 reaction verifier 1, rag_prose_extraction 19, Stage 2 inference 2, audit loop 3, gap resolver 9
+(1 with tool calls), curator 2. A scan for key or auth-header patterns found 0. Summary:
+`evidence/OBS-RAW/live-check-item6.txt` (the raw file itself is not committed).
