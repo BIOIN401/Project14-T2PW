@@ -1,0 +1,116 @@
+== LIVE
+server pid 24213
+00-front 200 http://127.0.0.1:8811/
+  png 105328
+01-tca 200 http://127.0.0.1:8811/search?q=TCA+cycle
+  png 148873
+02-glycolysis-yeast 200 http://127.0.0.1:8811/search?q=glycolysis+in+Saccharomyces+cerevisiae
+  png 56898
+03-enterobactin 200 http://127.0.0.1:8811/search?q=enterobactin+biosynthesis
+  png 53759
+04-pmid 200 http://127.0.0.1:8811/search?q=PMID+23637638
+  png 59110
+05-doi 200 http://127.0.0.1:8811/search?q=10.1093%2Fnar%2Fgkad1041
+  png 59287
+06-pasted 200 http://127.0.0.1:8811/search?q=The+enterobactin+biosynthetic+pathway+of+Escherichia+coli+converts+chorismate+into+the+siderophore+enterobactin.+EntC+converts+chorismate+to+isochorismate.+EntB+hydrolyses+isochorismate+to+2%2C3-dihydro-2%2C3-dihydroxybenzoate%2C+which+EntA+oxidises+to+2%2C3-dihydroxybenzoate.+EntE+adenylates+2%2C3-dihydroxybenzoate+and+loads+it+onto+the+aryl+carrier+domain+of+EntB.+EntF+activates+L-serine%2C+and+the+EntB%2C+EntE+and+EntF+assembly+line+condenses+three+2%2C3-dihydroxybenzoyl-serine+units+into+the+cyclic+trilactone+enterobactin.
+  png 74566
+07-sentence-llm 200 http://127.0.0.1:8811/search?q=how+does+baker%27s+yeast+make+ergosterol%3F
+  png 53359
+08-pathbank-alanine 200 http://127.0.0.1:8811/pathbank/PW000001
+  png 186050
+run redirect: /job/<sid>
+09-queued-job 200 http://127.0.0.1:8811/job/359cff3859a04002b3661a30b3ec081d
+  png 63939
+ERROR: The process "24213" not found.
+0
+LIVE_DONE
+== SUITE
+== tree C:/t/ws-search
+HEAD 438f065a3acf7c2c51638cbc0a8e5521922d032e
+STATUS_BEGIN
+?? docs/webserver/evidence/W10/
+?? docs/webserver/results/W10.md
+STATUS_END
+== smoke
+........................................................................ [ 84%]
+........................................................................ [ 98%]
+.......                                                                  [100%]
+511 passed in 82.37s (0:01:22)
+EXIT_smoke=0
+== g-batch
+T2PW: C:\t\ws-search\src\t2pw\__init__.py
+..                                                                       [100%]
+2 passed in 8.74s
+EXIT_g-batch=0
+== g-c011
+T2PW: C:\t\ws-search\src\t2pw\__init__.py
+........                                                                 [100%]
+8 passed in 71.43s (0:01:11)
+EXIT_g-c011=0
+== g-stage8
+T2PW: C:\t\ws-search\src\t2pw\__init__.py
+....                                                                     [100%]
+4 passed in 0.76s
+EXIT_g-stage8=0
+== g-quar
+T2PW: C:\t\ws-search\src\t2pw\__init__.py
+........................                                                 [100%]
+24 passed in 62.58s (0:01:02)
+EXIT_g-quar=0
+== eq-run
+T2PW: C:\t\ws-search\src\t2pw\__init__.py
+........                                                                 [100%]
+8 passed in 66.63s (0:01:06)
+EXIT_eq-run=0
+== eq-app
+T2PW: C:\t\ws-search\src\t2pw\__init__.py
+..............                                                           [100%]
+14 passed in 61.93s (0:01:01)
+EXIT_eq-app=0
+== eq-default
+T2PW: C:\t\ws-search\src\t2pw\__init__.py
+......                                                                   [100%]
+6 passed in 32.94s
+EXIT_eq-default=0
+== vision
+........................................................................ [ 77%]
+........................................................................ [ 97%]
+..........s                                                              [100%]
+370 passed, 1 skipped in 26.50s
+EXIT_vision=0
+== web
+T2PW: C:\t\ws-search\src\t2pw\__init__.py
+........................................................................ [ 84%]
+.............                                                            [100%]
+85 passed in 11.99s
+EXIT_web=0
+SUITE_DONE
+CHAIN_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 32fa3c4ef9db503dc52c3c1a4b456d1bcf804cb2  [git, worktree dirty=True]
+label                   : w10-chain
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/ws-search-work/chain.sh
+cwd                     : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 405828 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 3600 s
+duration                : 480.50 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 144  403852:bash.exe, 405532:bash.exe, 406360:bash.exe, 405632:bash.exe, 406616:bash.exe, 399452:curl.exe, 400316:bash.exe, 403828:python.exe, 407392:python.exe, 406404:curl.exe, 406844:bash.exe, 409052:bash.exe, 409096:awk.exe, 409120:bash.exe, 409140:python.exe, 409152:python.exe, 409176:bash.exe, 409200:curl.exe, 407796:bash.exe, 409048:bash.exe, 409076:python.exe, 409108:bash.exe, 409168:curl.exe, 409128:bash.exe, 409276:bash.exe, 409308:bash.exe, 407772:python.exe, 408036:python.exe, 408340:bash.exe, 407608:curl.exe, 409020:bash.exe, 409372:bash.exe, 404800:bash.exe, 405320:bash.exe, 407820:curl.exe, 408096:bash.exe, 407752:bash.exe, 406920:python.exe, 407828:bash.exe, 408204:python.exe, 406208:curl.exe, 408056:bash.exe, 408172:bash.exe, 409316:timeout.exe, 410088:bash.exe, 410128:awk.exe, 410328:bash.exe, 407340:bash.exe, 410492:bash.exe, 409124:timeout.exe, 410360:bash.exe, 407848:taskkill.exe, 409356:bash.exe, 410316:bash.exe, 409476:bash.exe, 409512:tasklist.exe, 408016:bash.exe, 409132:bash.exe, 410472:bash.exe, 409732:git.exe, 410008:bash.exe, 407996:bash.exe, 408088:git.exe, 407036:python.exe, 407160:python.exe, 409900:bash.exe, 406264:python.exe, 408292:python.exe, 122068:python.exe, 409840:python.exe, 409640:python.exe, 409652:python.exe, 407880:python.exe, 407888:python.exe, 410908:git.exe, 410052:tail.exe, 411232:bash.exe, 411292:python.exe, 411300:python.exe, 411308:bash.exe, 411276:bash.exe, 411372:python.exe, 411508:python.exe, 408504:git.exe, 410632:git.exe, 408100:git.exe, 411200:python.exe, 411248:python.exe, 400292:python.exe, 407484:python.exe, 400152:git.exe, 410732:git.exe, 406508:git.exe, 412004:python.exe, 411988:python.exe, 406640:python.exe, 411564:python.exe, 409044:python.exe, 411216:python.exe, 408408:python.exe, 412608:python.exe, 411036:python.exe, 411736:python.exe, 92400:python.exe, 411908:python.exe, 404316:bash.exe, 409860:python.exe, 412532:python.exe, 407528:python.exe, 409796:bash.exe, 411852:bash.exe, 411860:python.exe, 412620:tail.exe, 407480:bash.exe, 412600:python.exe, 413528:python.exe, 406564:python.exe, 409756:python.exe, 84876:bash.exe, 87860:bash.exe, 413652:python.exe, 61724:python.exe, 414164:python.exe, 414260:bash.exe, 415196:python.exe, 416720:bash.exe, 416744:bash.exe, 416752:python.exe, 416764:python.exe, 413980:python.exe, 416512:python.exe, 59832:python.exe, 414676:python.exe, 413004:python.exe, 414576:python.exe, 416360:bash.exe, 414128:python.exe, 416592:python.exe, 416340:python.exe, 415308:python.exe, 415188:python.exe, 415996:python.exe, 414664:python.exe, 415944:python.exe
+descendants terminated  : 144  59832, 61724, 84876, 87860, 92400, 122068, 399452, 400152, 400292, 400316, 403828, 403852, 404316, 404800, 405320, 405532, 405632, 406208, 406264, 406360, 406404, 406508, 406564, 406616, 406640, 406844, 406920, 407036, 407160, 407340, 407392, 407480, 407484, 407528, 407608, 407752, 407772, 407796, 407820, 407828, 407848, 407880, 407888, 407996, 408016, 408036, 408056, 408088, 408096, 408100, 408172, 408204, 408292, 408340, 408408, 408504, 409020, 409044, 409048, 409052, 409076, 409096, 409108, 409120, 409124, 409128, 409132, 409140, 409152, 409168, 409176, 409200, 409276, 409308, 409316, 409356, 409372, 409476, 409512, 409640, 409652, 409732, 409756, 409796, 409840, 409860, 409900, 410008, 410052, 410088, 410128, 410316, 410328, 410360, 410472, 410492, 410632, 410732, 410908, 411036, 411200, 411216, 411232, 411248, 411276, 411292, 411300, 411308, 411372, 411508, 411564, 411736, 411852, 411860, 411908, 411988, 412004, 412532, 412600, 412608, 412620, 413004, 413528, 413652, 413980, 414128, 414164, 414260, 414576, 414664, 414676, 415188, 415196, 415308, 415944, 415996, 416340, 416360, 416512, 416592, 416720, 416744, 416752, 416764
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-search-work/logs/chain.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=w10  acquired=True  released=True
+pre-existing (reported, NEVER killed): 15
+================================================
+BW_EXIT=0

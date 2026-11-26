@@ -1,0 +1,14 @@
+W10: can the server fetch from pathbank.org? (2026-11-26, from the dev machine)
+
+curl -A "Mozilla/5.0" (status, bytes, content type):
+403 5419  https://pathbank.org/downloads                      body: "Just a moment... Enable JavaScript and cookies to continue" (Cloudflare managed challenge)
+403 5632  https://pathbank.org/downloads  (full Chrome UA, Accept: text/html)   same challenge
+403 5563  https://pathbank.org/downloads/pathbank_primary_pathways.csv.zip      text/html (challenge page)
+403 5458  https://pathbank.org/view/SMP0000057                                  text/html (challenge page)
+403 5609  https://pathbank.org/view/SMP0000057/download?type=simple_png_image   text/html (challenge page)
+302  95   https://pathbank.org/pathwhiz/pathways/SMP0000057.pwml                Server: cloudflare, Location: https://pathbank.org/pathwhiz
+WebFetch tool: HTTP 403 on https://pathbank.org/downloads
+Headless Microsoft Edge (--dump-dom, 15 s virtual time budget) on https://pathbank.org/view/SMP0000057: <title>Just a moment...
+
+Conclusion: every pathbank.org URL is behind a Cloudflare browser challenge. A server cannot download the
+pathway list, images or PWML from pathbank.org; the licence/terms text on the downloads page could not be read either.

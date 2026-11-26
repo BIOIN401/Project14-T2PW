@@ -1,0 +1,48 @@
+## SELECT parent_id IS NULL pn, parent_id=id self_, COUNT(*) n FROM super_pathway_visualizations WHERE named_for_
+   {'pn': 0, 'self_': 0, 'n': 520748}
+## SELECT smpdb_id IS NULL nosmp, COUNT(*) n FROM super_pathway_visualizations WHERE named_for_type='Pathway' AND
+   {'nosmp': 0, 'n': 520748}
+## SELECT cached_name, COUNT(*) n, MIN(pw_id) first FROM super_pathway_visualizations WHERE named_for_type='Pathw
+   {'cached_name': 'Avalotcagene ontaparvovec Drug Metabolism', 'n': 1, 'first': 'PW132050'}
+   {'cached_name': 'Citric Acid Cycle', 'n': 6, 'first': 'PW000005'}
+   {'cached_name': 'Citric acid Drug Metabolism Action Pathway', 'n': 1, 'first': 'PW145554'}
+   {'cached_name': 'Enterobactin Biosynthesis', 'n': 3, 'first': 'PW002048'}
+   {'cached_name': 'Glycolysis', 'n': 146, 'first': 'PW000146'}
+   {'cached_name': 'Glycolysis and Pyruvate Dehydrogenase', 'n': 69, 'first': 'PW000785'}
+   {'cached_name': 'Glycolysis I', 'n': 1, 'first': 'PW002386'}
+   {'cached_name': 'TCA Cycle', 'n': 67, 'first': 'PW000779'}
+   {'cached_name': 'TCA Cycle (Ubiquinol-0)', 'n': 3, 'first': 'PW002023'}
+   {'cached_name': 'TCA Cycle (Ubiquinol-10)  ', 'n': 3, 'first': 'PW001010'}
+   {'cached_name': 'TCA Cycle (Ubiquinol-2)', 'n': 2, 'first': 'PW001002'}
+   {'cached_name': 'TCA Cycle (Ubiquinol-3)', 'n': 2, 'first': 'PW001003'}
+   {'cached_name': 'TCA Cycle (Ubiquinol-4)', 'n': 2, 'first': 'PW001004'}
+   {'cached_name': 'TCA Cycle (Ubiquinol-5) ', 'n': 3, 'first': 'PW001005'}
+   {'cached_name': 'TCA Cycle (Ubiquinol-6) ', 'n': 3, 'first': 'PW001006'}
+   {'cached_name': 'TCA Cycle (Ubiquinol-7)  ', 'n': 3, 'first': 'PW001007'}
+   {'cached_name': 'TCA Cycle (Ubiquinol-8)  ', 'n': 3, 'first': 'PW001008'}
+   {'cached_name': 'TCA Cycle (Ubiquinol-9)  ', 'n': 3, 'first': 'PW001009'}
+   {'cached_name': 'TCA cycle - E coli', 'n': 1, 'first': 'PW696613'}
+   {'cached_name': 'TCA cycle - E coli - Replica', 'n': 2, 'first': 'PW696616'}
+   {'cached_name': 'TCA cycle - Escherichia coli', 'n': 2, 'first': 'PW696615'}
+   {'cached_name': 'TCA Cycle - Practice', 'n': 1, 'first': 'PW704696'}
+   {'cached_name': 'TCA cycle Replica', 'n': 2, 'first': 'PW696614'}
+   {'cached_name': 'TCA cycle with mistakes', 'n': 1, 'first': 'PW696612'}
+## SELECT id, pw_id, smpdb_id, cached_name, cached_subject, cached_species_id, parent_id, model_id, export, LEFT(
+   {'id': 1, 'pw_id': 'PW000001', 'smpdb_id': 'SMP0000055', 'cached_name': 'Alanine Metabolism', 'cached_subject': 'Metabolic', 'cached_species_id': 1, 'parent_id': 0, 'model_id': 0, 'export': 1, 'd': 'Alanine (L-Alanine) is an α-amino acid that is used for protein biosynthesis. Ap'}
+   {'id': 17, 'pw_id': 'PW000017', 'smpdb_id': 'SMP0000012', 'cached_name': 'Catecholamine Biosynthesis', 'cached_subject': 'Metabolic', 'cached_species_id': 1, 'parent_id': 0, 'model_id': 0, 'export': 1, 'd': 'The Catecholamine Biosynthesis pathway depicts the synthesis of catecholamine ne'}
+   {'id': 780, 'pw_id': 'PW000779', 'smpdb_id': 'SMP0000802', 'cached_name': 'TCA Cycle', 'cached_subject': 'Metabolic', 'cached_species_id': 3, 'parent_id': 0, 'model_id': 780, 'export': 1, 'd': 'The citric acid cycle (also named tricarboxylic acid (TCA) cycle or the Krebs cy'}
+   {'id': 2437, 'pw_id': 'PW002437', 'smpdb_id': 'SMP0002349', 'cached_name': 'Phenylalanine Metabolism', 'cached_subject': 'Metabolic', 'cached_species_id': 18, 'parent_id': 0, 'model_id': 0, 'export': 1, 'd': 'The biosynthesis of phenylalanine begins with chorismate interacting with choris'}
+## SELECT cached_species_id, COUNT(*) n FROM super_pathway_visualizations WHERE named_for_type='Pathway' AND priv
+   {'cached_species_id': 1, 'n': 169126}
+   {'cached_species_id': 12, 'n': 131837}
+   {'cached_species_id': 17, 'n': 98003}
+   {'cached_species_id': 5, 'n': 56274}
+   {'cached_species_id': 18, 'n': 9545}
+   {'cached_species_id': 10, 'n': 4489}
+   {'cached_species_id': 6, 'n': 4246}
+   {'cached_species_id': 4, 'n': 3372}
+## SELECT model_id IS NULL nomodel, COUNT(*) n FROM super_pathway_visualizations WHERE named_for_type='Pathway' A
+   {'nomodel': 0, 'n': 520721}
+   {'nomodel': 1, 'n': 27}
+## SELECT COUNT(*) n FROM super_pathway_visualizations WHERE pwml_markup_file_name IS NOT NULL
+   {'n': 301163}

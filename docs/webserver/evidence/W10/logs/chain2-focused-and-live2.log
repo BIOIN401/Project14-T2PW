@@ -1,0 +1,54 @@
+HEAD 438f065a3acf7c2c51638cbc0a8e5521922d032e
+== search
+T2PW: C:\t\ws-search\src\t2pw\__init__.py
+...............................................                          [100%]
+47 passed in 3.50s
+EXIT_search=0
+== web
+T2PW: C:\t\ws-search\src\t2pw\__init__.py
+........................................................................ [ 20%]
+........................................................................ [ 40%]
+........................................................................ [ 61%]
+........................................................................ [ 81%]
+................................................................s        [100%]
+352 passed, 1 skipped in 67.81s (0:01:07)
+EXIT_web=0
+FOCUSED_DONE
+server winpid 453432
+11-tca-fullcolour 148873 http://127.0.0.1:8811/search?q=TCA+cycle
+12-glycolysis-yeast-dedup 52410 http://127.0.0.1:8811/search?q=glycolysis+in+Saccharomyces+cerevisiae
+13-pathbank-alanine-fullcolour 186050 http://127.0.0.1:8811/pathbank/PW000001
+14-enterobactin-ecoli 53892 http://127.0.0.1:8811/search?q=enterobactin+biosynthesis+E.+coli
+SUCCESS: The process with PID 443596 (child process of PID 453432) has been terminated.
+SUCCESS: The process with PID 453432 (child process of PID 457252) has been terminated.
+survivors: 0
+LIVE2_DONE
+CHAIN2_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 32fa3c4ef9db503dc52c3c1a4b456d1bcf804cb2  [git, worktree dirty=True]
+label                   : w10-chain2
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/ws-search-work/chain2.sh
+cwd                     : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 438240 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 1200 s
+duration                : 89.36 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 148  451956:bash.exe, 453028:bash.exe, 453144:bash.exe, 449368:bash.exe, 450588:bash.exe, 452484:git.exe, 449228:python.exe, 453136:bash.exe, 453232:python.exe, 428340:python.exe, 452956:bash.exe, 453284:python.exe, 453304:bash.exe, 453356:tail.exe, 441104:python.exe, 452760:python.exe, 443284:python.exe, 443604:python.exe, 433704:python.exe, 454244:python.exe, 450540:python.exe, 454172:python.exe, 453312:python.exe, 453156:python.exe, 445216:python.exe, 446888:python.exe, 454088:python.exe, 454168:python.exe, 447332:python.exe, 450532:python.exe, 451052:python.exe, 454560:python.exe, 452380:python.exe, 452916:python.exe, 451932:python.exe, 453556:python.exe, 447188:python.exe, 452368:python.exe, 447680:python.exe, 452968:python.exe, 451400:python.exe, 453496:python.exe, 445856:python.exe, 451152:python.exe, 453916:python.exe, 454328:python.exe, 452948:python.exe, 453332:python.exe, 452032:python.exe, 453928:python.exe, 449872:python.exe, 454228:python.exe, 454628:python.exe, 441016:python.exe, 447896:python.exe, 454584:python.exe, 451824:python.exe, 452392:python.exe, 453216:python.exe, 453328:python.exe, 443472:python.exe, 454192:python.exe, 439288:python.exe, 451724:python.exe, 450672:python.exe, 454240:python.exe, 449976:python.exe, 454268:python.exe, 451420:python.exe, 454336:python.exe, 453052:python.exe, 449208:python.exe, 432368:python.exe, 443000:python.exe, 445680:python.exe, 454232:python.exe, 450984:tasklist.exe, 455116:python.exe, 455172:python.exe, 455208:python.exe, 455228:python.exe, 455388:python.exe, 455408:python.exe, 443316:python.exe, 455568:python.exe, 456056:python.exe, 456200:python.exe, 444212:python.exe, 455956:python.exe, 452912:python.exe, 452004:python.exe, 453976:python.exe, 454008:python.exe, 444580:python.exe, 453812:python.exe, 456184:python.exe, 424576:python.exe, 456100:python.exe, 456644:python.exe, 452404:python.exe, 453740:python.exe, 454388:python.exe, 454416:python.exe, 452284:python.exe, 456660:python.exe, 441776:python.exe, 455136:python.exe, 450608:python.exe, 454412:python.exe, 419072:python.exe, 453544:python.exe, 456772:python.exe, 456784:python.exe, 456860:python.exe, 456872:python.exe, 457152:python.exe, 457196:python.exe, 457556:python.exe, 457580:python.exe, 457640:python.exe, 457724:python.exe, 452356:python.exe, 456128:python.exe, 456956:python.exe, 457020:python.exe, 452616:bash.exe, 457320:bash.exe, 457700:bash.exe, 443596:python.exe, 453432:python.exe, 457192:bash.exe, 457252:bash.exe, 456756:curl.exe, 457296:bash.exe, 417892:bash.exe, 458280:bash.exe, 458420:stat.exe, 457348:bash.exe, 457744:bash.exe, 458400:bash.exe, 456376:bash.exe, 458112:stat.exe, 458324:bash.exe, 452628:bash.exe, 454724:taskkill.exe, 450700:bash.exe, 457112:powershell.exe, 457856:bash.exe
+descendants terminated  : 148  417892, 419072, 424576, 428340, 432368, 433704, 439288, 441016, 441104, 441776, 443000, 443284, 443316, 443472, 443596, 443604, 444212, 444580, 445216, 445680, 445856, 446888, 447188, 447332, 447680, 447896, 449208, 449228, 449368, 449872, 449976, 450532, 450540, 450588, 450608, 450672, 450700, 450984, 451052, 451152, 451400, 451420, 451724, 451824, 451932, 451956, 452004, 452032, 452284, 452356, 452368, 452380, 452392, 452404, 452484, 452616, 452628, 452760, 452912, 452916, 452948, 452956, 452968, 453028, 453052, 453136, 453144, 453156, 453216, 453232, 453284, 453304, 453312, 453328, 453332, 453356, 453432, 453496, 453544, 453556, 453740, 453812, 453916, 453928, 453976, 454008, 454088, 454168, 454172, 454192, 454228, 454232, 454240, 454244, 454268, 454328, 454336, 454388, 454412, 454416, 454560, 454584, 454628, 454724, 455116, 455136, 455172, 455208, 455228, 455388, 455408, 455568, 455956, 456056, 456100, 456128, 456184, 456200, 456376, 456644, 456660, 456756, 456772, 456784, 456860, 456872, 456956, 457020, 457112, 457152, 457192, 457196, 457252, 457296, 457320, 457348, 457556, 457580, 457640, 457700, 457724, 457744, 457856, 458112, 458280, 458324, 458400, 458420
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-search-work/logs/chain2.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=w10  acquired=True  released=True
+pre-existing (reported, NEVER killed): 15
+================================================
+BW_EXIT=0

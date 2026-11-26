@@ -1,0 +1,64 @@
+HEAD 32fa3c4ef9db503dc52c3c1a4b456d1bcf804cb2
+== search
+E       TypeError: _page() got multiple values for argument 'name'
+
+src\t2pw\web\search_routes.py:84: TypeError
+=========================== short test summary info ===========================
+FAILED tests/test_web_smart_search.py::test_several_matches_offer_a_choice - ...
+FAILED tests/test_web_smart_search.py::test_no_match_falls_back_to_a_literature_run
+FAILED tests/test_web_smart_search.py::test_llm_off_or_failing_still_answers
+FAILED tests/test_web_smart_search.py::test_paper_ids_prefill_the_run_and_queue_one_job
+FAILED tests/test_web_smart_search.py::test_unresolved_doi_is_reported - Type...
+FAILED tests/test_web_smart_search.py::test_pasted_text_prefills_and_queues
+FAILED tests/test_web_smart_search.py::test_run_form_validation - TypeError: ...
+FAILED tests/test_web_smart_search.py::test_url_and_empty_queries - TypeError...
+FAILED tests/test_web_smart_search.py::test_hostile_query_is_escaped - TypeEr...
+FAILED tests/test_web_smart_search.py::test_missing_index_offers_the_literature_run
+10 failed, 37 passed in 8.97s
+EXIT_search=1
+== web
+E       TypeError: _page() got multiple values for argument 'name'
+
+src\t2pw\web\search_routes.py:84: TypeError
+=========================== short test summary info ===========================
+FAILED tests/test_web_smart_search.py::test_several_matches_offer_a_choice - ...
+FAILED tests/test_web_smart_search.py::test_no_match_falls_back_to_a_literature_run
+FAILED tests/test_web_smart_search.py::test_llm_off_or_failing_still_answers
+FAILED tests/test_web_smart_search.py::test_paper_ids_prefill_the_run_and_queue_one_job
+FAILED tests/test_web_smart_search.py::test_unresolved_doi_is_reported - Type...
+FAILED tests/test_web_smart_search.py::test_pasted_text_prefills_and_queues
+FAILED tests/test_web_smart_search.py::test_run_form_validation - TypeError: ...
+FAILED tests/test_web_smart_search.py::test_url_and_empty_queries - TypeError...
+FAILED tests/test_web_smart_search.py::test_hostile_query_is_escaped - TypeEr...
+FAILED tests/test_web_smart_search.py::test_missing_index_offers_the_literature_run
+10 failed, 342 passed, 1 skipped in 83.80s (0:01:23)
+EXIT_web=1
+FOCUSED_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 32fa3c4ef9db503dc52c3c1a4b456d1bcf804cb2  [git, worktree dirty=True]
+label                   : w10-focused
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/ws-search-work/focused.sh
+cwd                     : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 173748 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 98.63 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 122  173192:bash.exe, 173396:mkdir.exe, 174020:bash.exe, 173844:bash.exe, 173876:bash.exe, 174032:python.exe, 173668:python.exe, 171248:python.exe, 172568:bash.exe, 173676:bash.exe, 174132:python.exe, 166004:python.exe, 174852:python.exe, 174844:python.exe, 174776:python.exe, 107728:python.exe, 175068:python.exe, 175288:python.exe, 175352:python.exe, 175756:python.exe, 175796:python.exe, 175836:python.exe, 175884:python.exe, 175936:python.exe, 175980:python.exe, 170672:python.exe, 172944:python.exe, 175168:python.exe, 175212:python.exe, 176064:python.exe, 176020:python.exe, 175204:python.exe, 175404:python.exe, 173304:python.exe, 173380:python.exe, 171104:python.exe, 175468:python.exe, 149100:python.exe, 172512:python.exe, 172144:python.exe, 174356:python.exe, 172828:python.exe, 176028:python.exe, 176040:python.exe, 176060:python.exe, 172588:python.exe, 176068:python.exe, 172580:python.exe, 175496:python.exe, 167940:python.exe, 168468:python.exe, 168472:python.exe, 176036:python.exe, 174744:python.exe, 175676:python.exe, 171368:python.exe, 175108:python.exe, 175788:python.exe, 175832:python.exe, 172684:python.exe, 175828:python.exe, 175608:python.exe, 176080:python.exe, 149204:python.exe, 168216:python.exe, 164544:python.exe, 176016:python.exe, 172396:python.exe, 176032:python.exe, 168620:python.exe, 175436:python.exe, 175136:python.exe, 175724:python.exe, 174320:tasklist.exe, 175184:python.exe, 175568:python.exe, 171840:python.exe, 175572:python.exe, 175196:python.exe, 175776:python.exe, 177132:python.exe, 177144:python.exe, 172084:python.exe, 174024:python.exe, 173880:python.exe, 174268:python.exe, 175640:python.exe, 176616:python.exe, 176332:python.exe, 176652:python.exe, 152136:python.exe, 176740:python.exe, 167536:python.exe, 172448:python.exe, 177480:python.exe, 177536:python.exe, 178128:python.exe, 172476:python.exe, 177616:python.exe, 177704:python.exe, 177644:python.exe, 177800:python.exe, 174684:python.exe, 175100:python.exe, 177760:python.exe, 177836:python.exe, 175012:python.exe, 177892:python.exe, 176768:python.exe, 177604:python.exe, 177600:python.exe, 177612:python.exe, 177276:python.exe, 166660:python.exe, 177568:python.exe, 178088:python.exe, 171956:python.exe, 177976:python.exe, 177500:python.exe, 177844:python.exe, 177440:python.exe, 177840:python.exe
+descendants terminated  : 122  107728, 149100, 149204, 152136, 164544, 166004, 166660, 167536, 167940, 168216, 168468, 168472, 168620, 170672, 171104, 171248, 171368, 171840, 171956, 172084, 172144, 172396, 172448, 172476, 172512, 172568, 172580, 172588, 172684, 172828, 172944, 173192, 173304, 173380, 173396, 173668, 173676, 173844, 173876, 173880, 174020, 174024, 174032, 174132, 174268, 174320, 174356, 174684, 174744, 174776, 174844, 174852, 175012, 175068, 175100, 175108, 175136, 175168, 175184, 175196, 175204, 175212, 175288, 175352, 175404, 175436, 175468, 175496, 175568, 175572, 175608, 175640, 175676, 175724, 175756, 175776, 175788, 175796, 175828, 175832, 175836, 175884, 175936, 175980, 176016, 176020, 176028, 176032, 176036, 176040, 176060, 176064, 176068, 176080, 176332, 176616, 176652, 176740, 176768, 177132, 177144, 177276, 177440, 177480, 177500, 177536, 177568, 177600, 177604, 177612, 177616, 177644, 177704, 177760, 177800, 177836, 177840, 177844, 177892, 177976, 178088, 178128
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-search-work/logs/focused1.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=w10  acquired=True  released=True
+pre-existing (reported, NEVER killed): 17
+================================================
+BW_EXIT=0
