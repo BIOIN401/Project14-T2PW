@@ -531,12 +531,17 @@ def _crossings(pts: List[Tuple[float, float]], others: List[List[Tuple[float, fl
 
     x0, x1 = min(p[0] for p in pts), max(p[0] for p in pts)
     y0, y1 = min(p[1] for p in pts), max(p[1] for p in pts)
+    segs = [(p, q, min(p[0], q[0]), max(p[0], q[0]), min(p[1], q[1]), max(p[1], q[1])) for p, q in zip(pts, pts[1:])]
     n = 0
     for b in others:
         if not b or max(p[0] for p in b) < x0 or min(p[0] for p in b) > x1 or max(p[1] for p in b) < y0 or min(p[1] for p in b) > y1:
             continue
-        n += any(o(p, q, r) * o(p, q, s) < 0 and o(r, s, p) * o(r, s, q) < 0
-                 for p, q in zip(pts, pts[1:]) for r, s in zip(b, b[1:]))
+        for r, s_ in zip(b, b[1:]):
+            rx0, rx1, ry0, ry1 = min(r[0], s_[0]), max(r[0], s_[0]), min(r[1], s_[1]), max(r[1], s_[1])
+            if any(sx1 >= rx0 and sx0 <= rx1 and sy1 >= ry0 and sy0 <= ry1 and o(p, q, r) * o(p, q, s_) < 0 and o(r, s_, p) * o(r, s_, q) < 0
+                   for p, q, sx0, sx1, sy0, sy1 in segs):
+                n += 1
+                break
     return n
 
 
@@ -791,7 +796,7 @@ def _snake(blocks: Dict[Any, "_Block"], keys: List[Any], limit: int, hubs: set,
 
 def _relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], ir: Optional[Dict[str, Any]] = None,
               key_ids: Optional[Dict[str, Dict[str, int]]] = None, snake_over: float = SNAKE_OVER,
-              aspect: float = ASPECT) -> Tuple[int, int]:
+              aspect: float = ASPECT, signature_only: bool = False) -> Any:
     """Re-place every visual element of ``items`` in place; returns the new canvas (width, height).
 
     ``ir`` and ``key_ids`` (the writer's IR and its IR-key -> PWML-id map) only serve to place edges that no
@@ -1610,6 +1615,11 @@ def _relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int],
         loc["x"] = max(0, min(int(loc.get("x") or 0), width - _dim(loc["width"])))
         loc["y"] = max(0, min(int(loc.get("y") or 0), height - _dim(loc["height"])))
 
+    if signature_only:  # VIS-8: where everything stands before any edge is drawn; two candidates with one signature give one picture
+        return (width, height, tuple((sec, it["id"], it["x"], it["y"]) for sec in LOC_SECTIONS for it in items.get(sec, [])),
+                tuple(m["path"] for m in items.get("membrane-visualizations", [])),
+                tuple((lb["x"], lb["y"]) for lb in items.get("label-locations", [])))
+
     # VIS-8: a reaction with no enzyme is a point whose substrate edges the writer hides, so the visible product edge has to
     # start at the substrate. The layered layout puts the point beside its substrate, but when the substrate stands in
     # another group (another compartment, or behind a fold) the product edge started in empty space. Such a point moves to
@@ -1935,26 +1945,33 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
     """Re-place every visual element of ``items`` in place; returns the new canvas (width, height).
 
     VIS-8: a long chain can fold into rows at several widths and the picture can be packed to several aspects
-    (LAYOUT_CANDIDATES). Each is laid out on a copy of the items (ids from a throw-away counter) and scored with
+    (LAYOUT_CANDIDATES). Candidates whose node positions come out the same are one shape (cheap check before any edge is
+    drawn); each distinct shape is laid out on a copy of the items (ids from a throw-away counter) and scored with
     _layout_cost; the best is laid out for real (a tie keeps the first, VIS-7's), so a different shape is only taken when
-    it makes the picture easier to read."""
+    it makes the picture easier to read. A picture with one shape only is laid out once."""
     first = LAYOUT_CANDIDATES[0]
     if os.environ.get("T2PW_LAYOUT_CHOOSER", "1") == "0":  # off: VIS-7's layout
         return _relayout(items, new_id, ir, key_ids, *first)
-    best, pick = None, first
+    unique: Dict[Any, Tuple[float, float]] = {}  # layout signature -> first candidate with it
     for cand in LAYOUT_CANDIDATES:
+        try:
+            unique.setdefault(_relayout(copy.deepcopy(items), lambda: 0, ir, key_ids, *cand, signature_only=True), cand)
+        except Exception:  # a shape that cannot be laid out is not a candidate
+            if cand == first:
+                break
+    best, pick = None, first
+    for cand in list(unique.values()) if len(unique) > 1 else []:  # one shape only: nothing to compare
         trial, ids = copy.deepcopy(items), itertools.count(1 << 40)
         try:
             w, h = _relayout(trial, lambda: next(ids), ir, key_ids, *cand)
             cost = _layout_cost(trial, w, h)
-        except Exception:  # a shape that cannot be laid out is not a candidate; the first one is laid out for real below
+        except Exception:
             if cand == first:
                 break
             continue
         if best is None or cost < best - 1e-9:
             best, pick = cost, cand
     return _relayout(items, new_id, ir, key_ids, *pick)
-
 
 
 def _shorten_long_paths(items: Dict[str, List[Dict[str, Any]]]) -> None:

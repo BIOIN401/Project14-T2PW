@@ -129,3 +129,13 @@ def test_an_enzymeless_reaction_point_sits_on_its_substrate_even_across_compartm
     x0, y0, x1, y1 = int(sub["x"]), int(sub["y"]), int(sub["x"]) + 200, int(sub["y"]) + 190
     end = pts[-1]
     assert x0 - 14 <= end[0] <= x1 + 14 and y0 - 14 <= end[1] <= y1 + 14  # the edge starts on the substrate's border
+
+
+def test_crossings_counts_proper_crossings_once_per_polyline():
+    from t2pw.pwml.layout import _crossings
+    line = [(0.0, 0.0), (100.0, 0.0)]
+    cross = [(50.0, -10.0), (50.0, 10.0)]
+    twice = [(20.0, -10.0), (20.0, 10.0), (80.0, 10.0), (80.0, -10.0)]  # crosses the line twice: one polyline, one count
+    touch = [(100.0, 0.0), (150.0, 40.0)]  # shares an end: not a crossing
+    far = [(0.0, 50.0), (100.0, 50.0)]
+    assert _crossings(line, [cross, twice, touch, far, []]) == 2
