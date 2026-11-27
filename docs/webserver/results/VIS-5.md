@@ -205,3 +205,23 @@ user's applications held the machine at 1.6-4.6 GB free from ~14:00 to ~17:00).
 - Edge routing: 20 grid-routed edges over the 9 (base 37), 32 over the 97 corpus (base 64); none through a node.
 
 Side-by-side page (not committed, images local): `C:/t/vis-pw5-work/compare.html` (before / after r28 preview / PathWhiz / PathBank).
+
+## 10. Review verdict and merge (orchestrator, 2026-11-26)
+
+- Independent ws-reviewer on `1edbb805` (code `5f964ff7`): **APPROVE WITH NOTES**. Its own strict content diff (no
+  masking rules) found element structure and every id identical on the 9 showcases and the 97-PWML corpus; the only
+  non-geometry differences are nucleic-acid template 2 -> 12 and protein-location label-type protein -> subunit.
+  Notes F1-F9 (content_check rules two-directional, no subunit-label test, trivial 255-char test, two misplaced
+  lines, a loose test assertion, unmeasured relayout time, record text, VIS-2 F4 Mycobacterium) went to VIS-7.
+- Product questions, decided by the orchestrator under the PO's delegation (reversible): Q1 PathBank-style subunit
+  labels **accepted**, pending a PathWhiz import of coenzyme A and chlorophyll (done in VIS-7: each subunit drawn
+  under its own name). Q2 nucleic-acid template 12 **counted as a visualization field**, as VIS-1's 157 -> 81.
+- Merged as `767f4b62` = webserver/refactor `129508d9` (W10 merged) + `vis/layout-iter` `1edbb805`, no conflicts, in
+  the detached worktree `C:/t/merge-vis5`. Code changes only `pwml/layout.py`, `pwml/cell_art.py`,
+  `render/pathbank.py` and two `test_pwml_*` files. Lane flags and `T2PW_RESULT_RENDER` unset.
+- Gates on `767f4b62` (`evidence/VIS-5/logs/merge-vis5-gates.log`, script `merge_vis5_inner.sh`, tree clean): SMOKE
+  **511 passed**; golden seams **2 / 8 / 4 / 24 passed**, unedited; equivalence **8 / 14 / 6 passed**; vision **370
+  passed, 1 skipped**; web **85 passed**; pwml **312 passed**; render **49 passed**; service + web **405 passed**.
+  `BW_EXIT=0`, **FINAL SURVIVING COUNT 0**.
+- One docs-only commit (`d18c3fb6`, LEDGER row 60) landed meanwhile; merged in as `61e100c0` (no file outside `docs/`
+  changed) and pushed.
