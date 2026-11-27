@@ -234,3 +234,22 @@ the difference is at least `CROSS_W - 0.02`. F5: coenzyme A reading and the fina
 Focused tests through the queue on `0fde34e0` (clean tree, HEAD stamped): pwml 296 passed, render 49, final-payload writer 22, corpus tests 9,
 `logs/vis8s_focused.log`, BW_EXIT=0, FINAL SURVIVING COUNT 0. SMOKE and the other suite2 groups ran on `43ece565` (section 6); the only code change since
 is the edge-count skip and a test.
+
+## 10. Review verdict and merge (orchestrator, 2026-11-27)
+
+- Independent ws-reviewer on `dedd7196`: **APPROVE WITH NOTES**. Strict content check of VIS-7 against VIS-8 outputs:
+  0 differences on the 9 showcases and the 97-PWML corpus. F1 (the chooser switch did not restore VIS-7 exactly, as
+  the record claimed), F2 (worst-case time on the 9 unmeasured), F3 (a cost test that passed with `CROSS_W = 0`), F5
+  (coenzyme A described as one reading direction; it is a serpentine with crossings 3 -> 6). F4 (one more routed edge
+  in three corpus files) accepted. Orchestrator decision under PO delegation: the switch stays chooser-only; a full
+  rollback is a revert. Earlier, after the first PathWhiz A/B showed ceramide and enterobactin no better than VIS-7,
+  the orchestrator chose the implementer's option (b): `VIEW_H` 1000 -> 700, `CROSS_W` 0.05 -> 0.15.
+- Round 2 on `dc2d5655` (code `2be114b9`: `CHOOSER_MAX_EDGES = 120`, lipid A 7.7 -> 2.3 s per call, 9 byte-identical,
+  no corpus file over 102 edges): **APPROVE**. Notes: the coenzyme A verdict cell still says "better" while the text
+  says mixed; chlorophyll (102 edges) is near the limit.
+- Merged as `32fa681c` = webserver/refactor `0e2ecf7a` + `vis/edges-readability` `dc2d5655`, no conflicts, in the
+  detached worktree `C:/t/merge-vis8`. Code changes only `pwml/layout.py` and `tests/test_pwml_vis8_edges.py`.
+- Gates on `32fa681c` (`evidence/VIS-8/logs/merge-vis8-gates.log`, script `merge_vis8_inner.sh`, tree clean): SMOKE
+  **511 passed**; golden seams **2 / 8 / 4 / 24 passed**, unedited; equivalence **8 / 14 / 6 passed**; vision **370
+  passed, 1 skipped**; web **85 passed**; pwml **327 passed**; render **49 passed**; service + web **405 passed**.
+  `BW_EXIT=0`, **FINAL SURVIVING COUNT 0**. Pushed `32fa681c`.
