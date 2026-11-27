@@ -1,0 +1,133 @@
+TREE C:/t/vis-pw9 HEAD 74ed502db495cbdea258bf61bf73ba28e78212c6 dirty=
+EXIT_show=0
+EXIT_item6=0
+EXIT_corpus=0
+REPLAY_DONE corpus network_attempts 0
+RUN_DONE h2
+{"files": 9, "different": 0, "added_pwc_ids": 57}
+EXIT_cc_show=0
+{"files": 97, "different": 0, "added_pwc_ids": 364}
+EXIT_cc_corpus=0
+{"files": 9, "different": 9, "only_in_b": []}
+
+{"files": 97, "different": 86, "only_in_b": []}
+
+{"files": 9, "different": 9, "only_in_b": []}
+
+{"files": 97, "different": 86, "only_in_b": []}
+
+HEAD 74ed502db495cbdea258bf61bf73ba28e78212c6
+STATUS_BEGIN
+STATUS_END
+== orch768
+T2PW: C:\t\vis-pw9\src\t2pw\__init__.py
+.........                                                                [100%]
+9 passed in 3.23s
+EXIT_orch768=0
+== orch772
+T2PW: C:\t\vis-pw9\src\t2pw\__init__.py
+...............................................                          [100%]
+47 passed in 3.36s
+EXIT_orch772=0
+== eq2
+T2PW: C:\t\vis-pw9\src\t2pw\__init__.py
+.....................................                                    [100%]
+37 passed in 46.94s
+EXIT_eq2=0
+== pwml
+T2PW: C:\t\vis-pw9\src\t2pw\__init__.py
+........................................................................ [ 23%]
+........................................................................ [ 46%]
+........................................................................ [ 69%]
+........................................................................ [ 92%]
+......................                                                   [100%]
+310 passed in 6.18s
+EXIT_pwml=0
+FOCUSED2_DONE
+== tree C:/t/vis-pw9
+HEAD 74ed502db495cbdea258bf61bf73ba28e78212c6
+STATUS_BEGIN
+STATUS_END
+== smoke
+........................................................................ [ 84%]
+........................................................................ [ 98%]
+.......                                                                  [100%]
+511 passed in 51.62s
+EXIT_smoke=0
+== g-batch
+T2PW: C:\t\vis-pw9\src\t2pw\__init__.py
+..                                                                       [100%]
+2 passed in 6.45s
+EXIT_g-batch=0
+== g-c011
+T2PW: C:\t\vis-pw9\src\t2pw\__init__.py
+........                                                                 [100%]
+8 passed in 45.42s
+EXIT_g-c011=0
+== g-stage8
+T2PW: C:\t\vis-pw9\src\t2pw\__init__.py
+....                                                                     [100%]
+4 passed in 0.36s
+EXIT_g-stage8=0
+== g-quar
+T2PW: C:\t\vis-pw9\src\t2pw\__init__.py
+........................                                                 [100%]
+24 passed in 39.68s
+EXIT_g-quar=0
+== eq-run
+T2PW: C:\t\vis-pw9\src\t2pw\__init__.py
+........                                                                 [100%]
+8 passed in 61.28s (0:01:01)
+EXIT_eq-run=0
+== eq-app
+T2PW: C:\t\vis-pw9\src\t2pw\__init__.py
+..............                                                           [100%]
+14 passed in 58.05s
+EXIT_eq-app=0
+== eq-default
+T2PW: C:\t\vis-pw9\src\t2pw\__init__.py
+......                                                                   [100%]
+6 passed in 30.03s
+EXIT_eq-default=0
+== vision
+........................................................................ [ 77%]
+........................................................................ [ 97%]
+..........s                                                              [100%]
+370 passed, 1 skipped in 15.40s
+EXIT_vision=0
+== web
+T2PW: C:\t\vis-pw9\src\t2pw\__init__.py
+........................................................................ [ 84%]
+.............                                                            [100%]
+85 passed in 6.11s
+EXIT_web=0
+SUITE_DONE
+AB2_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ d6014d1528dbc644ca7a311ca9b13f1ae93a4e97  [git, worktree dirty=True]
+label                   : vis9-ab2
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/vis-pw9-work/scripts/ab2.sh
+cwd                     : c:\t\merge-vis8
+root PID / process group: 576108 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 3600 s
+duration                : 434.88 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 162  576040:bash.exe, 576240:bash.exe, 573996:bash.exe, 574756:bash.exe, 575500:mkdir.exe, 576364:bash.exe, 575536:bash.exe, 575900:bash.exe, 574020:python.exe, 574720:python.exe, 566492:python.exe, 574316:bash.exe, 575808:python.exe, 575492:bash.exe, 575744:python.exe, 575936:python.exe, 568372:mkdir.exe, 575768:bash.exe, 565872:bash.exe, 574956:bash.exe, 575284:basename.exe, 572952:basename.exe, 574520:bash.exe, 575960:bash.exe, 568676:bash.exe, 576392:basename.exe, 576832:bash.exe, 565352:bash.exe, 518456:bash.exe, 571064:python.exe, 575432:python.exe, 576748:python.exe, 576792:bash.exe, 576876:python.exe, 575168:python.exe, 576912:bash.exe, 577068:python.exe, 566980:python.exe, 568380:bash.exe, 572144:bash.exe, 565636:python.exe, 571836:bash.exe, 573964:bash.exe, 576660:head.exe, 577336:python.exe, 573072:python.exe, 568684:python.exe, 576044:python.exe, 576556:bash.exe, 573992:bash.exe, 574036:bash.exe, 575592:bash.exe, 577048:bash.exe, 577572:bash.exe, 577596:git.exe, 577748:bash.exe, 577780:python.exe, 577792:python.exe, 578480:bash.exe, 578512:python.exe, 578524:python.exe, 578132:python.exe, 578148:python.exe, 577796:bash.exe, 577824:python.exe, 577848:python.exe, 577584:python.exe, 577612:python.exe, 576812:bash.exe, 577072:python.exe, 577168:python.exe, 577568:bash.exe, 579724:bash.exe, 579756:git.exe, 579876:bash.exe, 579900:bash.exe, 579920:bash.exe, 579944:bash.exe, 579972:mkdir.exe, 580040:bash.exe, 580064:git.exe, 580216:bash.exe, 580248:python.exe, 580288:python.exe, 579812:python.exe, 579696:python.exe, 579732:python.exe, 580568:python.exe, 580588:python.exe, 576568:python.exe, 579856:python.exe, 580084:git.exe, 580848:bash.exe, 573560:python.exe, 579388:python.exe, 578944:bash.exe, 579804:bash.exe, 580280:python.exe, 580292:tail.exe, 580396:python.exe, 580872:git.exe, 569860:git.exe, 582064:git.exe, 577696:python.exe, 582072:python.exe, 578568:python.exe, 582192:python.exe, 582540:git.exe, 574420:python.exe, 577220:python.exe, 580108:python.exe, 582512:python.exe, 581076:python.exe, 582152:python.exe, 578084:python.exe, 580052:python.exe, 575756:python.exe, 581908:python.exe, 574436:python.exe, 582176:python.exe, 580724:bash.exe, 581564:tail.exe, 581744:python.exe, 582204:python.exe, 582404:bash.exe, 576736:bash.exe, 580376:python.exe, 581676:python.exe, 576684:python.exe, 579292:bash.exe, 582712:python.exe, 582884:bash.exe, 583128:tail.exe, 584044:python.exe, 584116:python.exe, 566516:python.exe, 579700:python.exe, 583928:bash.exe, 584484:bash.exe, 584564:tail.exe, 580868:bash.exe, 585124:bash.exe, 585564:python.exe, 585456:python.exe, 586424:python.exe, 586472:bash.exe, 586492:bash.exe, 586504:python.exe, 586536:tail.exe, 586748:git.exe, 583984:python.exe, 578204:python.exe, 583716:bash.exe, 584324:python.exe, 585028:python.exe, 586556:python.exe, 586044:python.exe, 585896:python.exe, 586416:python.exe, 586664:python.exe, 582412:python.exe, 586272:python.exe
+descendants terminated  : 162  518456, 565352, 565636, 565872, 566492, 566516, 566980, 568372, 568380, 568676, 568684, 569860, 571064, 571836, 572144, 572952, 573072, 573560, 573964, 573992, 573996, 574020, 574036, 574316, 574420, 574436, 574520, 574720, 574756, 574956, 575168, 575284, 575432, 575492, 575500, 575536, 575592, 575744, 575756, 575768, 575808, 575900, 575936, 575960, 576040, 576044, 576240, 576364, 576392, 576556, 576568, 576660, 576684, 576736, 576748, 576792, 576812, 576832, 576876, 576912, 577048, 577068, 577072, 577168, 577220, 577336, 577568, 577572, 577584, 577596, 577612, 577696, 577748, 577780, 577792, 577796, 577824, 577848, 578084, 578132, 578148, 578204, 578480, 578512, 578524, 578568, 578944, 579292, 579388, 579696, 579700, 579724, 579732, 579756, 579804, 579812, 579856, 579876, 579900, 579920, 579944, 579972, 580040, 580052, 580064, 580084, 580108, 580216, 580248, 580280, 580288, 580292, 580376, 580396, 580568, 580588, 580724, 580848, 580868, 580872, 581076, 581564, 581676, 581744, 581908, 582064, 582072, 582152, 582176, 582192, 582204, 582404, 582412, 582512, 582540, 582712, 582884, 583128, 583716, 583928, 583984, 584044, 584116, 584324, 584484, 584564, 585028, 585124, 585456, 585564, 585896, 586044, 586272, 586416, 586424, 586472, 586492, 586504, 586536, 586556, 586664, 586748
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-pw9-work/logs/vis9-ab2.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=VIS-9  acquired=True  released=True
+pre-existing (reported, NEVER killed): 13
+================================================
+BW_EXIT=0

@@ -1,0 +1,184 @@
+=== ab1
+TREE C:/t/vis-pw9-work/base_tree HEAD  dirty=
+EXIT_show=0
+EXIT_item6=0
+EXIT_corpus=0
+REPLAY_DONE corpus network_attempts 0
+RUN_DONE base
+TREE C:/t/vis-pw9 HEAD 99364bf1605531e2bcdbdc07142438d487d58d35 dirty=
+EXIT_show=0
+EXIT_item6=0
+EXIT_corpus=0
+REPLAY_DONE corpus network_attempts 0
+RUN_DONE h1
+{"files": 9, "different": 8, "added_pwc_ids": 59}
+EXIT_cc_show=1
+{"files": 97, "different": 83, "added_pwc_ids": 370}
+EXIT_cc_corpus=1
+AB1_DONE
+=== focused
+HEAD 99364bf1605531e2bcdbdc07142438d487d58d35
+STATUS_BEGIN
+STATUS_END
+== pwml
+T2PW: C:\t\vis-pw9\src\t2pw\__init__.py
+........................................................................ [ 24%]
+........................................................................ [ 49%]
+........................................................................ [ 74%]
+........................................................................ [ 99%]
+.                                                                        [100%]
+289 passed in 6.76s
+EXIT_pwml=0
+== render
+T2PW: C:\t\vis-pw9\src\t2pw\__init__.py
+.................................................                        [100%]
+49 passed in 8.78s
+EXIT_render=0
+== fpw
+T2PW: C:\t\vis-pw9\src\t2pw\__init__.py
+......................                                                   [100%]
+22 passed in 0.69s
+EXIT_fpw=0
+== corpus
+        record = corpus["runs"][0][leg_id]
+        assert record["checkpoint"] == "canonical"
+        assert record["canonical_matches_leg"] is EXPECTED[leg_id].get("canonical_matches_leg", True)
+        # ORCH-769c moved WNT PCP on purpose: its one fidelity difference is the outcome.
+        # ORCH-773 moved enterobactin on purpose: the outcome and the final gate's verdict.
+        expected_diffs = {
+            WNT_PCP: ["outcome recorded=refinement_review_crash replay=pwml"],
+            ENTEROBACTIN: [
+                "outcome recorded=final_pre_export_stage3_gates replay=pwml",
+                "final_gate_ok recorded=False replay=True",
+                f"final_gate_errors recorded={record['recorded_reports']['final_gate_errors']} replay=[]",
+            ],
+        }.get(leg_id, [])
+        assert H.fidelity(corpus["legs"][leg_id], record) == expected_diffs
+        for key, value in EXPECTED[leg_id].items():
+>           assert record.get(key) == value, (leg_id, key, record.get(key))
+E           AssertionError: ('ORCH-767/sour_taste_v2-strict/2026-10-24_0042', 'pwml_matches_leg', False)
+E           assert False == True
+E            +  where False = <built-in method get of dict object at 0x00000151A0A06440>('pwml_matches_leg')
+E            +    where <built-in method get of dict object at 0x00000151A0A06440> = {'canonical_matches_leg': True, 'canonical_sha256': 'c5204149011a737134fdcc9975de983a572285070a6ddf0788d3070c06c555ec', 'checkpoint': 'canonical', 'checkpoint_sha256': '38a330fdf2a1281043fbf3d135d86b896a26ec98b8627230a7f4e531cea9892c', ...}.get
+
+tests\test_orch768_replay_corpus.py:130: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_orch768_replay_corpus.py::test_replay_reproduces_the_recorded_verdict[ORCH-767/sour_taste_v2-strict/2026-10-24_0042]
+1 failed, 8 passed in 3.54s
+EXIT_corpus=1
+FOCUSED_DONE
+=== suite2
+== tree C:/t/vis-pw9
+HEAD 99364bf1605531e2bcdbdc07142438d487d58d35
+STATUS_BEGIN
+STATUS_END
+== smoke
+........................................................................ [ 84%]
+........................................................................ [ 98%]
+.......                                                                  [100%]
+511 passed in 48.87s
+EXIT_smoke=0
+== g-batch
+T2PW: C:\t\vis-pw9\src\t2pw\__init__.py
+..                                                                       [100%]
+2 passed in 6.26s
+EXIT_g-batch=0
+== g-c011
+T2PW: C:\t\vis-pw9\src\t2pw\__init__.py
+........                                                                 [100%]
+8 passed in 39.71s
+EXIT_g-c011=0
+== g-stage8
+T2PW: C:\t\vis-pw9\src\t2pw\__init__.py
+....                                                                     [100%]
+4 passed in 0.34s
+EXIT_g-stage8=0
+== g-quar
+T2PW: C:\t\vis-pw9\src\t2pw\__init__.py
+........................                                                 [100%]
+24 passed in 34.53s
+EXIT_g-quar=0
+== eq-run
+T2PW: C:\t\vis-pw9\src\t2pw\__init__.py
+........                                                                 [100%]
+8 passed in 60.36s (0:01:00)
+EXIT_eq-run=0
+== eq-app
+FAILED tests/test_equivalence_app_vs_service.py::test_a_app_runs_offline_from_the_fixture_alone_to_the_recorded_verdict
+FAILED tests/test_equivalence_app_vs_service.py::test_b_replay_reproduces_the_recorded_live_run
+FAILED tests/test_equivalence_app_vs_service.py::test_pwml_bytes_are_produced_and_equal_in_all_three_arms
+3 failed, 11 passed in 57.08s
+EXIT_eq-app=1
+== eq-default
+T2PW: C:\t\vis-pw9\src\t2pw\__init__.py
+......                                                                   [100%]
+6 passed in 29.40s
+EXIT_eq-default=0
+== vision
+........................................................................ [ 77%]
+........................................................................ [ 97%]
+..........s                                                              [100%]
+370 passed, 1 skipped in 15.04s
+EXIT_vision=0
+== web
+T2PW: C:\t\vis-pw9\src\t2pw\__init__.py
+........................................................................ [ 84%]
+.............                                                            [100%]
+85 passed in 5.49s
+EXIT_web=0
+SUITE_DONE
+=== pwab
+[pwi] starting rails server in the container
+[pwi] OK       51.4s  ceramide-sphingolipid.pwml  errors=1
+[pwi] OK      181.2s  chlorophyll.pwml  errors=15
+[pwi] OK       91.1s  coenzyme-a.pwml  errors=0
+[pwi] OK       61.9s  ent-item6.pwml  errors=1
+[pwi] OK       62.9s  enterobactin.pwml  errors=0
+[pwi] OK       20.3s  furochromone.pwml  errors=0
+[pwi] OK       78.4s  lipid-a.pwml  errors=22
+[pwi] OK       54.0s  menaquinone.pwml  errors=0
+[pwi] OK      100.6s  ref_PW000779.pwml  errors=3
+[pwi] OK       24.6s  sour-taste.pwml  errors=7
+[pwi] summary: {"files": 10, "success_true": 10, "success_true_no_errors": 4, "success_false": 0, "total_seconds": 726.3}
+EXIT_import=0
+ Container t2pw-pwdraw-app-1 Stopping 
+ Container t2pw-pwdraw-app-1 Stopped 
+ Container t2pw-pwdraw-app-1 Removing 
+ Container t2pw-pwdraw-app-1 Removed 
+ Container t2pw-pwdraw-db-1 Stopping 
+ Container t2pw-pwdraw-db-1 Stopped 
+ Container t2pw-pwdraw-db-1 Removing 
+ Container t2pw-pwdraw-db-1 Removed 
+ Network t2pw-pwdraw_default Removing 
+ Network t2pw-pwdraw_default Removed 
+STACK_DOWN rc=0
+PWAB_DONE
+CHAIN1_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 0e2ecf7a67ae8e972f4cf530eda9e2f419703ec0  [git, worktree dirty=True]
+label                   : vis9-chain1
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/vis-pw9-work/scripts/chain1.sh
+cwd                     : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 79468 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 5400 s
+duration                : 2409.64 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 254  79892:bash.exe, 50720:bash.exe, 55144:bash.exe, 74728:bash.exe, 79964:bash.exe, 80088:bash.exe, 80808:bash.exe, 78032:python.exe, 78672:python.exe, 80368:bash.exe, 68240:bash.exe, 75644:python.exe, 80080:python.exe, 74232:bash.exe, 65100:python.exe, 80400:python.exe, 73576:tail.exe, 74568:bash.exe, 81020:basename.exe, 81772:bash.exe, 19564:basename.exe, 79016:bash.exe, 81324:basename.exe, 81568:bash.exe, 78444:bash.exe, 78728:bash.exe, 79748:bash.exe, 80012:bash.exe, 79972:bash.exe, 80740:git.exe, 80844:bash.exe, 73468:python.exe, 80136:bash.exe, 80980:python.exe, 79224:python.exe, 79580:python.exe, 80916:bash.exe, 82660:bash.exe, 82764:python.exe, 82736:python.exe, 82836:bash.exe, 69756:bash.exe, 79324:git.exe, 82164:bash.exe, 81016:python.exe, 81812:python.exe, 81908:bash.exe, 61580:python.exe, 80596:python.exe, 81656:bash.exe, 81216:bash.exe, 81692:bash.exe, 82628:bash.exe, 81608:bash.exe, 81668:git.exe, 49420:python.exe, 80496:bash.exe, 82892:python.exe, 83328:bash.exe, 83516:python.exe, 83580:python.exe, 84080:bash.exe, 84112:python.exe, 84136:python.exe, 84448:bash.exe, 84492:python.exe, 84516:python.exe, 84652:bash.exe, 84656:bash.exe, 84692:bash.exe, 84708:bash.exe, 84740:mkdir.exe, 84860:bash.exe, 84876:git.exe, 84000:python.exe, 84056:python.exe, 84908:bash.exe, 81924:python.exe, 85472:python.exe, 85136:python.exe, 85932:python.exe, 86440:python.exe, 86516:python.exe, 87908:python.exe, 87928:python.exe, 91384:git.exe, 78508:python.exe, 87200:python.exe, 92156:bash.exe, 53216:python.exe, 76876:bash.exe, 91520:python.exe, 87108:git.exe, 92612:git.exe, 91844:python.exe, 92552:python.exe, 92616:python.exe, 92652:python.exe, 92372:git.exe, 72340:python.exe, 91880:python.exe, 73676:python.exe, 92056:python.exe, 86648:python.exe, 92448:python.exe, 76872:python.exe, 83664:python.exe, 71208:python.exe, 82392:python.exe, 83728:python.exe, 92784:python.exe, 92724:python.exe, 92764:python.exe, 92876:bash.exe, 72700:bash.exe, 93052:bash.exe, 93168:python.exe, 84024:python.exe, 79608:python.exe, 91348:bash.exe, 92968:python.exe, 93804:python.exe, 94200:python.exe, 92948:bash.exe, 93024:python.exe, 93432:python.exe, 95464:bash.exe, 95520:python.exe, 95596:python.exe, 43540:bash.exe, 94696:python.exe, 95012:python.exe, 82240:git.exe, 81488:tail.exe, 96848:bash.exe, 96868:bash.exe, 96880:python.exe, 96916:python.exe, 97216:python.exe, 97252:python.exe, 96504:python.exe, 96604:python.exe, 96976:python.exe, 97032:python.exe, 77988:bash.exe, 97120:bash.exe, 97168:bash.exe, 96420:bash.exe, 96840:python.exe, 97040:python.exe, 94148:docker.exe, 61828:docker.exe, 96428:docker-compose.exe, 95828:docker-compose.exe, 96484:docker.exe, 96532:docker-compose.exe, 94280:docker-compose.exe, 96516:docker.exe, 83864:docker-compose.exe, 97184:docker.exe, 96480:docker-compose.exe, 98684:docker-compose.exe, 98720:docker.exe, 99108:docker-compose.exe, 96204:python.exe, 99976:python.exe, 97940:node.exe, 99276:chrome-headless-shell.exe, 99656:chrome-headless-shell.exe, 100092:chrome-headless-shell.exe, 100368:chrome-headless-shell.exe, 40788:docker-compose.exe, 97556:docker.exe, 97388:python.exe, 101372:python.exe, 102740:node.exe, 105184:chrome-headless-shell.exe, 107576:chrome-headless-shell.exe, 107600:chrome-headless-shell.exe, 107632:chrome-headless-shell.exe, 110416:docker.exe, 110488:docker-compose.exe, 110516:docker-compose.exe, 113440:python.exe, 113456:python.exe, 113480:node.exe, 112668:chrome-headless-shell.exe, 111224:chrome-headless-shell.exe, 112788:chrome-headless-shell.exe, 112796:chrome-headless-shell.exe, 106184:docker-compose.exe, 114024:docker.exe, 108592:python.exe, 118328:python.exe, 118348:node.exe, 112688:chrome-headless-shell.exe, 116328:chrome-headless-shell.exe, 118112:chrome-headless-shell.exe, 118204:chrome-headless-shell.exe, 121136:docker.exe, 121352:docker-compose.exe, 113232:python.exe, 122692:python.exe, 122788:node.exe, 122884:chrome-headless-shell.exe, 123036:chrome-headless-shell.exe, 123068:chrome-headless-shell.exe, 123104:chrome-headless-shell.exe, 123928:docker.exe, 125912:docker-compose.exe, 127068:python.exe, 127088:python.exe, 127136:node.exe, 127284:chrome-headless-shell.exe, 127504:chrome-headless-shell.exe, 127524:chrome-headless-shell.exe, 127544:chrome-headless-shell.exe, 122972:docker-compose.exe, 128892:docker.exe, 130212:python.exe, 131388:python.exe, 131564:node.exe, 129584:chrome-headless-shell.exe, 131080:chrome-headless-shell.exe, 131332:chrome-headless-shell.exe, 131900:chrome-headless-shell.exe, 134980:docker.exe, 135120:docker-compose.exe, 122272:python.exe, 133736:python.exe, 111952:node.exe, 131832:chrome-headless-shell.exe, 132372:chrome-headless-shell.exe, 133916:chrome-headless-shell.exe, 137228:chrome-headless-shell.exe, 133236:docker.exe, 134864:docker-compose.exe, 138636:python.exe, 142280:python.exe, 141708:node.exe, 122920:chrome-headless-shell.exe, 123444:chrome-headless-shell.exe, 138004:chrome-headless-shell.exe, 140588:chrome-headless-shell.exe, 144000:docker.exe, 144464:docker-compose.exe, 142572:docker-compose.exe, 142564:python.exe, 145668:python.exe, 140316:node.exe, 137796:chrome-headless-shell.exe, 139116:chrome-headless-shell.exe, 144468:chrome-headless-shell.exe, 145856:chrome-headless-shell.exe
+descendants terminated  : 254  19564, 40788, 43540, 49420, 50720, 53216, 55144, 61580, 61828, 65100, 68240, 69756, 71208, 72340, 72700, 73468, 73576, 73676, 74232, 74568, 74728, 75644, 76872, 76876, 77988, 78032, 78444, 78508, 78672, 78728, 79016, 79224, 79324, 79580, 79608, 79748, 79892, 79964, 79972, 80012, 80080, 80088, 80136, 80368, 80400, 80496, 80596, 80740, 80808, 80844, 80916, 80980, 81016, 81020, 81216, 81324, 81488, 81568, 81608, 81656, 81668, 81692, 81772, 81812, 81908, 81924, 82164, 82240, 82392, 82628, 82660, 82736, 82764, 82836, 82892, 83328, 83516, 83580, 83664, 83728, 83864, 84000, 84024, 84056, 84080, 84112, 84136, 84448, 84492, 84516, 84652, 84656, 84692, 84708, 84740, 84860, 84876, 84908, 85136, 85472, 85932, 86440, 86516, 86648, 87108, 87200, 87908, 87928, 91348, 91384, 91520, 91844, 91880, 92056, 92156, 92372, 92448, 92552, 92612, 92616, 92652, 92724, 92764, 92784, 92876, 92948, 92968, 93024, 93052, 93168, 93432, 93804, 94148, 94200, 94280, 94696, 95012, 95464, 95520, 95596, 95828, 96204, 96420, 96428, 96480, 96484, 96504, 96516, 96532, 96604, 96840, 96848, 96868, 96880, 96916, 96976, 97032, 97040, 97120, 97168, 97184, 97216, 97252, 97388, 97556, 97940, 98684, 98720, 99108, 99276, 99656, 99976, 100092, 100368, 101372, 102740, 105184, 106184, 107576, 107600, 107632, 108592, 110416, 110488, 110516, 111224, 111952, 112668, 112688, 112788, 112796, 113232, 113440, 113456, 113480, 114024, 116328, 118112, 118204, 118328, 118348, 121136, 121352, 122272, 122692, 122788, 122884, 122920, 122972, 123036, 123068, 123104, 123444, 123928, 125912, 127068, 127088, 127136, 127284, 127504, 127524, 127544, 128892, 129584, 130212, 131080, 131332, 131388, 131564, 131832, 131900, 132372, 133236, 133736, 133916, 134864, 134980, 135120, 137228, 137796, 138004, 138636, 139116, 140316, 140588, 141708, 142280, 142564, 142572, 144000, 144464, 144468, 145668, 145856
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-pw9-work/logs/vis9-chain1.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=VIS-9  acquired=True  released=True
+pre-existing (reported, NEVER killed): 12
+================================================
+BW_EXIT=0

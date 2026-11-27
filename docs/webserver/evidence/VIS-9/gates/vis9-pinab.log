@@ -1,0 +1,50 @@
+HEAD 99364bf1605531e2bcdbdc07142438d487d58d35
+STATUS_BEGIN
+STATUS_END
+== off-corpus
+T2PW: C:\t\vis-pw9\src\t2pw\__init__.py
+.........                                                                [100%]
+9 passed in 3.57s
+EXIT_off-corpus=0
+== off-eqapp
+T2PW: C:\t\vis-pw9\src\t2pw\__init__.py
+..............                                                           [100%]
+14 passed in 57.10s
+EXIT_off-eqapp=0
+== on-corpus
+E            +    where <built-in method get of dict object at 0x000001D1701E9840> = {'canonical_matches_leg': True, 'canonical_sha256': 'c5204149011a737134fdcc9975de983a572285070a6ddf0788d3070c06c555ec', 'checkpoint': 'canonical', 'checkpoint_sha256': '38a330fdf2a1281043fbf3d135d86b896a26ec98b8627230a7f4e531cea9892c', ...}.get
+
+tests\test_orch768_replay_corpus.py:130: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_orch768_replay_corpus.py::test_replay_reproduces_the_recorded_verdict[ORCH-767/sour_taste_v2-strict/2026-10-24_0042]
+1 failed, 8 passed in 3.22s
+EXIT_on-corpus=1
+PINAB_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 0e2ecf7a67ae8e972f4cf530eda9e2f419703ec0  [git, worktree dirty=True]
+label                   : vis9-pinab
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/vis-pw9-work/scripts/pinab.sh a1
+cwd                     : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 192172 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 1800 s
+duration                : 67.87 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 18  191508:bash.exe, 192104:bash.exe, 161484:bash.exe, 191664:git.exe, 29716:bash.exe, 189652:tail.exe, 190208:python.exe, 190804:bash.exe, 192084:python.exe, 179380:bash.exe, 188556:python.exe, 190488:python.exe, 194004:bash.exe, 194028:bash.exe, 194036:python.exe, 194060:python.exe, 193668:git.exe, 193700:bash.exe
+descendants terminated  : 18  29716, 161484, 179380, 188556, 189652, 190208, 190488, 190804, 191508, 191664, 192084, 192104, 193668, 193700, 194004, 194028, 194036, 194060
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-pw9-work/logs/vis9-pinab.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=VIS-9  acquired=True  released=True
+pre-existing (reported, NEVER killed): 12
+================================================
+BW_EXIT=0
