@@ -10,6 +10,10 @@ check against VIS-7 is 0 differences (section 4). Not merged; LEDGER row left to
 `C:/t/vis-pw8-work/` (replays, renders, PathWhiz runs, metrics; side-by-side page `C:/t/vis-pw8-work/compare.html`).
 Evidence: `docs/webserver/evidence/VIS-8/`.
 
+**Status: code, tests, light checks and the 9-showcase evidence are done; the heavy-queue items (97-PWML corpus replay, PathWhiz
+import of the 9, SMOKE and the other gates) are NOT run** because the machine has had 0.0-0.4 GB free RAM since about 23:35 and the
+queue's 4 GB floor never opened (section 6). Everything needed to run them is committed and scripted.
+
 ## 1. How PathBank's curators draw interaction edges (all 16 reference PWMLs)
 
 Source: `C:/t/vis-ref/super_pathway_visualizations/.../pwml_markups/` (16 PWMLs), tools `evidence/VIS-8/scripts/refint.py`,
@@ -50,6 +54,11 @@ section 8.
    chosen: coenzyme A 5365 x 2343 -> 3061 x 2573 (label 2.5 -> 4.3 px at 1100 wide), furochromone 4430 x 1133 -> 2420 x 1795
    (a strip becomes a 1.35 picture), enterobactin 4716 x 2420 -> 3092 x 2758; lipid A and chlorophyll keep VIS-7's shape
    (no candidate beats it).
+   Time: candidates whose node positions come out identical are one shape (checked before any edge is drawn), and `_crossings`
+   got a per-segment box test (same result; VIS-7's single layout of lipid A, 133 edges, went 2.6 -> 2.0 s). Per `relayout`
+   call over the 8 showcases (`scripts/timing8.py`): 0.1-0.6 s for seven of them, lipid A 8.5 s (VIS-7: 2.6 s; the grid router
+   dominates each layout and the picture is laid out once per distinct shape plus once for real). VIS-7's corpus maximum was 0.19 s per call (VIS-7 section 6b F7); the corpus
+   timing for this tree is in section 3.
 2. **Interaction edges** (VIS-7's arches, reworked). Reaction and transport edges are drawn first, exactly as before;
    interaction edges follow, shortest span first, so the arches of one hub nest (a longer span stands higher) and an
    interaction never changes where a process edge goes. For an interaction between two nodes the cheapest clear candidate
@@ -65,11 +74,11 @@ section 8.
    substrate now moves onto the border of its first main substrate, on the side facing the products. Edges ending in empty
    space with no other edge there: 6 -> 2 over the 9 (the 2 left are lipid A's fork between two substrates, 60 units apart), 10
    over the 97-PWML corpus before (VIS-7).
-4. Tests, `tests/test_pwml_vis8_edges.py` (9): a blocked enzyme-to-enzyme interaction becomes one arch, control points above the
+4. Tests, `tests/test_pwml_vis8_edges.py` (10): a blocked enzyme-to-enzyme interaction becomes one arch, control points above the
    boxes, ends on the top sides (F5, fixture level through `relayout`); the pair's two edges end on the same points and are
    the same arch reversed (F2); arch ends face along the pair's longer axis (F3); the arches of one hub nest; a long flat
    chain folds; the chooser keeps the lowest-cost layout; the cost charges crossings and width; the kill switch equals the first
-   candidate; an enzymeless reaction point sits on its substrate across compartments.
+   candidate; an enzymeless reaction point sits on its substrate across compartments; `_crossings` counts a polyline once.
 
 ## 3. Numbers, before (VIS-7, `b9534f68`) and after (VIS-8)
 
@@ -95,19 +104,37 @@ PathBank's own 16 reference pathways, same script: median canvas 4500 x 3350, as
 crossing level. Interaction edges: only enterobactin changes (total 7673 -> 5245, longest 2281 -> 1281), 3 of the 9 have
 any. Honest limits: lipid A (6769 x 6351, 90 crossings) and chlorophyll (3665 x 5666) are unchanged; ceramide's chosen
 shape has 5 crossings (VIS-7: 0) and 24 % more edge length, in exchange for a canvas a third narrower (5087 -> 3415) (the cost
-model's trade; `T2PW_LAYOUT_CHOOSER=0` restores VIS-7). (97-PWML corpus numbers: pending)
+model's trade; `T2PW_LAYOUT_CHOOSER=0` restores VIS-7). The 97-PWML corpus numbers (before/after, strict content check, relayout time, stubs) are NOT run, see section 6.
 
 ## 4. Content check
 
-TBD
+`scripts/content_check.py` (rule-based, one-directional, VIS-7's) and `strict` (no masking rules). Base = the unmodified `f3241270`
+replays (VIS-5's), VIS-7 = `b9534f68`.
+
+| set | against | result |
+|---|---|---|
+| 8 showcases + server job item-6 (9 PWMLs) | VIS-7, strict | **0 differences** (`content_check_showcases_vs_vis7_strict.json`, `content_check_item6_vs_vis7_strict.json`): element structure and every id identical, only geometry and edge paths differ |
+| the same 9 | base, rule-based | 0 differences (`content_check_showcases_vs_base.json`, `..._item6_...`) |
+| the same 9 | base, strict | 4 of 8 differ, every line one of VIS-5's two accepted rules (label-type, nucleic-acid template), as in VIS-7 |
+| 97-PWML corpus | VIS-7 / base | **NOT RUN**: needs the heavy queue (section 6) |
 
 ## 5. PathWhiz A/B
 
-TBD
+**NOT RUN**: needs the heavy queue (Docker stack `t2pw-pwdraw`); see section 6. Ready to run:
+`evidence/VIS-8/scripts/chainF.sh` (corpus replay, then `pwab8.sh`: all 9 PWMLs plus PathBank's PW000779 imported and
+screenshotted), then `make_compare8.py n1 p1` for `compare.html`. Compare against VIS-7's `C:/t/vis-pw7-work/pw/a3` and `a3b`
+results with `pwcmp.py` (no new error line allowed).
 
 ## 6. Gates
 
-TBD
+**NOT RUN**: the heavy queue (`C:/t/vis-runs/queue.sh`) waits on its 4 GB free-RAM floor and the machine has had 0.0-0.4 GB free
+since about 23:35 on 2026-11-26 (committed memory 59 of 61.6 GB, working sets 12 of 32 GB: the unexplained-RAM leak in the
+memory notes; `wsl docker-desktop` itself has 13 GB free). My queued chain waited from 00:00 to the time I stopped it;
+VIS-9's queued chain waited too. Focused tests that the light path allows were run through `bounded_run.py`:
+`tests/test_pwml_*` + `tests/test_render_*` 344 passed, `test_final_payload_writer_fixes` + `test_orch768_replay_corpus` 31 passed,
+`test_equivalence_default_path` (alone) 6 passed, `test_vision_layout` + `test_vision_generate` 29 passed. To run the gates after a
+reboot: `evidence/VIS-8/scripts/gatesF.sh` (focused.sh, then `suite2.sh C:/t/vis-pw8 vis8`), on a clean tree at the commit named
+in the report.
 
 ## 7. Dead ends and slips
 
