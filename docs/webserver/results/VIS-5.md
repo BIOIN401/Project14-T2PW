@@ -160,6 +160,7 @@ FINAL SURVIVING COUNT 0):
 | 1 `vis5-pwab-r8` | 7952e790 | ceramide, chlorophyll, ent-item6, lipid A + PathBank PW000779 | 5/5 success; errors identical to VIS-2's final arm; screenshots of all 5 |
 | 2 `vis5-pwab-r20` | d78a346b | + enterobactin, menaquinone | 7/7 success; new errors only `Data too long for column 'path'` (ceramide 1, lipid A 3 edges): PathWhiz's `edges.path` is varchar(255) -> fixed r25-r26 |
 | 3 `vis5-pwab-r27` | 2dbe69db | all 9 + PW000779 | 10/10 success; import errors IDENTICAL to VIS-2's final arm for all 8 showcases (`pathwhiz_r27/ab_vs_vis2.txt`); created records differ only in membrane / label records; screenshots: 9 of 10 timed out on the login page under machine load (only enterobactin saved) |
+| 4 `vis5-pwab-r28` | 5f964ff7 | all 9 + PW000779, for screenshots | not run: waited ~1 h on the RAM gate, cancelled cleanly (own waiter killed, no lock, no stack left) |
 
 What PathWhiz draws (checkpoints 1-2 screenshots, `C:/t/vis-pw5-work/pw/r8|r20/screenshots/`, on the compare page):
 our geometry as our preview shows it: envelope lines named on their lines, TolC on the outer membrane, outside cargo
@@ -197,6 +198,10 @@ user's applications held the machine at 1.6-4.6 GB free from ~14:00 to ~17:00).
 - Readability at 1100 px: a 30-node pathway is still 2700-4500 units wide (PathBank's own PW000779 is 4400); labels
   are legible zoomed, not at 1100 px. Snaking and packing reduced the worst cases (max width on the 97-PWML corpus
   7685 -> 5365, aspect > 3 from 9 to 3).
+- Final PathWhiz screenshots of r28 not taken (checkpoint 4 cancelled); r28 differs from the imported r27 only in
+  chlorophyll's and coenzyme A's label-type.
 - Compound boxes without a structure in our preview: renderer issue, dropped per PO; PathWhiz draws from its own
   database (open question 7.4).
 - Edge routing: 20 grid-routed edges over the 9 (base 37), 32 over the 97 corpus (base 64); none through a node.
+
+Side-by-side page (not committed, images local): `C:/t/vis-pw5-work/compare.html` (before / after r28 preview / PathWhiz / PathBank).

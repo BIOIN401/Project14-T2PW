@@ -101,3 +101,7 @@ Lock/process check on the coordinator's request: no heavy lock held, no python p
 vis5-focused-final (HEAD 9edbaa67, tree clean): pwml 281 passed, render 49, final_payload_writer_fixes 22, orch768 corpus 9; BW_EXIT=0, 0 survivors.
 vis5-suite2 (same HEAD, clean): SMOKE 511, golden 2/8/4/24, equivalence 8/14/6, vision 370 + 1 skipped, web 83; BW_EXIT=0, 0 survivors.
 Checkpoint 4 (vis5-pwab-r28, all 9 + PW000779, for the screenshots checkpoint 3 lost) queued.
+
+## Wrap-up -- 18:10
+Checkpoint 4 (screenshots of the final r28 PWMLs) waited ~1 h on the RAM gate (free 1.2-4.1 GB) and was cancelled: TaskStop + taskkill of my own leftover bw.sh waiter (PID 542816); no lock held, no t2pw-pwdraw container up, no process of mine left. Visual PathWhiz evidence: checkpoints 1-2 screenshots (r8/r20: PW000779, ceramide, chlorophyll, ent-item6, lipid A, enterobactin); import A/B for all 9 at r27 (checkpoint 3). r28 differs from r27 only in label-type of chlorophyll and coenzyme A.
+Stopped iterating: the remaining defects are content-shaped (RESULT doc section 9). compare page: C:/t/vis-pw5-work/compare.html (before / after r28 / PathWhiz / PathBank).
