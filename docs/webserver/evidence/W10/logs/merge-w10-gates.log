@@ -1,0 +1,99 @@
+HEAD fb98b8d488a134f018c76bea2f80bf972ebcc8c5
+STATUS_BEGIN
+STATUS_END
+== tree C:/t/merge-w10
+HEAD fb98b8d488a134f018c76bea2f80bf972ebcc8c5
+STATUS_BEGIN
+STATUS_END
+== smoke
+........................................................................ [ 84%]
+........................................................................ [ 98%]
+.......                                                                  [100%]
+511 passed in 57.48s
+EXIT_smoke=0
+== g-batch
+T2PW: C:\t\merge-w10\src\t2pw\__init__.py
+..                                                                       [100%]
+2 passed in 6.50s
+EXIT_g-batch=0
+== g-c011
+T2PW: C:\t\merge-w10\src\t2pw\__init__.py
+........                                                                 [100%]
+8 passed in 43.54s
+EXIT_g-c011=0
+== g-stage8
+T2PW: C:\t\merge-w10\src\t2pw\__init__.py
+....                                                                     [100%]
+4 passed in 0.42s
+EXIT_g-stage8=0
+== g-quar
+T2PW: C:\t\merge-w10\src\t2pw\__init__.py
+........................                                                 [100%]
+24 passed in 38.61s
+EXIT_g-quar=0
+== eq-run
+T2PW: C:\t\merge-w10\src\t2pw\__init__.py
+........                                                                 [100%]
+8 passed in 61.50s (0:01:01)
+EXIT_eq-run=0
+== eq-app
+T2PW: C:\t\merge-w10\src\t2pw\__init__.py
+..............                                                           [100%]
+14 passed in 57.19s
+EXIT_eq-app=0
+== eq-default
+T2PW: C:\t\merge-w10\src\t2pw\__init__.py
+......                                                                   [100%]
+6 passed in 29.87s
+EXIT_eq-default=0
+== vision
+........................................................................ [ 77%]
+........................................................................ [ 97%]
+..........s                                                              [100%]
+370 passed, 1 skipped in 16.31s
+EXIT_vision=0
+== web
+T2PW: C:\t\merge-w10\src\t2pw\__init__.py
+........................................................................ [ 84%]
+.............                                                            [100%]
+85 passed in 6.54s
+EXIT_web=0
+SUITE_DONE
+== pwml
+311 passed in 8.13s
+EXIT_pwml=0
+== render
+49 passed in 8.11s
+EXIT_render=0
+== service
+405 passed in 55.21s
+EXIT_service=0
+MERGE_W10_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 221ad27fc91c08ffb7e8fb25f790faa261ef6a4e  [git, worktree dirty=True]
+label                   : merge-w10-gates
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/vis-runs/merge_w10_inner.sh
+cwd                     : c:\t\merge-w10
+root PID / process group: 636148 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 5400 s
+duration                : 408.16 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 93  670088:bash.exe, 675456:bash.exe, 676136:bash.exe, 675296:git.exe, 668332:bash.exe, 674588:bash.exe, 674784:bash.exe, 676324:bash.exe, 668008:bash.exe, 671500:python.exe, 672700:bash.exe, 673156:bash.exe, 674660:python.exe, 675232:tail.exe, 671124:python.exe, 671444:python.exe, 672624:python.exe, 674992:python.exe, 606164:python.exe, 675860:python.exe, 677644:python.exe, 677664:python.exe, 675024:git.exe, 672548:git.exe, 670520:python.exe, 673024:python.exe, 676020:bash.exe, 677216:bash.exe, 652160:python.exe, 660828:python.exe, 671668:git.exe, 677256:git.exe, 671792:git.exe, 678472:python.exe, 678492:python.exe, 678516:python.exe, 678540:python.exe, 678628:git.exe, 678060:python.exe, 678452:python.exe, 678768:python.exe, 678844:python.exe, 655656:python.exe, 678864:python.exe, 678684:python.exe, 678704:python.exe, 677984:python.exe, 678592:python.exe, 675352:python.exe, 677972:python.exe, 653416:python.exe, 677976:bash.exe, 678696:bash.exe, 677384:python.exe, 665236:python.exe, 678016:bash.exe, 678292:python.exe, 673000:bash.exe, 674156:python.exe, 680112:bash.exe, 680244:python.exe, 623268:python.exe, 678956:python.exe, 675604:python.exe, 676880:bash.exe, 678976:bash.exe, 678580:python.exe, 678112:python.exe, 678764:python.exe, 679512:bash.exe, 680672:bash.exe, 678488:python.exe, 678960:bash.exe, 680716:python.exe, 680748:git.exe, 680480:python.exe, 680548:python.exe, 680576:python.exe, 681008:bash.exe, 681136:python.exe, 681148:python.exe, 681352:python.exe, 681384:python.exe, 681816:python.exe, 681828:python.exe, 681468:python.exe, 681892:python.exe, 681968:python.exe, 672508:bash.exe, 619812:bash.exe, 671944:bash.exe, 673740:grep.exe, 623288:bash.exe
+descendants terminated  : 93  606164, 619812, 623268, 623288, 652160, 653416, 655656, 660828, 665236, 668008, 668332, 670088, 670520, 671124, 671444, 671500, 671668, 671792, 671944, 672508, 672548, 672624, 672700, 673000, 673024, 673156, 673740, 674156, 674588, 674660, 674784, 674992, 675024, 675232, 675296, 675352, 675456, 675604, 675860, 676020, 676136, 676324, 676880, 677216, 677256, 677384, 677644, 677664, 677972, 677976, 677984, 678016, 678060, 678112, 678292, 678452, 678472, 678488, 678492, 678516, 678540, 678580, 678592, 678628, 678684, 678696, 678704, 678764, 678768, 678844, 678864, 678956, 678960, 678976, 679512, 680112, 680244, 680480, 680548, 680576, 680672, 680716, 680748, 681008, 681136, 681148, 681352, 681384, 681468, 681816, 681828, 681892, 681968
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-runs/logs/merge-w10-gates.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=MERGE-W10  acquired=True  released=True
+pre-existing (reported, NEVER killed): 15
+================================================
+BW_EXIT=0
