@@ -41,7 +41,7 @@ OBSTACLE_PAD, CELL = 8, 10
 SNAKE_MIN, SNAKE_OVER = 1800, 1.8  # VIS-5: a group folds into rows when wider than 1.8x the picture's square-ish width
 # VIS-8: relayout lays the picture out once per (fold width, aspect) pair and keeps the best (_layout_cost); the first is VIS-7's
 LAYOUT_CANDIDATES = ((1.8, 1.5), (1.5, 1.5), (1.2, 1.5), (1.8, 1.2), (1.5, 1.2), (1.2, 1.2))
-VIEW_W, VIEW_H = 1100, 1000  # VIS-8: the viewing box a picture is fitted into when its legibility is scored (1100 px wide; PO)
+VIEW_W, VIEW_H = 1100, 700  # VIS-8: the viewing box a picture is fitted into when its legibility is scored (1100 px wide; PO)
 ASPECT = 1.5  # target width:height of the packed picture (PathBank content: median 1.4)
 MEMBRANE_TEMPLATE = 220  # PathWhiz "Simple Membrane"
 # Labels as in PathBank's own files (PW000001: template 235 "Simple Label - Large", scale 1.9). PathWhiz draws it as a
@@ -1905,7 +1905,7 @@ def _relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int],
     return width, height
 
 
-CROSS_W, THROUGH_W, LEN_W, INT_LEN_W = 0.05, 1.0, 0.00002, 0.00012  # VIS-8: _layout_cost weights (see there)
+CROSS_W, THROUGH_W, LEN_W, INT_LEN_W = 0.15, 1.0, 0.00002, 0.00012  # VIS-8: _layout_cost weights (see there)
 
 
 def _layout_cost(items: Dict[str, List[Dict[str, Any]]], width: int, height: int) -> float:
