@@ -9,11 +9,11 @@ for p in (ROOT / "src", ROOT / "tests"):
     if str(p) not in sys.path:
         sys.path.insert(0, str(p))
 
-from t2pw.pwml.layout import _path_points, _plen, relayout  # noqa: E402
+from t2pw.pwml.layout import _layout_cost, _path_points, _plen, _relayout, relayout  # noqa: E402
 from test_pwml_vis5_layout import _chain, _ids  # noqa: E402
 
 
-def _interacting_chain(n, a, b, second=None):
+def _interacting_chain(n, a, b, second=None, fold=1.8, public=False):
     """Chain of n reactions with an interaction between the enzymes of reactions a and b (edges 900 Left, 901 Right)."""
     comps, prots, pcvs, edges, rvs = _chain(n)
     pairs = [(a, b)] + ([second] if second else [])
@@ -29,7 +29,7 @@ def _interacting_chain(n, a, b, second=None):
              "proteins": [{"id": 100 + i, "name": f"E{i}"} for i in range(n)],
              "compound-locations": comps, "protein-locations": prots, "protein-complex-visualizations": pcvs,
              "edges": edges, "reaction-visualizations": rvs, "interaction-visualizations": ivs}
-    relayout(items, _ids())
+    (relayout(items, _ids()) if public else _relayout(items, _ids(), None, None, fold))
     return items
 
 
@@ -78,9 +78,26 @@ def test_arches_of_one_hub_nest_the_longer_span_stands_higher():
 
 
 def test_a_long_flat_chain_folds_into_rows_so_the_picture_is_not_a_strip():
-    items = _interacting_chain(12, 5, 6)
-    w = max(int(l["x"]) + 150 for l in items["protein-locations"])
-    h = max(int(l["y"]) + 70 for l in items["protein-locations"]) - min(int(l["y"]) for l in items["protein-locations"])
+    items = _interacting_chain(12, 5, 6, public=True)
     cy = {int(c["y"]) for c in items["compound-locations"]}
     assert max(cy) - min(cy) > 400  # more than one row
-    assert w < 12 * 670  # narrower than the straight chain
+    assert max(int(l["x"]) + 150 for l in items["protein-locations"]) < 12 * 670  # narrower than the straight chain
+
+
+def test_relayout_keeps_the_layout_with_the_lowest_cost():
+    strip = _interacting_chain(12, 5, 6, fold=100)
+    folded = _interacting_chain(12, 5, 6, fold=1.2)
+    public = _interacting_chain(12, 5, 6, public=True)
+    assert max(int(l["x"]) for l in strip["protein-locations"]) > max(int(l["x"]) for l in folded["protein-locations"])
+    wh = lambda it: (max(int(l["x"]) + 150 for l in it["protein-locations"]) + 40, max(int(c["y"]) + 190 for c in it["compound-locations"]) + 40)  # noqa: E731
+    costs = [_layout_cost(it, *wh(it)) for it in (strip, folded, public)]
+    assert costs[2] <= min(costs[0], costs[1]) + 1e-6
+
+
+def test_the_cost_charges_crossings_through_nodes_and_interaction_length():
+    base = {"compound-locations": [], "protein-locations": [], "edges": [
+        {"id": 1, "path": "M0 0 C50 0 100 0 150 0", "hidden": False}, {"id": 2, "path": "M75 -50 C75 -20 75 20 75 50", "hidden": False}]}
+    far = {"compound-locations": [], "protein-locations": [], "edges": [
+        {"id": 1, "path": "M0 0 C50 0 100 0 150 0", "hidden": False}, {"id": 2, "path": "M75 150 C75 160 75 190 75 200", "hidden": False}]}
+    assert _layout_cost(base, 1000, 700) > _layout_cost(far, 1000, 700) - 0.02  # the crossing adds CROSS_W (lengths differ a little)
+    assert _layout_cost(far, 2000, 700) > _layout_cost(far, 1000, 700)  # a wider picture is harder to read

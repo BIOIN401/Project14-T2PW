@@ -18,7 +18,9 @@ node box is routed around them on a grid.
 """
 from __future__ import annotations
 
+import copy
 import heapq
+import itertools
 import json
 import math
 import os
@@ -35,7 +37,9 @@ HGAP, VGAP, MEMBER_GAP, MEMBERS_PER_ROW = 160, 60, 10, 3  # PathBank substrate-t
 JUNCTION_W, JUNCTION_H = 40, 20
 STACK_DX, STACK_DY = 10, 38  # VIS-5: offset of each further enzyme in a reaction's stack (PathBank PW000779: ~5, ~22)
 OBSTACLE_PAD, CELL = 8, 10
-SNAKE_MIN, SNAKE_OVER = 1800, 1.5  # VIS-5: a group folds into rows when wider than SNAKE_OVER x the picture's square-ish width (VIS-8: was 1.8)
+SNAKE_MIN, SNAKE_OVER = 1800, 1.8  # VIS-5: a group folds into rows when wider than 1.8x the picture's square-ish width
+SNAKE_CANDIDATES = (1.8, 1.5, 1.2)  # VIS-8: relayout lays the picture out once per value and keeps the best (_layout_cost)
+VIEW_W, VIEW_H = 1100, 750  # VIS-8: the viewing box a picture is fitted into when its legibility is scored
 ASPECT = 1.5  # target width:height of the packed picture (PathBank content: median 1.4)
 MEMBRANE_TEMPLATE = 220  # PathWhiz "Simple Membrane"
 # Labels as in PathBank's own files (PW000001: template 235 "Simple Label - Large", scale 1.9). PathWhiz draws it as a
@@ -783,8 +787,8 @@ def _snake(blocks: Dict[Any, "_Block"], keys: List[Any], limit: int, hubs: set,
     return width, height
 
 
-def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], ir: Optional[Dict[str, Any]] = None,
-             key_ids: Optional[Dict[str, Dict[str, int]]] = None) -> Tuple[int, int]:
+def _relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], ir: Optional[Dict[str, Any]] = None,
+              key_ids: Optional[Dict[str, Dict[str, int]]] = None, snake_over: float = SNAKE_OVER) -> Tuple[int, int]:
     """Re-place every visual element of ``items`` in place; returns the new canvas (width, height).
 
     ``ir`` and ``key_ids`` (the writer's IR and its IR-key -> PWML-id map) only serve to place edges that no
@@ -1126,7 +1130,7 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
     snake_free: Dict[int, Tuple[int, int, int, int]] = {}
     for st, cs in comps_by_state.items():
         for i, (comp, w, h) in enumerate(cs):
-            if w > SNAKE_OVER * limit and st != loose_key:
+            if w > snake_over * limit and st != loose_key:
                 cs[i] = (comp, *_snake(blocks, comp, limit, hub_set, snake_free))
                 snaked_states.add(st)
         cs.sort(key=lambda c: (not any(k in attached for k in c[0]), -(c[1] * c[2])))
@@ -1861,6 +1865,59 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
     for loc in hidden_locs:  # not drawn; kept inside the (possibly shorter) canvas
         loc["y"] = max(0, min(int(loc.get("y") or 0), height - _dim(loc["height"])))
     return width, height
+
+
+CROSS_W, THROUGH_W, LEN_W, INT_LEN_W = 0.05, 1.0, 0.00002, 0.00012  # VIS-8: _layout_cost weights (see there)
+
+
+def _layout_cost(items: Dict[str, List[Dict[str, Any]]], width: int, height: int) -> float:
+    """VIS-8: how hard a laid-out picture is to read; lower is better. Legibility counts as -ln(scale), the scale a
+    picture is shrunk by to fit a VIEW_W x VIEW_H box (text and boxes shrink with it); each crossing of two visible
+    edges adds CROSS_W, each edge through a node box THROUGH_W, edge length LEN_W per unit and an interaction edge
+    INT_LEN_W per unit (a long arch over a chain is what the PO asked to shorten). Worked examples (enterobactin,
+    coenzyme A, furochromone) are in docs/webserver/results/VIS-8.md."""
+    rects = [(float(it["x"]), float(it["y"]), float(it["x"]) + _dim(it["width"]), float(it["y"]) + _dim(it["height"]))
+             for sec in LOC_SECTIONS for it in items.get(sec, []) if not it.get("hidden")]
+    inter = {int(m["edge-id"]) for iv in items.get("interaction-visualizations", []) for val in iv.values()
+             for m in (val if isinstance(val, list) else []) if isinstance(m, dict) and m.get("edge-id") is not None}
+    polys: List[List[Tuple[float, float]]] = []
+    total = int_total = through = 0.0
+    for e in items.get("edges", []):
+        pts = _path_points(str(e.get("path") or ""))
+        if e.get("hidden") or len(pts) < 4:
+            continue
+        samp = [pts[0]]
+        for i in range(0, len(pts) - 3, 3):
+            samp += _bezier_points(pts[i], pts[i + 1], pts[i + 2], pts[i + 3], 12)[1:]
+        polys.append(samp)
+        ln = _plen(samp)
+        total += ln
+        int_total += ln if int(e["id"]) in inter else 0
+        a, b = samp[0], samp[-1]
+        own = lambda q, r: r[0] - 4 <= q[0] <= r[2] + 4 and r[1] - 4 <= q[1] <= r[3] + 4  # noqa: E731
+        through += any(r[0] + 6 < q[0] < r[2] - 6 and r[1] + 6 < q[1] < r[3] - 6 for q in samp for r in rects
+                       if not (own(a, r) or own(b, r)))
+    crossings = sum(_crossings(p, polys[i + 1:]) for i, p in enumerate(polys))
+    scale = min(VIEW_W / max(1, width), VIEW_H / max(1, height))
+    return -math.log(scale) + CROSS_W * crossings + THROUGH_W * through + LEN_W * total + INT_LEN_W * int_total
+
+
+def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], ir: Optional[Dict[str, Any]] = None,
+             key_ids: Optional[Dict[str, Dict[str, int]]] = None) -> Tuple[int, int]:
+    """Re-place every visual element of ``items`` in place; returns the new canvas (width, height).
+
+    VIS-8: a long chain can fold into rows at several widths (SNAKE_CANDIDATES). Each is laid out on a copy of the items
+    (ids from a throw-away counter) and scored with _layout_cost; the best is laid out for real (a tie keeps the first,
+    the unfolded VIS-5 width), so a fold is only taken when it makes the picture easier to read."""
+    best, pick = None, SNAKE_OVER
+    for so in SNAKE_CANDIDATES:
+        trial, ids = copy.deepcopy(items), itertools.count(1 << 40)
+        w, h = _relayout(trial, lambda: next(ids), ir, key_ids, so)
+        cost = _layout_cost(trial, w, h)
+        if best is None or cost < best - 1e-9:
+            best, pick = cost, so
+    return _relayout(items, new_id, ir, key_ids, pick)
+
 
 
 def _shorten_long_paths(items: Dict[str, List[Dict[str, Any]]]) -> None:
