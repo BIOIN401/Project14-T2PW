@@ -2,7 +2,7 @@
 
 PO ruling (2026-11-26): "can we fix this somehow?" -> yes. Target: OUR patched PathWhiz importer (`t2pw/latest`); the PO
 fixes production PathWhiz. Branch `vis/structures`, worktree `C:/t/vis-pw9`, cut from webserver/refactor `b9534f68`.
-Code `2c760e27` (`src/t2pw/pwml/writer.py`, `tests/test_pwml_vis9_pwc_id.py`); fixture re-record `a86d936e`, `f3e093bd`; review fixes `74ed502d` (`writer.py`, test, new `pwml/refresh_pwc_id_skip.py`, `data/pwc_id_skip.json`). Working files `C:/t/vis-pw9-work/` (replays, content checks, PathWhiz runs, `compare.html`). Evidence
+Code `2c760e27` (`src/t2pw/pwml/writer.py`, `tests/test_pwml_vis9_pwc_id.py`); fixture re-record `a86d936e`, `f3e093bd`; review fixes `74ed502d`, `c1443a38` (`writer.py`, test, new `pwml/refresh_pwc_id_skip.py`, `data/pwc_id_skip.json`). Working files `C:/t/vis-pw9-work/` (replays, content checks, PathWhiz runs, `compare.html`). Evidence
 `docs/webserver/evidence/VIS-9/`.
 
 ## 1. Investigation (read-only)
@@ -296,6 +296,45 @@ stand and were not re-recorded: `test_orch768_replay_corpus` 9 passed, `test_equ
 PathWhiz: not re-run (orchestrator: only if counts change by more than the skips). The section 4.3 table changes only
 by the skips: coenzyme A's 4'-phosphopantetheine moves from "right picture" (it was wrong) to dev-DB pwc-id, ceramide
 from "no structure" to dev-DB pwc-id. Right pictures on the showcases: **6 -> 59 of 139, 0 wrong** on the eye check.
+
+## 7. Review round 2 (review of `c8719361`: CHANGES_REQUESTED; fixes in code commit `c1443a38`)
+
+- **R1** 41655 "Ferric enterobactin" draws a broken structure (lactone C=O drawn as CH(OH), the amides as imidic
+  N=C(OH), Fe unbonded); it was still written in 6 corpus records. Added to `STRUCTURE_ERRORS` in
+  `refresh_pwc_id_skip.py` with that reason; `data/pwc_id_skip.json` regenerated from the same saved SELECT (438
+  mismatches + 5 structure errors). Not in the 9 showcases (their "ferric-enterobactin complex" was already refused
+  by name).
+- **R2** fail closed on a bad refresh: `PathBankDbResolver._query` returns `[]` (or what it has) on error and only
+  records `last_error`. `refresh()` now refuses to write when the query gives no rows, when the resolver recorded an
+  error, or when the mismatch list shrinks below 90 % of the current file (`--allow-shrink` overrides only the last).
+  The writer treats an empty `derivation_mismatch` like a missing file: it derives no pwc-id. Tests: refresh writes the
+  rows; refuses a failed query; refuses no rows and a shrunken list (file untouched) unless `--allow-shrink`; the
+  writer derives nothing for a missing, empty or unreadable file.
+- **R3** errors name only the resolver's tag (`db_query_failed`, `db_connect_failed`, ...), never its message (it
+  can carry the DB host). Tested with a message naming a host.
+- **R4** `(+)-` / `(-)-` are stereo descriptors: "(+)-limonene" vs "(-)-Limonene" fails, "limonene" vs "(+)-Limonene"
+  passes. Tested.
+- **R5** one warning (`logging`, logger `t2pw.pwml.writer`) when the skip list is missing, unreadable or empty; once
+  per process (the result is cached). Tested (two exports, one warning).
+
+Re-run at `c1443a38` (clean tree, one queued hold `vis9-ab3`: **BW_EXIT=0, FINAL SURVIVING COUNT 0**):
+
+| check | 9 showcases | 97-PWML corpus |
+|---|---|---|
+| `cc9.py` strict (only added `<pwc-id>`, existing unchanged) | **0 different, 57 added** (unchanged) | **0 different, 358 added** (was 364: the 6 ferric enterobactin records) |
+| VIS-7 checker rule-based / strict | 9 / 9 files, every diff line an added `<pwc-id>` | 86 / 86, same |
+| text diff without `<pwc-id>` lines | 0 files | 0 files |
+
+| gate (`c1443a38`) | result |
+|---|---|
+| `tests/test_pwml_*.py` (VIS-9 tests now 33) | 318 passed |
+| orch768 / orch772 + 772b + 774s / second fixture + canonical equivalence | 9 / 47 / 37 passed |
+| SMOKE | **511 passed** |
+| golden seams batch / c011 / stage8 / quarantine (unedited) | 2 / 8 / 4 / 24 passed |
+| equivalence run_pathway / app-vs-service / default path | 8 / 14 / 6 passed |
+| vision / web | 370 passed, 1 skipped / 85 passed |
+
+Sour-taste bytes unchanged, pins not re-recorded. PathWhiz not re-run (showcase counts unchanged).
 
 ## 8. Open questions (product owner)
 
