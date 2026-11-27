@@ -1,0 +1,53 @@
+[pwi] starting rails server in the container
+[pwi] OK      100.6s  ref_PW000779.pwml  errors=3
+[pwi] OK       54.1s  v5_ceramide-sphingolipid.pwml  errors=1
+[pwi] OK      182.2s  v5_chlorophyll.pwml  errors=15
+[pwi] OK       91.9s  v5_coenzyme-a.pwml  errors=0
+[pwi] OK       63.1s  v5_ent-item6.pwml  errors=1
+[pwi] OK       63.1s  v5_enterobactin.pwml  errors=0
+[pwi] OK       21.3s  v5_furochromone.pwml  errors=0
+[pwi] OK       79.5s  v5_lipid-a.pwml  errors=22
+[pwi] OK       55.5s  v5_menaquinone.pwml  errors=0
+[pwi] OK       25.9s  v5_sour-taste.pwml  errors=7
+[pwi] summary: {"files": 10, "success_true": 10, "success_true_no_errors": 4, "success_false": 0, "total_seconds": 737.1}
+EXIT_import=0
+ Container t2pw-pwdraw-app-1 Stopping 
+ Container t2pw-pwdraw-app-1 Stopped 
+ Container t2pw-pwdraw-app-1 Removing 
+ Container t2pw-pwdraw-app-1 Removed 
+ Container t2pw-pwdraw-db-1 Stopping 
+ Container t2pw-pwdraw-db-1 Stopped 
+ Container t2pw-pwdraw-db-1 Removing 
+ Container t2pw-pwdraw-db-1 Removed 
+ Network t2pw-pwdraw_default Removing 
+ Network t2pw-pwdraw_default Removed 
+STACK_DOWN rc=0
+PWAB_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 0e2ecf7a67ae8e972f4cf530eda9e2f419703ec0  [git, worktree dirty=True]
+label                   : vis8-pwab
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/vis-pw8-work/scripts/pwab8.sh r1 p2
+cwd                     : C:\t\vis-pw8-work
+root PID / process group: 190184 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 3000 s
+duration                : 2064.36 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 115  190980:bash.exe, 193156:bash.exe, 195744:bash.exe, 195936:bash.exe, 195968:cp.exe, 196200:bash.exe, 196224:env.exe, 196364:bash.exe, 195616:bash.exe, 195640:python.exe, 195680:python.exe, 195716:docker.exe, 152020:docker-compose.exe, 195784:docker.exe, 196556:docker-compose.exe, 196264:docker.exe, 195356:docker-compose.exe, 195684:docker.exe, 195812:docker-compose.exe, 196316:docker.exe, 196332:docker-compose.exe, 191416:docker-compose.exe, 198860:docker.exe, 202860:python.exe, 203240:python.exe, 203216:node.exe, 203396:chrome-headless-shell.exe, 203672:chrome-headless-shell.exe, 203716:chrome-headless-shell.exe, 203632:chrome-headless-shell.exe, 200664:docker.exe, 200676:docker-compose.exe, 204352:docker-compose.exe, 197204:python.exe, 205480:python.exe, 205908:node.exe, 203948:chrome-headless-shell.exe, 206676:chrome-headless-shell.exe, 206720:chrome-headless-shell.exe, 206756:chrome-headless-shell.exe, 208936:docker.exe, 208980:docker-compose.exe, 209020:docker-compose.exe, 211056:python.exe, 211556:python.exe, 209056:node.exe, 196584:chrome-headless-shell.exe, 204788:chrome-headless-shell.exe, 208388:chrome-headless-shell.exe, 210116:chrome-headless-shell.exe, 211000:docker.exe, 212140:docker-compose.exe, 213312:docker-compose.exe, 216596:python.exe, 216616:python.exe, 216712:node.exe, 216836:chrome-headless-shell.exe, 217032:chrome-headless-shell.exe, 217064:chrome-headless-shell.exe, 217084:chrome-headless-shell.exe, 218212:docker-compose.exe, 218472:docker.exe, 214684:python.exe, 215284:python.exe, 221176:node.exe, 167748:chrome-headless-shell.exe, 215924:chrome-headless-shell.exe, 216628:chrome-headless-shell.exe, 218936:chrome-headless-shell.exe, 222908:docker.exe, 223072:docker-compose.exe, 213040:python.exe, 216344:python.exe, 223160:node.exe, 224476:chrome-headless-shell.exe, 223828:chrome-headless-shell.exe, 224628:chrome-headless-shell.exe, 224640:chrome-headless-shell.exe, 189352:docker-compose.exe, 226344:docker.exe, 225024:docker-compose.exe, 228904:python.exe, 228924:python.exe, 229076:node.exe, 229160:chrome-headless-shell.exe, 229312:chrome-headless-shell.exe, 229336:chrome-headless-shell.exe, 229356:chrome-headless-shell.exe, 221580:docker.exe, 230992:docker-compose.exe, 232648:python.exe, 234200:python.exe, 234356:node.exe, 232392:chrome-headless-shell.exe, 232608:chrome-headless-shell.exe, 234412:chrome-headless-shell.exe, 234476:chrome-headless-shell.exe, 235876:docker.exe, 235608:docker-compose.exe, 238252:python.exe, 238276:python.exe, 238312:node.exe, 237516:chrome-headless-shell.exe, 223708:chrome-headless-shell.exe, 224512:chrome-headless-shell.exe, 235780:chrome-headless-shell.exe, 241516:docker.exe, 241608:docker-compose.exe, 243184:python.exe, 243248:python.exe, 241828:node.exe, 241628:chrome-headless-shell.exe, 243452:chrome-headless-shell.exe, 243464:chrome-headless-shell.exe, 243480:chrome-headless-shell.exe
+descendants terminated  : 115  152020, 167748, 189352, 190980, 191416, 193156, 195356, 195616, 195640, 195680, 195684, 195716, 195744, 195784, 195812, 195936, 195968, 196200, 196224, 196264, 196316, 196332, 196364, 196556, 196584, 197204, 198860, 200664, 200676, 202860, 203216, 203240, 203396, 203632, 203672, 203716, 203948, 204352, 204788, 205480, 205908, 206676, 206720, 206756, 208388, 208936, 208980, 209020, 209056, 210116, 211000, 211056, 211556, 212140, 213040, 213312, 214684, 215284, 215924, 216344, 216596, 216616, 216628, 216712, 216836, 217032, 217064, 217084, 218212, 218472, 218936, 221176, 221580, 222908, 223072, 223160, 223708, 223828, 224476, 224512, 224628, 224640, 225024, 226344, 228904, 228924, 229076, 229160, 229312, 229336, 229356, 230992, 232392, 232608, 232648, 234200, 234356, 234412, 234476, 235608, 235780, 235876, 237516, 238252, 238276, 238312, 241516, 241608, 241628, 241828, 243184, 243248, 243452, 243464, 243480
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-pw8-work/logs/r1_pwab.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=VIS-8  acquired=True  released=True
+pre-existing (reported, NEVER killed): 12
+================================================
+BW_EXIT=0

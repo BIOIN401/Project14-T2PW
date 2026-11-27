@@ -18,7 +18,9 @@ node box is routed around them on a grid.
 """
 from __future__ import annotations
 
+import copy
 import heapq
+import itertools
 import json
 import math
 import os
@@ -33,9 +35,14 @@ LOC_SECTIONS = ("compound-locations", "protein-locations", "nucleic-acid-locatio
 MARGIN, BAND_GAP, BAND_PAD_X, BAND_PAD_BOT = 40, 80, 40, 40
 HGAP, VGAP, MEMBER_GAP, MEMBERS_PER_ROW = 160, 60, 10, 3  # PathBank substrate-to-product step: median 667
 JUNCTION_W, JUNCTION_H = 40, 20
+JUNCTION_GAP = 120  # VIS-8: a reaction point farther than this from every substrate is moved onto its substrate
 STACK_DX, STACK_DY = 10, 38  # VIS-5: offset of each further enzyme in a reaction's stack (PathBank PW000779: ~5, ~22)
 OBSTACLE_PAD, CELL = 8, 10
 SNAKE_MIN, SNAKE_OVER = 1800, 1.8  # VIS-5: a group folds into rows when wider than 1.8x the picture's square-ish width
+# VIS-8: relayout lays the picture out once per (fold width, aspect) pair and keeps the best (_layout_cost); the first is VIS-7's
+LAYOUT_CANDIDATES = ((1.8, 1.5), (1.5, 1.5), (1.2, 1.5), (1.8, 1.2), (1.5, 1.2), (1.2, 1.2))
+CHOOSER_MAX_EDGES = 120  # VIS-8: a picture with more edges is laid out once (each layout of lipid A, 133 edges, takes 2 s; no candidate beat VIS-7 there)
+VIEW_W, VIEW_H = 1100, 700  # VIS-8: the viewing box a picture is fitted into when its legibility is scored (1100 px wide; PO)
 ASPECT = 1.5  # target width:height of the packed picture (PathBank content: median 1.4)
 MEMBRANE_TEMPLATE = 220  # PathWhiz "Simple Membrane"
 # Labels as in PathBank's own files (PW000001: template 235 "Simple Label - Large", scale 1.9). PathWhiz draws it as a
@@ -460,7 +467,12 @@ BEND_OFFSETS = (90, -90, 180, -180, 300, -300, 450, -450)  # VIS-5: how far a be
 VIA_PAD = 60  # VIS-5: a bent edge passes this far off the side of the box it goes round
 
 
+CROSS_COST = 300  # VIS-8: length an interaction edge may add to avoid crossing one other edge
 ARC_HEIGHTS = (60, 110, 170, 250, 350, 480)  # VIS-7: how far an arc's control points stand off the boxes' top or bottom
+
+
+def _plen(pts) -> float:
+    return sum(((q[0] - o[0]) ** 2 + (q[1] - o[1]) ** 2) ** 0.5 for o, q in zip(pts, pts[1:]))
 
 
 def _arc(p0, n0, p3, n3, h: float, bound: Optional[Tuple[int, int]] = None):
@@ -520,12 +532,17 @@ def _crossings(pts: List[Tuple[float, float]], others: List[List[Tuple[float, fl
 
     x0, x1 = min(p[0] for p in pts), max(p[0] for p in pts)
     y0, y1 = min(p[1] for p in pts), max(p[1] for p in pts)
+    segs = [(p, q, min(p[0], q[0]), max(p[0], q[0]), min(p[1], q[1]), max(p[1], q[1])) for p, q in zip(pts, pts[1:])]
     n = 0
     for b in others:
         if not b or max(p[0] for p in b) < x0 or min(p[0] for p in b) > x1 or max(p[1] for p in b) < y0 or min(p[1] for p in b) > y1:
             continue
-        n += any(o(p, q, r) * o(p, q, s) < 0 and o(r, s, p) * o(r, s, q) < 0
-                 for p, q in zip(pts, pts[1:]) for r, s in zip(b, b[1:]))
+        for r, s_ in zip(b, b[1:]):
+            rx0, rx1, ry0, ry1 = min(r[0], s_[0]), max(r[0], s_[0]), min(r[1], s_[1]), max(r[1], s_[1])
+            if any(sx1 >= rx0 and sx0 <= rx1 and sy1 >= ry0 and sy0 <= ry1 and o(p, q, r) * o(p, q, s_) < 0 and o(r, s_, p) * o(r, s_, q) < 0
+                   for p, q, sx0, sx1, sy0, sy1 in segs):
+                n += 1
+                break
     return n
 
 
@@ -778,8 +795,9 @@ def _snake(blocks: Dict[Any, "_Block"], keys: List[Any], limit: int, hubs: set,
     return width, height
 
 
-def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], ir: Optional[Dict[str, Any]] = None,
-             key_ids: Optional[Dict[str, Dict[str, int]]] = None) -> Tuple[int, int]:
+def _relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], ir: Optional[Dict[str, Any]] = None,
+              key_ids: Optional[Dict[str, Dict[str, int]]] = None, snake_over: float = SNAKE_OVER,
+              aspect: float = ASPECT, signature_only: bool = False) -> Any:
     """Re-place every visual element of ``items`` in place; returns the new canvas (width, height).
 
     ``ir`` and ``key_ids`` (the writer's IR and its IR-key -> PWML-id map) only serve to place edges that no
@@ -979,6 +997,7 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
                 flow.append((k, hub) if left else (hub, k))
     n_flow_after_transports = len(flow)
     hub_set = set(hub_of.values())
+    interaction_edges: set = set()  # VIS-8: edges of interactions (no hub end): drawn last, shortest first
     for iv in items.get("interaction-visualizations", []):
         ends: Dict[str, List[Tuple[Dict[str, Any], Any]]] = {"Left": [], "Right": []}
         for sec, fld in (("interaction_compound_visualizations", "compound-location-id"),
@@ -1001,6 +1020,7 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
             for m, k in ends.get(side, []):
                 if m.get("edge-id") is not None and int(m["edge-id"]) in edges and (k or own) is not None:
                     edge_ends[int(m["edge-id"])] = (k or own, other if other is not None else (k or own))
+                    interaction_edges.add(int(m["edge-id"]))
 
     # Edges no visualization member points at: the IR's enzyme/transporter connectors. v2 draws a reaction
     # through its enzyme, so such a connector runs from its member to the reaction's hub (a point when equal).
@@ -1114,17 +1134,17 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
 
     area = sum((w + HGAP) * (h + VGAP) for cs in comps_by_state.values() for _, w, h in cs)
     # VIS-5: a group much wider than the whole picture's square-ish width folds into rows (a snake)
-    limit = max(SNAKE_MIN, int((area * ASPECT) ** 0.5))
+    limit = max(SNAKE_MIN, int((area * aspect) ** 0.5))
     snaked_states = set()
     snake_free: Dict[int, Tuple[int, int, int, int]] = {}
     for st, cs in comps_by_state.items():
         for i, (comp, w, h) in enumerate(cs):
-            if w > SNAKE_OVER * limit and st != loose_key:
+            if w > snake_over * limit and st != loose_key:
                 cs[i] = (comp, *_snake(blocks, comp, limit, hub_set, snake_free))
                 snaked_states.add(st)
         cs.sort(key=lambda c: (not any(k in attached for k in c[0]), -(c[1] * c[2])))
     area = sum((w + HGAP) * (h + VGAP) for cs in comps_by_state.values() for _, w, h in cs)
-    target = max([int((area * ASPECT) ** 0.5)] + [w for cs in comps_by_state.values() for _, w, _ in cs])
+    target = max([int((area * aspect) ** 0.5)] + [w for cs in comps_by_state.values() for _, w, _ in cs])
     # compartment kinds (PathBank membrane template and colour per kind) and nesting (organelles inside the cell,
     # the cell inside its envelope); each box holds its own groups (shelf-packed), then its child boxes in rows
     states = {s.get("id"): s for s in items.get("biological-states", [])}
@@ -1309,7 +1329,7 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
         def badness(sp):
             bw = max(x0 + sizes[st][0] for x0, _, st, _ in sp)
             bh = max(y0 + h for _, y0, _, h in sp)
-            return bw * bh * (1 + abs(math.log(bw / bh / ASPECT)))
+            return bw * bh * (1 + abs(math.log(bw / bh / aspect)))
         if badness(cols) < badness(spots):
             spots = cols
     top = MARGIN + (LINE_LABEL_ROOM if spots else 0)  # VIS-5: room above the first row for labels on its top line
@@ -1596,6 +1616,36 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
         loc["x"] = max(0, min(int(loc.get("x") or 0), width - _dim(loc["width"])))
         loc["y"] = max(0, min(int(loc.get("y") or 0), height - _dim(loc["height"])))
 
+    if signature_only:  # VIS-8: where everything stands before any edge is drawn; two candidates with one signature give one picture
+        return (width, height, tuple((sec, it["id"], it["x"], it["y"]) for sec in LOC_SECTIONS for it in items.get(sec, [])),
+                tuple(m["path"] for m in items.get("membrane-visualizations", [])),
+                tuple((lb["x"], lb["y"]) for lb in items.get("label-locations", [])))
+
+    # VIS-8: a reaction with no enzyme is a point whose substrate edges the writer hides, so the visible product edge has to
+    # start at the substrate. The layered layout puts the point beside its substrate, but when the substrate stands in
+    # another group (another compartment, or behind a fold) the product edge started in empty space. Such a point moves to
+    # the border of its first main substrate, on the side facing the products.
+    for hub, hubs, roles in pending:
+        if hubs or not blocks[hub].virtual:
+            continue
+        subs = [k for _, k, _, r in roles if r == "in" and k is not None and k != hub and not blocks[k].virtual]
+        prods = [k for _, k, _, r in roles if r == "out" and k is not None and k != hub and not blocks[k].virtual]
+        if not subs or not prods:
+            continue
+        jx, jy = blocks[hub].center()
+
+        def gap(k):
+            r = own_rect(k)
+            return max(r[0] - jx, jx - r[2], r[1] - jy, jy - r[3], 0)
+
+        if min(gap(k) for k in subs) <= JUNCTION_GAP:
+            continue
+        s0 = next((k for k in subs if k not in pill_of), subs[0])
+        tx = sum(blocks[k].center()[0] for k in prods) / len(prods)
+        ty = sum(blocks[k].center()[1] for k in prods) / len(prods)
+        (px, py), _ = _side_point(own_rect(s0), _sides_toward(own_rect(s0), tx, ty)[0])
+        blocks[hub].x, blocks[hub].y = px - JUNCTION_W // 2, py - JUNCTION_H // 2
+
     # ---- edges: PathBank's cubic per edge (see SIDES above). A reaction's substrates meet at the middle of its enzyme's
     # left side, its products leave from the right side (top or bottom when the node lies behind the enzyme); a
     # transporter on a membrane takes its inner cargo on the side facing in and its outer cargo on the side facing out
@@ -1635,7 +1685,17 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
     bound = (width, height)
     drawn: List[List[Tuple[float, float]]] = []  # visible edges drawn so far, as sampled polylines
     plain: Dict[Tuple[Any, Any], Any] = {}  # (start block, end block) -> chosen ends of a curve with no hub end
-    for eid, (a, b) in edge_ends.items():
+    plain_h: Dict[Tuple[Any, Any], float] = {}  # VIS-8: (start block, end block) -> height of the arch chosen for the pair
+
+    def span(item):
+        ra_, rb_ = own_rect(item[1][0]), own_rect(item[1][1])
+        return abs((ra_[0] + ra_[2]) - (rb_[0] + rb_[2])) + abs((ra_[1] + ra_[3]) - (rb_[1] + rb_[3]))
+
+    # VIS-8: reaction and transport edges first (as before), then the interactions shortest first, so the arches of one
+    # hub nest (a longer span stands higher) and an interaction never changes where a process edge goes
+    order_edges = [it for it in edge_ends.items() if it[0] not in interaction_edges]
+    order_edges += sorted((it for it in edge_ends.items() if it[0] in interaction_edges), key=span)
+    for eid, (a, b) in order_edges:
         e = edges[eid]
         ra, rb = own_rect(a), own_rect(b)
         if a == b:  # a connector from an enzyme to its own reaction: the shaft through the enzyme (its first location)
@@ -1671,25 +1731,33 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
                     break
             if score is not None and score[:2] == (False, 0):
                 break
-        if score is not None and score[0] and fa is None and fb is None:
-            # VIS-7: an interaction between two nodes far apart (enzyme to enzyme along a chain): a flat arch over or
-            # under the boxes between them, from the facing top or bottom sides, before any right-angle route
-            if (b, a) in plain:  # the other edge of the pair already chose its ends: the same arch
-                arc_ends = [(ends_a[0], ends_b[0])]
+        if fa is None and fb is None and score is not None and (score[0] or score[1] or (b, a) in plain_h):
+            # VIS-7/VIS-8: an interaction between two nodes far apart (enzyme to enzyme): besides the straight curve, flat
+            # arches round the boxes between them; the cheapest clear one wins (a crossing with another edge costs
+            # CROSS_COST units of length). An arch leaves the sides that face along the pair's longer axis: top or bottom
+            # for a pair side by side, left or right for a pair one above the other (VIS-7 review F3). The pair's second
+            # edge takes the first one's arch (review F2).
+            horizontal = abs(ra[0] + ra[2] - rb[0] - rb[2]) >= abs(ra[1] + ra[3] - rb[1] - rb[3])
+            if (b, a) in plain_h:
+                arc_ends, heights = [(ends_a[0], ends_b[0])], [plain_h[(b, a)]]
             else:
-                arc_ends = [(_side_point(ra, s), _side_point(rb, s)) for s in ("T", "B")]
-            chord = ((rb[0] + rb[2] - ra[0] - ra[2]) ** 2 + (rb[1] + rb[3] - ra[1] - ra[3]) ** 2) ** 0.5 / 2
-            for h in (h for h in ARC_HEIGHTS if h <= 0.4 * chord + 60):
+                arc_ends = [(_side_point(ra, s), _side_point(rb, s)) for s in (("T", "B") if horizontal else ("L", "R"))]
+                chord = ((rb[0] + rb[2] - ra[0] - ra[2]) ** 2 + (rb[1] + rb[3] - ra[1] - ra[3]) ** 2) ** 0.5 / 2
+                heights = [h for h in ARC_HEIGHTS if h <= 0.4 * chord + 60]
+            cands = [] if score[0] or (b, a) in plain_h else [(CROSS_COST * score[1] + _plen(best[5]), 0, best, pick, None)]
+            for h in heights:
                 for (p0, n0), (p3, n3) in arc_ends:
                     if p0 == p3:
                         continue
                     path, c1, c2 = _arc(p0, n0, p3, n3, h, bound)
                     pts = _bezier_points(p0, c1, c2, p3)
                     if _clear(pts, obstacles):
-                        best, score, pick = (path, p0, c1, p3, c2, pts), (False, _crossings(pts, drawn), 0), ((p0, n0), (p3, n3))
-                        break
-                if not score[0]:
-                    break
+                        cands.append((CROSS_COST * _crossings(pts, drawn) + _plen(pts), 1, (path, p0, c1, p3, c2, pts), ((p0, n0), (p3, n3)), h))
+            if cands:
+                cost, _, cb, cpick, h = min(cands, key=lambda c: c[:2])
+                best, score, pick = cb, (False, 0, 0), cpick
+                if h is not None:
+                    plain_h[(a, b)] = h
         if score is not None and score[0]:
             # VIS-5 (STRUCTURE_DIFF G1): PathBank keeps an edge one cubic (rarely two). Before a grid route: the same
             # ends with the control points further out, then one smooth bend round the boxes (two cubics through a
@@ -1836,6 +1904,75 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
     for loc in hidden_locs:  # not drawn; kept inside the (possibly shorter) canvas
         loc["y"] = max(0, min(int(loc.get("y") or 0), height - _dim(loc["height"])))
     return width, height
+
+
+CROSS_W, THROUGH_W, LEN_W, INT_LEN_W = 0.15, 1.0, 0.00002, 0.00012  # VIS-8: _layout_cost weights (see there)
+
+
+def _layout_cost(items: Dict[str, List[Dict[str, Any]]], width: int, height: int) -> float:
+    """VIS-8: how hard a laid-out picture is to read; lower is better. Legibility counts as -ln(scale), the scale a
+    picture is shrunk by to fit a VIEW_W x VIEW_H box (text and boxes shrink with it); each crossing of two visible
+    edges adds CROSS_W, each edge through a node box THROUGH_W, edge length LEN_W per unit and an interaction edge
+    INT_LEN_W per unit (a long arch over a chain is what the PO asked to shorten). Worked examples (enterobactin,
+    coenzyme A, furochromone) are in docs/webserver/results/VIS-8.md."""
+    rects = [(float(it["x"]), float(it["y"]), float(it["x"]) + _dim(it["width"]), float(it["y"]) + _dim(it["height"]))
+             for sec in LOC_SECTIONS for it in items.get(sec, []) if not it.get("hidden")]
+    inter = {int(m["edge-id"]) for iv in items.get("interaction-visualizations", []) for val in iv.values()
+             for m in (val if isinstance(val, list) else []) if isinstance(m, dict) and m.get("edge-id") is not None}
+    polys: List[List[Tuple[float, float]]] = []
+    total = int_total = through = 0.0
+    for e in items.get("edges", []):
+        pts = _path_points(str(e.get("path") or ""))
+        if e.get("hidden") or len(pts) < 4:
+            continue
+        samp = [pts[0]]
+        for i in range(0, len(pts) - 3, 3):
+            samp += _bezier_points(pts[i], pts[i + 1], pts[i + 2], pts[i + 3], 12)[1:]
+        polys.append(samp)
+        ln = _plen(samp)
+        total += ln
+        int_total += ln if int(e["id"]) in inter else 0
+        a, b = samp[0], samp[-1]
+        own = lambda q, r: r[0] - 4 <= q[0] <= r[2] + 4 and r[1] - 4 <= q[1] <= r[3] + 4  # noqa: E731
+        through += any(r[0] + 6 < q[0] < r[2] - 6 and r[1] + 6 < q[1] < r[3] - 6 for q in samp for r in rects
+                       if not (own(a, r) or own(b, r)))
+    crossings = sum(_crossings(p, polys[i + 1:]) for i, p in enumerate(polys))
+    scale = min(VIEW_W / max(1, width), VIEW_H / max(1, height))
+    return -math.log(scale) + CROSS_W * crossings + THROUGH_W * through + LEN_W * total + INT_LEN_W * int_total
+
+
+def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], ir: Optional[Dict[str, Any]] = None,
+             key_ids: Optional[Dict[str, Dict[str, int]]] = None) -> Tuple[int, int]:
+    """Re-place every visual element of ``items`` in place; returns the new canvas (width, height).
+
+    VIS-8: a long chain can fold into rows at several widths and the picture can be packed to several aspects
+    (LAYOUT_CANDIDATES). Candidates whose node positions come out the same are one shape (cheap check before any edge is
+    drawn); each distinct shape is laid out on a copy of the items (ids from a throw-away counter) and scored with
+    _layout_cost; the best is laid out for real (a tie keeps the first, VIS-7's), so a different shape is only taken when
+    it makes the picture easier to read. A picture with one shape only is laid out once."""
+    first = LAYOUT_CANDIDATES[0]
+    if os.environ.get("T2PW_LAYOUT_CHOOSER", "1") == "0" or len(items.get("edges", [])) > CHOOSER_MAX_EDGES:  # off, or too slow: VIS-7's canvas shape
+        return _relayout(items, new_id, ir, key_ids, *first)
+    unique: Dict[Any, Tuple[float, float]] = {}  # layout signature -> first candidate with it
+    for cand in LAYOUT_CANDIDATES:
+        try:
+            unique.setdefault(_relayout(copy.deepcopy(items), lambda: 0, ir, key_ids, *cand, signature_only=True), cand)
+        except Exception:  # a shape that cannot be laid out is not a candidate
+            if cand == first:
+                break
+    best, pick = None, first
+    for cand in list(unique.values()) if len(unique) > 1 else []:  # one shape only: nothing to compare
+        trial, ids = copy.deepcopy(items), itertools.count(1 << 40)
+        try:
+            w, h = _relayout(trial, lambda: next(ids), ir, key_ids, *cand)
+            cost = _layout_cost(trial, w, h)
+        except Exception:
+            if cand == first:
+                break
+            continue
+        if best is None or cost < best - 1e-9:
+            best, pick = cost, cand
+    return _relayout(items, new_id, ir, key_ids, *pick)
 
 
 def _shorten_long_paths(items: Dict[str, List[Dict[str, Any]]]) -> None:
