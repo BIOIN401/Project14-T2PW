@@ -111,10 +111,12 @@ def test_v2_chain_reads_left_to_right(monkeypatch):
     row_of = {}
     for y in rows:
         row_of[y] = next((row_of[r] for r in row_of if abs(r - y) < 300), len(set(row_of.values())))
-    for (ax, ay), (bx, by) in zip(xs, xs[1:]):
+    for (na, (ax, ay)), (nb, (bx, by)) in zip(zip(chain, xs), list(zip(chain, xs))[1:]):
         ra, rb = row_of[ay], row_of[by]
-        # isochorismate and its product share one enzyme (pc_4) in the fixture, so they may stand in the same column
-        assert rb == ra + 1 or (rb == ra and (bx >= ax if ra % 2 == 0 else bx <= ax)), dict(zip(chain, xs))
+        # isochorismate and its product share one enzyme (pc_4) in the fixture, so only that pair may stand in one column
+        shared = (na, nb) == ("isochorismate", "2,3-dihydro-2,3-dihydroxybenzoate")
+        fwd = (bx > ax if ra % 2 == 0 else bx < ax) or (shared and bx == ax)
+        assert rb == ra + 1 or (rb == ra and fwd), dict(zip(chain, xs))
     assert xs[0][0] < xs[1][0] and row_of[xs[0][1]] == 0, dict(zip(chain, xs))  # it starts left to right
 
 

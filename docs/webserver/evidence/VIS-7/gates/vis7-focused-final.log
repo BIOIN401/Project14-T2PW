@@ -1,0 +1,55 @@
+HEAD 6f4974333c89bf1f2d9df7f0daccfa18953ffae9
+STATUS_BEGIN
+STATUS_END
+== pwml
+T2PW: C:\t\vis-pw7\src\t2pw\__init__.py
+........................................................................ [ 25%]
+........................................................................ [ 50%]
+........................................................................ [ 75%]
+.....................................................................    [100%]
+285 passed in 7.19s
+EXIT_pwml=0
+== render
+T2PW: C:\t\vis-pw7\src\t2pw\__init__.py
+.................................................                        [100%]
+49 passed in 8.42s
+EXIT_render=0
+== fpw
+T2PW: C:\t\vis-pw7\src\t2pw\__init__.py
+......................                                                   [100%]
+22 passed in 0.62s
+EXIT_fpw=0
+== corpus
+T2PW: C:\t\vis-pw7\src\t2pw\__init__.py
+.........                                                                [100%]
+9 passed in 4.16s
+EXIT_corpus=0
+FOCUSED_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 129508d93d73271ba877fc5efe10c71b32d82e12  [git, worktree dirty=True]
+label                   : vis7-focused-final
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/vis-pw7-work/scripts/focused.sh final
+cwd                     : C:\t\vis-pw7-work
+root PID / process group: 684344 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 3000 s
+duration                : 26.30 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 24  681640:bash.exe, 682176:bash.exe, 679588:git.exe, 682824:bash.exe, 680072:bash.exe, 682084:python.exe, 684212:bash.exe, 684640:python.exe, 683424:python.exe, 683500:bash.exe, 685460:bash.exe, 685812:tail.exe, 685840:python.exe, 678756:python.exe, 680600:tail.exe, 682620:python.exe, 685092:bash.exe, 685828:bash.exe, 685252:bash.exe, 685764:python.exe, 685820:bash.exe, 685832:python.exe, 686368:bash.exe, 686392:git.exe
+descendants terminated  : 24  678756, 679588, 680072, 680600, 681640, 682084, 682176, 682620, 682824, 683424, 683500, 684212, 684640, 685092, 685252, 685460, 685764, 685812, 685820, 685828, 685832, 685840, 686368, 686392
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-pw7-work/logs/vis7-focused-final.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=VIS-7  acquired=True  released=True
+pre-existing (reported, NEVER killed): 15
+================================================
+BW_EXIT=0

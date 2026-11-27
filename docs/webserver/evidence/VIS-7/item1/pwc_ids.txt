@@ -1,0 +1,19 @@
+# PathWhiz dev-DB export of our enterobactin PWML (VIS-5 r27 checkpoint, f0005): compound name -> pwc-id assigned by the clean dev DB
+chorismate:             <pwc-id>PW_C000002</pwc-id>
+Pyruvic acid:             <pwc-id>PW_C000005</pwc-id>
+L-serine:             <pwc-id>PW_C000007</pwc-id>
+enterobactin:             <pwc-id>PW_C000006</pwc-id>
+isochorismate:             <pwc-id>PW_C000003</pwc-id>
+
+# the same compounds in PathBank's own PW000779 carry production pwc-ids (sample):
+            <pwc-id>PW_C001420</pwc-id>
+            <pwc-id>PW_C000940</pwc-id>
+            <pwc-id>PW_C000063</pwc-id>
+            <pwc-id>PW_C001099</pwc-id>
+            <pwc-id>PW_C040034</pwc-id>
+
+# our PWML as written has no pwc-id at all:
+0
+# viewer image URL template (app/assets/javascripts/backbone/templates/svg_visualization/image.jst.eco):
+http://moldb.wishartlab.com/molecules/<pwc_id>/image.png
+# dev DB assigns pwc_id = PW_C + (last compound row id + 1) (app/models/data/compound.rb set_pathwhiz_id), on a truncated DB

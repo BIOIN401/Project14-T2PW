@@ -1,0 +1,164 @@
+{
+  "label": "vis7-corpus-c2",
+  "command": [
+    "C:\\Program Files\\Git\\bin\\bash.exe",
+    "C:/t/vis-pw7-work/scripts/corpus.sh",
+    "c2",
+    "C:/t/vis-pw7/src"
+  ],
+  "cwd": "C:\\t\\vis-pw7-work",
+  "started_at": "2026-11-27T01:45:53+00:00",
+  "finished_at": "2026-11-27T01:46:25+00:00",
+  "duration_seconds": 31.581166399999347,
+  "timeout_seconds": 3000.0,
+  "root_pid": 682992,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 672688,
+      "name": "bash.exe",
+      "ppid": 682588
+    },
+    {
+      "pid": 682588,
+      "name": "bash.exe",
+      "ppid": 682992
+    },
+    {
+      "pid": 676336,
+      "name": "bash.exe",
+      "ppid": 682588
+    },
+    {
+      "pid": 679696,
+      "name": "python.exe",
+      "ppid": 682748
+    },
+    {
+      "pid": 682748,
+      "name": "python.exe",
+      "ppid": 676336
+    },
+    {
+      "pid": 684148,
+      "name": "bash.exe",
+      "ppid": 682588
+    },
+    {
+      "pid": 684972,
+      "name": "git.exe",
+      "ppid": 684148
+    }
+  ],
+  "descendants_terminated": [
+    672688,
+    676336,
+    679696,
+    682588,
+    682748,
+    684148,
+    684972
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 19832,
+      "name": "python.exe"
+    },
+    {
+      "pid": 26712,
+      "name": "python.exe"
+    },
+    {
+      "pid": 27660,
+      "name": "python.exe"
+    },
+    {
+      "pid": 31900,
+      "name": "python.exe"
+    },
+    {
+      "pid": 32200,
+      "name": "python.exe"
+    },
+    {
+      "pid": 32412,
+      "name": "python.exe"
+    },
+    {
+      "pid": 32428,
+      "name": "python.exe"
+    },
+    {
+      "pid": 32696,
+      "name": "python.exe"
+    },
+    {
+      "pid": 70144,
+      "name": "python.exe"
+    },
+    {
+      "pid": 93728,
+      "name": "python.exe"
+    },
+    {
+      "pid": 602564,
+      "name": "python.exe"
+    },
+    {
+      "pid": 606152,
+      "name": "python.exe"
+    },
+    {
+      "pid": 621184,
+      "name": "python.exe"
+    },
+    {
+      "pid": 682136,
+      "name": "python.exe"
+    },
+    {
+      "pid": 682168,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/vis-pw7-work/logs/vis7-corpus-c2.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "221ad27fc91c08ffb7e8fb25f790faa261ef6a4e",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "VIS-7",
+    "token": "VIS-7:682136:0a55120106298480",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
