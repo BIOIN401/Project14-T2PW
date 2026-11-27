@@ -1,0 +1,56 @@
+HEAD 43ece56507f34719061bd962ea653ba8944a54e4
+STATUS_BEGIN
+STATUS_END
+== pwml
+T2PW: C:\t\vis-pw8\src\t2pw\__init__.py
+........................................................................ [ 24%]
+........................................................................ [ 48%]
+........................................................................ [ 73%]
+........................................................................ [ 97%]
+.......                                                                  [100%]
+295 passed in 8.18s
+EXIT_pwml=0
+== render
+T2PW: C:\t\vis-pw8\src\t2pw\__init__.py
+.................................................                        [100%]
+49 passed in 7.85s
+EXIT_render=0
+== fpw
+T2PW: C:\t\vis-pw8\src\t2pw\__init__.py
+......................                                                   [100%]
+22 passed in 0.74s
+EXIT_fpw=0
+== corpus
+T2PW: C:\t\vis-pw8\src\t2pw\__init__.py
+.........                                                                [100%]
+9 passed in 3.07s
+EXIT_corpus=0
+FOCUSED_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 0e2ecf7a67ae8e972f4cf530eda9e2f419703ec0  [git, worktree dirty=True]
+label                   : vis8r-focused
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/vis-pw8-work/scripts/focused8.sh f
+cwd                     : C:\t\vis-pw8-work
+root PID / process group: 241552 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 3000 s
+duration                : 23.73 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 17  239832:bash.exe, 246576:bash.exe, 248336:bash.exe, 250516:git.exe, 230128:bash.exe, 243604:bash.exe, 250080:python.exe, 243656:python.exe, 195184:python.exe, 213696:bash.exe, 247952:python.exe, 243536:python.exe, 244412:bash.exe, 246216:python.exe, 242716:bash.exe, 249552:python.exe, 249728:python.exe
+descendants terminated  : 17  195184, 213696, 230128, 239832, 242716, 243536, 243604, 243656, 244412, 246216, 246576, 247952, 248336, 249552, 249728, 250080, 250516
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-pw8-work/logs/vis8r_focused.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=VIS-8  acquired=True  released=True
+pre-existing (reported, NEVER killed): 12
+================================================
+BW_EXIT=0
