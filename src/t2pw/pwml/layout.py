@@ -35,7 +35,7 @@ HGAP, VGAP, MEMBER_GAP, MEMBERS_PER_ROW = 160, 60, 10, 3  # PathBank substrate-t
 JUNCTION_W, JUNCTION_H = 40, 20
 STACK_DX, STACK_DY = 10, 38  # VIS-5: offset of each further enzyme in a reaction's stack (PathBank PW000779: ~5, ~22)
 OBSTACLE_PAD, CELL = 8, 10
-SNAKE_MIN, SNAKE_OVER = 1800, 1.8  # VIS-5: a group folds into rows when wider than 1.8x the picture's square-ish width
+SNAKE_MIN, SNAKE_OVER = 1800, 1.5  # VIS-5: a group folds into rows when wider than SNAKE_OVER x the picture's square-ish width (VIS-8: was 1.8)
 ASPECT = 1.5  # target width:height of the packed picture (PathBank content: median 1.4)
 MEMBRANE_TEMPLATE = 220  # PathWhiz "Simple Membrane"
 # Labels as in PathBank's own files (PW000001: template 235 "Simple Label - Large", scale 1.9). PathWhiz draws it as a
@@ -460,7 +460,12 @@ BEND_OFFSETS = (90, -90, 180, -180, 300, -300, 450, -450)  # VIS-5: how far a be
 VIA_PAD = 60  # VIS-5: a bent edge passes this far off the side of the box it goes round
 
 
+CROSS_COST = 300  # VIS-8: length an interaction edge may add to avoid crossing one other edge
 ARC_HEIGHTS = (60, 110, 170, 250, 350, 480)  # VIS-7: how far an arc's control points stand off the boxes' top or bottom
+
+
+def _plen(pts) -> float:
+    return sum(((q[0] - o[0]) ** 2 + (q[1] - o[1]) ** 2) ** 0.5 for o, q in zip(pts, pts[1:]))
 
 
 def _arc(p0, n0, p3, n3, h: float, bound: Optional[Tuple[int, int]] = None):
@@ -979,6 +984,7 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
                 flow.append((k, hub) if left else (hub, k))
     n_flow_after_transports = len(flow)
     hub_set = set(hub_of.values())
+    interaction_edges: set = set()  # VIS-8: edges of interactions (no hub end): drawn last, shortest first
     for iv in items.get("interaction-visualizations", []):
         ends: Dict[str, List[Tuple[Dict[str, Any], Any]]] = {"Left": [], "Right": []}
         for sec, fld in (("interaction_compound_visualizations", "compound-location-id"),
@@ -1001,6 +1007,7 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
             for m, k in ends.get(side, []):
                 if m.get("edge-id") is not None and int(m["edge-id"]) in edges and (k or own) is not None:
                     edge_ends[int(m["edge-id"])] = (k or own, other if other is not None else (k or own))
+                    interaction_edges.add(int(m["edge-id"]))
 
     # Edges no visualization member points at: the IR's enzyme/transporter connectors. v2 draws a reaction
     # through its enzyme, so such a connector runs from its member to the reaction's hub (a point when equal).
@@ -1635,7 +1642,17 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
     bound = (width, height)
     drawn: List[List[Tuple[float, float]]] = []  # visible edges drawn so far, as sampled polylines
     plain: Dict[Tuple[Any, Any], Any] = {}  # (start block, end block) -> chosen ends of a curve with no hub end
-    for eid, (a, b) in edge_ends.items():
+    plain_h: Dict[Tuple[Any, Any], float] = {}  # VIS-8: (start block, end block) -> height of the arch chosen for the pair
+
+    def span(item):
+        ra_, rb_ = own_rect(item[1][0]), own_rect(item[1][1])
+        return abs((ra_[0] + ra_[2]) - (rb_[0] + rb_[2])) + abs((ra_[1] + ra_[3]) - (rb_[1] + rb_[3]))
+
+    # VIS-8: reaction and transport edges first (as before), then the interactions shortest first, so the arches of one
+    # hub nest (a longer span stands higher) and an interaction never changes where a process edge goes
+    order_edges = [it for it in edge_ends.items() if it[0] not in interaction_edges]
+    order_edges += sorted((it for it in edge_ends.items() if it[0] in interaction_edges), key=span)
+    for eid, (a, b) in order_edges:
         e = edges[eid]
         ra, rb = own_rect(a), own_rect(b)
         if a == b:  # a connector from an enzyme to its own reaction: the shaft through the enzyme (its first location)
@@ -1671,25 +1688,33 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
                     break
             if score is not None and score[:2] == (False, 0):
                 break
-        if score is not None and score[0] and fa is None and fb is None:
-            # VIS-7: an interaction between two nodes far apart (enzyme to enzyme along a chain): a flat arch over or
-            # under the boxes between them, from the facing top or bottom sides, before any right-angle route
-            if (b, a) in plain:  # the other edge of the pair already chose its ends: the same arch
-                arc_ends = [(ends_a[0], ends_b[0])]
+        if fa is None and fb is None and score is not None and (score[0] or score[1] or (b, a) in plain_h):
+            # VIS-7/VIS-8: an interaction between two nodes far apart (enzyme to enzyme): besides the straight curve, flat
+            # arches round the boxes between them; the cheapest clear one wins (a crossing with another edge costs
+            # CROSS_COST units of length). An arch leaves the sides that face along the pair's longer axis: top or bottom
+            # for a pair side by side, left or right for a pair one above the other (VIS-7 review F3). The pair's second
+            # edge takes the first one's arch (review F2).
+            horizontal = abs(ra[0] + ra[2] - rb[0] - rb[2]) >= abs(ra[1] + ra[3] - rb[1] - rb[3])
+            if (b, a) in plain_h:
+                arc_ends, heights = [(ends_a[0], ends_b[0])], [plain_h[(b, a)]]
             else:
-                arc_ends = [(_side_point(ra, s), _side_point(rb, s)) for s in ("T", "B")]
-            chord = ((rb[0] + rb[2] - ra[0] - ra[2]) ** 2 + (rb[1] + rb[3] - ra[1] - ra[3]) ** 2) ** 0.5 / 2
-            for h in (h for h in ARC_HEIGHTS if h <= 0.4 * chord + 60):
+                arc_ends = [(_side_point(ra, s), _side_point(rb, s)) for s in (("T", "B") if horizontal else ("L", "R"))]
+                chord = ((rb[0] + rb[2] - ra[0] - ra[2]) ** 2 + (rb[1] + rb[3] - ra[1] - ra[3]) ** 2) ** 0.5 / 2
+                heights = [h for h in ARC_HEIGHTS if h <= 0.4 * chord + 60]
+            cands = [] if score[0] or (b, a) in plain_h else [(CROSS_COST * score[1] + _plen(best[5]), 0, best, pick, None)]
+            for h in heights:
                 for (p0, n0), (p3, n3) in arc_ends:
                     if p0 == p3:
                         continue
                     path, c1, c2 = _arc(p0, n0, p3, n3, h, bound)
                     pts = _bezier_points(p0, c1, c2, p3)
                     if _clear(pts, obstacles):
-                        best, score, pick = (path, p0, c1, p3, c2, pts), (False, _crossings(pts, drawn), 0), ((p0, n0), (p3, n3))
-                        break
-                if not score[0]:
-                    break
+                        cands.append((CROSS_COST * _crossings(pts, drawn) + _plen(pts), 1, (path, p0, c1, p3, c2, pts), ((p0, n0), (p3, n3)), h))
+            if cands:
+                cost, _, cb, cpick, h = min(cands, key=lambda c: c[:2])
+                best, score, pick = cb, (False, 0, 0), cpick
+                if h is not None:
+                    plain_h[(a, b)] = h
         if score is not None and score[0]:
             # VIS-5 (STRUCTURE_DIFF G1): PathBank keeps an edge one cubic (rarely two). Before a grid route: the same
             # ends with the control points further out, then one smooth bend round the boxes (two cubics through a
