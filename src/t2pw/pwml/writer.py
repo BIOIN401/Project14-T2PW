@@ -4,8 +4,10 @@ import argparse
 import json
 import math
 import re
+import unicodedata
 from collections import defaultdict
 from dataclasses import dataclass, field
+from functools import lru_cache
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, Dict, List, Optional, Sequence, Tuple
@@ -523,20 +525,43 @@ def _trusted_compound_pwc_id(
     return _nonempty_text(db_row.get("pwc_id") or record.get("pwc_id") or mapped_ids.get("pwc_id"))
 
 
-# PathBank compound ids that must not get a derived pwc-id (read-only SELECTs on PathBank `compounds`, 2026-11-26, VIS-9):
-# - PW_C%06d(id) is a *different* compound's pwc_id (12 of 276,783 rows; 438 rows in all have pwc_id != PW_C%06d(id),
-#   for the other 426 the derived pwc_id is unused, so PathWhiz finds no structure: same as writing none);
-# - 40747 "1,4-dihydroxy-2-naphthoate": PathBank's MolDB structure is its CoA thioester (same InChIKey as 40746).
-_PWC_ID_SKIP = frozenset(
-    {98041, 98042, 265982, 266704, 268987, 268993, 269024, 276999, 277933, 277957, 278008, 285452, 40747}
-)
+_PWC_ID_SKIP_PATH = PROJECT_ROOT / "data" / "pwc_id_skip.json"
+_GREEK_LETTERS = {"α": "alpha", "β": "beta", "γ": "gamma", "δ": "delta", "ε": "epsilon",
+                  "ω": "omega"}
+_STEREO_PREFIX = re.compile(r"^(l|d|\(r\)|\(s\)|\(e\)|\(z\))-")
 
 
-def _compound_name_key(value: Any) -> str:
+@lru_cache(maxsize=1)
+def _pwc_id_skip() -> Optional[frozenset]:
+    """PathBank compound ids that must not get a derived pwc-id (``data/pwc_id_skip.json``, built by
+    ``python -m t2pw.pwml.refresh_pwc_id_skip``): rows whose pwc_id is not ``PW_C%06d(id)`` and rows with a wrong
+    structure. ``None`` when the file is missing or unreadable: then no pwc-id is derived at all (fail closed)."""
+    try:
+        data = json.loads(_PWC_ID_SKIP_PATH.read_text(encoding="utf-8"))
+        return frozenset(int(i) for i in data["derivation_mismatch"]) | frozenset(int(i) for i in data["structure_errors"])
+    except Exception:  # noqa: BLE001 - a missing skip list must never let a wrong picture through
+        return None
+
+
+def _compound_name_parts(value: Any) -> Tuple[str, str]:
+    """(leading stereo descriptor, comparison key) of a compound name. Greek letters are spelled out (alpha, beta, ...),
+    so beta-alanine never reads as alanine; one leading L- / D- / (R)- / (S)- / (E)- / (Z)- is split off; a trailing
+    "ic acid" reads as "ate"; punctuation and spaces drop, letters of any script stay."""
     text = str(value or "").casefold().strip()
-    text = re.sub(r"^(l|d|\(r\)|\(s\))-", "", text)
-    text = re.sub(r"ic acid$", "ate", text)
-    return re.sub(r"[^0-9a-z]+", "", text)
+    for letter, word in _GREEK_LETTERS.items():
+        text = text.replace(letter, word)
+    text = "".join(c for c in unicodedata.normalize("NFKD", text) if not unicodedata.combining(c))
+    match = _STEREO_PREFIX.match(text)
+    prefix = match.group(1) if match else ""
+    text = re.sub(r"ic acid$", "ate", text[match.end():] if match else text)
+    return prefix, re.sub(r"[\W_]+", "", text)
+
+
+def _same_compound_name(ours: Any, theirs: Any) -> bool:
+    """Same name up to case, punctuation, acid / -ate and a stereo descriptor only ONE side states (serine vs L-Serine);
+    two different descriptors (D- vs L-, (S)- vs (R)-) never match."""
+    (p1, k1), (p2, k2) = _compound_name_parts(ours), _compound_name_parts(theirs)
+    return bool(k1) and k1 == k2 and (not p1 or not p2 or p1 == p2)
 
 
 def _mapped_compound_pwc_id(record: Dict[str, Any], db_row: Dict[str, Any], rid: int) -> Optional[str]:
@@ -545,7 +570,8 @@ def _mapped_compound_pwc_id(record: Dict[str, Any], db_row: Dict[str, Any], rid:
     full PathBank name held for that id agrees with the name we write. Short names never count (``MK`` matched
     Melleolide K, ``UMP`` a muramoyl peptide)."""
     pid = _to_positive_int(record.get("pw_compound_id") or record.get("pathbank_compound_id"))
-    if pid is None or pid != rid or pid in _PWC_ID_SKIP:
+    skip = _pwc_id_skip()
+    if pid is None or pid != rid or skip is None or pid in skip:
         return None
     meta = record.get("mapping_meta") if isinstance(record.get("mapping_meta"), dict) else {}
     match = record.get("db_match") if isinstance(record.get("db_match"), dict) else {}
@@ -558,8 +584,8 @@ def _mapped_compound_pwc_id(record: Dict[str, Any], db_row: Dict[str, Any], rid:
     for cand in match.get("candidates") or []:
         if isinstance(cand, dict) and _to_positive_int(cand.get("id")) == pid:
             names.append(cand.get("name"))
-    ours = _compound_name_key(db_row.get("name") or record.get("name"))
-    if not ours or ours not in {_compound_name_key(n) for n in names if n}:
+    ours = db_row.get("name") or record.get("name")
+    if not any(_same_compound_name(ours, n) for n in names if n):
         return None
     return f"PW_C{pid:06d}"
 
@@ -1335,7 +1361,15 @@ class DeterministicPwmlBuilder:
                             protein_key_by_db_id[db_id] = key
 
         self.section_items["compounds"] = []
+        # VIS-9: every trusted pwc-id first, so a derived one never repeats one (whichever record comes first).
         written_pwc_ids: set = set()
+        for record in entities.get("compounds", []) if isinstance(entities.get("compounds"), list) else []:
+            if isinstance(record, dict):
+                held_row = record.get("db_row") if isinstance(record.get("db_row"), dict) else {}
+                held_ids = record.get("mapped_ids") if isinstance(record.get("mapped_ids"), dict) else {}
+                held = _trusted_compound_pwc_id(record, held_row, held_ids)
+                if held is not None:
+                    written_pwc_ids.add(held)
         for record in entities.get("compounds", []) if isinstance(entities.get("compounds"), list) else []:
             if not isinstance(record, dict):
                 continue
@@ -1365,10 +1399,10 @@ class DeterministicPwmlBuilder:
             pwc_id = _trusted_compound_pwc_id(record, db_row, mapped_ids)
             if pwc_id is None:
                 pwc_id = _mapped_compound_pwc_id(record, db_row, rid)
-                if pwc_id in written_pwc_ids:  # a second record under the same id: a repeat pwc-id fails PathWhiz's uniqueness
+                if pwc_id in written_pwc_ids:  # a repeat pwc-id fails PathWhiz's uniqueness: keep the first / trusted one
                     pwc_id = None
-            if pwc_id is not None:
-                written_pwc_ids.add(pwc_id)
+                if pwc_id is not None:
+                    written_pwc_ids.add(pwc_id)
             short_name = _trusted_compound_short_name(record, db_row)
             compound_item = {
                 "id": rid,
