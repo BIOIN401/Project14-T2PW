@@ -47,7 +47,7 @@ section 8.
    aspect) (1.8, 1.5) [VIS-7's own], (1.5, 1.5), (1.2, 1.5), (1.8, 1.2), (1.5, 1.2), (1.2, 1.2). Each is laid out on a deep
    copy of the items (ids from a throw-away counter, so no real id moves) and scored by `_layout_cost`; the best is laid out
    for real. A tie keeps the first, so VIS-7's layout survives wherever nothing is better; a candidate that raises is
-   skipped; `T2PW_LAYOUT_CHOOSER=0` gives VIS-7's layout exactly (kill switch for the server).
+   skipped; `T2PW_LAYOUT_CHOOSER=0` = the chooser off: VIS-7's canvas shape (fold width and aspect); the VIS-8 edge rules (edge order, arch rules, moved reaction points) stay; a full rollback is a revert (switch for the server).
    `_layout_cost` = -ln(scale) + 0.15 x edge crossings + 1.0 x edges through a node box + 0.00002 x edge length + 0.00012 x
    interaction-edge length, scale = the factor the picture shrinks by to fit a 1100 x 700 box (the PO's "1100 px wide" and the
    landscape shape of PathWhiz's window; text and boxes shrink with it). A smaller canvas wins unless it buys crossings or long
@@ -108,7 +108,7 @@ by the stub fix and the arch rules: ceramide's edge length 10787 -> 14473 (the t
 their substrates, same 0 crossings), enterobactin's interaction length 7673 -> 7780 (+1.4 %, crossings 12 -> 11, longest edge unchanged at
 2281). Coenzyme A trades 3 -> 6 crossings for a canvas 43 % narrower. The first run's weights (box 1100 x 1000, crossings 0.05) shrank
 ceramide and enterobactin too (3415 and 3092 wide) and cut enterobactin's interaction length to 5245, but they read worse in
-PathWhiz, hence the change; its numbers are in `metrics/m_vis8_showcases_run1.json`. `T2PW_LAYOUT_CHOOSER=0` restores VIS-7's layout exactly.
+PathWhiz, hence the change; its numbers are in `metrics/m_vis8_showcases_run1.json`. `T2PW_LAYOUT_CHOOSER=0` = the chooser off: VIS-7's canvas shape (fold width and aspect); the VIS-8 edge rules (edge order, arch rules, moved reaction points) stay; a full rollback is a revert.
 The 97-PWML corpus numbers are in section 6.
 
 ## 4. Content check
@@ -141,7 +141,7 @@ pathways have layouts byte-identical to run 1 and I judged them from their previ
 |---|---|---|
 | ceramide | **same or slightly better** | same canvas and the same clean left-to-right ER pipeline as VIS-7; the two product edges that began in empty space now run from sphingomyelin and sphinganine into ceramide (two long swoops under the chain, still 0 crossings as in VIS-7) |
 | enterobactin | **same** | VIS-7 shape; interaction arches unchanged in kind (total 7673 -> 7780, longest 2281, crossings 12 -> 11) |
-| coenzyme A | **better** | compact serpentine, one reading direction, canvas 5365 -> 3061 wide, boxes larger in the viewer; 3 -> 6 crossings |
+| coenzyme A | **better** | compact serpentine (the third row runs right to left, so the reading direction is mixed), canvas 5365 -> 3061 wide, boxes larger in the viewer; crossings 3 -> 6 |
 | furochromone | **better** | a 4430 x 1133 strip becomes 2420 x 1795; 3 -> 2 crossings |
 | menaquinone | same or marginally tidier | 3160 -> 2615 wide, 5 -> 4 crossings |
 | sour taste | same or marginally tidier | 14 -> 6 crossings, canvas 1196 wide (single-transporter lines remain) |
@@ -162,7 +162,9 @@ kept: same results on `94623fb3`.
 1.28 -> 1.18, label at 1100 px 5.7 -> 6.4 px, visible-edge crossings (sum) 66 -> 60, interaction edges (49): total length 15237 -> 15093,
 longest 2664 -> 2758 (corpus file 4.pwml, one edge, +3.5 %), edges starting in empty space 10 -> 5, box overlaps 7 -> 7.
 (Run 1: width 1945, crossings 79, interaction total 13224, longest 1271.) `relayout` time per call: maximum 0.63 s, total 4.6 s over the 97
-(VIS-7: maximum 0.19 s, total 1.86 s).
+(VIS-7: maximum 0.19 s, total 1.86 s). On the 8 showcases at `43ece565` (final weights, `scripts/timing8.py`): 0.1-0.5 s for seven, **lipid A (133
+edges) 7.7 s**; above 3 s, so `2be114b9` skips the chooser above 120 edges (`CHOOSER_MAX_EDGES`): lipid A 2.3 s per call, output byte-identical (no
+candidate beat VIS-7 there), the other seven unchanged; the corpus (largest 102 edges) is not affected.
 
 ## 7. Dead ends and slips
 
@@ -213,7 +215,7 @@ longest 2664 -> 2758 (corpus file 4.pwml, one edge, +3.5 %), edges starting in e
    the longest edges). Recommendation: (c) now, (b) as a content project.
 2. **Chooser weights: decided.** Option (b), box 1100 x 700 and crossings 0.15, by the orchestrator under PO delegation; applied and
    re-run (sections 4-6). Still one constant each: if the PO wants the smaller canvases for ceramide and enterobactin back, the first
-   run weights (1100 x 1000, 0.05) are in `metrics/m_vis8_showcases_run1.json`; `T2PW_LAYOUT_CHOOSER=0` gives VIS-7 exactly.
+   run weights (1100 x 1000, 0.05) are in `metrics/m_vis8_showcases_run1.json`; `T2PW_LAYOUT_CHOOSER=0` = the chooser off: VIS-7's canvas shape (fold width and aspect); the VIS-8 edge rules (edge order, arch rules, moved reaction points) stay; a full rollback is a revert.
    Enterobactin interaction lines stay as long as in VIS-7 (7780 total); only question 1 (hide, or complexes) shortens them.
 3. **Single-transporter pathways** (lipid A, sour taste, ceramide's CERT) remain the largest source of long lines and crossings
    (lipid A 90 of the 132 crossings over the 9). VIS-7 question 3 still stands (one transporter location per transport, as
