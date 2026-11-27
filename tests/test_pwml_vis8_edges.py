@@ -101,3 +101,11 @@ def test_the_cost_charges_crossings_through_nodes_and_interaction_length():
         {"id": 1, "path": "M0 0 C50 0 100 0 150 0", "hidden": False}, {"id": 2, "path": "M75 150 C75 160 75 190 75 200", "hidden": False}]}
     assert _layout_cost(base, 1000, 700) > _layout_cost(far, 1000, 700) - 0.02  # the crossing adds CROSS_W (lengths differ a little)
     assert _layout_cost(far, 2000, 700) > _layout_cost(far, 1000, 700)  # a wider picture is harder to read
+
+
+def test_chooser_off_gives_the_first_candidates_layout(monkeypatch):
+    from t2pw.pwml.layout import LAYOUT_CANDIDATES
+    monkeypatch.setenv("T2PW_LAYOUT_CHOOSER", "0")
+    off = _interacting_chain(12, 5, 6, public=True)
+    first = _interacting_chain(12, 5, 6, fold=LAYOUT_CANDIDATES[0][0])
+    assert [(l["x"], l["y"]) for l in off["protein-locations"]] == [(l["x"], l["y"]) for l in first["protein-locations"]]

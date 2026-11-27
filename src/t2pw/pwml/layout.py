@@ -1912,11 +1912,19 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
     (LAYOUT_CANDIDATES). Each is laid out on a copy of the items (ids from a throw-away counter) and scored with
     _layout_cost; the best is laid out for real (a tie keeps the first, VIS-7's), so a different shape is only taken when
     it makes the picture easier to read."""
-    best, pick = None, LAYOUT_CANDIDATES[0]
+    first = LAYOUT_CANDIDATES[0]
+    if os.environ.get("T2PW_LAYOUT_CHOOSER", "1") == "0":  # off: VIS-7's layout
+        return _relayout(items, new_id, ir, key_ids, *first)
+    best, pick = None, first
     for cand in LAYOUT_CANDIDATES:
         trial, ids = copy.deepcopy(items), itertools.count(1 << 40)
-        w, h = _relayout(trial, lambda: next(ids), ir, key_ids, *cand)
-        cost = _layout_cost(trial, w, h)
+        try:
+            w, h = _relayout(trial, lambda: next(ids), ir, key_ids, *cand)
+            cost = _layout_cost(trial, w, h)
+        except Exception:  # a shape that cannot be laid out is not a candidate; the first one is laid out for real below
+            if cand == first:
+                break
+            continue
         if best is None or cost < best - 1e-9:
             best, pick = cost, cand
     return _relayout(items, new_id, ir, key_ids, *pick)
