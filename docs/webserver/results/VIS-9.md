@@ -2,7 +2,7 @@
 
 PO ruling (2026-11-26): "can we fix this somehow?" -> yes. Target: OUR patched PathWhiz importer (`t2pw/latest`); the PO
 fixes production PathWhiz. Branch `vis/structures`, worktree `C:/t/vis-pw9`, cut from webserver/refactor `b9534f68`.
-Code `2c760e27` (`src/t2pw/pwml/writer.py`, `tests/test_pwml_vis9_pwc_id.py`); fixture re-record `a86d936e`, `f3e093bd`. Working files `C:/t/vis-pw9-work/` (replays, content checks, PathWhiz runs, `compare.html`). Evidence
+Code `2c760e27` (`src/t2pw/pwml/writer.py`, `tests/test_pwml_vis9_pwc_id.py`); fixture re-record `a86d936e`, `f3e093bd`; review fixes `74ed502d` (`writer.py`, test, new `pwml/refresh_pwc_id_skip.py`, `data/pwc_id_skip.json`). Working files `C:/t/vis-pw9-work/` (replays, content checks, PathWhiz runs, `compare.html`). Evidence
 `docs/webserver/evidence/VIS-9/`.
 
 ## 1. Investigation (read-only)
@@ -63,7 +63,7 @@ traditional IUPAC, formal / physiological charge. Ours writes the same tags empt
 Write the `pwc-id` PathBank would write, for compounds we already write under their mapped PathBank compound id, with a
 name guard. No new lookups, no change to which compounds or ids are written; the six existing `pwc-id`s untouched.
 
-## 2. Change (code commit `2c760e27`)
+## 2. Change (code commit `2c760e27`; skip list, name rule and repeat check revised in `74ed502d`, section 6)
 
 `src/t2pw/pwml/writer.py`, compound records only, plus `tests/test_pwml_vis9_pwc_id.py` (new, 4 tests).
 
@@ -97,18 +97,22 @@ ids). 25 records with a PathBank id are refused by the name guard (names disagre
 `CoA-SH`, `Pchlide`, and the wrong ids in open question 4); 47 have no PathBank id. Corpus (691 records): 370 gain a pwc-id (109 without HMDB), 13 already had one, 113 refused by name, 192 have no PathBank id. Exact mirror of the writer decision: `scripts/nohmdb9.py`.
 
 Eye check: the MolDB picture of all 55 distinct pwc-ids, fetched by pwc-id (only the public id left the machine), laid
-out with our compound name (`evidence/VIS-9/moldb/sheet_1..3.png`). 50 right (AMP, beta-alanine, L-serine, lactate,
+out with our compound name (`evidence/VIS-9/moldb/sheet_1..3.png`). **Corrected after review (section 6): of the 55, 50 right,
+3 "No Structure Available" (not 4), 2 wrong (not 1: 4'-phosphopantetheine was missed).** 50 right (AMP, beta-alanine, L-serine, lactate,
 pantothenate, the porphyrins, sphingoid bases, ATP, NAD(H), CoA and its esters, chorismate, isochorismate, SEPHCHC,
 lipid A, lipid IVA, chlorophyll a / b, enterobactin, pyruvate, aspartate, menaquinone, ...; class compounds such as
-"fatty acid", "glucosylceramide", "dihydroceramide" draw PathBank's representative); 4 "No Structure Available"
+"fatty acid", "glucosylceramide", "dihydroceramide" draw PathBank's representative); 3 "No Structure Available"
 (pantethine 118678, sphingomyelin 247821 have no MolDB structure; ceramide 247818 derives to an unused pwc_id; that is no
 picture, as before); **1 wrong**: 40747 "1,4-dihydroxy-2-naphthoic acid" draws 1,4-dihydroxy-2-naphthoyl-CoA, because
 PathBank's own row carries the CoA ester's structure (same InChIKey as 40746, formula C32H38N7O19P3S). Fixed by the skip
-list. After the fix: 54 distinct ids, 50 correct pictures, 4 no picture, 0 wrong (on this check).
+list. **Missed by me, found by the reviewer:** 40974 "4'-phosphopantetheine" (coenzyme A) draws a methyl where the 2-OH
+is (C12H23N2O6PS vs C11H23N2O7PS); now skipped too. After the review fixes: 52 distinct ids on the showcases, 50 correct
+pictures, 2 no picture (pantethine, sphingomyelin), 0 wrong (on this check).
 
 Before / after, compounds with a correct picture in our patched importer on a clean DB (the dev stack): before 6 of 139 (the six pwc-ids already written);
 every other compound gets a dev-DB pwc_id and MolDB draws production's compound with that number (VIS-7 section 1); after:
-the 6 existing + 59 new pwc-id records, of which all but the 4 "No Structure" ids draw their own structure.
+the 6 existing + 59 new pwc-id records (57 after the review fixes, section 6), of which all but the "No Structure" ids
+draw their own structure.
 
 ## 4. Verification (2026-11-27, after the reboot; HEAD `99364bf1`, clean tree)
 
@@ -153,7 +157,7 @@ rc=0`). **10/10 imported, 10/10 screenshots. Error lines identical to VIS-7's a3
 created record counts identical** (`evidence/VIS-9/pathwhiz/pwab_vs_vis7.txt`).
 
 Per compound record of our PWML, read against PathWhiz's own export of the imported pathway (`scripts/pics.py`;
-"right picture" = PathWhiz holds our pwc-id and MolDB has a structure for it, all 54 checked by eye in section 3):
+"right picture" = PathWhiz holds our pwc-id and MolDB has a structure for it, all checked by eye in section 3; this run is BEFORE the review fixes, so 4'-phosphopantetheine counts here as "right" but is wrong, section 6):
 
 | pathway | compounds | VIS-7 right picture | VIS-9 right picture (no HMDB) | VIS-9 own pwc-id, MolDB has no structure | VIS-9 dev-DB pwc-id (no right picture) (no HMDB) | merged into a same-HMDB record | absent from PathWhiz's export (VIS-7 too) | errors VIS-7 -> VIS-9 |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -216,6 +220,10 @@ Re-run at `f3e093bd`, clean tree, one hold (`vis9-chain3`, `scripts/chain2.sh`):
 
 ## 5. Dead ends and slips
 
+- Review round: I passed 4'-phosphopantetheine (40974) in the eye check, and the first name rule was too loose (stereo
+  prefixes dropped on both sides, non-ASCII letters deleted) and the repeat check missed a trusted pwc-id coming after a
+  derived one; all fixed in `74ed502d` (section 6).
+
 - Writing SMILES / InChI, the brief's first guess: dead end, PathWhiz draws only by pwc_id (section 1.1).
 - Short-name agreement passed five wrong mappings (section 2); KEGG/ChEBI agreement tier added one doubtful case; both dropped.
 - Deriving the pwc_id without a check would have drawn a different compound for 12 PathBank rows; and PathBank's own
@@ -228,6 +236,66 @@ Re-run at `f3e093bd`, clean tree, one hold (`vis9-chain3`, `scripts/chain2.sh`):
 - `cc9.py` first version reported 8/9 and 83/97 "different": it dropped the removed `<pwc-id>`'s tail (the element is the last child), a whitespace artefact; fixed (the previous sibling takes its tail), text diff confirms.
 - Python `-I` ignores `PYTHONPATH`; the DB measurement scripts insert the main repo `src` on `sys.path` (read-only
   SELECTs through `PathBankDbResolver`, connection settings from the main checkout's `.env`, never read or printed).
+
+## 6. Review round (review of `f8561846`: CHANGES_REQUESTED; fixes in code commit `74ed502d`)
+
+Orchestrator decisions in brackets in the review; all done in `src/t2pw/pwml/writer.py` with tests:
+
+- **F1** 40974 "4'-phosphopantetheine": PathBank's structure has a methyl where the 2-OH is (C12H23N2O6PS vs
+  C11H23N2O7PS). Skipped. The eye-check count in section 3 is corrected (I had passed it).
+- **F2** name agreement tightened: Greek letters are spelled out (alpha, beta, ...), so beta-/alpha-alanine no longer
+  read as alanine and alpha-D-glucose no longer matches beta-D-glucose; a leading L- / D- / (R)- / (S)- / (E)- / (Z)-
+  is ignored only when the other name has none (serine vs L-Serine passes, D-serine vs L-Serine and (S)- vs
+  (R)-pantoate fail); letters of any script are kept (no more deletion of non-ASCII). Tests for every pair named in the
+  review plus the accepted ones (serine / L-Serine, NAD+ / NAD, Pyruvic acid / Pyruvate, pantoate / (R)-pantoate).
+- **F3** [skip both] 2580 Geraniol (drawn Z, nerol) and 442 Cinnamic acid (drawn cis): skipped.
+- **F4** [skip all 438] every row with `pwc_id != PW_C%06d(id)` is skipped (Ceramide 247818 and Phosphatidylcholine
+  109386 no longer get an unused pwc-id). The list is data, not hand-typed: `data/pwc_id_skip.json`, built by the new
+  maintainer command `python -m t2pw.pwml.refresh_pwc_id_skip` (read-only SELECT on the resolution DB, or
+  `--snapshot` from the saved SELECT `evidence/VIS-9/db/pb_mismatch.json`, which is how it was built); the curated
+  structure errors (40747, 40974, 2580, 442) live in that command with their reasons. If the file is missing or
+  unreadable the writer derives no pwc-id at all (fail closed; tested).
+- **F5** all trusted (held) pwc-ids are collected before the loop, so a derived pwc-id never repeats a trusted one,
+  whichever record comes first (tested both orders).
+- **Q2** (structure guard): not possible at export without new data: the payload holds neither PathBank's structure nor
+  a reference structure, so an export-time guard needs a lookup (open question 2). Done instead, as a one-off dev-time
+  audit with data already on disk: PathBank's MolDB InChIKey (`db/pb_rows.json`) against ChEBI's standard InChIKey
+  from the local ChEBI fill cache (`C:/t/showcase/_work/fillcache`, 214 ChEBI records) for 147 of our 224 PathBank
+  ids (`scripts/structaudit.py`, `db/structaudit.json`). Connectivity differs for 3: 40747 and 40974 (both now
+  skipped) and 843 D-sedoheptulose 7-phosphate (ring form vs ChEBI's open chain, same formula: the same compound, not
+  skipped). 10 differ only in stereo: 3 where PathBank gives no stereo, 1 where ChEBI gives none, 6 where both differ
+  (mostly CoA thioesters, ribose / sedoheptulose phosphates, Mg-protoporphyrin's non-standard flag); none is a
+  different compound by name and formula, so none skipped. Geraniol and cinnamic acid have no ChEBI record in that
+  cache; the audit does not replace the eye.
+
+Re-run at `74ed502d` (clean tree, one queued hold `vis9-ab2`: **BW_EXIT=0, FINAL SURVIVING COUNT 0**; base replays reused
+from `b9534f68`, same payloads):
+
+| check | 9 showcases | 97-PWML corpus |
+|---|---|---|
+| `cc9.py` strict (only added `<pwc-id>`, existing unchanged) | **0 different, 57 added** (was 59) | **0 different, 364 added** (was 370) |
+| VIS-7 checker rule-based / strict | 9 / 9 files, every diff line an added `<pwc-id>` | 86 / 86 files, same |
+| text diff without `<pwc-id>` lines | 0 files | 0 files |
+
+The 8 dropped against the first version, all intended: ceramide 247818 (2 files), 4'-phosphopantetheine 40974 (2),
+cinnamic acid 442, geraniol 2580, phosphatidylcholine 109386 (all skip list) and 17alpha-hydroxyprogesterone 273 in
+corpus `140.pwml` (F2: "17alpha" vs PathBank's "17a-...": now refused, no picture rather than a guess).
+
+The sour-taste PWML bytes do not change (Sodium, serotonin, Hydrogen Ion keep their pwc-ids), so the pins of section 4.4
+stand and were not re-recorded: `test_orch768_replay_corpus` 9 passed, `test_equivalence_app_vs_service` 14 passed.
+
+| gate (`74ed502d`) | result |
+|---|---|
+| `tests/test_pwml_*.py` (incl. the VIS-9 tests, now 25) | 310 passed |
+| orch768 / orch772 + 772b + 774s / second fixture + canonical equivalence | 9 / 47 / 37 passed |
+| SMOKE | **511 passed** |
+| golden seams batch / c011 / stage8 / quarantine (unedited) | 2 / 8 / 4 / 24 passed |
+| equivalence run_pathway / app-vs-service / default path | 8 / 14 / 6 passed |
+| vision / web | 370 passed, 1 skipped / 85 passed |
+
+PathWhiz: not re-run (orchestrator: only if counts change by more than the skips). The section 4.3 table changes only
+by the skips: coenzyme A's 4'-phosphopantetheine moves from "right picture" (it was wrong) to dev-DB pwc-id, ceramide
+from "no structure" to dev-DB pwc-id. Right pictures on the showcases: **6 -> 59 of 139, 0 wrong** on the eye check.
 
 ## 8. Open questions (product owner)
 
