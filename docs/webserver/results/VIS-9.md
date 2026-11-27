@@ -2,7 +2,7 @@
 
 PO ruling (2026-11-26): "can we fix this somehow?" -> yes. Target: OUR patched PathWhiz importer (`t2pw/latest`); the PO
 fixes production PathWhiz. Branch `vis/structures`, worktree `C:/t/vis-pw9`, cut from webserver/refactor `b9534f68`.
-Working files `C:/t/vis-pw9-work/` (replays, content checks, PathWhiz runs, `compare.html`). Evidence
+Code `2c760e27` (`src/t2pw/pwml/writer.py`, `tests/test_pwml_vis9_pwc_id.py`). Working files `C:/t/vis-pw9-work/` (replays, content checks, PathWhiz runs, `compare.html`). Evidence
 `docs/webserver/evidence/VIS-9/`.
 
 ## 1. Investigation (read-only)
@@ -88,7 +88,7 @@ Melleolide K (for menaquinone), `LPS` -> LPS with O-antigen, `(p)ppGpp` -> pppGp
 Full names only: those are refused. A second tier (PathBank row found by the same KEGG / ChEBI id we write) added 2
 (phosphopantothenate, right; "cardiolipin" -> one specific CL species, a representative at best) and was dropped.
 
-## 3. Showcase coverage and the eye check (offline, before the A/B run)
+## 3. Showcase coverage and the eye check (offline)
 
 Guard applied to the 9 showcase IRs (`scripts/evalguard2.py`, short names removed; T2 counted there but not in the
 writer): of 139 compound records, 92 carry a mapped PathBank id; 67 pass the name guard (6 of them already had a pwc-id),
@@ -110,30 +110,75 @@ Before / after, compounds with a correct picture in our patched importer on a cl
 every other compound gets a dev-DB pwc_id and MolDB draws production's compound with that number (VIS-7 section 1); after:
 the 6 existing + 59 new pwc-id records, of which all but the 4 "No Structure" ids draw their own structure.
 
-## 4. Verification: NOT RUN (machine out of memory)
+## 4. Verification (2026-11-27, after the reboot; HEAD `99364bf1`, clean tree)
 
-Everything below was prepared and queued once as one heavy-lock chain (`scripts/chain1.sh`, holder `VIS-9`, label
-`vis9-chain1`), and never started: the queue's RAM gate (4 GB free) was never met. Available memory from 23:16 to 02:15
-was 948 -> 136 MB of 31 GB (committed ~61 GB; ~33 GB of process private memory, the rest kernel, as in the memory note on
-the kernel leak; uptime since 11:30). Three queue attempts each ended `GATE_BLOCKED`; at 02:15 I stopped the task and
-killed its waiting shells by PID (none held the lock; 0 VIS-9 processes left). Not run, so **not claimed**:
+One queued heavy-lock chain `vis9-chain1` (`scripts/chain1.sh`): **BW_EXIT=0, FINAL SURVIVING COUNT 0**; then
+`vis9-pinab` (`scripts/pinab.sh`): **BW_EXIT=0, 0 survivors**. Logs `evidence/VIS-9/gates/`. (The night run never
+started: under 1 GB available until the reboot; see section 5.)
 
-| gate | status | command (all inside one hold: `queue.sh VIS-9 vis9-chain1 5400 ... -- bash scripts/chain1.sh`) |
+### 4.1 Content check: only `<pwc-id>` additions
+
+Base = replays through `git archive b9534f68` (webserver/refactor), head = this tree; same payloads, no network.
+
+| check | 9 showcases | 97-PWML corpus |
 |---|---|---|
-| content check, 9 showcases + 97 corpus, base = `git archive b9534f68` | not run | `scripts/ab1.sh h1` (`run.sh` base / head, `cc9.py`: only `<pwc-id>` additions masked, nothing else) |
-| focused tests incl. `tests/test_pwml_vis9_pwc_id.py` | not run | `scripts/focused.sh f1` |
-| SMOKE, golden seams, equivalence, vision, web | not run | `C:/t/vis-runs/suite2.sh C:/t/vis-pw9 vis9-suite2-s1` |
-| PathWhiz import of the 9 + PW000779, A/B vs VIS-7 a3/a3b, screenshots | not run | `scripts/pwab9.sh h1 p1`, then `scripts/pwcmp9.py`, `scripts/make_compare.py` |
+| `cc9.py` strict: canonical XML equal after removing only the `<pwc-id>` head added to a compound that had none; existing pwc-ids unchanged | **0 different**, 59 pwc-ids added | **0 different**, 370 added (86 files) |
+| VIS-7 `content_check.py` rule-based / strict (masks no pwc-id) | 9 / 9 differ, every diff line an added `<pwc-id>` | 86 / 86 differ, every diff line an added `<pwc-id>` |
+| text diff with `<pwc-id>` lines dropped | 0 files | 0 files |
 
-Expected, to check when it runs: `cc9` reports 0 files different and 59 (showcases) / 370 (corpus) added pwc-ids, the
-six existing pwc-ids unchanged; golden-seam outputs may gain `<pwc-id>` lines if their fixtures carry mapped PathBank ids
-with agreeing names (that is this task's content addition, to be read, not a refactor break); in PathWhiz no new error
-lines; a dev-DB `pwc_id` collision is possible only if a derived number is at most the compound count of one file (the
-smallest derived ids are PW_C000032 / 40 / 91 / 120; the largest file has 32 compounds) and would show as a new
-`compound: Pwc id has already been taken` line.
+The added counts equal the offline mirror of the writer (section 3): 59 and 370.
 
-`C:/t/vis-pw9-work/compare.html` is not written (it needs the PathWhiz screenshots); `scripts/make_compare.py` builds it
-from `metrics/cc9_show_h1.json` and the `pw/p1` run.
+### 4.2 Tests
+
+| gate | result |
+|---|---|
+| focused: `tests/test_pwml_*.py` (incl. the 4 new) | 289 passed |
+| `tests/test_render_*.py` / `test_final_payload_writer_fixes.py` | 49 / 22 passed |
+| `tests/test_orch768_replay_corpus.py` | **1 failed**, 8 passed: `pwml_matches_leg` for the sour-taste leg |
+| SMOKE | **511 passed** |
+| golden seams batch / c011 / stage8 / quarantine (unedited) | 2 / 8 / 4 / 24 passed |
+| equivalence run_pathway / app-vs-service / default path | 8 / **3 failed, 11 passed** / 6 passed |
+| vision / web | 370 passed, 1 skipped / 85 passed |
+
+The 4 failures are byte pins of recorded sour-taste PWMLs (`pwml_sha256` / `pwml_matches_leg`); our change adds
+`<pwc-id>PW_C040034</pwc-id>` to its "Hydrogen Ion" (PathBank 40034, name agrees). A/B in one hold, same tree, with the
+VIS-9 fallback switched off by a test-only plugin (`evidence/VIS-9/scripts/vis9_off.py`, `-p vis9_off`): orch768
+**9 passed**, app-vs-service **14 passed**; switched on again: orch768 1 failed. So the VIS-9 pwc-id is the only cause.
+I did not edit the pinned tests (open question 7).
+
+### 4.3 PathWhiz, our patched importer (`t2pw/latest`), clean dev DB per file
+
+`scripts/pwab9.sh h1 p1`: 9 showcases + PathBank PW000779, project `t2pw-pwdraw`, stack down afterwards (`STACK_DOWN
+rc=0`). **10/10 imported, 10/10 screenshots. Error lines identical to VIS-7's a3/a3b for every file (`NEW_ERROR_LINES 0`),
+created record counts identical** (`evidence/VIS-9/pathwhiz/pwab_vs_vis7.txt`).
+
+Per compound record of our PWML, read against PathWhiz's own export of the imported pathway (`scripts/pics.py`;
+"right picture" = PathWhiz holds our pwc-id and MolDB has a structure for it, all 54 checked by eye in section 3):
+
+| pathway | compounds | VIS-7 right picture | VIS-9 right picture (no HMDB) | VIS-9 own pwc-id, MolDB has no structure | VIS-9 dev-DB pwc-id (no right picture) (no HMDB) | merged into a same-HMDB record | absent from PathWhiz's export (VIS-7 too) | errors VIS-7 -> VIS-9 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| ceramide-sphingolipid | 13 | 2 | 10 (1) | 2 | 0 (0) | 1 | 0 | 1 -> 1 |
+| chlorophyll | 25 | 0 | 10 (2) | 0 | 15 (14) | 0 | 0 | 15 -> 15 |
+| coenzyme-a | 15 | 0 | 8 (3) | 1 | 5 (3) | 1 | 0 | 0 -> 0 |
+| ent-item6 | 13 | 0 | 10 (4) | 0 | 3 (3) | 0 | 0 | 1 -> 1 |
+| enterobactin | 12 | 0 | 9 (3) | 0 | 3 (3) | 0 | 0 | 0 -> 0 |
+| furochromone | 13 | 1 | 3 (1) | 0 | 10 (9) | 0 | 0 | 0 -> 0 |
+| lipid-a | 32 | 1 | 4 (1) | 0 | 28 (24) | 0 | 0 | 22 -> 22 |
+| menaquinone | 13 | 2 | 5 (4) | 0 | 6 (6) | 0 | 2 | 0 -> 0 |
+| sour-taste | 3 | 0 | 1 (0) | 0 | 2 (1) | 0 | 0 | 7 -> 7 |
+| **total** | 139 | 6 | 60 (19) | 3 | 72 (63) | 2 | 2 | |
+
+**Key question: compounds with a pwc-id and no HMDB id import cleanly and draw.** All 22 such records (20 new, 2 already
+had one) are in PathWhiz with our pwc-id; none dropped, no new error: 19 draw the right structure, 2 (ceramide,
+sphingomyelin) draw "No Structure Available" (MolDB has none), 1 (menaquinone) is absent from PathWhiz's export in VIS-7
+too (as is "demethylmenaquinone", which has no pwc-id: an existing effect, not VIS-9). Right pictures: **6 -> 60 of 139**.
+The 72 left with a dev-DB pwc-id are the 47 without a PathBank id and the 25 the name guard refused. Two "merged" records
+are second records of a compound already present under the same HMDB id (ceramide "serine" -> "L-serine", coenzyme A ->
+"CoA-SH"); the coenzyme A box therefore draws CoA-SH's dev-DB picture, because "CoA-SH" (abbreviation, refused) comes
+first in the file. Screenshots: `evidence/VIS-9/pathwhiz/*_zoom.png`; all ten in `C:/t/vis-pw9-work/pw/p1/screenshots/`.
+
+`C:/t/vis-pw9-work/compare.html`: per pathway VIS-7's PWML in PathWhiz next to VIS-9's, the names that gained a pwc-id,
+and the MolDB contact sheets.
 
 ## 5. Dead ends and slips
 
@@ -145,6 +190,8 @@ from `metrics/cc9_show_h1.json` and the `pw/p1` run.
   evaluation was still running, then the write-up (this file, sections 1-3) was committed before any run.
 - Slip: one read-only `grep -r` over `/` was started with a trailing `&` (not a run_in_background job); it ended with
   its shell, no process left.
+- Night of 2026-11-26: the first verification chain waited 3 hours in the RAM gate (948 -> 136 MB available) and was stopped and its waiting shells killed by PID; it ran after the reboot.
+- `cc9.py` first version reported 8/9 and 83/97 "different": it dropped the removed `<pwc-id>`'s tail (the element is the last child), a whitespace artefact; fixed (the previous sibling takes its tail), text diff confirms.
 - Python `-I` ignores `PYTHONPATH`; the DB measurement scripts insert the main repo `src` on `sys.path` (read-only
   SELECTs through `PathBankDbResolver`, connection settings from the main checkout's `.env`, never read or printed).
 
@@ -183,9 +230,14 @@ from `metrics/cc9_show_h1.json` and the `pw/p1` run.
    of 66 compared (`MK` 13418 vs 9867602, `lactate` 4615 vs 107689).
 5. **PathBank data errors** to report upstream: row 40747 "1,4-dihydroxy-2-naphthoate" has the structure of 40746
    (its CoA ester); row 247818 "Ceramide" has glycerol, and its pwc_id is PW_C247816, not PW_C247818.
-6. **Verification is owed (section 4).** The machine had under 1 GB available all night. After a reboot (memory note:
-   kernel leak), run the one chain: `"C:/Program Files/Git/bin/bash.exe" C:/t/vis-runs/queue.sh VIS-9 vis9-chain1 5400
-   C:/t/vis-pw9-work/logs/vis9-chain1.json 4 C:/t/vis-pw9-work/logs/vis9-chain1.log -- "C:/Program Files/Git/bin/bash.exe"
-   C:/t/vis-pw9-work/scripts/chain1.sh` (about 45-60 min), then `pwcmp9.py` and `make_compare.py`. Options: (a) re-dispatch
-   VIS-9 to run it and finish this record (small); (b) review the diff now and gate the merge on that run. Not mergeable
-   before it passes.
+6. **(closed) Verification**: run on 2026-11-27 after the reboot, section 4.
+7. **Four recorded-byte pins fail by design (section 4.2).** `test_orch768_replay_corpus` (sour-taste leg,
+   `pwml_matches_leg`) and three `test_equivalence_app_vs_service` tests (`pwml_sha256` of the recorded sour-taste live
+   run) compare our PWML bytes with PWMLs recorded before VIS-9; the one added `<pwc-id>PW_C040034</pwc-id>` (Hydrogen
+   Ion) breaks them, and nothing else does (A/B with the fallback off: 9 / 14 passed). The tests say a lane that
+   changes a verdict on purpose moves the pin with its documented delta (merge rule 4); gate 5 treats an edited
+   equivalence test as a reject unless the reviewer accepts it. Options: (a) **compare after removing the `<pwc-id>`
+   elements the head adds** (a small helper in both tests, like `cc9.py`: keeps byte fidelity on everything else;
+   recommended, small, needs reviewer sign-off on a test edit); (b) re-record the sour-taste fixture and leg hash (loses
+   the link to the recorded live run, medium); (c) pin the old bytes with an env switch in the writer, as D-W23 did for
+   layout v2 (adds a production flag only tests use, small, not recommended); (d) don't merge VIS-9. I did not edit them.

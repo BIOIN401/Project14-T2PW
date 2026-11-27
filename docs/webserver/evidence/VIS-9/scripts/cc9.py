@@ -26,6 +26,11 @@ def main():
                 px, py = x.find("pwc-id"), y.find("pwc-id")
                 if px is None and py is not None:
                     added.append({"file": fa.name, "id": y.findtext("id"), "name": y.findtext("name"), "hmdb": y.findtext("hmdb-id") or "", "pwc_id": py.text})
+                    prev = py.getprevious()
+                    if prev is not None:
+                        prev.tail = py.tail  # pretty-print: the removed element's tail is the indent the base had there
+                    else:
+                        y.text = py.tail
                     y.remove(py)
                 elif px is not None and (py is None or px.text != py.text):
                     why = "existing pwc-id changed or removed: %s" % px.text
