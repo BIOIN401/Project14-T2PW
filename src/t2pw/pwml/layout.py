@@ -41,6 +41,7 @@ OBSTACLE_PAD, CELL = 8, 10
 SNAKE_MIN, SNAKE_OVER = 1800, 1.8  # VIS-5: a group folds into rows when wider than 1.8x the picture's square-ish width
 # VIS-8: relayout lays the picture out once per (fold width, aspect) pair and keeps the best (_layout_cost); the first is VIS-7's
 LAYOUT_CANDIDATES = ((1.8, 1.5), (1.5, 1.5), (1.2, 1.5), (1.8, 1.2), (1.5, 1.2), (1.2, 1.2))
+CHOOSER_MAX_EDGES = 120  # VIS-8: a picture with more edges is laid out once (each layout of lipid A, 133 edges, takes 2 s; no candidate beat VIS-7 there)
 VIEW_W, VIEW_H = 1100, 700  # VIS-8: the viewing box a picture is fitted into when its legibility is scored (1100 px wide; PO)
 ASPECT = 1.5  # target width:height of the packed picture (PathBank content: median 1.4)
 MEMBRANE_TEMPLATE = 220  # PathWhiz "Simple Membrane"
@@ -1950,7 +1951,7 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
     _layout_cost; the best is laid out for real (a tie keeps the first, VIS-7's), so a different shape is only taken when
     it makes the picture easier to read. A picture with one shape only is laid out once."""
     first = LAYOUT_CANDIDATES[0]
-    if os.environ.get("T2PW_LAYOUT_CHOOSER", "1") == "0":  # off: VIS-7's layout
+    if os.environ.get("T2PW_LAYOUT_CHOOSER", "1") == "0" or len(items.get("edges", [])) > CHOOSER_MAX_EDGES:  # off, or too slow: VIS-7's canvas shape
         return _relayout(items, new_id, ir, key_ids, *first)
     unique: Dict[Any, Tuple[float, float]] = {}  # layout signature -> first candidate with it
     for cand in LAYOUT_CANDIDATES:

@@ -9,7 +9,7 @@ for p in (ROOT / "src", ROOT / "tests"):
     if str(p) not in sys.path:
         sys.path.insert(0, str(p))
 
-from t2pw.pwml.layout import _layout_cost, _path_points, _plen, _relayout, relayout  # noqa: E402
+from t2pw.pwml.layout import CROSS_W, _layout_cost, _path_points, _plen, _relayout, relayout  # noqa: E402
 from test_pwml_vis5_layout import _chain, _ids  # noqa: E402
 
 
@@ -96,10 +96,10 @@ def test_relayout_keeps_the_layout_with_the_lowest_cost():
 
 def test_the_cost_charges_crossings_through_nodes_and_interaction_length():
     base = {"compound-locations": [], "protein-locations": [], "edges": [
-        {"id": 1, "path": "M0 0 C50 0 100 0 150 0", "hidden": False}, {"id": 2, "path": "M75 -50 C75 -20 75 20 75 50", "hidden": False}]}
+        {"id": 1, "path": "M0 0 C50 0 100 0 150 0", "hidden": False}, {"id": 2, "path": "M80 -45 C80 -20 80 20 80 50", "hidden": False}]}
     far = {"compound-locations": [], "protein-locations": [], "edges": [
         {"id": 1, "path": "M0 0 C50 0 100 0 150 0", "hidden": False}, {"id": 2, "path": "M75 150 C75 160 75 190 75 200", "hidden": False}]}
-    assert _layout_cost(base, 1000, 700) > _layout_cost(far, 1000, 700) - 0.02  # the crossing adds CROSS_W (lengths differ a little)
+    assert _layout_cost(base, 1000, 700) - _layout_cost(far, 1000, 700) >= CROSS_W - 0.02  # the crossing adds CROSS_W (lengths differ a little)
     assert _layout_cost(far, 2000, 700) > _layout_cost(far, 1000, 700)  # a wider picture is harder to read
 
 
@@ -139,3 +139,11 @@ def test_crossings_counts_proper_crossings_once_per_polyline():
     touch = [(100.0, 0.0), (150.0, 40.0)]  # shares an end: not a crossing
     far = [(0.0, 50.0), (100.0, 50.0)]
     assert _crossings(line, [cross, twice, touch, far, []]) == 2
+
+
+def test_a_picture_with_more_edges_than_the_limit_is_laid_out_once(monkeypatch):
+    import t2pw.pwml.layout as lay
+    monkeypatch.setattr(lay, "CHOOSER_MAX_EDGES", 0)
+    limited = _interacting_chain(12, 5, 6, public=True)
+    first = _interacting_chain(12, 5, 6, fold=lay.LAYOUT_CANDIDATES[0][0])
+    assert [(l["x"], l["y"]) for l in limited["protein-locations"]] == [(l["x"], l["y"]) for l in first["protein-locations"]]
