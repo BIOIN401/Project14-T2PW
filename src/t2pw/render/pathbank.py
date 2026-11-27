@@ -430,7 +430,14 @@ def _items(root, vis, pics: Optional[Dict[str, Any]] = None, extent: Optional[Li
         elif t == "protein-location":
             full, gene = names.get(("protein", _txt(k, "protein-id")), ("", ""))
             lt = _txt(k, "label-type").lower()
-            name = "" if lt == "none" else (gene or full) if lt == "gene" else                 complex_of.get(_txt(k, "id"), full) if lt == "protein" else full
+            if lt == "none":
+                name = ""
+            elif lt == "gene":
+                name = gene or full
+            elif lt == "protein":
+                name = complex_of.get(_txt(k, "id"), full)
+            else:
+                name = full
             add(z, lambda ax, a=(x, y, w, h, tpl, name, z): _protein(ax, *a), x + w, y + h, x, y)
         elif t == "nucleic-acid-location":
             name = names.get(("nucleic-acid", _txt(k, "nucleic-acid-id")), ("", ""))[0]

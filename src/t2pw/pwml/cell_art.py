@@ -61,8 +61,11 @@ def cell_kind(items: Dict[str, List[Dict[str, Any]]], states: Iterable[Any]) -> 
     return next(iter(kinds)) if len(kinds) == 1 and kinds <= {"bacterium", "eukaryote"} else None
 
 
-def gram_negative(location_kinds: Iterable[str]) -> bool:
-    """A bacterium whose PWML names an outer membrane or a periplasm (no genus table: an unnamed envelope stays unknown)."""
+def gram_negative(location_kinds: Iterable[str], species_names: Iterable[Any] = ()) -> bool:
+    """A bacterium whose PWML names an outer membrane or a periplasm (no genus table: an unnamed envelope stays unknown).
+    VIS-7: a Mycobacterium's "outer membrane" is its mycomembrane, not a Gram-negative envelope."""
+    if any(str(n or "").strip().lower().startswith("mycobacter") for n in species_names):
+        return False
     return any(k in ("outer_membrane", "periplasm") for k in location_kinds)
 
 

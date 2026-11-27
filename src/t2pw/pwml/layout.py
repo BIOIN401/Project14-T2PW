@@ -460,6 +460,21 @@ BEND_OFFSETS = (90, -90, 180, -180, 300, -300, 450, -450)  # VIS-5: how far a be
 VIA_PAD = 60  # VIS-5: a bent edge passes this far off the side of the box it goes round
 
 
+ARC_HEIGHTS = (60, 110, 170, 250, 350, 480)  # VIS-7: how far an arc's control points stand off the boxes' top or bottom
+
+
+def _arc(p0, n0, p3, n3, h: float, bound: Optional[Tuple[int, int]] = None):
+    """VIS-7: one cubic leaving p0 along n0 and arriving at p3 against n3, both control points ``h`` out along their
+    normals (a flat arch over or under a row of boxes): path, c1, c2."""
+    c1 = [p0[0] + h * n0[0], p0[1] + h * n0[1]]
+    c2 = [p3[0] + h * n3[0], p3[1] + h * n3[1]]
+    if bound:
+        for c in (c1, c2):
+            c[0], c[1] = max(0, min(bound[0], c[0])), max(0, min(bound[1], c[1]))
+    c1, c2 = (int(c1[0]), int(c1[1])), (int(c2[0]), int(c2[1]))
+    return f"M{p0[0]} {p0[1]} C{c1[0]} {c1[1]} {c2[0]} {c2[1]} {p3[0]} {p3[1]}", c1, c2
+
+
 def _bend(p0, n0, p3, n3, off: float, bound: Optional[Tuple[int, int]] = None, via: Optional[Tuple[int, int]] = None):
     """VIS-5: an edge as two cubics through a point ``off`` units off the middle of the chord (left of p0->p3 for
     positive), smooth there (the tangent runs along the chord): path, first point, first control point, last point,
@@ -1143,8 +1158,9 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
     # an outer membrane / periplasm gets PathBank's envelope on its cell box (outer and inner membrane lines 250 apart,
     # peptidoglycan between): membrane visualizations only
     cell = cell_art.cell_kind(items, bands)
-    gram_neg = cell == "bacterium" and cell_art.gram_negative(compartment_kind(str(l.get("name") or ""))
-                                                              for l in items.get("subcellular-locations", []))
+    gram_neg = cell == "bacterium" and cell_art.gram_negative(
+        [compartment_kind(str(l.get("name") or "")) for l in items.get("subcellular-locations", [])],
+        [sp.get("name") for sp in items.get("species", [])])
     flat_envelope = gram_neg and not any(kinds[s] in ("outer_membrane", "periplasm") for s in bands)
     cyto = [s for s in bands if kinds[s] == "cytoplasm"]
     if cell == "bacterium" and cyto:  # room for the chromosome: an empty group after the cytoplasm's own groups
@@ -1416,9 +1432,9 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
         m = next((s for s in reversed(anc[si]) if s not in anc[so]), None)
         return m if m in rect_of_state and style(m)[0] is not None else None
 
-    on_membrane: Dict[Any, Tuple[set, bool]] = {}
+    on_membrane: Dict[Any, Tuple[set, bool]] = {}  # moved hub -> (states inside its membrane, membrane is the box top)
     hub_mem: Dict[Any, Any] = {}  # VIS-5: the membrane box a moved transporter sits on
-    placed_cols: List[Tuple[Any, int, int, int, int]] = []  # VIS-5: (membrane box, rect) of each moved transporter  # moved hub -> (states inside its membrane, membrane is the box top)
+    placed_cols: List[Tuple[Any, int, int, int, int]] = []  # VIS-5: (membrane box, rect) of each moved transporter
 
     def anc_set(mem):
         return {st for st, chain in anc.items() if mem in chain}
@@ -1655,6 +1671,25 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
                     break
             if score is not None and score[:2] == (False, 0):
                 break
+        if score is not None and score[0] and fa is None and fb is None:
+            # VIS-7: an interaction between two nodes far apart (enzyme to enzyme along a chain): a flat arch over or
+            # under the boxes between them, from the facing top or bottom sides, before any right-angle route
+            if (b, a) in plain:  # the other edge of the pair already chose its ends: the same arch
+                arc_ends = [(ends_a[0], ends_b[0])]
+            else:
+                arc_ends = [(_side_point(ra, s), _side_point(rb, s)) for s in ("T", "B")]
+            chord = ((rb[0] + rb[2] - ra[0] - ra[2]) ** 2 + (rb[1] + rb[3] - ra[1] - ra[3]) ** 2) ** 0.5 / 2
+            for h in (h for h in ARC_HEIGHTS if h <= 0.4 * chord + 60):
+                for (p0, n0), (p3, n3) in arc_ends:
+                    if p0 == p3:
+                        continue
+                    path, c1, c2 = _arc(p0, n0, p3, n3, h, bound)
+                    pts = _bezier_points(p0, c1, c2, p3)
+                    if _clear(pts, obstacles):
+                        best, score, pick = (path, p0, c1, p3, c2, pts), (False, _crossings(pts, drawn), 0), ((p0, n0), (p3, n3))
+                        break
+                if not score[0]:
+                    break
         if score is not None and score[0]:
             # VIS-5 (STRUCTURE_DIFF G1): PathBank keeps an edge one cubic (rarely two). Before a grid route: the same
             # ends with the control points further out, then one smooth bend round the boxes (two cubics through a
@@ -1795,7 +1830,17 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
                                       _set_arrow_paths, MARGIN)
     # VIS-5: the canvas ends a margin below what is drawn (PathBank: canvas = drawing + margin); an outside row moved up
     # to its transporter left an empty strip at the bottom
-    for e in items.get("edges", []):  # last guard for PathWhiz's varchar(255): one cubic between the same ends
+    _shorten_long_paths(items)
+    bottom = _drawn_bottom(items)
+    height = min(height, int(bottom) + MARGIN) if bottom else height
+    for loc in hidden_locs:  # not drawn; kept inside the (possibly shorter) canvas
+        loc["y"] = max(0, min(int(loc.get("y") or 0), height - _dim(loc["height"])))
+    return width, height
+
+
+def _shorten_long_paths(items: Dict[str, List[Dict[str, Any]]]) -> None:
+    """Last guard for PathWhiz's varchar(255): an edge path over EDGE_PATH_MAX is redrawn as one cubic between the same ends."""
+    for e in items.get("edges", []):
         pts = _path_points(str(e.get("path") or ""))
         if len(str(e.get("path") or "")) > EDGE_PATH_MAX and len(pts) >= 2:
             (x0, y0), (x1, y1) = pts[0], pts[-1]
@@ -1804,11 +1849,6 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
             n0 = (1 if dx >= 0 else -1, 0) if abs(dx) >= abs(dy) else (0, 1 if dy >= 0 else -1)
             e["path"], c1, c2 = _curve(p0, n0, p3, (-n0[0], -n0[1]))
             _set_arrow_paths(e, p0, c1, p3, c2)
-    bottom = _drawn_bottom(items)
-    height = min(height, int(bottom) + MARGIN) if bottom else height
-    for loc in hidden_locs:  # not drawn; kept inside the (possibly shorter) canvas
-        loc["y"] = max(0, min(int(loc.get("y") or 0), height - _dim(loc["height"])))
-    return width, height
 
 
 def _drawn_bottom(items: Dict[str, List[Dict[str, Any]]]) -> float:
