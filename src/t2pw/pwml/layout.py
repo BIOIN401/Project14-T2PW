@@ -38,8 +38,9 @@ JUNCTION_W, JUNCTION_H = 40, 20
 STACK_DX, STACK_DY = 10, 38  # VIS-5: offset of each further enzyme in a reaction's stack (PathBank PW000779: ~5, ~22)
 OBSTACLE_PAD, CELL = 8, 10
 SNAKE_MIN, SNAKE_OVER = 1800, 1.8  # VIS-5: a group folds into rows when wider than 1.8x the picture's square-ish width
-SNAKE_CANDIDATES = (1.8, 1.5, 1.2)  # VIS-8: relayout lays the picture out once per value and keeps the best (_layout_cost)
-VIEW_W, VIEW_H = 1100, 750  # VIS-8: the viewing box a picture is fitted into when its legibility is scored
+# VIS-8: relayout lays the picture out once per (fold width, aspect) pair and keeps the best (_layout_cost); the first is VIS-7's
+LAYOUT_CANDIDATES = ((1.8, 1.5), (1.5, 1.5), (1.2, 1.5), (1.8, 1.2), (1.5, 1.2), (1.2, 1.2))
+VIEW_W, VIEW_H = 1100, 1000  # VIS-8: the viewing box a picture is fitted into when its legibility is scored (1100 px wide; PO)
 ASPECT = 1.5  # target width:height of the packed picture (PathBank content: median 1.4)
 MEMBRANE_TEMPLATE = 220  # PathWhiz "Simple Membrane"
 # Labels as in PathBank's own files (PW000001: template 235 "Simple Label - Large", scale 1.9). PathWhiz draws it as a
@@ -788,7 +789,8 @@ def _snake(blocks: Dict[Any, "_Block"], keys: List[Any], limit: int, hubs: set,
 
 
 def _relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], ir: Optional[Dict[str, Any]] = None,
-              key_ids: Optional[Dict[str, Dict[str, int]]] = None, snake_over: float = SNAKE_OVER) -> Tuple[int, int]:
+              key_ids: Optional[Dict[str, Dict[str, int]]] = None, snake_over: float = SNAKE_OVER,
+              aspect: float = ASPECT) -> Tuple[int, int]:
     """Re-place every visual element of ``items`` in place; returns the new canvas (width, height).
 
     ``ir`` and ``key_ids`` (the writer's IR and its IR-key -> PWML-id map) only serve to place edges that no
@@ -1125,7 +1127,7 @@ def _relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int],
 
     area = sum((w + HGAP) * (h + VGAP) for cs in comps_by_state.values() for _, w, h in cs)
     # VIS-5: a group much wider than the whole picture's square-ish width folds into rows (a snake)
-    limit = max(SNAKE_MIN, int((area * ASPECT) ** 0.5))
+    limit = max(SNAKE_MIN, int((area * aspect) ** 0.5))
     snaked_states = set()
     snake_free: Dict[int, Tuple[int, int, int, int]] = {}
     for st, cs in comps_by_state.items():
@@ -1135,7 +1137,7 @@ def _relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int],
                 snaked_states.add(st)
         cs.sort(key=lambda c: (not any(k in attached for k in c[0]), -(c[1] * c[2])))
     area = sum((w + HGAP) * (h + VGAP) for cs in comps_by_state.values() for _, w, h in cs)
-    target = max([int((area * ASPECT) ** 0.5)] + [w for cs in comps_by_state.values() for _, w, _ in cs])
+    target = max([int((area * aspect) ** 0.5)] + [w for cs in comps_by_state.values() for _, w, _ in cs])
     # compartment kinds (PathBank membrane template and colour per kind) and nesting (organelles inside the cell,
     # the cell inside its envelope); each box holds its own groups (shelf-packed), then its child boxes in rows
     states = {s.get("id"): s for s in items.get("biological-states", [])}
@@ -1320,7 +1322,7 @@ def _relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int],
         def badness(sp):
             bw = max(x0 + sizes[st][0] for x0, _, st, _ in sp)
             bh = max(y0 + h for _, y0, _, h in sp)
-            return bw * bh * (1 + abs(math.log(bw / bh / ASPECT)))
+            return bw * bh * (1 + abs(math.log(bw / bh / aspect)))
         if badness(cols) < badness(spots):
             spots = cols
     top = MARGIN + (LINE_LABEL_ROOM if spots else 0)  # VIS-5: room above the first row for labels on its top line
@@ -1906,17 +1908,18 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
              key_ids: Optional[Dict[str, Dict[str, int]]] = None) -> Tuple[int, int]:
     """Re-place every visual element of ``items`` in place; returns the new canvas (width, height).
 
-    VIS-8: a long chain can fold into rows at several widths (SNAKE_CANDIDATES). Each is laid out on a copy of the items
-    (ids from a throw-away counter) and scored with _layout_cost; the best is laid out for real (a tie keeps the first,
-    the unfolded VIS-5 width), so a fold is only taken when it makes the picture easier to read."""
-    best, pick = None, SNAKE_OVER
-    for so in SNAKE_CANDIDATES:
+    VIS-8: a long chain can fold into rows at several widths and the picture can be packed to several aspects
+    (LAYOUT_CANDIDATES). Each is laid out on a copy of the items (ids from a throw-away counter) and scored with
+    _layout_cost; the best is laid out for real (a tie keeps the first, VIS-7's), so a different shape is only taken when
+    it makes the picture easier to read."""
+    best, pick = None, LAYOUT_CANDIDATES[0]
+    for cand in LAYOUT_CANDIDATES:
         trial, ids = copy.deepcopy(items), itertools.count(1 << 40)
-        w, h = _relayout(trial, lambda: next(ids), ir, key_ids, so)
+        w, h = _relayout(trial, lambda: next(ids), ir, key_ids, *cand)
         cost = _layout_cost(trial, w, h)
         if best is None or cost < best - 1e-9:
-            best, pick = cost, so
-    return _relayout(items, new_id, ir, key_ids, pick)
+            best, pick = cost, cand
+    return _relayout(items, new_id, ir, key_ids, *pick)
 
 
 
