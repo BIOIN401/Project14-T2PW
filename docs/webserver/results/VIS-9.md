@@ -2,7 +2,7 @@
 
 PO ruling (2026-11-26): "can we fix this somehow?" -> yes. Target: OUR patched PathWhiz importer (`t2pw/latest`); the PO
 fixes production PathWhiz. Branch `vis/structures`, worktree `C:/t/vis-pw9`, cut from webserver/refactor `b9534f68`.
-Code `2c760e27` (`src/t2pw/pwml/writer.py`, `tests/test_pwml_vis9_pwc_id.py`). Working files `C:/t/vis-pw9-work/` (replays, content checks, PathWhiz runs, `compare.html`). Evidence
+Code `2c760e27` (`src/t2pw/pwml/writer.py`, `tests/test_pwml_vis9_pwc_id.py`); fixture re-record `a86d936e`, `f3e093bd`. Working files `C:/t/vis-pw9-work/` (replays, content checks, PathWhiz runs, `compare.html`). Evidence
 `docs/webserver/evidence/VIS-9/`.
 
 ## 1. Investigation (read-only)
@@ -144,7 +144,7 @@ The 4 failures are byte pins of recorded sour-taste PWMLs (`pwml_sha256` / `pwml
 `<pwc-id>PW_C040034</pwc-id>` to its "Hydrogen Ion" (PathBank 40034, name agrees). A/B in one hold, same tree, with the
 VIS-9 fallback switched off by a test-only plugin (`evidence/VIS-9/scripts/vis9_off.py`, `-p vis9_off`): orch768
 **9 passed**, app-vs-service **14 passed**; switched on again: orch768 1 failed. So the VIS-9 pwc-id is the only cause.
-I did not edit the pinned tests (open question 7).
+I did not edit the pinned tests; the fixtures were re-recorded on the orchestrator's decision, section 4.4.
 
 ### 4.3 PathWhiz, our patched importer (`t2pw/latest`), clean dev DB per file
 
@@ -179,6 +179,40 @@ first in the file. Screenshots: `evidence/VIS-9/pathwhiz/*_zoom.png`; all ten in
 
 `C:/t/vis-pw9-work/compare.html`: per pathway VIS-7's PWML in PathWhiz next to VIS-9's, the names that gained a pwc-id,
 and the MolDB contact sheets.
+
+### 4.4 Q7 decision: re-recorded pins (orchestrator, 2026-11-27)
+
+Decision recorded as the orchestrator's (PO delegation; the PO authorised the content addition): re-record the pinned
+fixtures / hashes so the four tests stay strict on the new intended output; no comparison that strips `<pwc-id>`, no
+test-only writer switch. Done in two fixture-only commits (no test logic touched):
+
+- `a86d936e`: `tests/fixtures/orch768/legs.json` and `docs/pwml_recovery_sprint/evidence/orch768_corpus_manifest.json`
+  (leg `ORCH-767/sour_taste_v2-strict/2026-10-24_0042`, `pathway.review_required.pwml`): sha256 `d73219f9...14a4` ->
+  `0d0d7db0...677f`, bytes 45928 -> 46008; `tests/fixtures/equivalence/sour_taste_v2_strict.json.gz`
+  `recorded.pwml_sha256` and `pwml_files["pathway.pwml"]` `76617a0d...1f37` -> `25dea135...495b`, `pwml_bytes`
+  53474 -> 53554.
+- `f3e093bd`: the same fixture's `recorded.outcome.message` names the byte count ("... is 53474 bytes" -> "53554
+  bytes"); I missed it in the first commit and the first re-run (`vis9-chain2`) caught it (`test_a`, 1 failed, 13 passed).
+
+Old and new recorded PWMLs are the files the tests themselves wrote (old = HEAD with the VIS-9 fallback off, whose sha
+equals the old pin; new = HEAD): `evidence/VIS-9/rerecord/`. Every changed line is an added `<pwc-id>`:
+orch768 sour-taste leg `+<pwc-id>PW_C000458</pwc-id>` (Sodium) and `+<pwc-id>PW_C000178</pwc-id>` (serotonin);
+equivalence fixture `+<pwc-id>PW_C040034</pwc-id>` (Hydrogen Ion) and `+<pwc-id>PW_C000178</pwc-id>` (serotonin).
+The decompressed fixture JSON differs in exactly 4 lines (message, bytes, two sha values): `rerecord/eqfixture.diff`.
+Script `scripts/rerecord.py`, `rerecord2.py`; log `rerecord/rerecord_log.txt`.
+
+Re-run at `f3e093bd`, clean tree, one hold (`vis9-chain3`, `scripts/chain2.sh`): **BW_EXIT=0, FINAL SURVIVING COUNT 0**.
+
+| gate | result |
+|---|---|
+| `test_orch768_replay_corpus.py` | **9 passed** |
+| `test_orch772_pwml_coverage` + `orch772b` + `orch774s` (read the same legs) | 47 passed |
+| `test_equivalence_second_fixture` + `test_canonical_biological_equivalence` | 37 passed |
+| `tests/test_pwml_*.py` | 289 passed |
+| SMOKE | **511 passed** |
+| golden seams batch / c011 / stage8 / quarantine (unedited) | 2 / 8 / 4 / 24 passed |
+| equivalence run_pathway / **app-vs-service** / default path | 8 / **14** / 6 passed |
+| vision / web | 370 passed, 1 skipped / 85 passed |
 
 ## 5. Dead ends and slips
 
@@ -231,13 +265,4 @@ and the MolDB contact sheets.
 5. **PathBank data errors** to report upstream: row 40747 "1,4-dihydroxy-2-naphthoate" has the structure of 40746
    (its CoA ester); row 247818 "Ceramide" has glycerol, and its pwc_id is PW_C247816, not PW_C247818.
 6. **(closed) Verification**: run on 2026-11-27 after the reboot, section 4.
-7. **Four recorded-byte pins fail by design (section 4.2).** `test_orch768_replay_corpus` (sour-taste leg,
-   `pwml_matches_leg`) and three `test_equivalence_app_vs_service` tests (`pwml_sha256` of the recorded sour-taste live
-   run) compare our PWML bytes with PWMLs recorded before VIS-9; the one added `<pwc-id>PW_C040034</pwc-id>` (Hydrogen
-   Ion) breaks them, and nothing else does (A/B with the fallback off: 9 / 14 passed). The tests say a lane that
-   changes a verdict on purpose moves the pin with its documented delta (merge rule 4); gate 5 treats an edited
-   equivalence test as a reject unless the reviewer accepts it. Options: (a) **compare after removing the `<pwc-id>`
-   elements the head adds** (a small helper in both tests, like `cc9.py`: keeps byte fidelity on everything else;
-   recommended, small, needs reviewer sign-off on a test edit); (b) re-record the sour-taste fixture and leg hash (loses
-   the link to the recorded live run, medium); (c) pin the old bytes with an env switch in the writer, as D-W23 did for
-   layout v2 (adds a production flag only tests use, small, not recommended); (d) don't merge VIS-9. I did not edit them.
+7. **(closed, orchestrator decision 2026-11-27) Recorded-byte pins.** Re-recorded to the new intended output in two fixture-only commits; all pinned tests pass strict (section 4.4). Q1: no action, the PO fixes production PathWhiz.
