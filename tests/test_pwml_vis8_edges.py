@@ -109,3 +109,23 @@ def test_chooser_off_gives_the_first_candidates_layout(monkeypatch):
     off = _interacting_chain(12, 5, 6, public=True)
     first = _interacting_chain(12, 5, 6, fold=LAYOUT_CANDIDATES[0][0])
     assert [(l["x"], l["y"]) for l in off["protein-locations"]] == [(l["x"], l["y"]) for l in first["protein-locations"]]
+
+
+def test_an_enzymeless_reaction_point_sits_on_its_substrate_even_across_compartments():
+    # the writer hides the substrate edge of such a reaction, so the visible product edge must start at the substrate
+    from test_pwml_vis5_layout import _cl
+    comps = [_cl(1, 2), _cl(2, 1)]
+    edges = [{"id": 10, "path": "M0 0", "hidden": True, "options": '{"start_arrow": false}'},
+             {"id": 11, "path": "M0 0", "hidden": False, "options": '{"start_arrow": true}'}]
+    rv = {"id": 20, "reaction-id": 1, "biological-state-id": 1, "reaction_compound_visualizations": [
+        {"compound-location-id": 1, "edge-id": 10, "side": "Left"}, {"compound-location-id": 2, "edge-id": 11, "side": "Right"}]}
+    items = {"biological-states": [{"id": 1, "name": "cytosol state", "subcellular-location-id": 11},
+                                   {"id": 2, "name": "ER state", "subcellular-location-id": 12}],
+             "subcellular-locations": [{"id": 11, "name": "cytosol"}, {"id": 12, "name": "endoplasmic reticulum"}],
+             "compound-locations": comps, "edges": edges, "reaction-visualizations": [rv]}
+    _relayout(items, _ids(), None, None, 1.8)
+    pts = _path_points(edges[1]["path"])
+    sub = next(c for c in comps if c["id"] == 1)
+    x0, y0, x1, y1 = int(sub["x"]), int(sub["y"]), int(sub["x"]) + 200, int(sub["y"]) + 190
+    end = pts[-1]
+    assert x0 - 14 <= end[0] <= x1 + 14 and y0 - 14 <= end[1] <= y1 + 14  # the edge starts on the substrate's border

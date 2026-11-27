@@ -35,6 +35,7 @@ LOC_SECTIONS = ("compound-locations", "protein-locations", "nucleic-acid-locatio
 MARGIN, BAND_GAP, BAND_PAD_X, BAND_PAD_BOT = 40, 80, 40, 40
 HGAP, VGAP, MEMBER_GAP, MEMBERS_PER_ROW = 160, 60, 10, 3  # PathBank substrate-to-product step: median 667
 JUNCTION_W, JUNCTION_H = 40, 20
+JUNCTION_GAP = 120  # VIS-8: a reaction point farther than this from every substrate is moved onto its substrate
 STACK_DX, STACK_DY = 10, 38  # VIS-5: offset of each further enzyme in a reaction's stack (PathBank PW000779: ~5, ~22)
 OBSTACLE_PAD, CELL = 8, 10
 SNAKE_MIN, SNAKE_OVER = 1800, 1.8  # VIS-5: a group folds into rows when wider than 1.8x the picture's square-ish width
@@ -1608,6 +1609,31 @@ def _relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int],
     for loc in hidden_locs:  # not drawn; kept inside the canvas
         loc["x"] = max(0, min(int(loc.get("x") or 0), width - _dim(loc["width"])))
         loc["y"] = max(0, min(int(loc.get("y") or 0), height - _dim(loc["height"])))
+
+    # VIS-8: a reaction with no enzyme is a point whose substrate edges the writer hides, so the visible product edge has to
+    # start at the substrate. The layered layout puts the point beside its substrate, but when the substrate stands in
+    # another group (another compartment, or behind a fold) the product edge started in empty space. Such a point moves to
+    # the border of its first main substrate, on the side facing the products.
+    for hub, hubs, roles in pending:
+        if hubs or not blocks[hub].virtual:
+            continue
+        subs = [k for _, k, _, r in roles if r == "in" and k is not None and k != hub and not blocks[k].virtual]
+        prods = [k for _, k, _, r in roles if r == "out" and k is not None and k != hub and not blocks[k].virtual]
+        if not subs or not prods:
+            continue
+        jx, jy = blocks[hub].center()
+
+        def gap(k):
+            r = own_rect(k)
+            return max(r[0] - jx, jx - r[2], r[1] - jy, jy - r[3], 0)
+
+        if min(gap(k) for k in subs) <= JUNCTION_GAP:
+            continue
+        s0 = next((k for k in subs if k not in pill_of), subs[0])
+        tx = sum(blocks[k].center()[0] for k in prods) / len(prods)
+        ty = sum(blocks[k].center()[1] for k in prods) / len(prods)
+        (px, py), _ = _side_point(own_rect(s0), _sides_toward(own_rect(s0), tx, ty)[0])
+        blocks[hub].x, blocks[hub].y = px - JUNCTION_W // 2, py - JUNCTION_H // 2
 
     # ---- edges: PathBank's cubic per edge (see SIDES above). A reaction's substrates meet at the middle of its enzyme's
     # left side, its products leave from the right side (top or bottom when the node lies behind the enzyme); a
