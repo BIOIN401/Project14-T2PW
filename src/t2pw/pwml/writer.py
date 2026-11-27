@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 import math
 import re
 import unicodedata
@@ -528,19 +529,24 @@ def _trusted_compound_pwc_id(
 _PWC_ID_SKIP_PATH = PROJECT_ROOT / "data" / "pwc_id_skip.json"
 _GREEK_LETTERS = {"α": "alpha", "β": "beta", "γ": "gamma", "δ": "delta", "ε": "epsilon",
                   "ω": "omega"}
-_STEREO_PREFIX = re.compile(r"^(l|d|\(r\)|\(s\)|\(e\)|\(z\))-")
+_STEREO_PREFIX = re.compile(r"^(l|d|\(r\)|\(s\)|\(e\)|\(z\)|\(\+\)|\(-\))-")
 
 
 @lru_cache(maxsize=1)
 def _pwc_id_skip() -> Optional[frozenset]:
     """PathBank compound ids that must not get a derived pwc-id (``data/pwc_id_skip.json``, built by
     ``python -m t2pw.pwml.refresh_pwc_id_skip``): rows whose pwc_id is not ``PW_C%06d(id)`` and rows with a wrong
-    structure. ``None`` when the file is missing or unreadable: then no pwc-id is derived at all (fail closed)."""
+    structure. ``None`` when the file is missing, unreadable or has an empty mismatch list: then no pwc-id is derived
+    at all (fail closed), with one warning."""
     try:
         data = json.loads(_PWC_ID_SKIP_PATH.read_text(encoding="utf-8"))
-        return frozenset(int(i) for i in data["derivation_mismatch"]) | frozenset(int(i) for i in data["structure_errors"])
+        mismatch = frozenset(int(i) for i in data["derivation_mismatch"])
+        if mismatch:
+            return mismatch | frozenset(int(i) for i in data["structure_errors"])
     except Exception:  # noqa: BLE001 - a missing skip list must never let a wrong picture through
-        return None
+        pass
+    logging.getLogger(__name__).warning("VIS-9: %s missing, unreadable or empty: no pwc-id is derived", _PWC_ID_SKIP_PATH.name)
+    return None
 
 
 def _compound_name_parts(value: Any) -> Tuple[str, str]:
