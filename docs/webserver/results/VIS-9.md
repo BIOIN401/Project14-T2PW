@@ -373,3 +373,25 @@ Sour-taste bytes unchanged, pins not re-recorded. PathWhiz not re-run (showcase 
    (its CoA ester); row 247818 "Ceramide" has glycerol, and its pwc_id is PW_C247816, not PW_C247818.
 6. **(closed) Verification**: run on 2026-11-27 after the reboot, section 4.
 7. **(closed, orchestrator decision 2026-11-27) Recorded-byte pins.** Re-recorded to the new intended output in two fixture-only commits; all pinned tests pass strict (section 4.4). Q1: no action, the PO fixes production PathWhiz.
+
+## 9. Review verdicts and merge (orchestrator, 2026-11-27)
+
+- Independent ws-reviewer, three rounds. Round 1 on `f8561846`: **CHANGES_REQUESTED** (PathBank row 40974 draws a
+  wrong structure; name check too loose: D vs L, (R) vs (S), alpha vs beta all matched; geraniol 2580 and cinnamic
+  acid 442 drawn as the wrong isomer; all 438 rows off the `PW_C` + row id rule must be skipped, not only 12; trusted
+  ids could repeat a derived one). Orchestrator decisions: skip every wrong or doubtful picture (a wrong picture is
+  worse than none); re-record the sour-taste byte pins rather than loosen the tests. Round 2 on `c8719361`:
+  **CHANGES_REQUESTED** (41655 ferric enterobactin draws a broken structure; the skip-list refresh could fail open
+  on a DB error and write an empty list; an error message could carry the DB host; (+)/(-) still matched; silent
+  missing file). Round 3 on `d0ab3730` (code `c1443a38`): **APPROVE**; the reviewer's own id audit, from a
+  `git archive` rebuild, finds no wrong picture in the 9 or the 97.
+- Merged as `29b1ee6f` = webserver/refactor `d6014d15` (VIS-8 merged) + `vis/structures` `d0ab3730`, no conflicts,
+  in the detached worktree `C:/t/merge-vis9`. Changes: `pwml/writer.py` (compound records only), new
+  `pwml/refresh_pwc_id_skip.py` (hand-run only, read-only SELECT, never imported at export), new
+  `data/pwc_id_skip.json` (ids and reasons only), the re-recorded sour-taste fixtures, and the new test file.
+- Gates on `29b1ee6f` (`evidence/VIS-9/logs/merge-vis9-gates.log`, script `merge_vis9_inner.sh`, tree clean), which
+  also re-run the byte-pinned replay and app-vs-service equivalence tests on VIS-8 + VIS-9 together: SMOKE **511
+  passed**; golden seams **2 / 8 / 4 / 24 passed**, unedited; equivalence **8 / 14 / 6 passed**; vision **370 passed,
+  1 skipped**; web **85 passed**; pwml (incl. `test_orch768_replay_corpus.py`) **360 passed**; render **49 passed**;
+  service + web **405 passed**. `BW_EXIT=0`, **FINAL SURVIVING COUNT 0**. Pushed `29b1ee6f`.
+- Result: showcase compounds drawn with their correct structure in our PathWhiz go from 6 to 59 of 139.
