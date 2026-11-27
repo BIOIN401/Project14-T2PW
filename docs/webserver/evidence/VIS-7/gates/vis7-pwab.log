@@ -1,0 +1,53 @@
+[pwi] starting rails server in the container
+[pwi] OK      113.4s  ref_PW000779.pwml  errors=3
+[pwi] OK       62.2s  v5_ceramide-sphingolipid.pwml  errors=1
+[pwi] OK      188.9s  v5_chlorophyll.pwml  errors=15
+[pwi] OK      124.2s  v5_coenzyme-a.pwml  errors=0
+[pwi] OK       87.1s  v5_ent-item6.pwml  errors=1
+[pwi] OK       87.3s  v5_enterobactin.pwml  errors=0
+[pwi] OK       31.7s  v5_furochromone.pwml  errors=0
+[pwi] OK       82.4s  v5_lipid-a.pwml  errors=22
+[pwi] OK       56.4s  v5_menaquinone.pwml  errors=0
+[pwi] OK       25.9s  v5_sour-taste.pwml  errors=7
+[pwi] summary: {"files": 10, "success_true": 10, "success_true_no_errors": 4, "success_false": 0, "total_seconds": 859.3}
+EXIT_import=0
+ Container t2pw-pwdraw-app-1 Stopping 
+ Container t2pw-pwdraw-app-1 Stopped 
+ Container t2pw-pwdraw-app-1 Removing 
+ Container t2pw-pwdraw-app-1 Removed 
+ Container t2pw-pwdraw-db-1 Stopping 
+ Container t2pw-pwdraw-db-1 Stopped 
+ Container t2pw-pwdraw-db-1 Removing 
+ Container t2pw-pwdraw-db-1 Removed 
+ Network t2pw-pwdraw_default Removing 
+ Network t2pw-pwdraw_default Removed 
+STACK_DOWN rc=0
+PWAB_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 221ad27fc91c08ffb7e8fb25f790faa261ef6a4e  [git, worktree dirty=True]
+label                   : vis7-pwab-r30
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/vis-pw7-work/scripts/pwab.sh a3
+cwd                     : C:\t\vis-pw7-work
+root PID / process group: 636880 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 3600 s
+duration                : 2577.88 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 130  635928:bash.exe, 606172:bash.exe, 636144:mkdir.exe, 636224:cp.exe, 636344:bash.exe, 633612:bash.exe, 635416:bash.exe, 595332:bash.exe, 631312:cp.exe, 635144:cp.exe, 636244:bash.exe, 636388:bash.exe, 636568:ls.exe, 637076:bash.exe, 637100:python.exe, 637112:python.exe, 637132:docker.exe, 637184:docker.exe, 637236:docker.exe, 637292:docker-compose.exe, 637424:docker-compose.exe, 599372:docker.exe, 636892:docker-compose.exe, 636832:docker-compose.exe, 637072:docker.exe, 637340:docker-compose.exe, 637160:docker-compose.exe, 630936:docker.exe, 637504:docker-compose.exe, 630600:docker-compose.exe, 632708:docker-compose.exe, 642920:docker.exe, 639348:docker-compose.exe, 639764:python.exe, 643216:python.exe, 639268:node.exe, 644056:chrome-headless-shell.exe, 631912:chrome-headless-shell.exe, 641948:chrome-headless-shell.exe, 642524:chrome-headless-shell.exe, 642120:docker-compose.exe, 642760:docker.exe, 646220:docker-compose.exe, 618940:python.exe, 646548:python.exe, 642584:node.exe, 639572:chrome-headless-shell.exe, 634012:chrome-headless-shell.exe, 641072:chrome-headless-shell.exe, 642892:chrome-headless-shell.exe, 645300:docker.exe, 643540:docker-compose.exe, 644336:docker-compose.exe, 648292:python.exe, 649548:python.exe, 650812:node.exe, 650960:chrome-headless-shell.exe, 643040:chrome-headless-shell.exe, 645880:chrome-headless-shell.exe, 647940:chrome-headless-shell.exe, 647672:docker.exe, 651440:docker-compose.exe, 642712:docker-compose.exe, 653428:python.exe, 653468:python.exe, 650220:node.exe, 651800:chrome-headless-shell.exe, 653592:chrome-headless-shell.exe, 654120:chrome-headless-shell.exe, 654212:chrome-headless-shell.exe, 655920:docker.exe, 653744:docker-compose.exe, 654388:docker-compose.exe, 657992:python.exe, 658328:python.exe, 657592:node.exe, 657952:chrome-headless-shell.exe, 656464:chrome-headless-shell.exe, 656480:chrome-headless-shell.exe, 657252:chrome-headless-shell.exe, 659704:docker-compose.exe, 660212:docker.exe, 656488:docker-compose.exe, 652264:python.exe, 654372:python.exe, 659484:node.exe, 654224:chrome-headless-shell.exe, 661620:chrome-headless-shell.exe, 661640:chrome-headless-shell.exe, 661648:chrome-headless-shell.exe, 663564:docker-compose.exe, 664528:docker.exe, 662596:docker-compose.exe, 666400:python.exe, 666252:python.exe, 666552:node.exe, 660796:chrome-headless-shell.exe, 663812:chrome-headless-shell.exe, 665468:chrome-headless-shell.exe, 666336:chrome-headless-shell.exe, 665296:docker.exe, 669732:docker-compose.exe, 667608:docker-compose.exe, 671432:python.exe, 671460:python.exe, 672636:node.exe, 665308:chrome-headless-shell.exe, 669828:chrome-headless-shell.exe, 670112:chrome-headless-shell.exe, 670444:chrome-headless-shell.exe, 672448:docker-compose.exe, 673920:docker.exe, 672864:docker-compose.exe, 669492:python.exe, 674220:python.exe, 674372:node.exe, 658252:chrome-headless-shell.exe, 671768:chrome-headless-shell.exe, 673096:chrome-headless-shell.exe, 673752:chrome-headless-shell.exe, 664180:docker-compose.exe, 674916:docker.exe, 614124:docker-compose.exe, 666144:python.exe, 673404:python.exe, 671560:node.exe, 670364:chrome-headless-shell.exe, 672388:chrome-headless-shell.exe, 675044:chrome-headless-shell.exe, 675056:chrome-headless-shell.exe
+descendants terminated  : 130  595332, 599372, 606172, 614124, 618940, 630600, 630936, 631312, 631912, 632708, 633612, 634012, 635144, 635416, 635928, 636144, 636224, 636244, 636344, 636388, 636568, 636832, 636892, 637072, 637076, 637100, 637112, 637132, 637160, 637184, 637236, 637292, 637340, 637424, 637504, 639268, 639348, 639572, 639764, 641072, 641948, 642120, 642524, 642584, 642712, 642760, 642892, 642920, 643040, 643216, 643540, 644056, 644336, 645300, 645880, 646220, 646548, 647672, 647940, 648292, 649548, 650220, 650812, 650960, 651440, 651800, 652264, 653428, 653468, 653592, 653744, 654120, 654212, 654224, 654372, 654388, 655920, 656464, 656480, 656488, 657252, 657592, 657952, 657992, 658252, 658328, 659484, 659704, 660212, 660796, 661620, 661640, 661648, 662596, 663564, 663812, 664180, 664528, 665296, 665308, 665468, 666144, 666252, 666336, 666400, 666552, 667608, 669492, 669732, 669828, 670112, 670364, 670444, 671432, 671460, 671560, 671768, 672388, 672448, 672636, 672864, 673096, 673404, 673752, 673920, 674220, 674372, 674916, 675044, 675056
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-pw7-work/logs/vis7-pwab.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=VIS-7  acquired=True  released=True
+pre-existing (reported, NEVER killed): 15
+================================================
+BW_EXIT=0

@@ -1,0 +1,1514 @@
+<svg id="pathway_image" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" externalresourcesrequired="true" version="1.1" width="5365" height="2343">
+    <defs>
+  <radialGradient id="coa" cx="50%" cy="50%" r="70%">
+    <stop offset="10%" stop-color="#FF8080"></stop>
+    <stop offset="90%" stop-color="#C40000"></stop>
+  </radialGradient>
+  <radialGradient id="pyrophosphate" gradientUnits="userSpaceOnUse" cx="31.071" cy="21.673" r="29.851">
+    <stop offset="0" stop-color="#80C8FF"></stop>
+    <stop offset="1" stop-color="#672BFF"></stop>
+  </radialGradient>
+  <radialGradient id="phosphate" gradientUnits="userSpaceOnUse" cx="21.811" cy="21.673" r="20.591">
+    <stop offset="0" stop-color="#80C8FF"></stop>
+    <stop offset="1" stop-color="#672BFF"></stop>
+  </radialGradient>
+  <radialGradient id="atp" cx="50%" cy="50%" r="70%">
+    <stop offset="10%" stop-color="#FFF3AA"></stop>
+    <stop offset="90%" stop-color="#443A00"></stop>
+  </radialGradient>
+  <radialGradient id="HCO3_1" gradientUnits="userSpaceOnUse" cx="28.843" cy="26.412" r="15.322">
+    <stop offset="0" stop-color="#EAEAEA"></stop>
+    <stop offset="1" stop-color="#0088EE"></stop>
+  </radialGradient>
+  <radialGradient id="HCO3_2" gradientUnits="userSpaceOnUse" cx="55.617" cy="37.127" r="15.322">
+    <stop offset="0" stop-color="#EAEAEA"></stop>
+    <stop offset="1" stop-color="#0088EE"></stop>
+  </radialGradient>
+  <radialGradient id="HCO3_3" gradientUnits="userSpaceOnUse" cx="33.639" cy="54.28" r="11.229">
+    <stop offset="0" stop-color="#FF8080"></stop>
+    <stop offset="1" stop-color="#C40000"></stop>
+  </radialGradient>
+  <radialGradient id="HCO3_4" gradientUnits="userSpaceOnUse" cx="39.203" cy="39.299" r="15.373">
+    <stop offset="0" stop-color="#D5D5D5"></stop>
+    <stop offset="1" stop-color="#2B2B2B"></stop>
+  </radialGradient>
+  <radialGradient id="HCO3_5" gradientUnits="userSpaceOnUse" cx="47.725" cy="25.389" r="15.322">
+    <stop offset="0" stop-color="#EAEAEA"></stop>
+    <stop offset="1" stop-color="#0088EE"></stop>
+  </radialGradient>
+  <!-- compounds color -->
+  <linearGradient id="svg_1" x1="1.0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#1199FF"></stop>
+    <stop offset="1" stop-color="#99bbFF"></stop>
+  </linearGradient>
+  <radialGradient id="protein_color_1" r="0.65306" cy="0.5" cx="0.5">
+    <stop stop-color="#44EE22" offset="0.5"></stop>
+    <stop stop-color="#117700" offset="1"></stop>
+  </radialGradient>
+  <radialGradient id="protein_color_2" r="0.65306" cy="0.5" cx="0.5">
+    <stop stop-color="#FE9A2E" offset="0.5"></stop>
+    <stop stop-color="#CD7B23" offset="1"></stop>
+  </radialGradient>
+  <radialGradient id="protein_color_3" r="0.65306" cy="0.5" cx="0.5">
+    <stop stop-color="#FE642E" offset="0.5"></stop>
+    <stop stop-color="#BB4A21" offset="1"></stop>
+  </radialGradient>
+  <radialGradient id="protein_color_4" r="0.65306" cy="0.5" cx="0.5">
+    <stop stop-color="#298A08" offset="0.5"></stop>
+    <stop stop-color="#195705" offset="1"></stop>
+  </radialGradient>
+  <radialGradient id="protein_color_5" r="0.65306" cy="0.5" cx="0.5">
+    <stop stop-color="#AC58FA" offset="0.5"></stop>
+    <stop stop-color="#8A45CA" offset="1"></stop>
+  </radialGradient>
+  <radialGradient id="protein_color_6" r="0.65306" cy="0.5" cx="0.5">
+    <stop stop-color="#AD3333" offset="0.5"></stop>
+    <stop stop-color="#990000" offset="1"></stop>
+  </radialGradient>
+  <radialGradient id="na_color" r="0.65306" cy="0.5" cx="0.5">
+    <stop stop-color="#FFFF00" offset="0.5"></stop>
+    <stop stop-color="#C2C201" offset="1"></stop>
+  </radialGradient>
+  <radialGradient id="sp_color" r="0.65306" cy="0.5" cx="0.5">
+    <stop stop-color="#01DFD7" offset="0.5"></stop>
+    <stop stop-color="#00ABA5" offset="1"></stop>
+  </radialGradient>
+  <radialGradient id="protein_drug_color" r="0.65306" cy="0.5" cx="0.5">
+    <stop stop-color="#FA58F4" offset="0.5"></stop>
+    <stop stop-color="#C946C5" offset="1"></stop>
+  </radialGradient>
+  <linearGradient id="compound_drug_color" x1="1.0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#FA58F4"></stop>
+    <stop offset="1" stop-color="#C946C5"></stop>
+  </linearGradient>
+   <!-- background -->
+  <linearGradient y2="0.99609" x2="0.75391" y1="0.00781" x1="0.26172" id="svg_3">
+    <stop offset="0" stop-color="#110066"></stop>
+    <stop offset="1" stop-color="#000099"></stop>
+  </linearGradient>
+  <g id="lipid">
+    <g><circle fill="#ff0000" stroke="#000000" cx="10" cy="10" r="5"></circle>
+        <line y2="33" x2="8" y1="15" x1="8" stroke="#000000" fill="none"></line>
+        <line y2="33" x2="12" y1="15" x1="12" stroke="#000000" fill="none"></line>
+    </g>
+    <g><circle fill="#ff0000" stroke="#000000" cx="10" cy="57" r="5"></circle>
+        <line y2="53" x2="8" y1="35" x1="8" stroke="#000000" fill="none"></line>
+        <line y2="53" x2="12" y1="35" x1="12" stroke="#000000" fill="none"></line>
+    </g>
+  </g>
+  <g id="moldb_cache">
+  <g id="PW_C000005_moldb_cache">
+    <image xlink:href="http://moldb.wishartlab.com/molecules/PW_C000005/image.png" pointer-events="none" height="200" width="200"></image>
+  </g><g id="PW_C000012_moldb_cache">
+    <image xlink:href="http://moldb.wishartlab.com/molecules/PW_C000012/image.png" pointer-events="none" height="200" width="200"></image>
+  </g><g id="PW_C000014_moldb_cache">
+    <image xlink:href="http://moldb.wishartlab.com/molecules/PW_C000014/image.png" pointer-events="none" height="200" width="200"></image>
+  </g><g id="PW_C000001_moldb_cache">
+    <image xlink:href="http://moldb.wishartlab.com/molecules/PW_C000001/image.png" pointer-events="none" height="200" width="200"></image>
+  </g><g id="PW_C000002_moldb_cache">
+    <image xlink:href="http://moldb.wishartlab.com/molecules/PW_C000002/image.png" pointer-events="none" height="200" width="200"></image>
+  </g><g id="PW_C000003_moldb_cache">
+    <image xlink:href="http://moldb.wishartlab.com/molecules/PW_C000003/image.png" pointer-events="none" height="200" width="200"></image>
+  </g><g id="PW_C000004_moldb_cache">
+    <image xlink:href="http://moldb.wishartlab.com/molecules/PW_C000004/image.png" pointer-events="none" height="200" width="200"></image>
+  </g><g id="PW_C000006_moldb_cache">
+    <image xlink:href="http://moldb.wishartlab.com/molecules/PW_C000006/image.png" pointer-events="none" height="200" width="200"></image>
+  </g><g id="PW_C000007_moldb_cache">
+    <image xlink:href="http://moldb.wishartlab.com/molecules/PW_C000007/image.png" pointer-events="none" height="200" width="200"></image>
+  </g><g id="PW_C000008_moldb_cache">
+    <image xlink:href="http://moldb.wishartlab.com/molecules/PW_C000008/image.png" pointer-events="none" height="200" width="200"></image>
+  </g><g id="PW_C000009_moldb_cache">
+    <image xlink:href="http://moldb.wishartlab.com/molecules/PW_C000009/image.png" pointer-events="none" height="200" width="200"></image>
+  </g><g id="PW_C000010_moldb_cache">
+    <image xlink:href="http://moldb.wishartlab.com/molecules/PW_C000010/image.png" pointer-events="none" height="200" width="200"></image>
+  </g><g id="PW_C000013_moldb_cache">
+    <image xlink:href="http://moldb.wishartlab.com/molecules/PW_C000013/image.png" pointer-events="none" height="200" width="200"></image>
+  </g><g id="PW_C000011_moldb_cache">
+    <image xlink:href="http://moldb.wishartlab.com/molecules/PW_C000011/image.png" pointer-events="none" height="200" width="200"></image>
+  </g></g>
+  <pattern id="compoundHatch" patternUnits="userSpaceOnUse" width="4" height="4">
+    <rect x="0" y="0" width="100%" height="100%" fill="white"></rect>
+    <path d="M-1,1 l2,-2
+             M0,4 l4,-4
+             M3,5 l2,-2" stroke="#1199FF" stroke-width="1.5"></path>
+  </pattern>
+  <pattern id="nucleicHatch" patternUnits="userSpaceOnUse" width="4" height="4">
+    <rect x="0" y="0" width="100%" height="100%" fill="white"></rect>
+    <path d="M-1,1 l2,-2
+             M0,4 l4,-4
+             M3,5 l2,-2" stroke="#FFFF00" stroke-width="1.5"></path>
+  </pattern>
+  <pattern id="protein_complexHatch" patternUnits="userSpaceOnUse" width="4" height="4">
+    <rect x="0" y="0" width="100%" height="100%" fill="white"></rect>
+    <path d="M-1,1 l2,-2
+             M0,4 l4,-4
+             M3,5 l2,-2" stroke="#44EE22" stroke-width="1.5"></path>
+  </pattern>
+  <pattern id="receptorHatch" patternUnits="userSpaceOnUse" width="4" height="4">
+    <rect x="0" y="0" width="100%" height="100%" fill="white"></rect>
+    <path d="M-1,1 l2,-2
+             M0,4 l4,-4
+             M3,5 l2,-2" stroke="#FF9900" stroke-width="1.5"></path>
+  </pattern>
+  <linearGradient id="mitochondriaInner" gradientUnits="userSpaceOnUse" x1="-66.5934" y1="642.6035" x2="833.4064" y2="642.6035" gradientTransform="matrix(1.25 0 0 1.25 10.3858 -180.3908)">
+    <stop offset="0" style="stop-color:#FEAEAC"></stop>
+    <stop offset="1" style="stop-color:#FFCCCA"></stop>
+  </linearGradient>
+  <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
+      <path d="M 50 0 L 0 0 0 50" fill="none" stroke="#BBB" stroke-width="1"></path>
+  </pattern>
+  <filter id="greyscale">
+    <feColorMatrix type="matrix" values="0.3333 0.3333 0.3333 0 0
+    0.3333 0.3333 0.3333 0 0
+    0.3333 0.3333 0.3333 0 0
+    0 0 0 1 0"></feColorMatrix>
+  </filter>
+  <filter id="outline" color-interpolation-filters="sRGB" x="-5%" y="-5%" width="110%" height="110%">
+    <feColorMatrix type="matrix" in="SourceGraphic" result="gray" values="0.2 0.2 0.2 0 0
+      0.2 0.2 0.2 0 0
+      0.2 0.2 0.2 0 0
+      0 0 0 1 0"></feColorMatrix>
+    <feMorphology operator="dilate" radius="1" in="gray" result="dilated"></feMorphology>
+    <feMorphology operator="erode" radius="1" in="gray" result="eroded"></feMorphology>
+    <feBlend in="dilated" in2="eroded" mode="difference" result="edgeMag"></feBlend>
+    <feComponentTransfer in="edgeMag" result="lines">
+      <feFuncR type="linear" slope="-2" intercept="1"></feFuncR>
+      <feFuncG type="linear" slope="-2" intercept="1"></feFuncG>
+      <feFuncB type="linear" slope="-2" intercept="1"></feFuncB>
+      <feFuncA type="identity"></feFuncA>
+    </feComponentTransfer>
+    <feComposite in="lines" in2="SourceAlpha" operator="in"></feComposite>
+  </filter>
+</defs>
+
+      <g id="pathway" transform="translate(0,0) scale(1,1)">
+      	<rect id="background" fill="#000099" x="0" y="0" width="5365" height="2343"></rect>
+      <g><g>
+    
+      
+    
+    <g id="location" transform="translate(2770,978) rotate(0) scale(1.6,1.6)">
+      <rect class="selection-box" x="-10" y="-10" width="499" height="501" fill="none" stroke="none" stroke-width="1" stroke-dasharray="5,5" vector-effect="non-scaling-stroke"></rect>
+      <image height="481" width="479" xlink:href="https://s3-us-west-2.amazonaws.com/smpdb/drawable_images/images/92.svg?1548458024"></image>
+    </g>
+  </g></g><g><g>
+    
+      
+    
+    <g id="location" transform="translate(40,865) rotate(0) scale(0.7,0.7)">
+      <rect class="selection-box" x="-10" y="-10" width="532" height="532" fill="none" stroke="none" stroke-width="1" stroke-dasharray="5,5" vector-effect="non-scaling-stroke"></rect>
+      <image height="512" width="512" xlink:href="https://s3-us-west-2.amazonaws.com/smpdb/drawable_images/images/146.png?1614847030"></image>
+    </g>
+  </g></g><g><g>
+    <g id="zoom_box" data-zoom-type="left" data-element-type="zoombox">
+      <rect id="zoom_small_rect" x="127" y="1045" height="20" width="25" fill="none" stroke="white" stroke-width="2"></rect>
+      <path id="zoom_center" data-colored="true" d="M152 1045 L418 58 L418 2030 L152 1065 z" fill="#aabbff" stroke="white" stroke-width="2" opacity="0.5"></path>
+      <rect id="zoom_large_rect" x="418" y="58" height="1972" width="4934" fill="none" stroke="white" stroke-width="2"></rect>
+      <text x="2885" y="75" text-anchor="middle" font-family="Verdana" font-size="16" fill="black" pointer-events="none"></text>
+    </g>
+    <g id="edit_symbols">
+    </g>
+  </g></g><g><g>
+    
+    
+    
+      
+      
+    
+    <g id="membrane_visualization" data-element-type="membrane" data-location-id="1" data-complex="false" data-default-color="#4BC8F2">
+      
+        <path data-colored="true" d="M445 115 C445 100 460 85 475 85 C2081 85 3688 85 5295 85 C5310 85 5325 100 5325 115 C5325 734 5325 1353 5325 1973 C5325 1988 5310 2003 5295 2003 C3688 2003 2081 2003 475 2003 C460 2003 445 1988 445 1973 C445 1353 445 734 445 115 " fill="none" stroke="#4BC8F2" stroke-width="50"></path>
+      
+      
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(1835,1968)" data-element-type="protein" data-location-id="18" data-element-id="P70972" data-default-color="url(#protein_color_1)">
+      <ellipse data-colored="true" cx="75" cy="35" rx="75" ry="35" stroke="#000000" stroke-width="1" pointer-events="visible" fill="url(#protein_color_1)"></ellipse>
+      
+      <text x="75" y="17" font-family="Verdana" text-anchor="middle" font-size="15" fill="black" pointer-events="none">
+        
+          <tspan x="75" dy="15">ECF transporter</tspan>
+        
+          <tspan x="75" dy="15">complex</tspan>
+        
+      </text>
+      
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(1005,1928)" data-element-type="protein" data-location-id="19" data-element-id="O34406" data-default-color="url(#protein_color_1)">
+      <ellipse data-colored="true" cx="75" cy="35" rx="75" ry="35" stroke="#000000" stroke-width="1" pointer-events="visible" fill="url(#protein_color_1)"></ellipse>
+      
+      <text x="75" y="17" font-family="Verdana" text-anchor="middle" font-size="15" fill="black" pointer-events="none">
+        
+          <tspan x="75" dy="15">L-cystine-binding</tspan>
+        
+          <tspan x="75" dy="15">protein TcyJ</tspan>
+        
+      </text>
+      
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(1165,1928)" data-element-type="protein" data-location-id="20" data-element-id="O34852" data-default-color="url(#protein_color_1)">
+      <ellipse data-colored="true" cx="75" cy="35" rx="75" ry="35" stroke="#000000" stroke-width="1" pointer-events="visible" fill="url(#protein_color_1)"></ellipse>
+      
+      <text x="75" y="17" font-family="Verdana" text-anchor="middle" font-size="15" fill="black" pointer-events="none">
+        
+          <tspan x="75" dy="15">L-cystine-binding</tspan>
+        
+          <tspan x="75" dy="15">protein TcyK</tspan>
+        
+      </text>
+      
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(1325,1928)" data-element-type="protein" data-location-id="21" data-element-id="O34315" data-default-color="url(#protein_color_1)">
+      <ellipse data-colored="true" cx="75" cy="35" rx="75" ry="35" stroke="#000000" stroke-width="1" pointer-events="visible" fill="url(#protein_color_1)"></ellipse>
+      
+      <text x="75" y="2" font-family="Verdana" text-anchor="middle" font-size="15" fill="black" pointer-events="none">
+        
+          <tspan x="75" dy="15">L-cystine</tspan>
+        
+          <tspan x="75" dy="15">transport system</tspan>
+        
+          <tspan x="75" dy="15">permease protein</tspan>
+        
+          <tspan x="75" dy="15">TcyL</tspan>
+        
+      </text>
+      
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(1005,2008)" data-element-type="protein" data-location-id="22" data-element-id="O34931" data-default-color="url(#protein_color_1)">
+      <ellipse data-colored="true" cx="75" cy="35" rx="75" ry="35" stroke="#000000" stroke-width="1" pointer-events="visible" fill="url(#protein_color_1)"></ellipse>
+      
+      <text x="75" y="2" font-family="Verdana" text-anchor="middle" font-size="15" fill="black" pointer-events="none">
+        
+          <tspan x="75" dy="15">L-cystine</tspan>
+        
+          <tspan x="75" dy="15">transport system</tspan>
+        
+          <tspan x="75" dy="15">permease protein</tspan>
+        
+          <tspan x="75" dy="15">TcyM</tspan>
+        
+      </text>
+      
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(1165,2008)" data-element-type="protein" data-location-id="23" data-element-id="O34900" data-default-color="url(#protein_color_1)">
+      <ellipse data-colored="true" cx="75" cy="35" rx="75" ry="35" stroke="#000000" stroke-width="1" pointer-events="visible" fill="url(#protein_color_1)"></ellipse>
+      
+      <text x="75" y="9.5" font-family="Verdana" text-anchor="middle" font-size="15" fill="black" pointer-events="none">
+        
+          <tspan x="75" dy="15">L-cystine import</tspan>
+        
+          <tspan x="75" dy="15">ATP-binding</tspan>
+        
+          <tspan x="75" dy="15">protein TcyN</tspan>
+        
+      </text>
+      
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(2890,704)" data-element-type="protein" data-location-id="1" data-element-id="P37564" data-default-color="url(#protein_color_1)">
+      <ellipse data-colored="true" cx="75" cy="35" rx="75" ry="35" stroke="#000000" stroke-width="1" pointer-events="visible" fill="url(#protein_color_1)"></ellipse>
+      
+      <text x="75" y="9.5" font-family="Verdana" text-anchor="middle" font-size="15" fill="black" pointer-events="none">
+        
+          <tspan x="75" dy="15">Type III</tspan>
+        
+          <tspan x="75" dy="15">pantothenate</tspan>
+        
+          <tspan x="75" dy="15">kinase</tspan>
+        
+      </text>
+      
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(870,878)" data-element-type="protein" data-location-id="2" data-element-id="P52996" data-default-color="url(#protein_color_1)">
+      <ellipse data-colored="true" cx="75" cy="35" rx="75" ry="35" stroke="#000000" stroke-width="1" pointer-events="visible" fill="url(#protein_color_1)"></ellipse>
+      
+      <text x="75" y="9.5" font-family="Verdana" text-anchor="middle" font-size="15" fill="black" pointer-events="none">
+        
+          <tspan x="75" dy="15">3-methyl-2-</tspan>
+        
+          <tspan x="75" dy="15">oxobutanoate</tspan>
+        
+          <tspan x="75" dy="15">hydroxymethyltransferase</tspan>
+        
+      </text>
+      
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(1540,754)" data-element-type="protein" data-location-id="3" data-element-id="O34661" data-default-color="url(#protein_color_1)">
+      <ellipse data-colored="true" cx="75" cy="35" rx="75" ry="35" stroke="#000000" stroke-width="1" pointer-events="visible" fill="url(#protein_color_1)"></ellipse>
+      
+      <text x="75" y="17" font-family="Verdana" text-anchor="middle" font-size="15" fill="black" pointer-events="none">
+        
+          <tspan x="75" dy="15">2-dehydropantoate</tspan>
+        
+          <tspan x="75" dy="15">2-reductase</tspan>
+        
+      </text>
+      
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(1550,792)" data-element-type="protein" data-location-id="4" data-element-id="P37253" data-default-color="url(#protein_color_1)">
+      <ellipse data-colored="true" cx="75" cy="35" rx="75" ry="35" stroke="#000000" stroke-width="1" pointer-events="visible" fill="url(#protein_color_1)"></ellipse>
+      
+      <text x="75" y="9.5" font-family="Verdana" text-anchor="middle" font-size="15" fill="black" pointer-events="none">
+        
+          <tspan x="75" dy="15">Ketol-acid</tspan>
+        
+          <tspan x="75" dy="15">reductoisomerase</tspan>
+        
+          <tspan x="75" dy="15">(NADP(+))</tspan>
+        
+      </text>
+      
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(2220,704)" data-element-type="protein" data-location-id="5" data-element-id="P52998" data-default-color="url(#protein_color_1)">
+      <ellipse data-colored="true" cx="75" cy="35" rx="75" ry="35" stroke="#000000" stroke-width="1" pointer-events="visible" fill="url(#protein_color_1)"></ellipse>
+      
+      <text x="75" y="17" font-family="Verdana" text-anchor="middle" font-size="15" fill="black" pointer-events="none">
+        
+          <tspan x="75" dy="15">Pantothenate</tspan>
+        
+          <tspan x="75" dy="15">synthetase</tspan>
+        
+      </text>
+      
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(3560,746)" data-element-type="protein" data-location-id="7" data-element-id="O35033" data-default-color="url(#protein_color_1)">
+      <ellipse data-colored="true" cx="75" cy="35" rx="75" ry="35" stroke="#000000" stroke-width="1" pointer-events="visible" fill="url(#protein_color_1)"></ellipse>
+      
+      <text x="75" y="2" font-family="Verdana" text-anchor="middle" font-size="15" fill="black" pointer-events="none">
+        
+          <tspan x="75" dy="15">Coenzyme A</tspan>
+        
+          <tspan x="75" dy="15">biosynthesis</tspan>
+        
+          <tspan x="75" dy="15">bifunctional</tspan>
+        
+          <tspan x="75" dy="15">protein CoaBC</tspan>
+        
+      </text>
+      
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(4230,693)" data-element-type="protein" data-location-id="8" data-element-id="O34797" data-default-color="url(#protein_color_1)">
+      <ellipse data-colored="true" cx="75" cy="35" rx="75" ry="35" stroke="#000000" stroke-width="1" pointer-events="visible" fill="url(#protein_color_1)"></ellipse>
+      
+      <text x="75" y="17" font-family="Verdana" text-anchor="middle" font-size="15" fill="black" pointer-events="none">
+        
+          <tspan x="75" dy="15">Phosphopantetheine</tspan>
+        
+          <tspan x="75" dy="15">adenylyltransferase</tspan>
+        
+      </text>
+      
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(4900,693)" data-element-type="protein" data-location-id="9" data-element-id="O34932" data-default-color="url(#protein_color_1)">
+      <ellipse data-colored="true" cx="75" cy="35" rx="75" ry="35" stroke="#000000" stroke-width="1" pointer-events="visible" fill="url(#protein_color_1)"></ellipse>
+      
+      <text x="75" y="17" font-family="Verdana" text-anchor="middle" font-size="15" fill="black" pointer-events="none">
+        
+          <tspan x="75" dy="15">Dephospho-CoA</tspan>
+        
+          <tspan x="75" dy="15">kinase</tspan>
+        
+      </text>
+      
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(1545,523)" data-element-type="protein" data-location-id="6" data-element-id="P52999" data-default-color="url(#protein_color_1)">
+      <ellipse data-colored="true" cx="75" cy="35" rx="75" ry="35" stroke="#000000" stroke-width="1" pointer-events="visible" fill="url(#protein_color_1)"></ellipse>
+      
+      <text x="75" y="17" font-family="Verdana" text-anchor="middle" font-size="15" fill="black" pointer-events="none">
+        
+          <tspan x="75" dy="15">Aspartate</tspan>
+        
+          <tspan x="75" dy="15">1-decarboxylase</tspan>
+        
+      </text>
+      
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(1810,2113)" data-element-type="compound" data-element-id="PW_C000005" data-location-id="4" data-default-color="url(#svg_1)">
+      
+      <rect data-colored="true" height="200" width="200" rx="10" fill="url(#svg_1)" stroke="black" stroke-width="1" pointer-events="visible"></rect>
+      <rect transform="translate(5,35)" height="160" width="190" rx="10" fill="white" stroke="black" stroke-width="1" pointer-events="visible"></rect>
+      <text x="100" y="5" font-family="Verdana" text-anchor="middle" font-size="20" fill="black" pointer-events="none">
+        
+          <tspan x="100" dy="20">pantothenate</tspan>
+        
+      </text>
+      <use xlink:href="#PW_C000005_moldb_cache" transform="translate(25,40) scale(0.75)"></use>
+      
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(1810,1378)" data-element-type="compound" data-element-id="PW_C000005" data-location-id="1" data-default-color="url(#svg_1)">
+      
+      <rect data-colored="true" height="200" width="200" rx="10" fill="url(#svg_1)" stroke="black" stroke-width="1" pointer-events="visible"></rect>
+      <rect transform="translate(5,35)" height="160" width="190" rx="10" fill="white" stroke="black" stroke-width="1" pointer-events="visible"></rect>
+      <text x="100" y="5" font-family="Verdana" text-anchor="middle" font-size="20" fill="black" pointer-events="none">
+        
+          <tspan x="100" dy="20">pantothenate</tspan>
+        
+      </text>
+      <use xlink:href="#PW_C000005_moldb_cache" transform="translate(25,40) scale(0.75)"></use>
+      
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(1043,2113)" data-element-type="compound" data-element-id="PW_C000012" data-location-id="5" data-default-color="url(#svg_1)">
+      
+      <rect data-colored="true" height="200" width="200" rx="10" fill="url(#svg_1)" stroke="black" stroke-width="1" pointer-events="visible"></rect>
+      <rect transform="translate(5,35)" height="160" width="190" rx="10" fill="white" stroke="black" stroke-width="1" pointer-events="visible"></rect>
+      <text x="100" y="5" font-family="Verdana" text-anchor="middle" font-size="20" fill="black" pointer-events="none">
+        
+          <tspan x="100" dy="20">cysteinopantetheine</tspan>
+        
+      </text>
+      <use xlink:href="#PW_C000012_moldb_cache" transform="translate(25,40) scale(0.75)"></use>
+      
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(1140,1378)" data-element-type="compound" data-element-id="PW_C000012" data-location-id="2" data-default-color="url(#svg_1)">
+      
+      <rect data-colored="true" height="200" width="200" rx="10" fill="url(#svg_1)" stroke="black" stroke-width="1" pointer-events="visible"></rect>
+      <rect transform="translate(5,35)" height="160" width="190" rx="10" fill="white" stroke="black" stroke-width="1" pointer-events="visible"></rect>
+      <text x="100" y="5" font-family="Verdana" text-anchor="middle" font-size="20" fill="black" pointer-events="none">
+        
+          <tspan x="100" dy="20">cysteinopantetheine</tspan>
+        
+      </text>
+      <use xlink:href="#PW_C000012_moldb_cache" transform="translate(25,40) scale(0.75)"></use>
+      
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(1303,2113)" data-element-type="compound" data-element-id="PW_C000014" data-location-id="6" data-default-color="url(#svg_1)">
+      
+      <rect data-colored="true" height="200" width="200" rx="10" fill="url(#svg_1)" stroke="black" stroke-width="1" pointer-events="visible"></rect>
+      <rect transform="translate(5,35)" height="160" width="190" rx="10" fill="white" stroke="black" stroke-width="1" pointer-events="visible"></rect>
+      <text x="100" y="5" font-family="Verdana" text-anchor="middle" font-size="20" fill="black" pointer-events="none">
+        
+          <tspan x="100" dy="20">pantethine</tspan>
+        
+      </text>
+      <use xlink:href="#PW_C000014_moldb_cache" transform="translate(25,40) scale(0.75)"></use>
+      
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(3200,769)" data-element-type="compound" data-element-id="PW_C000014" data-location-id="3" data-default-color="url(#svg_1)">
+      
+      <rect data-colored="true" height="200" width="200" rx="10" fill="url(#svg_1)" stroke="black" stroke-width="1" pointer-events="visible"></rect>
+      <rect transform="translate(5,35)" height="160" width="190" rx="10" fill="white" stroke="black" stroke-width="1" pointer-events="visible"></rect>
+      <text x="100" y="5" font-family="Verdana" text-anchor="middle" font-size="20" fill="black" pointer-events="none">
+        
+          <tspan x="100" dy="20">pantethine</tspan>
+        
+      </text>
+      <use xlink:href="#PW_C000014_moldb_cache" transform="translate(25,40) scale(0.75)"></use>
+      
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(510,818)" data-element-type="compound" data-element-id="PW_C000001" data-location-id="7" data-default-color="url(#svg_1)">
+      
+      <rect data-colored="true" height="200" width="200" rx="10" fill="url(#svg_1)" stroke="black" stroke-width="1" pointer-events="visible"></rect>
+      <rect transform="translate(5,35)" height="160" width="190" rx="10" fill="white" stroke="black" stroke-width="1" pointer-events="visible"></rect>
+      <text x="100" y="5" font-family="Verdana" text-anchor="middle" font-size="20" fill="black" pointer-events="none">
+        
+          <tspan x="100" dy="20">α-ketoisovalerate</tspan>
+        
+      </text>
+      <use xlink:href="#PW_C000001_moldb_cache" transform="translate(25,40) scale(0.75)"></use>
+      
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(1180,818)" data-element-type="compound" data-element-id="PW_C000002" data-location-id="8" data-default-color="url(#svg_1)">
+      
+      <rect data-colored="true" height="200" width="200" rx="10" fill="url(#svg_1)" stroke="black" stroke-width="1" pointer-events="visible"></rect>
+      <rect transform="translate(5,35)" height="160" width="190" rx="10" fill="white" stroke="black" stroke-width="1" pointer-events="visible"></rect>
+      <text x="100" y="5" font-family="Verdana" text-anchor="middle" font-size="20" fill="black" pointer-events="none">
+        
+          <tspan x="100" dy="20">α-ketopantoate</tspan>
+        
+      </text>
+      <use xlink:href="#PW_C000002_moldb_cache" transform="translate(25,40) scale(0.75)"></use>
+      
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(1860,713)" data-element-type="compound" data-element-id="PW_C000003" data-location-id="9" data-default-color="url(#svg_1)">
+      
+      <rect data-colored="true" height="200" width="200" rx="10" fill="url(#svg_1)" stroke="black" stroke-width="1" pointer-events="visible"></rect>
+      <rect transform="translate(5,35)" height="160" width="190" rx="10" fill="white" stroke="black" stroke-width="1" pointer-events="visible"></rect>
+      <text x="100" y="5" font-family="Verdana" text-anchor="middle" font-size="20" fill="black" pointer-events="none">
+        
+          <tspan x="100" dy="20">pantoate</tspan>
+        
+      </text>
+      <use xlink:href="#PW_C000003_moldb_cache" transform="translate(25,40) scale(0.75)"></use>
+      
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(1860,463)" data-element-type="compound" data-element-id="PW_C000004" data-location-id="10" data-default-color="url(#svg_1)">
+      
+      <rect data-colored="true" height="200" width="200" rx="10" fill="url(#svg_1)" stroke="black" stroke-width="1" pointer-events="visible"></rect>
+      <rect transform="translate(5,35)" height="160" width="190" rx="10" fill="white" stroke="black" stroke-width="1" pointer-events="visible"></rect>
+      <text x="100" y="5" font-family="Verdana" text-anchor="middle" font-size="20" fill="black" pointer-events="none">
+        
+          <tspan x="100" dy="20">β-alanine</tspan>
+        
+      </text>
+      <use xlink:href="#PW_C000004_moldb_cache" transform="translate(25,40) scale(0.75)"></use>
+      
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(2530,644)" data-element-type="compound" data-element-id="PW_C000005" data-location-id="11" data-default-color="url(#svg_1)">
+      
+      <rect data-colored="true" height="200" width="200" rx="10" fill="url(#svg_1)" stroke="black" stroke-width="1" pointer-events="visible"></rect>
+      <rect transform="translate(5,35)" height="160" width="190" rx="10" fill="white" stroke="black" stroke-width="1" pointer-events="visible"></rect>
+      <text x="100" y="5" font-family="Verdana" text-anchor="middle" font-size="20" fill="black" pointer-events="none">
+        
+          <tspan x="100" dy="20">pantothenate</tspan>
+        
+      </text>
+      <use xlink:href="#PW_C000005_moldb_cache" transform="translate(25,40) scale(0.75)"></use>
+      
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(3200,519)" data-element-type="compound" data-element-id="PW_C000006" data-location-id="12" data-default-color="url(#svg_1)">
+      
+      <rect data-colored="true" height="200" width="200" rx="10" fill="url(#svg_1)" stroke="black" stroke-width="1" pointer-events="visible"></rect>
+      <rect transform="translate(5,35)" height="160" width="190" rx="10" fill="white" stroke="black" stroke-width="1" pointer-events="visible"></rect>
+      <text x="100" y="5" font-family="Verdana" text-anchor="middle" font-size="20" fill="black" pointer-events="none">
+        
+          <tspan x="100" dy="20">phosphopantothenate</tspan>
+        
+      </text>
+      <use xlink:href="#PW_C000006_moldb_cache" transform="translate(25,40) scale(0.75)"></use>
+      
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(1180,318)" data-element-type="compound" data-element-id="PW_C000007" data-location-id="13" data-default-color="url(#svg_1)">
+      
+      <rect data-colored="true" height="200" width="200" rx="10" fill="url(#svg_1)" stroke="black" stroke-width="1" pointer-events="visible"></rect>
+      <rect transform="translate(5,35)" height="160" width="190" rx="10" fill="white" stroke="black" stroke-width="1" pointer-events="visible"></rect>
+      <text x="100" y="5" font-family="Verdana" text-anchor="middle" font-size="20" fill="black" pointer-events="none">
+        
+          <tspan x="100" dy="20">cysteine</tspan>
+        
+      </text>
+      <use xlink:href="#PW_C000007_moldb_cache" transform="translate(25,40) scale(0.75)"></use>
+      
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(3870,633)" data-element-type="compound" data-element-id="PW_C000008" data-location-id="14" data-default-color="url(#svg_1)">
+      
+      <rect data-colored="true" height="220" width="200" rx="10" fill="url(#svg_1)" stroke="black" stroke-width="1" pointer-events="visible"></rect>
+      <rect transform="translate(5,55)" height="160" width="190" rx="10" fill="white" stroke="black" stroke-width="1" pointer-events="visible"></rect>
+      <text x="100" y="5" font-family="Verdana" text-anchor="middle" font-size="20" fill="black" pointer-events="none">
+        
+          <tspan x="100" dy="20">4'-</tspan>
+        
+          <tspan x="100" dy="20">phosphopantetheine</tspan>
+        
+      </text>
+      <use xlink:href="#PW_C000008_moldb_cache" transform="translate(25,60) scale(0.75)"></use>
+      
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(4540,633)" data-element-type="compound" data-element-id="PW_C000009" data-location-id="15" data-default-color="url(#svg_1)">
+      
+      <rect data-colored="true" height="200" width="200" rx="10" fill="url(#svg_1)" stroke="black" stroke-width="1" pointer-events="visible"></rect>
+      <rect transform="translate(5,35)" height="160" width="190" rx="10" fill="white" stroke="black" stroke-width="1" pointer-events="visible"></rect>
+      <text x="100" y="5" font-family="Verdana" text-anchor="middle" font-size="20" fill="black" pointer-events="none">
+        
+          <tspan x="100" dy="20">dephospho-CoA</tspan>
+        
+      </text>
+      <use xlink:href="#PW_C000009_moldb_cache" transform="translate(25,40) scale(0.75)"></use>
+      
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(5210,713)" data-element-type="compound" data-element-id="PW_C000010" data-location-id="16" data-default-color="url(#coa)">
+      
+      <g id="Layer 1">
+        <g>
+          <rect data-colored="true" height="28" width="48" rx="12" fill="url(#coa)" stroke="black" stroke-width="1"></rect>
+        </g>
+        <text x="24" y="6" text-anchor="middle" font-family="Helvetica-Bold" font-size="12" fill="#000000">
+          <tspan x="24" dy="12">CoA</tspan>
+        </text>
+      </g>
+      
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(1180,568)" data-element-type="compound" data-element-id="PW_C000013" data-location-id="17" data-default-color="url(#svg_1)">
+      
+      <rect data-colored="true" height="200" width="200" rx="10" fill="url(#svg_1)" stroke="black" stroke-width="1" pointer-events="visible"></rect>
+      <rect transform="translate(5,35)" height="160" width="190" rx="10" fill="white" stroke="black" stroke-width="1" pointer-events="visible"></rect>
+      <text x="100" y="5" font-family="Verdana" text-anchor="middle" font-size="20" fill="black" pointer-events="none">
+        
+          <tspan x="100" dy="20">aspartate</tspan>
+        
+      </text>
+      <use xlink:href="#PW_C000013_moldb_cache" transform="translate(25,40) scale(0.75)"></use>
+      
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(1180,1068)" data-element-type="compound" data-element-id="PW_C000011" data-location-id="18" data-default-color="url(#svg_1)">
+      
+      <rect data-colored="true" height="200" width="200" rx="10" fill="url(#svg_1)" stroke="black" stroke-width="1" pointer-events="visible"></rect>
+      <rect transform="translate(5,35)" height="160" width="190" rx="10" fill="white" stroke="black" stroke-width="1" pointer-events="visible"></rect>
+      <text x="100" y="5" font-family="Verdana" text-anchor="middle" font-size="20" fill="black" pointer-events="none">
+        
+          <tspan x="100" dy="20">pantetheine</tspan>
+        
+      </text>
+      <use xlink:href="#PW_C000011_moldb_cache" transform="translate(25,40) scale(0.75)"></use>
+      
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(1860,963)" data-element-type="compound" data-element-id="PW_C000012" data-location-id="19" data-default-color="url(#svg_1)">
+      
+      <rect data-colored="true" height="200" width="200" rx="10" fill="url(#svg_1)" stroke="black" stroke-width="1" pointer-events="visible"></rect>
+      <rect transform="translate(5,35)" height="160" width="190" rx="10" fill="white" stroke="black" stroke-width="1" pointer-events="visible"></rect>
+      <text x="100" y="5" font-family="Verdana" text-anchor="middle" font-size="20" fill="black" pointer-events="none">
+        
+          <tspan x="100" dy="20">cysteinopantetheine</tspan>
+        
+      </text>
+      <use xlink:href="#PW_C000012_moldb_cache" transform="translate(25,40) scale(0.75)"></use>
+      
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(510,1068)" data-element-type="compound" data-element-id="PW_C000014" data-location-id="20" data-default-color="url(#svg_1)">
+      
+      <rect data-colored="true" height="200" width="200" rx="10" fill="url(#svg_1)" stroke="black" stroke-width="1" pointer-events="visible"></rect>
+      <rect transform="translate(5,35)" height="160" width="190" rx="10" fill="white" stroke="black" stroke-width="1" pointer-events="visible"></rect>
+      <text x="100" y="5" font-family="Verdana" text-anchor="middle" font-size="20" fill="black" pointer-events="none">
+        
+          <tspan x="100" dy="20">pantethine</tspan>
+        
+      </text>
+      <use xlink:href="#PW_C000014_moldb_cache" transform="translate(25,40) scale(0.75)"></use>
+      
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+      
+      
+    
+    
+    
+    
+    
+    <path data-colored="true" d="M1910 2113 C1910 2088 1910 2063 1910 2038 " fill="none" stroke="#44ee22" stroke-width="9"></path>
+    <path id="arrow_path" data-colored="true" d="" fill="none" stroke="#44ee22" stroke-width="9"></path>
+    
+  </g></g><g><g>
+    
+    
+    
+    
+      
+      
+    
+    
+    
+    
+    
+    <path data-colored="true" d="M1910 1968 C1910 1938 1910 1678 1910 1578 " fill="none" stroke="#44ee22" stroke-width="9"></path>
+    <path id="arrow_path" data-colored="true" d="" fill="none" stroke="#44ee22" stroke-width="9"></path>
+    
+  </g></g><g><g>
+    
+    
+    
+    
+      
+      
+    
+    
+    
+    
+    
+    <path data-colored="true" d="M1143 2113 C1143 2083 1240 2108 1240 2078 " fill="none" stroke="#44ee22" stroke-width="9"></path>
+    <path id="arrow_path" data-colored="true" d="" fill="none" stroke="#44ee22" stroke-width="9"></path>
+    
+  </g></g><g><g>
+    
+    
+    
+    
+      
+      
+    
+    
+    
+    
+    
+    <path data-colored="true" d="M1240 1928 C1240 1898 1240 1668 1240 1578 " fill="none" stroke="#44ee22" stroke-width="9"></path>
+    <path id="arrow_path" data-colored="true" d="" fill="none" stroke="#44ee22" stroke-width="9"></path>
+    
+  </g></g><g><g>
+    
+    
+    
+    
+      
+      
+    
+    
+    
+    
+    
+    <path data-colored="true" d="M1403 2113 C1403 1913 2154 2031 2452 1757 C2749 1482 2690 739 2890 739 " fill="none" stroke="#44ee22" stroke-width="9"></path>
+    <path id="arrow_path" data-colored="true" d="" fill="none" stroke="#44ee22" stroke-width="9"></path>
+    
+  </g></g><g><g>
+    
+    
+    
+    
+      
+      
+    
+    
+    
+    
+    
+    <path data-colored="true" d="M3040 739 C3070 739 3150 869 3200 869 " fill="none" stroke="#44ee22" stroke-width="9"></path>
+    <path id="arrow_path" data-colored="true" d="" fill="none" stroke="#44ee22" stroke-width="9"></path>
+    
+  </g></g><g><g>
+    
+    
+    
+    
+      
+      
+    
+    
+    
+    
+    
+    <path data-colored="true" d="M710 918 C750 918 840 913 870 913 " fill="none" stroke="#ffc500" stroke-width="9"></path>
+    <path id="arrow_path" data-colored="true" d="" fill="none" stroke="#ffc500" stroke-width="9"></path>
+    
+  </g></g><g><g>
+    
+    
+    
+    
+      
+      
+    
+    
+    
+    
+    
+    <path data-colored="true" d="M1180 918 C1140 918 1050 913 1020 913 " fill="none" stroke="#ffc500" stroke-width="9"></path>
+    <path id="arrow_path" data-colored="true" d=" M 1154.0192378864667 933 L 1180 918 L 1154.0192378864667 903" fill="none" stroke="#ffc500" stroke-width="9"></path>
+    
+  </g></g><g><g>
+    
+    
+    
+    
+      
+      
+    
+    
+    
+    
+    
+    <path data-colored="true" d="M1380 918 C1427 918 1510 789 1540 789 " fill="none" stroke="#ffc500" stroke-width="9"></path>
+    <path id="arrow_path" data-colored="true" d="" fill="none" stroke="#ffc500" stroke-width="9"></path>
+    
+  </g></g><g><g>
+    
+    
+    
+    
+      
+      
+    
+    
+    
+    
+    
+    <path data-colored="true" d="M1860 813 C1820 813 1730 827 1700 827 " fill="none" stroke="#ffc500" stroke-width="9"></path>
+    <path id="arrow_path" data-colored="true" d=" M 1834.0192378864667 828 L 1860 813 L 1834.0192378864667 798" fill="none" stroke="#ffc500" stroke-width="9"></path>
+    
+  </g></g><g><g>
+    
+    
+    
+    
+      
+      
+    
+    
+    
+    
+    
+    <path data-colored="true" d="M2060 813 C2103 813 2190 739 2220 739 " fill="none" stroke="#ffc500" stroke-width="9"></path>
+    <path id="arrow_path" data-colored="true" d="" fill="none" stroke="#ffc500" stroke-width="9"></path>
+    
+  </g></g><g><g>
+    
+    
+    
+    
+      
+      
+    
+    
+    
+    
+    
+    <path data-colored="true" d="M2060 563 C2120 563 2190 739 2220 739 " fill="none" stroke="#ffc500" stroke-width="9"></path>
+    <path id="arrow_path" data-colored="true" d="" fill="none" stroke="#ffc500" stroke-width="9"></path>
+    
+  </g></g><g><g>
+    
+    
+    
+    
+      
+      
+    
+    
+    
+    
+    
+    <path data-colored="true" d="M2530 744 C2490 744 2400 739 2370 739 " fill="none" stroke="#ffc500" stroke-width="9"></path>
+    <path id="arrow_path" data-colored="true" d=" M 2504.0192378864667 759 L 2530 744 L 2504.0192378864667 729" fill="none" stroke="#ffc500" stroke-width="9"></path>
+    
+  </g></g><g><g>
+    
+    
+    
+    
+      
+      
+    
+    
+    
+    
+    
+    <path data-colored="true" d="M2730 744 C2770 744 2860 739 2890 739 " fill="none" stroke="#ffc500" stroke-width="9"></path>
+    <path id="arrow_path" data-colored="true" d="" fill="none" stroke="#ffc500" stroke-width="9"></path>
+    
+  </g></g><g><g>
+    
+    
+    
+    
+      
+      
+    
+    
+    
+    
+    
+    <path data-colored="true" d="M3200 619 C3150 619 3070 739 3040 739 " fill="none" stroke="#ffc500" stroke-width="9"></path>
+    <path id="arrow_path" data-colored="true" d=" M 3174.0192378864667 634 L 3200 619 L 3174.0192378864667 604" fill="none" stroke="#ffc500" stroke-width="9"></path>
+    
+  </g></g><g><g>
+    
+    
+    
+    
+      
+      
+    
+    
+    
+    
+    
+    <path data-colored="true" d="M3400 619 C3457 619 3530 781 3560 781 " fill="none" stroke="#ffc500" stroke-width="9"></path>
+    <path id="arrow_path" data-colored="true" d="" fill="none" stroke="#ffc500" stroke-width="9"></path>
+    
+  </g></g><g><g>
+    
+    
+    
+    
+      
+      
+    
+    
+    
+    
+    
+    <path data-colored="true" d="M1380 418 C1580 418 1524 329 1960 403 C2396 476 3360 781 3560 781 " fill="none" stroke="#ffc500" stroke-width="9"></path>
+    <path id="arrow_path" data-colored="true" d="" fill="none" stroke="#ffc500" stroke-width="9"></path>
+    
+  </g></g><g><g>
+    
+    
+    
+    
+      
+      
+    
+    
+    
+    
+    
+    <path data-colored="true" d="M3870 743 C3828 743 3740 781 3710 781 " fill="none" stroke="#ffc500" stroke-width="9"></path>
+    <path id="arrow_path" data-colored="true" d=" M 3844.0192378864667 758 L 3870 743 L 3844.0192378864667 728" fill="none" stroke="#ffc500" stroke-width="9"></path>
+    
+  </g></g><g><g>
+    
+    
+    
+    
+      
+      
+    
+    
+    
+    
+    
+    <path data-colored="true" d="M4070 743 C4110 743 4200 728 4230 728 " fill="none" stroke="#ffc500" stroke-width="9"></path>
+    <path id="arrow_path" data-colored="true" d="" fill="none" stroke="#ffc500" stroke-width="9"></path>
+    
+  </g></g><g><g>
+    
+    
+    
+    
+      
+      
+    
+    
+    
+    
+    
+    <path data-colored="true" d="M4540 733 C4500 733 4410 728 4380 728 " fill="none" stroke="#ffc500" stroke-width="9"></path>
+    <path id="arrow_path" data-colored="true" d=" M 4514.019237886467 748 L 4540 733 L 4514.019237886467 718" fill="none" stroke="#ffc500" stroke-width="9"></path>
+    
+  </g></g><g><g>
+    
+    
+    
+    
+      
+      
+    
+    
+    
+    
+    
+    <path data-colored="true" d="M4740 733 C4780 733 4870 728 4900 728 " fill="none" stroke="#ffc500" stroke-width="9"></path>
+    <path id="arrow_path" data-colored="true" d="" fill="none" stroke="#ffc500" stroke-width="9"></path>
+    
+  </g></g><g><g>
+    
+    
+    
+    
+      
+      
+    
+    
+    
+    
+    
+    <path data-colored="true" d="M5210 728 C5170 728 5080 728 5050 728 " fill="none" stroke="#ffc500" stroke-width="9"></path>
+    <path id="arrow_path" data-colored="true" d=" M 5184.019237886467 743 L 5210 728 L 5184.019237886467 713" fill="none" stroke="#ffc500" stroke-width="9"></path>
+    
+  </g></g><g><g>
+    
+    
+    
+    
+      
+      
+    
+    
+    
+    
+    
+    <path data-colored="true" d="M1380 668 C1428 668 1515 558 1545 558 " fill="none" stroke="#ffc500" stroke-width="9"></path>
+    <path id="arrow_path" data-colored="true" d="" fill="none" stroke="#ffc500" stroke-width="9"></path>
+    
+  </g></g><g><g>
+    
+    
+    
+    
+      
+      
+    
+    
+    
+    
+    
+    <path data-colored="true" d="M1860 563 C1819 563 1725 558 1695 558 " fill="none" stroke="#ffc500" stroke-width="9"></path>
+    <path id="arrow_path" data-colored="true" d=" M 1834.0192378864667 578 L 1860 563 L 1834.0192378864667 548" fill="none" stroke="#ffc500" stroke-width="9"></path>
+    
+  </g></g><g><g>
+    
+    
+    
+    
+      
+      
+    
+    
+    
+    
+    
+    <path data-colored="true" d="M3870 743 C3810 743 3665 676 3635 676 " fill="none" stroke="#ffc500" stroke-width="9"></path>
+    <path id="arrow_path" data-colored="true" d=" M 3844.0192378864667 758 L 3870 743 L 3844.0192378864667 728" fill="none" stroke="#ffc500" stroke-width="9"></path>
+    
+  </g></g><g><g>
+    
+    
+    
+    
+      
+      
+    
+    
+    
+    
+    
+    <path data-colored="true" d="M1860 1063 C1723 1063 1412 788 1382 788 " fill="none" stroke="#ffc500" stroke-width="9"></path>
+    <path id="arrow_path" data-colored="true" d=" M 1834.0192378864667 1078 L 1860 1063 L 1834.0192378864667 1048" fill="none" stroke="#ffc500" stroke-width="9"></path>
+    
+  </g></g><g><g>
+    
+    
+    
+    
+      
+      
+    
+    
+    
+    
+    
+    <path data-colored="true" d="M1180 1168 C1063 1168 742 1163 712 1163 " fill="none" stroke="#ffc500" stroke-width="9"></path>
+    <path id="arrow_path" data-colored="true" d=" M 1154.019237886467 1183 L 1180 1168 L 1154.019237886467 1153" fill="none" stroke="#ffc500" stroke-width="9"></path>
+    
+  </g></g><g><g>
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(525,4) scale(2.0,2.0)">
+      <rect class="selection-box" x="-5" y="15" width="220" height="51" fill="none" stroke="none" stroke-width="1" stroke-dasharray="5,5" vector-effect="non-scaling-stroke"></rect>
+      <rect data-colored="true" transform="translate(5,25)" height="31" width="200" rx="10" fill="white" stroke="black" stroke-width="3" pointer-events="visible"></rect>
+      <text x="105" y="31" text-anchor="middle" font-family="Verdana" font-size="16" fill="black" pointer-events="none">
+        
+          <tspan x="108" dy="16">Cell Membrane</tspan>
+        
+      </text>
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(482,114) scale(2.0,2.0)">
+      <rect class="selection-box" x="-5" y="15" width="220" height="51" fill="none" stroke="none" stroke-width="1" stroke-dasharray="5,5" vector-effect="non-scaling-stroke"></rect>
+      <rect data-colored="true" transform="translate(5,25)" height="31" width="200" rx="10" fill="white" stroke="black" stroke-width="3" pointer-events="visible"></rect>
+      <text x="105" y="31" text-anchor="middle" font-family="Verdana" font-size="16" fill="black" pointer-events="none">
+        
+          <tspan x="108" dy="16">Bacillus subtilis</tspan>
+        
+      </text>
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(482,182) scale(2.0,2.0)">
+      <rect class="selection-box" x="-5" y="15" width="220" height="51" fill="none" stroke="none" stroke-width="1" stroke-dasharray="5,5" vector-effect="non-scaling-stroke"></rect>
+      <rect data-colored="true" transform="translate(5,25)" height="31" width="200" rx="10" fill="white" stroke="black" stroke-width="3" pointer-events="visible"></rect>
+      <text x="105" y="31" text-anchor="middle" font-family="Verdana" font-size="16" fill="black" pointer-events="none">
+        
+          <tspan x="108" dy="16">cytoplasm</tspan>
+        
+      </text>
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(2050,2128) scale(2.0,2.0)">
+      <rect class="selection-box" x="-5" y="15" width="220" height="67" fill="none" stroke="none" stroke-width="1" stroke-dasharray="5,5" vector-effect="non-scaling-stroke"></rect>
+      <rect data-colored="true" transform="translate(5,25)" height="47" width="200" rx="10" fill="white" stroke="black" stroke-width="3" pointer-events="visible"></rect>
+      <text x="105" y="31" text-anchor="middle" font-family="Verdana" font-size="16" fill="black" pointer-events="none">
+        
+          <tspan x="108" dy="16">Bacillus subtilis</tspan>
+        
+          <tspan x="108" dy="16">extracellular</tspan>
+        
+      </text>
+    </g>
+  </g></g><g><g>
+    
+    
+    
+    
+    
+      
+      
+    
+    <g id="location" transform="translate(2943,1281) scale(2.0,2.0)">
+      <rect class="selection-box" x="-5" y="15" width="220" height="51" fill="none" stroke="none" stroke-width="1" stroke-dasharray="5,5" vector-effect="non-scaling-stroke"></rect>
+      <rect data-colored="true" transform="translate(5,25)" height="31" width="200" rx="10" fill="white" stroke="black" stroke-width="3" pointer-events="visible"></rect>
+      <text x="105" y="31" text-anchor="middle" font-family="Verdana" font-size="16" fill="black" pointer-events="none">
+        
+          <tspan x="108" dy="16">Bacterial Chromosome</tspan>
+        
+      </text>
+    </g>
+  </g></g></g>
+	</svg>

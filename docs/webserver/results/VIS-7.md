@@ -51,7 +51,7 @@ interaction edges 4 -> 0, routed (3+ segment) edges over the 9: 20 -> 18, throug
 are unchanged except enterobactin (byte-identical geometry elsewhere); on the 97-PWML corpus one PWML (4.pwml) changes
 geometry. Honest limit: the arches are still long (enterobactin total interaction length 7422 -> 7673 units) because
 the interacting enzymes are far apart in the chain; the loops and rectangles are gone, the long thin arches stay.
-PathWhiz drew the new r30 enterobactin with the arches as thin dark curves over the chain, none through a box
+PathWhiz drew the new enterobactin with the arches as thin dark curves over the chain, none through a box
 (`evidence/VIS-7/pathwhiz/`). Option to shorten them (open question 2).
 
 ## 3. Item 3: chromosome and cell art not loading: environment
@@ -68,28 +68,56 @@ Nothing to fix in our PWML.
 | note | result |
 |---|---|
 | F1 content_check | the two rules are one-directional and per location id: only base `label-type protein` -> head `subunit`, only base template 2 -> head 12 on a nucleic-acid location are read as equal; the reverse or any other value counts (base writer already writes `subunit` in places, a blanket mask would hide a head change there). `strict` argument drops both rules. Rule-based: 0 differences on 8/8 + item-6 and 97/97; strict: 4 of 8 showcases and 7 of 97 differ, every difference line is one of those two rules (`evidence/VIS-7/metrics/`) |
-| F2 subunit labels | unit test `test_two_named_subunits_are_labelled_by_subunit_one_subunit_and_unknown_stay_protein` (2 named subunits -> `subunit`, 1-subunit complex and an Unknown subunit -> `protein`). PathWhiz import of the r30 PWMLs with screenshots: chlorophyll draws each Mg-chelatase subunit by its own name (Protogen IX, PPO1, PPO; PORB complex; protochlorophyllide reductase) in `evidence/VIS-7/pathwhiz/`. Coenzyme A: see section 6 |
+| F2 subunit labels | unit test `test_two_named_subunits_are_labelled_by_subunit_one_subunit_and_unknown_stay_protein` (2 named subunits -> `subunit`, 1-subunit complex and an Unknown subunit -> `protein`). PathWhiz import of the VIS-7 PWMLs with screenshots: chlorophyll draws each Mg-chelatase subunit by its own name (Protogen IX, PPO1, PPO; PORB complex; protochlorophyllide reductase) in `evidence/VIS-7/pathwhiz/`. Coenzyme A: each subunit draws under its own name, `TcyJKLMN` 0 times (section 6) |
 | F3 long path | `_shorten_long_paths` split out of `relayout` (same code), test with a 40-segment path over 255 characters: result <= 255 characters, start and end points unchanged; a short path untouched |
 | F4 | `render/pathbank.py:433` mangled `else` + 17 spaces rewrapped as an if/elif chain, same result |
 | F5 | `layout.py` misplaced `on_membrane` comment moved onto its own line |
 | F6 | chain-order test strict (`>` / `<`), equal x allowed only for the isochorismate -> 2,3-dihydro-2,3-dihydroxybenzoate pair |
-| F7 | relayout time per call over the 97 corpus PWMLs: max 0.19 s, total 1.86 s; largest PWML (item 7, chlorophyll, 313 KB): 0.08-0.10 s, base tree 0.08 s (`logs relayout_times`, `scripts/timing7.py`) |
+| F7 | relayout time per call over the 97 corpus PWMLs: max 0.19 s, total 1.86 s; largest PWML (item 7, chlorophyll, 313 KB): 0.08-0.10 s, base tree 0.08 s (`evidence/VIS-7/logs/relayout_times_*.txt`, `scripts/timing7.py`) |
 | F9 / VIS-2 F4 | `cell_art.gram_negative` takes the species names; a species whose name starts with "Mycobacter" never draws the Gram-negative envelope (no peptidoglycan line, no flat envelope); test `test_mycobacterium_outer_membrane_is_not_a_gram_negative_envelope`. No other genus changed |
 
 ## 5. Content check
 
 `scripts/content_check.py` (rule-based, one-directional) and `strict`, base = unmodified `f3241270` replays (VIS-5's):
-8 showcases + item-6: 0 differences rule-based; 97-PWML corpus (`replay/c1`): 97/97 identical rule-based; strict diff
+8 showcases + item-6: 0 differences rule-based; 97-PWML corpus (`c1` and `c2`): 97/97 identical rule-based; strict diff
 7/97 = only label-type / nucleic-acid template lines of VIS-5 items 11 and 13. VIS-7 against VIS-5 r28: strict 0
 differences (97/97), geometry differs only in enterobactin (and corpus 4.pwml).
 
 ## 6. PathWhiz A/B
 
-Queue, heavy lock, harness VIS-2 / project `t2pw-pwdraw` (`scripts/pwab.sh`); stack down afterwards, BW_EXIT=0,
-FINAL SURVIVING COUNT 0. Checkpoint r30 (code `1e038639`): 10/10 success, **import errors identical to VIS-5 r27 for all
-10 files** (success, error lines and created record counts, `scripts/pwcmp.py`: 0 new error lines; sums 3 / 1 / 15 / 0 /
-1 / 0 / 0 / 22 / 0 / 7). Screenshots 7 of 10 saved; the other three (coenzyme A, ent-item6, sour taste) timed out on the
-viewer under machine load, as in VIS-5; a retry is below.
+Queue, heavy lock, harness VIS-2 / project `t2pw-pwdraw` (`scripts/pwab.sh`, `pwab3.sh`); stack down afterwards each time,
+BW_EXIT=0, FINAL SURVIVING COUNT 0. Checkpoint `a3` (code `1e038639`): 10/10 import success (9 showcases + PathBank
+PW000779), **import errors identical to VIS-5 r27 for all 10 files** (success flag, error lines and created record
+counts; `evidence/VIS-7/pathwhiz/ab_vs_vis5_r27.txt`: 0 new error lines; error counts 3 / 1 / 15 / 0 / 1 / 0 / 0 / 22 / 0
+/ 7). Screenshots: 7 of 10 saved (enterobactin, chlorophyll, ceramide, furochromone, lipid A, menaquinone, PW000779); the
+viewer timed out on coenzyme A, ent-item6 and sour taste under machine load (as in VIS-5), so they were re-imported
+alone (`a3b`: 3/3 success, same errors as r27, 3 screenshots). `compare.html` (`C:/t/vis-pw7-work/`) shows per pathway
+VIS-5 r28 preview, VIS-7 preview, VIS-7 in PathWhiz, PathBank reference.
+
+F2 check in PathWhiz: coenzyme A's TcyJKLMN complex draws each subunit with its own protein name (SVG text: TcyL, TcyM,
+"protein TcyJ", "protein TcyK", "protein TcyN"; the complex name "TcyJKLMN" appears 0 times; VIS-5 section 3 item 13 records it printed five
+times). Chlorophyll's Mg-chelatase subunits draw as Protogen IX / PPO1 / PPO, PORB complex, protochlorophyllide
+reductase. The PathBank-style `subunit` labels import and draw correctly.
+
+## 6b. Gates (queue, heavy lock, clean tree, HEAD `6f497433` = code `1e038639` + docs, 0 survivors each)
+
+| gate | result |
+|---|---|
+| `vis7-focused-final`: `tests/test_pwml_*.py` | 285 passed |
+| `tests/test_render_*.py` | 49 passed |
+| `tests/test_final_payload_writer_fixes.py` | 22 passed |
+| `tests/test_orch768_replay_corpus.py` | 9 passed |
+| wrapper | BW_EXIT=0, FINAL SURVIVING COUNT 0 |
+| `vis7-suite2`: SMOKE | 511 passed |
+| golden seams batch / c011 / stage8 / quarantine (unedited) | 2 / 8 / 4 / 24 passed |
+| equivalence run_pathway / app vs service / default path | 8 / 14 / 6 passed |
+| vision | 370 passed, 1 skipped |
+| web | 83 passed |
+| wrapper | BW_EXIT=0, FINAL SURVIVING COUNT 0 |
+| `vis7-corpus-c2`: 97-PWML replay corpus through this tree (relayout timed) | BW_EXIT=0, 97/97 PWMLs, content check 97/97 identical, 0 survivors |
+
+Logs in `evidence/VIS-7/gates/`. The first corpus run (`c1`, same code) also passed; its wrapper log was truncated by the
+slip in section 7, hence the re-run `c2`.
 
 ## 7. Dead ends and slips
 

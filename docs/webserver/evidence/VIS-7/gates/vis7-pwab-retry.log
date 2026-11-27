@@ -1,0 +1,46 @@
+[pwi] starting rails server in the container
+[pwi] OK       93.9s  v5_coenzyme-a.pwml  errors=0
+[pwi] OK       64.5s  v5_ent-item6.pwml  errors=1
+[pwi] OK       27.6s  v5_sour-taste.pwml  errors=7
+[pwi] summary: {"files": 3, "success_true": 3, "success_true_no_errors": 1, "success_false": 0, "total_seconds": 185.9}
+EXIT_import=0
+ Container t2pw-pwdraw-app-1 Stopping 
+ Container t2pw-pwdraw-app-1 Stopped 
+ Container t2pw-pwdraw-app-1 Removing 
+ Container t2pw-pwdraw-app-1 Removed 
+ Container t2pw-pwdraw-db-1 Stopping 
+ Container t2pw-pwdraw-db-1 Stopped 
+ Container t2pw-pwdraw-db-1 Removing 
+ Container t2pw-pwdraw-db-1 Removed 
+ Network t2pw-pwdraw_default Removing 
+ Network t2pw-pwdraw_default Removed 
+STACK_DOWN rc=0
+PWAB_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ d18c3fb6f884fabcbf90cb267894f2f249b963cd  [git, worktree dirty=True]
+label                   : vis7-pwab-retry
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/vis-pw7-work/scripts/pwab3.sh a3 a3b coenzyme-a ent-item6 sour-taste
+cwd                     : C:\t\vis-pw7-work
+root PID / process group: 685572 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 2400 s
+duration                : 683.09 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 49  690764:bash.exe, 690932:bash.exe, 691056:bash.exe, 691468:bash.exe, 691492:python.exe, 691504:python.exe, 691524:docker.exe, 691576:docker.exe, 691632:docker.exe, 691704:docker-compose.exe, 691804:docker-compose.exe, 689852:docker.exe, 689940:docker-compose.exe, 688992:docker-compose.exe, 668532:docker-compose.exe, 690452:docker.exe, 691268:docker-compose.exe, 686904:docker.exe, 691252:docker-compose.exe, 679012:docker-compose.exe, 691212:docker-compose.exe, 691436:docker.exe, 691296:docker-compose.exe, 692436:python.exe, 692456:python.exe, 692480:node.exe, 692572:chrome-headless-shell.exe, 692744:chrome-headless-shell.exe, 692800:chrome-headless-shell.exe, 692824:chrome-headless-shell.exe, 689732:docker.exe, 693968:docker-compose.exe, 675096:docker-compose.exe, 690972:python.exe, 692580:python.exe, 693612:node.exe, 689708:chrome-headless-shell.exe, 694312:chrome-headless-shell.exe, 694388:chrome-headless-shell.exe, 694400:chrome-headless-shell.exe, 696084:docker.exe, 693684:docker-compose.exe, 693096:python.exe, 695740:python.exe, 694988:node.exe, 695072:chrome-headless-shell.exe, 696340:chrome-headless-shell.exe, 696364:chrome-headless-shell.exe, 696376:chrome-headless-shell.exe
+descendants terminated  : 49  668532, 675096, 679012, 686904, 688992, 689708, 689732, 689852, 689940, 690452, 690764, 690932, 690972, 691056, 691212, 691252, 691268, 691296, 691436, 691468, 691492, 691504, 691524, 691576, 691632, 691704, 691804, 692436, 692456, 692480, 692572, 692580, 692744, 692800, 692824, 693096, 693612, 693684, 693968, 694312, 694388, 694400, 694988, 695072, 695740, 696084, 696340, 696364, 696376
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-pw7-work/logs/vis7-pwab-retry.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=VIS-7  acquired=True  released=True
+pre-existing (reported, NEVER killed): 15
+================================================
+BW_EXIT=0
