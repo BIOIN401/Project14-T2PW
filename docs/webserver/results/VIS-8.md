@@ -10,9 +10,9 @@ check against VIS-7 is 0 differences (section 4). Not merged; LEDGER row left to
 `C:/t/vis-pw8-work/` (replays, renders, PathWhiz runs, metrics; side-by-side page `C:/t/vis-pw8-work/compare.html`).
 Evidence: `docs/webserver/evidence/VIS-8/`.
 
-**Status: code, tests, light checks and the 9-showcase evidence are done; the heavy-queue items (97-PWML corpus replay, PathWhiz
-import of the 9, SMOKE and the other gates) are NOT run** because the machine has had 0.0-0.4 GB free RAM since about 23:35 and the
-queue's 4 GB floor never opened (section 6). Everything needed to run them is committed and scripted.
+**Status: done and run.** 97-PWML strict content check 0 differences; PathWhiz imports of all 9 identical to VIS-7; SMOKE 511 and all
+gates green (section 6). PathWhiz shows coenzyme A and furochromone clearly better and ceramide and enterobactin NOT better: a weight
+change is proposed in section 5 and question 2, not applied.
 
 ## 1. How PathBank's curators draw interaction edges (all 16 reference PWMLs)
 
@@ -104,7 +104,7 @@ PathBank's own 16 reference pathways, same script: median canvas 4500 x 3350, as
 crossing level. Interaction edges: only enterobactin changes (total 7673 -> 5245, longest 2281 -> 1281), 3 of the 9 have
 any. Honest limits: lipid A (6769 x 6351, 90 crossings) and chlorophyll (3665 x 5666) are unchanged; ceramide's chosen
 shape has 5 crossings (VIS-7: 0) and 24 % more edge length, in exchange for a canvas a third narrower (5087 -> 3415) (the cost
-model's trade; `T2PW_LAYOUT_CHOOSER=0` restores VIS-7). The 97-PWML corpus numbers (before/after, strict content check, relayout time, stubs) are NOT run, see section 6.
+model's trade; `T2PW_LAYOUT_CHOOSER=0` restores VIS-7). The 97-PWML corpus numbers are in section 6; the PathWhiz reading of ceramide and enterobactin (not better) is in section 5.
 
 ## 4. Content check
 
@@ -113,28 +113,47 @@ replays (VIS-5's), VIS-7 = `b9534f68`.
 
 | set | against | result |
 |---|---|---|
-| 8 showcases + server job item-6 (9 PWMLs) | VIS-7, strict | **0 differences** (`content_check_showcases_vs_vis7_strict.json`, `content_check_item6_vs_vis7_strict.json`): element structure and every id identical, only geometry and edge paths differ |
-| the same 9 | base, rule-based | 0 differences (`content_check_showcases_vs_base.json`, `..._item6_...`) |
-| the same 9 | base, strict | 4 of 8 differ, every line one of VIS-5's two accepted rules (label-type, nucleic-acid template), as in VIS-7 |
-| 97-PWML corpus | VIS-7 / base | **NOT RUN**: needs the heavy queue (section 6) |
+| 8 showcases + server job item-6 (9 PWMLs) | VIS-7, strict | **0 differences** (`metrics/content_check_*_vs_vis7_strict.json`) |
+| 97-PWML corpus (`replay/n1`) | VIS-7, strict | **0 differences** (97/97; `metrics/corpus_vs_vis7_strict.json`): element structure and every id identical, only geometry and edge paths differ |
+| the 9 and the 97 | base, rule-based | **0 differences** (`metrics/content_check_*_vs_base.json`, `corpus_vs_base_rule.json`) |
+| the 97 | base, strict | 7 of 97 differ, the same 7 as in VIS-7 (VIS-5's two accepted rules: label-type, nucleic-acid template) |
 
-## 5. PathWhiz A/B
+## 5. PathWhiz A/B (queue, heavy lock, harness VIS-2, project `t2pw-pwdraw`, stack down afterwards, BW_EXIT=0, FINAL SURVIVING COUNT 0)
 
-**NOT RUN**: needs the heavy queue (Docker stack `t2pw-pwdraw`); see section 6. Ready to run:
-`evidence/VIS-8/scripts/chainF.sh` (corpus replay, then `pwab8.sh`: all 9 PWMLs plus PathBank's PW000779 imported and
-screenshotted), then `make_compare8.py n1 p1` for `compare.html`. Compare against VIS-7's `C:/t/vis-pw7-work/pw/a3` and `a3b`
-results with `pwcmp.py` (no new error line allowed).
+Tree `94623fb3`, the 9 PWMLs plus PathBank's PW000779, `scripts/pwab8.sh n1 p1`. **10 of 10 imported, success flag, error lines and
+created record counts identical to VIS-7 for all 10** (VIS-7 `a3` / `a3b`; `pathwhiz/ab_vs_vis7.txt`: new error lines 0; error counts
+3 / 1 / 15 / 0 / 1 / 0 / 0 / 22 / 0 / 7). 10 of 10 screenshots (`pathwhiz/`, the page `compare.html`).
 
-## 6. Gates
+**Honest reading of the screenshots against VIS-7** (PathWhiz's viewer fits the picture into the window, so a squarer picture does not
+get bigger boxes the way my 1100-wide score assumes):
+- coenzyme A and furochromone: clearly better (compact serpentine, one reading direction, nothing hidden), boxes bigger.
+- menaquinone, sour taste, chlorophyll, lipid A: same or marginally tidier.
+- **ceramide: not better, arguably worse.** VIS-7's ER box is one clean left-to-right pipeline; VIS-8's is a squarer block with the
+  CERT transporter line running the full height and sphingomyelin / sphinganine lines swooping across the middle (5 crossings against 0).
+  It does remove the two product edges that started in empty space, and the canvas is a third narrower, but the box size in the viewer
+  is no larger and the reading is harder. I would not call it an improvement.
+- **enterobactin: mixed.** The squarer picture shortens the interaction lines (total 7673 -> 5245) but they now cross each other and the
+  yellow chain (19 crossings against 12) where VIS-7's arches sat above a single row; the boxes are not larger in the viewer. I would
+  not call it an improvement either.
 
-**NOT RUN**: the heavy queue (`C:/t/vis-runs/queue.sh`) waits on its 4 GB free-RAM floor and the machine has had 0.0-0.4 GB free
-since about 23:35 on 2026-11-26 (committed memory 59 of 61.6 GB, working sets 12 of 32 GB: the unexplained-RAM leak in the
-memory notes; `wsl docker-desktop` itself has 13 GB free). My queued chain waited from 00:00 to the time I stopped it;
-VIS-9's queued chain waited too. Focused tests that the light path allows were run through `bounded_run.py`:
-`tests/test_pwml_*` + `tests/test_render_*` 344 passed, `test_final_payload_writer_fixes` + `test_orch768_replay_corpus` 31 passed,
-`test_equivalence_default_path` (alone) 6 passed, `test_vision_layout` + `test_vision_generate` 29 passed. To run the gates after a
-reboot: `evidence/VIS-8/scripts/gatesF.sh` (focused.sh, then `suite2.sh C:/t/vis-pw8 vis8`), on a clean tree at the commit named
-in the report.
+**Proposed weight change** (one-line constants in `layout.py`, measured on the 9 only, not re-run in PathWhiz): `VIEW_H` 1000 -> 700 (score
+fits a landscape window like PathWhiz's, so a tall shape is no longer rewarded) and `CROSS_W` 0.05 -> 0.15. Result
+(`metrics/weights_proposal_showcases.txt`): ceramide and enterobactin go back to VIS-7's shape (5087 x 2999, 4716 x 2420; ceramide 0
+crossings, enterobactin 11, interactions back to 7780 total), item-6 stays VIS-7's, while coenzyme A (5365 -> 3061 wide), furochromone
+(4430 x 1133 -> 2420 x 1795), menaquinone and sour taste keep their gains. This trades enterobactin's shorter interaction lines for a
+cleaner picture. Not applied: it changes the layouts the gates below ran on, so it needs the PO's choice (question 2) and a new run.
+
+## 6. Gates (queue, heavy lock, clean tree, HEAD `94623fb3` stamped, 0 survivors each)
+
+`logs/vis8_focused.log`: pwml 295 passed, render 49, final-payload writer 22, corpus tests 9, BW_EXIT=0, FINAL SURVIVING COUNT 0.
+`logs/vis8_suite.log` (`suite2.sh C:/t/vis-pw8 vis8`): SMOKE **511 passed**; golden seams **2 / 8 / 4 / 24 passed**, unedited; equivalence
+run / app / default **8 / 14 / 6 passed**; vision **370 passed, 1 skipped**; web **85 passed**; BW_EXIT=0, FINAL SURVIVING COUNT 0.
+Corpus replay (`logs/n1_corpus.log`) BW_EXIT=0, 0 survivors; PathWhiz run `logs/n1_pwab.log` BW_EXIT=0, 0 survivors.
+
+97-PWML corpus numbers, VIS-7 -> VIS-8 (`metrics/m_vis7_corpus.json`, `m_vis8_corpus.json`): median canvas width 2320 -> 1945, aspect
+1.28 -> 1.09, label at 1100 px 5.7 -> 6.8 px, visible-edge crossings (sum) 66 -> 79, interaction edges (49 of them): total length
+15237 -> 13224, longest 2664 -> 1271, edges starting in empty space 10 -> 3, box overlaps 7 -> 7. `relayout` time per call: maximum
+0.42 s, total 4.35 s over the 97 (VIS-7: maximum 0.19 s, total 1.86 s).
 
 ## 7. Dead ends and slips
 
@@ -165,6 +184,7 @@ in the report.
   the other session's research-platform containers); their queue / chain shells were killed by PID, verified none left.
   (e) `git worktree remove` for my own scratch worktrees `C:/t/vis-pw8-s12`, `-s15` and `-x` was denied by the permission
   system, so they are still registered (detached, no commits): the orchestrator can `git worktree remove --force` them.
+- The gates and A/B first ran after the orchestrator's reboot message; the machine had 0.0-0.4 GB free for about 2.5 h before that.
 - The quick loop (9 replays, content check, 13 renders, about 40-70 s) went through `bounded_run.py` without the heavy lock, as in
   VIS-5 and VIS-7; the corpus replay, PathWhiz runs and gates went through the queue.
 
@@ -181,9 +201,12 @@ in the report.
    (c) hide a Binding/Unspecified edge in the picture when its partners are more than about 600 units apart (visualization
    only: `hidden=true` on the edge records, the interaction stays in the PWML; cost: small; information leaves the picture for
    the longest edges). Recommendation: (c) now, (b) as a content project.
-2. **Chooser weights.** `_layout_cost` is my judgement (legibility first, crossings 0.05, interaction length 0.00012 per unit,
-   viewing box 1100 x 1000). The effect on the 9 is in section 3. If the PO prefers fewer crossings over legibility raise
-   `CROSS_W`; if the PO prefers a fixed shape, `T2PW_LAYOUT_CHOOSER=0` restores VIS-7 exactly. Cost of changing: one constant.
+2. **Chooser weights (decision needed).** `_layout_cost` is my judgement (legibility first, crossings 0.05, interaction length 0.00012 per
+   unit, viewing box 1100 x 1000). PathWhiz's screenshots show it makes coenzyme A and furochromone clearly better but ceramide and
+   enterobactin not better (section 5). Options: (a) keep as run (gates and A/B are on this); (b) `VIEW_H` 700 and `CROSS_W` 0.15,
+   which returns ceramide and enterobactin to VIS-7's shape and keeps the other gains (cost: enterobactin's interaction lines stay
+   long, 7780 total; needs a new corpus, PathWhiz and gate run, about 1.5 h of queue); (c) `T2PW_LAYOUT_CHOOSER=0` for VIS-7 exactly.
+   Recommendation: (b).
 3. **Single-transporter pathways** (lipid A, sour taste, ceramide's CERT) remain the largest source of long lines and crossings
    (lipid A 90 of the 132 crossings over the 9). VIS-7 question 3 still stands (one transporter location per transport, as
    PathBank does; content change in the writer).

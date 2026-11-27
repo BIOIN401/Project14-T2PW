@@ -1,0 +1,86 @@
+== tree C:/t/vis-pw8
+HEAD 94623fb3f600667e6b8b4571d3ee598521842738
+STATUS_BEGIN
+STATUS_END
+== smoke
+........................................................................ [ 84%]
+........................................................................ [ 98%]
+.......                                                                  [100%]
+511 passed in 48.00s
+EXIT_smoke=0
+== g-batch
+T2PW: C:\t\vis-pw8\src\t2pw\__init__.py
+..                                                                       [100%]
+2 passed in 6.11s
+EXIT_g-batch=0
+== g-c011
+T2PW: C:\t\vis-pw8\src\t2pw\__init__.py
+........                                                                 [100%]
+8 passed in 40.91s
+EXIT_g-c011=0
+== g-stage8
+T2PW: C:\t\vis-pw8\src\t2pw\__init__.py
+....                                                                     [100%]
+4 passed in 0.36s
+EXIT_g-stage8=0
+== g-quar
+T2PW: C:\t\vis-pw8\src\t2pw\__init__.py
+........................                                                 [100%]
+24 passed in 34.25s
+EXIT_g-quar=0
+== eq-run
+T2PW: C:\t\vis-pw8\src\t2pw\__init__.py
+........                                                                 [100%]
+8 passed in 59.67s
+EXIT_eq-run=0
+== eq-app
+T2PW: C:\t\vis-pw8\src\t2pw\__init__.py
+..............                                                           [100%]
+14 passed in 56.85s
+EXIT_eq-app=0
+== eq-default
+T2PW: C:\t\vis-pw8\src\t2pw\__init__.py
+......                                                                   [100%]
+6 passed in 29.86s
+EXIT_eq-default=0
+== vision
+........................................................................ [ 77%]
+........................................................................ [ 97%]
+..........s                                                              [100%]
+370 passed, 1 skipped in 13.99s
+EXIT_vision=0
+== web
+T2PW: C:\t\vis-pw8\src\t2pw\__init__.py
+........................................................................ [ 84%]
+.............                                                            [100%]
+85 passed in 5.38s
+EXIT_web=0
+SUITE_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 0e2ecf7a67ae8e972f4cf530eda9e2f419703ec0  [git, worktree dirty=True]
+label                   : vis8-suite
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/vis-runs/suite2.sh C:/t/vis-pw8 vis8
+cwd                     : C:\t\vis-pw8-work
+root PID / process group: 146788 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 6000 s
+duration                : 306.42 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 73  150784:bash.exe, 151348:bash.exe, 149512:bash.exe, 151292:git.exe, 78252:python.exe, 79824:bash.exe, 151000:python.exe, 150760:python.exe, 151168:python.exe, 149484:python.exe, 150012:python.exe, 151588:python.exe, 151608:python.exe, 152012:python.exe, 152032:python.exe, 153000:git.exe, 148104:python.exe, 149272:bash.exe, 153520:python.exe, 146640:python.exe, 150740:python.exe, 153308:bash.exe, 152956:python.exe, 154576:python.exe, 140896:python.exe, 142376:python.exe, 155568:python.exe, 155576:python.exe, 152684:python.exe, 152952:python.exe, 153144:python.exe, 154112:python.exe, 145616:python.exe, 154916:python.exe, 155024:python.exe, 155060:python.exe, 153932:python.exe, 154696:python.exe, 155364:python.exe, 155376:bash.exe, 155392:python.exe, 146296:bash.exe, 154648:python.exe, 154780:python.exe, 152424:python.exe, 155984:bash.exe, 156164:python.exe, 153948:python.exe, 156016:python.exe, 144420:bash.exe, 155152:python.exe, 156228:python.exe, 155088:bash.exe, 155692:python.exe, 156328:python.exe, 160544:bash.exe, 160588:python.exe, 160652:python.exe, 159196:python.exe, 160328:python.exe, 140364:python.exe, 159204:python.exe, 160528:bash.exe, 159772:python.exe, 160640:python.exe, 158884:python.exe, 160668:python.exe, 156816:python.exe, 159900:python.exe, 156212:python.exe, 159824:python.exe, 159484:python.exe, 160764:python.exe
+descendants terminated  : 73  78252, 79824, 140364, 140896, 142376, 144420, 145616, 146296, 146640, 148104, 149272, 149484, 149512, 150012, 150740, 150760, 150784, 151000, 151168, 151292, 151348, 151588, 151608, 152012, 152032, 152424, 152684, 152952, 152956, 153000, 153144, 153308, 153520, 153932, 153948, 154112, 154576, 154648, 154696, 154780, 154916, 155024, 155060, 155088, 155152, 155364, 155376, 155392, 155568, 155576, 155692, 155984, 156016, 156164, 156212, 156228, 156328, 156816, 158884, 159196, 159204, 159484, 159772, 159824, 159900, 160328, 160528, 160544, 160588, 160640, 160652, 160668, 160764
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-pw8-work/logs/vis8_suite.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=VIS-8  acquired=True  released=True
+pre-existing (reported, NEVER killed): 12
+================================================
+BW_EXIT=0
