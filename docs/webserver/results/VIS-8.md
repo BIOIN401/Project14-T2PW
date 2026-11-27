@@ -223,3 +223,14 @@ candidate beat VIS-7 there), the other seven unchanged; the corpus (largest 102 
 4. **Enzyme label size.** The only native size switch (`font-size large`) replaces the label by the gene name, so it is not a
    layout option (section 7). Making enzyme names larger in PathWhiz would need a PathWhiz template change (150 x 70 ellipse,
    15-unit text) or a different protein template; out of this task's boundary.
+
+## 9. Review follow-up (F1-F5), head `2be114b9` (code) and later docs commits
+
+F1 wording fixed (sections 2, 3, 8): chooser off = VIS-7's canvas shape only. F2: `relayout` timed on the 8 showcases at `43ece565`; lipid A 7.7 s, so
+the chooser is skipped above 120 edges (`2be114b9`): lipid A 2.3 s per call, output of all 9 byte-identical to the final run (strict content check on
+the 9: 0 differences; the corpus has at most 102 edges, so it is unaffected), test `test_a_picture_with_more_edges_than_the_limit_is_laid_out_once`.
+F3: the cost test now builds a real crossing (the old fixture only touched at a shared sample point, so it passed with `CROSS_W` = 0) and asserts
+the difference is at least `CROSS_W - 0.02`. F5: coenzyme A reading and the final screenshot `pathwhiz/final_coenzyme-a.png` added. F4: no change.
+Focused tests through the queue on `0fde34e0` (clean tree, HEAD stamped): pwml 296 passed, render 49, final-payload writer 22, corpus tests 9,
+`logs/vis8s_focused.log`, BW_EXIT=0, FINAL SURVIVING COUNT 0. SMOKE and the other suite2 groups ran on `43ece565` (section 6); the only code change since
+is the edge-count skip and a test.
