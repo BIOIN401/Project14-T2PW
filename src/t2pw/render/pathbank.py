@@ -56,7 +56,7 @@ PILL_FILL = {"45": "#8E7BFF", "46": "#8E7BFF", "85": "#E05050", "137": "#E05050"
              "139": "#E05050", "140": "#E05050"}
 PILL_DEFAULT = "#D8C25A"  # PathBank's ATP-style radial gradient, flattened
 ICON_TEMPLATES = {"47", "49", "51", "52", "55", "56", "63", "64", "65"}  # 78x78 small-molecule icons
-NAMED = ("compound", "protein", "nucleic-acid", "element-collection", "sub-pathway")
+NAMED = ("compound", "protein", "nucleic-acid", "element-collection", "sub-pathway", "protein-complex")
 _ART = "pathbank_art"
 _TEXT_TO_PATH = TextToPath()
 TARGET_PX, MIN_SCALE, MAX_PX = 2400, 0.85, 8000  # see output_scale
@@ -378,6 +378,15 @@ def _items(root, vis, pics: Optional[Dict[str, Any]] = None, extent: Optional[Li
     names = _definitions(root)
     cids = _cids(root) if pics else {}
     used_edges = {(c.text or "").strip() for c in vis.iter() if _local(c.tag) == "edge-id"}
+    # VIS-5: PathWhiz labels a protein location of label-type "protein" that belongs to a protein-complex
+    # visualization with the complex's name (T2PW writes this for an enzyme whose protein is PathBank's Unknown 9659)
+    complex_of: Dict[str, str] = {}
+    for pcv in vis.iter():
+        if _local(pcv.tag) == "protein-complex-visualization":
+            cname = names.get(("protein-complex", _txt(_kids(pcv), "protein-complex-id")), ("", ""))[0]
+            for m in pcv.iter():
+                if _local(m.tag) == "protein-location-id" and cname:
+                    complex_of.setdefault((m.text or "").strip(), cname)
     items: List[Tuple[float, int, Callable[[Any], None]]] = []
     ext = [math.inf, math.inf, 0.0, 0.0]
 
@@ -421,7 +430,7 @@ def _items(root, vis, pics: Optional[Dict[str, Any]] = None, extent: Optional[Li
         elif t == "protein-location":
             full, gene = names.get(("protein", _txt(k, "protein-id")), ("", ""))
             lt = _txt(k, "label-type").lower()
-            name = "" if lt == "none" else (gene or full) if lt == "gene" else full
+            name = "" if lt == "none" else (gene or full) if lt == "gene" else                 complex_of.get(_txt(k, "id"), full) if lt == "protein" else full
             add(z, lambda ax, a=(x, y, w, h, tpl, name, z): _protein(ax, *a), x + w, y + h, x, y)
         elif t == "nucleic-acid-location":
             name = names.get(("nucleic-acid", _txt(k, "nucleic-acid-id")), ("", ""))[0]

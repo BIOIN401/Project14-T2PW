@@ -42,7 +42,10 @@ FAMILY = {"mito": "mito", "mito_inner": "mito", "mito_matrix": "mito", "er": "er
           "plastid": "plastid", "thylakoid": "plastid"}
 PEPTIDOGLYCAN_TEMPLATE, ENVELOPE_GAP = 291, 250  # outer to inner membrane line (PathBank: 248-250); peptidoglycan at 0.48
 GRID = 20
-CHROMOSOME_ROOM = (320, 320)  # space layout v2 keeps free in a bacterial cytoplasm (the chromosome at scale 0.6 and more)
+CHROMOSOME_ROOM = (560, 560)  # space layout v2 keeps free in a bacterial cytoplasm (VIS-5: the chromosome at 1.1 and more)
+# VIS-5 (STRUCTURE_DIFF G4): PathBank draws the chromosome at scale 1.6 as the cytoplasm's centre piece, named by a label
+CHROMOSOME_SCALES = (1.6, 1.4, 1.2, 1.1, 1.0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4)
+CHROMOSOME_LABEL, LABEL_TEMPLATE, LABEL_SCALE = "Bacterial Chromosome", 235, 2.0
 
 
 def cell_kind(items: Dict[str, List[Dict[str, Any]]], states: Iterable[Any]) -> Optional[str]:
@@ -200,10 +203,15 @@ def decorate(items, new_id, width: int, height: int, plan: Dict[str, Any], obsta
         host = plan.get("chromosome_region")
         if host:
             w, h = IMAGE_SIZE[CHROMOSOME]
-            spot = free_spot(host, (w, h), (1.0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4), obstacles + plan.get("boxes_inside", []), lines,
+            spot = free_spot(host, (w, h), CHROMOSOME_SCALES, obstacles + plan.get("boxes_inside", []), lines,
                              ((host[0] + host[2]) / 2, (host[1] + host[3]) / 2))
             if spot:
                 out_d.append(_drawable(new_id, CHROMOSOME, spot[0], spot[1], spot[2]))
+                cx, cy = spot[0] + w * spot[2] / 2, spot[1] + h * spot[2] / 2  # its label at its centre (PW000779)
+                items.setdefault("label-locations", []).append({
+                    "id": new_id(), "visualization-template-id": LABEL_TEMPLATE, "label-text": CHROMOSOME_LABEL,
+                    "x": int(cx - 105 * LABEL_SCALE), "y": int(cy - 40.5 * LABEL_SCALE), "zindex": 20,
+                    "scale-x": f"{LABEL_SCALE}", "scale-y": f"{LABEL_SCALE}", "width": "200", "height": "15"})
         bw, bh = IMAGE_SIZE[BACTERIUM]
         s = max(0.5, min(1.0, round(0.2 * (cy1 - cy0) / bh, 1)))
         iw, ih = bw * s, bh * s
@@ -211,7 +219,7 @@ def decorate(items, new_id, width: int, height: int, plan: Dict[str, Any], obsta
         if dx:
             translate(items, dx, 0, loc_sections, set_arrow_paths)
             for d in out_d:
-                d["x"] += dx
+                d["x"] += dx  # (the chromosome's label is in items and moved by translate)
             cx0, cx1, width = cx0 + dx, cx1 + dx, width + dx
         ix, iy = cx0 - ZOOM_OUT - 20 - iw, max(0, (cy0 + cy1) / 2 - ih / 2)
         out_d.append(_drawable(new_id, BACTERIUM, ix, iy, s))
@@ -227,7 +235,7 @@ def decorate(items, new_id, width: int, height: int, plan: Dict[str, Any], obsta
         if rel is not None:
             w, h = IMAGE_SIZE[image]
             big_w = tx1 - tx0
-            s_max = max(0.6, min(1.4, round(0.3 * big_w / w, 1)))
+            s_max = max(0.6, min(2.0, round(0.4 * big_w / w, 1)))  # VIS-5 (G5): PathBank 1.6-2.4
             scales = [round(s_max - 0.1 * i, 1) for i in range(int(round((s_max - 0.6) / 0.1)) + 1)]
             # a free spot above the target box (in the cell, as PathBank draws it), else a strip above the picture
             region = (margin, margin, width - margin, ty0 - ZOOM_OUT - 60)
