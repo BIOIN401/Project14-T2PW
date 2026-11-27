@@ -523,6 +523,47 @@ def _trusted_compound_pwc_id(
     return _nonempty_text(db_row.get("pwc_id") or record.get("pwc_id") or mapped_ids.get("pwc_id"))
 
 
+# PathBank compound ids that must not get a derived pwc-id (read-only SELECTs on PathBank `compounds`, 2026-11-26, VIS-9):
+# - PW_C%06d(id) is a *different* compound's pwc_id (12 of 276,783 rows; 438 rows in all have pwc_id != PW_C%06d(id),
+#   for the other 426 the derived pwc_id is unused, so PathWhiz finds no structure: same as writing none);
+# - 40747 "1,4-dihydroxy-2-naphthoate": PathBank's MolDB structure is its CoA thioester (same InChIKey as 40746).
+_PWC_ID_SKIP = frozenset(
+    {98041, 98042, 265982, 266704, 268987, 268993, 269024, 276999, 277933, 277957, 278008, 285452, 40747}
+)
+
+
+def _compound_name_key(value: Any) -> str:
+    text = str(value or "").casefold().strip()
+    text = re.sub(r"^(l|d|\(r\)|\(s\))-", "", text)
+    text = re.sub(r"ic acid$", "ate", text)
+    return re.sub(r"[^0-9a-z]+", "", text)
+
+
+def _mapped_compound_pwc_id(record: Dict[str, Any], db_row: Dict[str, Any], rid: int) -> Optional[str]:
+    """VIS-9: PathWhiz draws a compound's structure from MolDB by its pwc-id only. For a compound written under its
+    mapped PathBank compound id, give it that compound's pwc-id (PathBank assigns ``PW_C%06d`` of the row id) when a
+    full PathBank name held for that id agrees with the name we write. Short names never count (``MK`` matched
+    Melleolide K, ``UMP`` a muramoyl peptide)."""
+    pid = _to_positive_int(record.get("pw_compound_id") or record.get("pathbank_compound_id"))
+    if pid is None or pid != rid or pid in _PWC_ID_SKIP:
+        return None
+    meta = record.get("mapping_meta") if isinstance(record.get("mapping_meta"), dict) else {}
+    match = record.get("db_match") if isinstance(record.get("db_match"), dict) else {}
+    names = [db_row.get("name")] if _to_positive_int(db_row.get("id")) == pid else []
+    if _to_positive_int(meta.get("pathbank_compound_id")) == pid:
+        names.append(meta.get("resolved_name"))
+    for cand in meta.get("candidates") or []:
+        if isinstance(cand, dict) and _to_positive_int(cand.get("pathbank_compound_id")) == pid:
+            names.append(cand.get("name"))
+    for cand in match.get("candidates") or []:
+        if isinstance(cand, dict) and _to_positive_int(cand.get("id")) == pid:
+            names.append(cand.get("name"))
+    ours = _compound_name_key(db_row.get("name") or record.get("name"))
+    if not ours or ours not in {_compound_name_key(n) for n in names if n}:
+        return None
+    return f"PW_C{pid:06d}"
+
+
 def _trusted_compound_short_name(record: Dict[str, Any], db_row: Dict[str, Any]) -> Optional[str]:
     if not _is_trusted_compound_record(record, db_row):
         return None
@@ -1294,6 +1335,7 @@ class DeterministicPwmlBuilder:
                             protein_key_by_db_id[db_id] = key
 
         self.section_items["compounds"] = []
+        written_pwc_ids: set = set()
         for record in entities.get("compounds", []) if isinstance(entities.get("compounds"), list) else []:
             if not isinstance(record, dict):
                 continue
@@ -1321,6 +1363,12 @@ class DeterministicPwmlBuilder:
             if chebi_id is not None:
                 chebi_id = str(chebi_id).replace("CHEBI:", "").strip()
             pwc_id = _trusted_compound_pwc_id(record, db_row, mapped_ids)
+            if pwc_id is None:
+                pwc_id = _mapped_compound_pwc_id(record, db_row, rid)
+                if pwc_id in written_pwc_ids:  # a second record under the same id: a repeat pwc-id fails PathWhiz's uniqueness
+                    pwc_id = None
+            if pwc_id is not None:
+                written_pwc_ids.add(pwc_id)
             short_name = _trusted_compound_short_name(record, db_row)
             compound_item = {
                 "id": rid,
