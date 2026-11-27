@@ -144,3 +144,32 @@ slip in section 7, hence the re-run `c2`.
    the diagram: content shape. Option: one transporter location per transport, as PathBank does (new location records,
    structural content change, medium; needs a content-check rule and an A/B).
 4. Currency compounds per reaction, enzyme cofactor tags, protein templates by subunit count (VIS-5 items 7.1-7.3), still open.
+
+## 9. Review verdict and merge (orchestrator, 2026-11-26)
+
+- Independent ws-reviewer on `875a0ad2` (code `1e038639`): **APPROVE WITH NOTES**. It rebuilt the outputs from a
+  `git archive` of `1e038639` (byte-identical to the implementer's, deterministic) and ran a strict content diff: 0
+  content differences on the 9 showcases and 97/97 corpus files; byte changes are edge paths in enterobactin and
+  `4.pwml`, plus the chromosome art in `4.pwml` moved 60 units.
+- **Correction to section 1, point 4 and open question 1 (reviewer F1).** "In production the importer finds compounds
+  by HMDB id" is not supported. `find_by_unique_external_id` is our own patch (`6e11df0e` on `t2pw/latest` of the
+  PathWhiz clone), not on PathWhiz `origin/master`, whose `store_object` matches on the full attribute hash
+  (`lib/pwml_parser.rb:514`) while Compound validates `name` and `hmdb_id` as unique. With master's importer our
+  compounds would more likely fail validation (dropped with an error) than draw with the right picture. What the
+  evidence does show: the wrong pictures in the dev stack come from the environment (fresh DB numbering against the
+  live MolDB). Which importer production runs is open (PO question, below).
+- Other notes, follow-up: F2 the visible edge of a pair keeps the first-pass curve, not the same arch (comment
+  wrong); F3 arch ends always top-top or bottom-bottom, so a vertically separated pair could run back through its
+  own box (not seen on the 9 or 97); F4 arches apply to every blocked edge with no reaction-hub end, not only
+  template 195 (section 2 overstates); F5 no fixture-level test that `relayout` produces one arch; F6 whitespace in
+  the evidence content_check script.
+- Product questions added: which PWML importer production PathWhiz runs (master, or an HMDB lookup like our
+  patch); whether the Gram-negative exclusion should cover other mycolic-acid genera (Corynebacterium, Nocardia,
+  Rhodococcus).
+- Merged as `62c53880` = webserver/refactor `fd07d5e6` (VIS-5 merged) + `vis/layout-polish` `875a0ad2`, no
+  conflicts, in the detached worktree `C:/t/merge-vis7`. Code changes only `pwml/layout.py`, `pwml/cell_art.py`,
+  `render/pathbank.py` and two `test_pwml_*` files.
+- Gates on `62c53880` (`evidence/VIS-7/logs/merge-vis7-gates.log`, script `merge_vis7_inner.sh`, tree clean): SMOKE
+  **511 passed**; golden seams **2 / 8 / 4 / 24 passed**, unedited; equivalence **8 / 14 / 6 passed**; vision **370
+  passed, 1 skipped**; web **85 passed**; pwml **316 passed**; render **49 passed**; service + web **405 passed**.
+  `BW_EXIT=0`, **FINAL SURVIVING COUNT 0**. Pushed `62c53880`.

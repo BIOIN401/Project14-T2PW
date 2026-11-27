@@ -1,0 +1,99 @@
+HEAD 62c5388053ad297c69fdb5ab4ec07a56b55f4a23
+STATUS_BEGIN
+STATUS_END
+== tree C:/t/merge-vis7
+HEAD 62c5388053ad297c69fdb5ab4ec07a56b55f4a23
+STATUS_BEGIN
+STATUS_END
+== smoke
+........................................................................ [ 84%]
+........................................................................ [ 98%]
+.......                                                                  [100%]
+511 passed in 59.35s
+EXIT_smoke=0
+== g-batch
+T2PW: C:\t\merge-vis7\src\t2pw\__init__.py
+..                                                                       [100%]
+2 passed in 6.83s
+EXIT_g-batch=0
+== g-c011
+T2PW: C:\t\merge-vis7\src\t2pw\__init__.py
+........                                                                 [100%]
+8 passed in 44.94s
+EXIT_g-c011=0
+== g-stage8
+T2PW: C:\t\merge-vis7\src\t2pw\__init__.py
+....                                                                     [100%]
+4 passed in 0.45s
+EXIT_g-stage8=0
+== g-quar
+T2PW: C:\t\merge-vis7\src\t2pw\__init__.py
+........................                                                 [100%]
+24 passed in 40.17s
+EXIT_g-quar=0
+== eq-run
+T2PW: C:\t\merge-vis7\src\t2pw\__init__.py
+........                                                                 [100%]
+8 passed in 61.83s (0:01:01)
+EXIT_eq-run=0
+== eq-app
+T2PW: C:\t\merge-vis7\src\t2pw\__init__.py
+..............                                                           [100%]
+14 passed in 57.83s
+EXIT_eq-app=0
+== eq-default
+T2PW: C:\t\merge-vis7\src\t2pw\__init__.py
+......                                                                   [100%]
+6 passed in 30.49s
+EXIT_eq-default=0
+== vision
+........................................................................ [ 77%]
+........................................................................ [ 97%]
+..........s                                                              [100%]
+370 passed, 1 skipped in 17.43s
+EXIT_vision=0
+== web
+T2PW: C:\t\merge-vis7\src\t2pw\__init__.py
+........................................................................ [ 84%]
+.............                                                            [100%]
+85 passed in 6.60s
+EXIT_web=0
+SUITE_DONE
+== pwml
+316 passed in 9.61s
+EXIT_pwml=0
+== render
+49 passed in 8.34s
+EXIT_render=0
+== service
+405 passed in 59.10s
+EXIT_service=0
+MERGE_VIS7_DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ fd07d5e6fa3eb4bfcb35560612402d276ec0342c  [git, worktree dirty=True]
+label                   : merge-vis7-gates
+command                 : C:\Program Files\Git\bin\bash.exe C:/t/vis-runs/merge_vis7_inner.sh
+cwd                     : c:\t\merge-vis7
+root PID / process group: 774000 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 5400 s
+duration                : 423.92 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 97  773732:bash.exe, 774576:mkdir.exe, 774964:bash.exe, 774520:bash.exe, 774560:git.exe, 771184:bash.exe, 774264:bash.exe, 774444:bash.exe, 772136:git.exe, 772536:bash.exe, 774696:bash.exe, 772088:python.exe, 774296:python.exe, 772896:python.exe, 773236:python.exe, 769716:python.exe, 769832:python.exe, 769804:python.exe, 773240:python.exe, 766108:python.exe, 769476:python.exe, 774164:git.exe, 775540:git.exe, 775536:bash.exe, 771264:python.exe, 774220:python.exe, 776976:bash.exe, 777108:python.exe, 777136:python.exe, 777148:bash.exe, 776392:git.exe, 730424:git.exe, 772648:git.exe, 775924:git.exe, 775748:python.exe, 776220:python.exe, 730032:python.exe, 730428:python.exe, 775752:python.exe, 777100:python.exe, 770736:python.exe, 773376:python.exe, 774680:python.exe, 775604:python.exe, 775288:python.exe, 777076:python.exe, 730448:python.exe, 745976:python.exe, 729884:python.exe, 774080:python.exe, 769032:tail.exe, 776008:python.exe, 776428:python.exe, 776728:bash.exe, 776824:bash.exe, 775892:bash.exe, 729880:python.exe, 776800:python.exe, 719056:bash.exe, 729984:bash.exe, 770312:python.exe, 776000:python.exe, 778028:python.exe, 778068:python.exe, 778200:bash.exe, 771584:python.exe, 775772:python.exe, 778432:bash.exe, 778472:python.exe, 778508:python.exe, 769544:bash.exe, 770116:bash.exe, 770436:bash.exe, 778208:python.exe, 777376:python.exe, 779300:git.exe, 780224:python.exe, 780248:python.exe, 775552:python.exe, 780268:python.exe, 760448:python.exe, 779624:bash.exe, 779628:python.exe, 780104:python.exe, 780204:python.exe, 778120:python.exe, 779752:python.exe, 778500:python.exe, 778572:python.exe, 779860:python.exe, 780012:python.exe, 777792:bash.exe, 780260:ls.exe, 776668:bash.exe, 779736:bash.exe, 779840:ls.exe, 779880:bash.exe
+descendants terminated  : 97  719056, 729880, 729884, 729984, 730032, 730424, 730428, 730448, 745976, 760448, 766108, 769032, 769476, 769544, 769716, 769804, 769832, 770116, 770312, 770436, 770736, 771184, 771264, 771584, 772088, 772136, 772536, 772648, 772896, 773236, 773240, 773376, 773732, 774080, 774164, 774220, 774264, 774296, 774444, 774520, 774560, 774576, 774680, 774696, 774964, 775288, 775536, 775540, 775552, 775604, 775748, 775752, 775772, 775892, 775924, 776000, 776008, 776220, 776392, 776428, 776668, 776728, 776800, 776824, 776976, 777076, 777100, 777108, 777136, 777148, 777376, 777792, 778028, 778068, 778120, 778200, 778208, 778432, 778472, 778500, 778508, 778572, 779300, 779624, 779628, 779736, 779752, 779840, 779860, 779880, 780012, 780104, 780204, 780224, 780248, 780260, 780268
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/vis-runs/logs/merge-vis7-gates.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=MERGE-VIS7  acquired=True  released=True
+pre-existing (reported, NEVER killed): 16
+================================================
+BW_EXIT=0
